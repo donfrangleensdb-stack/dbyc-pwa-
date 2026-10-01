@@ -1,0 +1,29 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Local build scripts & logs
+*.log
+*.bak
+*.txt
+check_*.py
+build_*.py
+dump_*.py
+find_*.py
+get_*.py
+inspect_*.py
+list_*.py
+patch*.py
+sync_*.py
+test_*.py
+update_*.py
+validate_*.py
+verify_*.py
+append_*.py
+

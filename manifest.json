@@ -1,0 +1,18 @@
+{
+  "name": "DBYC - Don Bosco Youth Centre",
+  "short_name": "DBYC PWA",
+  "description": "Salesian Province of Chennai (INM) - DBYC Youth Management, Attendance & Member Portal",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#003b7a",
+  "theme_color": "#004b98",
+  "icons": [
+    {
+      "src": "assets/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

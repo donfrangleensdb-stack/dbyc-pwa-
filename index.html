@@ -1,0 +1,1949 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>DBYC - Don Bosco Youth Centre | Basin Bridge, Chennai - 600 012</title>
+
+  <!-- PWA Meta Tags -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#004b98">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="DBYC Basin Bridge">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link rel="apple-touch-icon" href="assets/icon.svg">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- =======================================================
+       1. LOGIN PORTAL (Artwork Background & Security PIN)
+       ======================================================= -->
+  <div id="loginView">
+    
+    <div class="login-top-banner">
+      <div class="province-title">
+        DON BOSCO YOUTH CENTRE<br>DBYC • BASIN BRIDGE
+      </div>
+      <div class="orange-wave-decor"></div>
+    </div>
+
+    <!-- Hero Area with DBYC Logo on Left and Don Bosco on Right -->
+    <div class="login-hero-area">
+      <img src="assets/icon.svg" alt="DBYC Logo" class="login-side-img" style="background:#ffffff; padding:4px;">
+
+      <div class="login-hero-center-title">
+        <h2>DBYC PORTAL</h2>
+        <p>சென்னை - 600 012</p>
+      </div>
+
+      <img src="assets/don_bosco.webp" alt="Saint John Bosco" class="login-side-img">
+    </div>
+
+    <!-- Login Card with Password / Security PIN -->
+    <div class="login-card-wrapper">
+      <div class="login-card">
+        <div class="login-tabs">
+          <button type="button" class="tab-btn active">Mobile / ID</button>
+          <button type="button" class="tab-btn">Security PIN</button>
+        </div>
+
+        <form id="loginForm">
+          <div class="login-form-group">
+            <label>Mobile No / உறுப்பினர் எண் <span>*</span></label>
+            <div class="input-pill-wrapper">
+              <span class="input-icon">👤</span>
+              <input type="text" id="loginMobileInput" class="input-pill" placeholder="Enter Mobile No or DBYC ID" required>
+            </div>
+          </div>
+
+          <div class="login-form-group">
+            <label>Security PIN / கடவுச்சொல்</label>
+            <div class="input-pill-wrapper">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="loginPinInput" class="input-pill" placeholder="Director: 1888 | Leader: 1234">
+            </div>
+          </div>
+
+          <button type="submit" class="btn-login-green">Log in</button>
+        </form>
+
+        <!-- Fast Demo Shortcut Buttons with Presets -->
+        <div style="display:flex; justify-content:space-between; margin-top:14px; padding-top:12px; border-top:1px dashed #e2e8f0; font-size:0.75rem;">
+          <button id="demoDirectorLoginBtn" style="background:none; border:none; color:#004b98; font-weight:700; cursor:pointer;" title="PIN: 1888">⚡ Director (PIN: 1888)</button>
+          <button id="demoLeaderLoginBtn" style="background:none; border:none; color:#ea580c; font-weight:700; cursor:pointer;" title="PIN: 1234">⚡ Leader (1234)</button>
+          <button id="demoMemberLoginBtn" style="background:none; border:none; color:#10b981; font-weight:700; cursor:pointer;">⚡ Member</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="login-bottom-banner">
+      Don Bosco Youth Centre, Basin Bridge, Chennai - 600 012
+    </div>
+  </div>
+
+
+  <!-- =======================================================
+       2. MAIN APPLICATION (Top Bar, Drawer & Views)
+       ======================================================= -->
+  <div id="mainApp">
+    
+    <!-- Top Sticky Navigation Bar -->
+    <header class="top-navbar">
+      <div class="nav-left">
+        <button id="hamburgerBtn" class="hamburger-btn" aria-label="Open Menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <div class="nav-brand">
+          <img src="assets/icon.svg" alt="DBYC" class="nav-logo">
+          <div class="nav-title">
+            DBYC BASIN BRIDGE
+            <small>Chennai - 600 012</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <button class="pill-tool-btn" title="Voice Assistant">🎙️ Voice</button>
+        <button id="langToggleBtn" class="pill-tool-btn gold" title="Switch Language">தமிழ்</button>
+      </div>
+    </header>
+
+    <!-- Sidebar Drawer -->
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+    <aside id="sidebarDrawer" class="sidebar-drawer">
+      <div class="sidebar-header">
+        <div class="sidebar-user">
+          <img id="sidebarAvatarImg" src="assets/icon.svg" alt="User" class="sidebar-avatar">
+          <div>
+            <div id="sidebarUserName" style="font-weight:800; font-size:0.95rem;">DBYC User</div>
+            <div id="sidebarUserRole" style="font-size:0.72rem; color:#fde047;">Member • DBYC</div>
+          </div>
+        </div>
+        <button id="sidebarCloseBtn" class="sidebar-close">&times;</button>
+      </div>
+
+      <!-- OPERATIONS Section -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">OPERATIONS</div>
+        <ul class="sidebar-menu">
+          <li>
+            <a href="#dashboard" class="sidebar-menu-item active" data-view="dashboard">
+              <span class="sidebar-menu-icon">📊</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="#profile" class="sidebar-menu-item" data-view="profile">
+              <span class="sidebar-menu-icon">👤</span>
+              <span>My Profile (சுயவிவரம்)</span>
+            </a>
+          </li>
+          <li>
+            <a href="#members" class="sidebar-menu-item" data-view="members">
+              <span class="sidebar-menu-icon">👥</span>
+              <span>Members Registry</span>
+            </a>
+          </li>
+          <li data-role-required="leader">
+            <a href="#attendance" class="sidebar-menu-item" data-view="attendance">
+              <span class="sidebar-menu-icon">📷</span>
+              <span>QR Attendance</span>
+            </a>
+          </li>
+          <li>
+            <a href="#passes" class="sidebar-menu-item" data-view="passes">
+              <span class="sidebar-menu-icon">🪪</span>
+              <span>My Digital QR Pass</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- YOUTH LIFE & EVENTS Section -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">YOUTH LIFE & EVENTS</div>
+        <ul class="sidebar-menu">
+          <li>
+            <a href="#birthdays" class="sidebar-menu-item" data-view="birthdays">
+              <span class="sidebar-menu-icon">🎂</span>
+              <span>Birthday Celebrations</span>
+            </a>
+          </li>
+          <li>
+            <a href="#calendar" class="sidebar-menu-item" data-view="calendar">
+              <span class="sidebar-menu-icon">📅</span>
+              <span>Event Calendar</span>
+            </a>
+          </li>
+          <li data-role-required="leader">
+            <a href="#minutes" class="sidebar-menu-item" data-view="minutes">
+              <span class="sidebar-menu-icon">📋</span>
+              <span>DBYC Minutes</span>
+            </a>
+          </li>
+          <li>
+            <a href="#livescore" class="sidebar-menu-item" data-view="livescore">
+              <span class="sidebar-menu-icon">⚽</span>
+              <span>Live Scores & Sports <span style="background:#dc2626; color:#ffffff; font-size:0.65rem; padding:2px 6px; border-radius:10px; font-weight:800; margin-left:4px;">LIVE</span></span>
+            </a>
+          </li>
+          <li>
+            <a href="#media" class="sidebar-menu-item" data-view="media">
+              <span class="sidebar-menu-icon">🎥</span>
+              <span>Live Telecast & Media <span style="background:#dc2626; color:#ffffff; font-size:0.65rem; padding:2px 6px; border-radius:10px; font-weight:800; margin-left:4px;">ON AIR</span></span>
+            </a>
+          </li>
+          <li>
+            <a href="#news" class="sidebar-menu-item" data-view="news">
+              <span class="sidebar-menu-icon">📰</span>
+              <span>DBYC News & Updates</span>
+            </a>
+          </li>
+          <li>
+            <a href="#rules" class="sidebar-menu-item" data-view="rules">
+              <span class="sidebar-menu-icon">📜</span>
+              <span>DBYC Rules (விதிமுறைகள்)</span>
+            </a>
+          </li>
+          <li>
+            <a href="#certificates" class="sidebar-menu-item" data-view="certificates">
+              <span class="sidebar-menu-icon">🎖️</span>
+              <span>Certificate Studio</span>
+            </a>
+          </li>
+          <li data-role-required="admin">
+            <a href="#qualifications" class="sidebar-menu-item" data-view="qualifications">
+              <span class="sidebar-menu-icon">⭐</span>
+              <span>Qualification Desk <span id="sidebarPendingBadge" style="background:#dc2626; color:#ffffff; font-size:0.68rem; padding:2px 7px; border-radius:10px; font-weight:800; margin-left:4px;">0</span></span>
+            </a>
+          </li>
+          <li data-role-required="director-only">
+            <a href="#settings" class="sidebar-menu-item" data-view="settings">
+              <span class="sidebar-menu-icon">⚙️</span>
+              <span>App Master Settings <span style="background:#f59e0b; color:#0f172a; font-size:0.62rem; padding:2px 5px; border-radius:4px; font-weight:800; margin-left:4px;">🔒 DIRECTOR</span></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div style="margin-top:auto; padding:16px;">
+        <button id="logoutBtn" style="width:100%; background:rgba(239, 68, 68, 0.2); border:1px solid #ef4444; color:#ffffff; padding:10px; border-radius:8px; font-weight:700; cursor:pointer;">
+          🚪 Logout
+        </button>
+      </div>
+    </aside>
+
+
+    <!-- =======================================================
+         VIEW 1: DASHBOARD
+         ======================================================= -->
+    <section id="view_dashboard" class="app-section">
+      
+      <div class="home-hero-card">
+        <div class="dashboard-header-triptych">
+          <img src="assets/mother_mary.jpg" alt="Mother Mary" class="dash-holy-img mother-mary" title="Mary Help of Christians">
+
+          <div class="dash-center-info">
+            <h2>தொன்போஸ்கோ இளைஞர் மன்றம்</h2>
+            <div style="font-size:0.85rem; font-weight:800; color:#004b98;">DON BOSCO YOUTH CENTRE (DBYC)</div>
+            <p>பேசின் பாலம், சென்னை - 600 012</p>
+          </div>
+
+          <img src="assets/don_bosco.webp" alt="Saint John Bosco" class="dash-holy-img don-bosco" title="Saint John Bosco">
+        </div>
+
+        <!-- News Marquee -->
+        <div class="news-ticker-bar">
+          <div class="news-label-badge">📢 News</div>
+          <div class="marquee-text-container">
+            <span id="newsMarqueeText" class="marquee-text">
+              தொன்போஸ்கோ இளைஞர் மன்றம், பேசின் பாலம், சென்னை - 600 012 • 75% Attendance Required • Sunday Assembly at 10:00 AM
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="main-content">
+        
+        <!-- Live Quick Stats -->
+        <div class="org-stats-grid">
+          <div class="org-stat-card">
+            <span class="org-stat-label">Total Members</span>
+            <span id="statTotalMembers" class="org-stat-num">0</span>
+          </div>
+          <div class="org-stat-card">
+            <span class="org-stat-label">Today's Attendance</span>
+            <span id="statTodayAttendance" class="org-stat-num" style="color:#10b981;">0</span>
+          </div>
+          <div class="org-stat-card">
+            <span class="org-stat-label">Active Groups</span>
+            <span class="org-stat-num" style="color:#f59e0b;">6 Groups</span>
+          </div>
+          <div class="org-stat-card">
+            <span class="org-stat-label">Upcoming Events</span>
+            <span id="statTotalEvents" class="org-stat-num" style="color:#8b5cf6;">0</span>
+          </div>
+        </div>
+
+        <!-- Director & Asst Director Qualification Alert Box -->
+        <div id="directorDeskAlertBox" class="director-desk-alert" style="display:none;" onclick="switchView('qualifications')">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="font-size:1.8rem;">⭐</span>
+            <div>
+              <strong style="color:#9a3412; font-size:0.95rem;">இயக்குநர் ஒப்புதல் மையம் (Director's Qualification Desk)</strong>
+              <p id="directorDeskAlertText" style="color:#7c2d12; font-size:0.82rem; margin-top:2px;">You have member submissions pending review and approval.</p>
+            </div>
+          </div>
+          <button class="btn-dbyc-primary" style="background:#ea580c; border:none; padding:8px 14px; font-weight:800;">Review Submissions ➔</button>
+        </div>
+
+        <!-- Director Master Modification Authority Banner -->
+        <div id="directorMasterControlBanner" class="director-master-banner" style="display:none;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span style="font-size:1.8rem;">🔒</span>
+            <div>
+              <strong style="color:#1e3a8a; font-size:0.95rem;">Master App Modification Authority (முழு நிர்வாக உரிமை மையம்)</strong>
+              <p style="color:#1e40af; font-size:0.8rem; margin-top:2px;">Logged in as Sole Director: Full App Modification, Security PINs, Cloud DB & Rules Control Active.</p>
+            </div>
+          </div>
+          <button class="btn-dbyc-primary" style="background:#1d4ed8; border:none; padding:8px 14px; font-weight:800; font-size:0.82rem;" onclick="switchView('settings')">⚙️ Master Settings ➔</button>
+        </div>
+
+        <!-- Role-Aware App Grid -->
+        <div class="app-grid">
+          <div class="app-tile" onclick="switchView('profile')">
+            <div class="app-tile-icon bg-orange">👤</div>
+            <div class="app-tile-title">My Profile</div>
+          </div>
+
+          <div class="app-tile" onclick="switchView('passes')">
+            <div class="app-tile-icon bg-amber">🪪</div>
+            <div class="app-tile-title">My QR Pass</div>
+          </div>
+
+          <div class="app-tile" onclick="switchView('members')">
+            <div class="app-tile-icon bg-pink">👥</div>
+            <div class="app-tile-title">Members</div>
+          </div>
+
+          <div class="app-tile" data-role-required="leader" onclick="switchView('attendance')">
+            <div class="app-tile-icon bg-cyan">📷</div>
+            <div class="app-tile-title">QR Attendance</div>
+          </div>
+
+          <div class="app-tile" onclick="switchView('certificates')">
+            <div class="app-tile-icon bg-green">🎖️</div>
+            <div class="app-tile-title">Certificates</div>
+          </div>
+
+          <div class="app-tile" onclick="switchView('birthdays')">
+            <div class="app-tile-icon bg-red">🎂</div>
+            <div class="app-tile-title">Birthdays</div>
+          </div>
+
+          <div class="app-tile" onclick="switchView('calendar')">
+            <div class="app-tile-icon bg-purple">📅</div>
+            <div class="app-tile-title">Calendar</div>
+          </div>
+
+          <div class="app-tile" onclick="switchView('livescore')">
+            <div class="app-tile-icon" style="background:linear-gradient(135deg, #ef4444, #f97316); color:#fff; position:relative;">
+              ⚽
+              <span style="position:absolute; top:2px; right:2px; width:10px; height:10px; background:#22c55e; border:2px solid #fff; border-radius:50%; animation:scanPulse 1s infinite;"></span>
+            </div>
+            <div class="app-tile-title">Live Score</div>
+          </div>
+
+          <div class="app-tile" onclick="switchView('media')">
+            <div class="app-tile-icon" style="background:linear-gradient(135deg, #e11d48, #be123c); color:#fff; position:relative;">
+              🎥
+              <span style="position:absolute; top:2px; right:2px; width:10px; height:10px; background:#ef4444; border:2px solid #fff; border-radius:50%; animation:scanPulse 1s infinite;"></span>
+            </div>
+            <div class="app-tile-title">Live & Videos</div>
+          </div>
+
+          <div class="app-tile" onclick="switchView('news')">
+            <div class="app-tile-icon bg-magenta">📰</div>
+            <div class="app-tile-title">DBYC News</div>
+          </div>
+
+          <div class="app-tile" data-role-required="admin" onclick="switchView('qualifications')">
+            <div class="app-tile-icon" style="background:linear-gradient(135deg, #ea580c, #d97706); color:#fff; position:relative;">
+              ⭐
+              <span id="tilePendingBadge" style="position:absolute; top:-4px; right:-4px; background:#dc2626; color:#fff; font-size:0.7rem; font-weight:900; padding:2px 6px; border-radius:10px; border:2px solid #fff;">0</span>
+            </div>
+            <div class="app-tile-title">Qualification</div>
+          </div>
+
+          <div class="app-tile" onclick="switchView('rules')">
+            <div class="app-tile-icon bg-teal">📜</div>
+            <div class="app-tile-title">DBYC Rules</div>
+          </div>
+
+          <div class="app-tile" data-role-required="director-only" onclick="switchView('settings')">
+            <div class="app-tile-icon bg-indigo">🔒</div>
+            <div class="app-tile-title">Master Settings</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- =======================================================
+         VIEW 2: MY PROFILE (Photo Upload & Edit Option)
+         ======================================================= -->
+    <section id="view_profile" class="app-section" style="display:none;">
+      <div class="main-content">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">👤 My Profile (சுயவிவரம்)</h2>
+            <small style="color:#64748b;">Don Bosco Youth Centre, Basin Bridge</small>
+          </div>
+          <button id="openEditProfileBtn" class="btn-dbyc-primary">✏️ Edit Profile</button>
+        </div>
+
+        <div class="profile-card">
+          <div class="profile-avatar-wrapper">
+            <img id="myProfAvatarImg" src="assets/icon.svg" alt="Profile Photo" class="profile-avatar-img">
+            <button class="avatar-upload-btn" title="Upload Profile Photo" onclick="document.getElementById('profilePhotoFileInput').click()">📷</button>
+            <input type="file" id="profilePhotoFileInput" accept="image/*" style="display:none;">
+          </div>
+
+          <h3 id="myProfName" style="font-size:1.3rem; font-weight:900; color:#004b98;">Member Name</h3>
+          <p id="myProfRoleGroup" style="font-size:0.85rem; font-weight:700; color:#c62828; margin-top:2px;">Role • Group</p>
+
+          <div class="profile-grid-details">
+            <div class="profile-detail-item">
+              <small>DBYC ID</small>
+              <strong id="myProfId">--</strong>
+            </div>
+            <div class="profile-detail-item">
+              <small>Mobile Number</small>
+              <strong id="myProfMobile">--</strong>
+            </div>
+            <div class="profile-detail-item">
+              <small>Email Address</small>
+              <strong id="myProfEmail">--</strong>
+            </div>
+            <div class="profile-detail-item">
+              <small>Instagram ID</small>
+              <strong id="myProfInsta">--</strong>
+            </div>
+            <div class="profile-detail-item">
+              <small>Date of Birth & Age</small>
+              <strong id="myProfDobAge">--</strong>
+            </div>
+            <div class="profile-detail-item">
+              <small>Blood Group</small>
+              <strong id="myProfBlood">--</strong>
+            </div>
+            <div class="profile-detail-item">
+              <small>Home Address</small>
+              <strong id="myProfAddress">--</strong>
+            </div>
+            <div class="profile-detail-item">
+              <small>Education / Work</small>
+              <strong id="myProfEducation">--</strong>
+            </div>
+            <div class="profile-detail-item">
+              <small>Sports / Special Activities</small>
+              <strong id="myProfActivities">--</strong>
+            </div>
+            <div class="profile-detail-item">
+              <small>Future Ambition</small>
+              <strong id="myProfAmbition">--</strong>
+            </div>
+            <div class="profile-detail-item">
+              <small>Tenure in DBYC</small>
+              <strong id="myProfTenure" style="color:#f59e0b;">--</strong>
+            </div>
+            <div class="profile-detail-item">
+              <small>Attendance Record</small>
+              <strong id="myProfAttendance" style="color:#10b981;">--</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =======================================================
+         VIEW 3: MEMBERS REGISTRY (Themed Banner with Don Bosco & Oratory)
+         ======================================================= -->
+    <section id="view_members" class="app-section" style="display:none;">
+      <div class="main-content">
+        
+        <!-- Artwork Banner -->
+        <div class="section-art-banner banner-oratory">
+          <h3 style="font-size:1.15rem; font-weight:900;">உறுப்பினர்கள் பதிவேடு (Members Registry)</h3>
+          <p style="font-size:0.8rem; opacity:0.9;">Don Bosco Oratory & Youth Centre • 6 Age Categories</p>
+        </div>
+
+        <div class="section-header">
+          <div style="font-size:0.85rem; color:#64748b; font-weight:700;">Active Members Database</div>
+          <div style="display:flex; gap:6px;">
+            <button id="registryScanQrBtn" class="btn-dbyc-primary" style="background:#0284c7; padding:8px 10px;" title="Scan Member QR">📷 Scan</button>
+            <button id="registryUploadDocBtn" class="btn-dbyc-primary" style="background:#f59e0b; color:#000; padding:8px 10px;" title="Upload Document / Bulk">📁 Upload</button>
+            <input type="file" id="bulkUploadFileInput" style="display:none;">
+            <button id="openAddMemberBtn" class="btn-dbyc-primary">+ New Reg</button>
+          </div>
+        </div>
+
+        <div style="margin-bottom:12px;">
+          <input type="text" id="memberSearchInput" class="form-control-dbyc" placeholder="🔍 Search Name, Member ID, or Mobile...">
+        </div>
+
+        <!-- 6 Groups Filter Bar -->
+        <div class="filter-bar">
+          <button class="filter-chip active" data-group="ALL">All (அனைத்தும்)</button>
+          <button class="filter-chip" data-group="Sub Juniors Group">Sub Juniors (6-14)</button>
+          <button class="filter-chip" data-group="Junior Group">Juniors (15-18)</button>
+          <button class="filter-chip" data-group="Inters Group">Inters (19-25)</button>
+          <button class="filter-chip" data-group="Senior Group">Seniors (25-34)</button>
+          <button class="filter-chip" data-group="Super Seniors Group">Super Seniors (34-55)</button>
+          <button class="filter-chip" data-group="Elders Group">Elders (56+)</button>
+        </div>
+
+        <div id="membersListContainer" class="member-list"></div>
+      </div>
+    </section>
+
+
+    <!-- =======================================================
+         VIEW 4: QR ATTENDANCE SCANNER
+         ======================================================= -->
+    <section id="view_attendance" class="app-section" style="display:none;">
+      <div class="main-content">
+        <div class="section-header">
+          <h2 class="section-title">📷 Live QR வருகைப் பதிவு (Attendance)</h2>
+          <span id="todayAttCountBadge" class="role-badge leader">0 Marked Today</span>
+        </div>
+
+        <div class="scanner-card">
+          <h3 style="font-size:1.05rem; font-weight:800; color:#004b98;">Scan Member QR Pass (அடையாள அட்டை)</h3>
+          <p style="font-size:0.8rem; color:#64748b;">விதிமுறை 4: அடையாள அட்டையை தினமும் கொண்டுவருதல் அவசியம்.</p>
+
+          <div id="qrVideoContainer" data-active="false">
+            <div style="color:#64748b; font-size:0.85rem;">Camera is inactive. Tap below to scan.</div>
+          </div>
+
+          <button id="startCameraBtn" class="btn-dbyc-primary" style="margin-top:8px;">📷 Turn On Camera Scanner</button>
+
+          <div style="margin-top:20px; border-top:1px dashed #e2e8f0; padding-top:14px;">
+            <label style="font-size:0.82rem; font-weight:700; color:#334155;">Or Enter Member ID / Mobile No:</label>
+            <div class="manual-checkin-box">
+              <input type="text" id="manualCheckinInput" class="form-control-dbyc" placeholder="e.g. DBYC-2026-SJ01 or 9840123456">
+              <button id="manualCheckinBtn" class="btn-dbyc-primary" style="background:#10b981;">Check In</button>
+            </div>
+          </div>
+        </div>
+
+        <h3 style="font-size:1rem; font-weight:800; color:#0f172a; margin-bottom:10px;">📋 Today's Check-in Log</h3>
+        <div id="todayAttendanceList" class="member-list"></div>
+      </div>
+    </section>
+
+
+    <!-- =======================================================
+         VIEW 5: MEMBER DIGITAL QR PASS
+         ======================================================= -->
+    <section id="view_passes" class="app-section" style="display:none;">
+      <div class="main-content">
+        <div class="section-header">
+          <h2 class="section-title">🪪 உறுப்பினர் அடையாள அட்டை (Member QR Pass)</h2>
+        </div>
+
+        <div style="margin-bottom:16px;">
+          <label style="font-size:0.82rem; font-weight:700; color:#334155; margin-bottom:4px; display:block;">Select Member:</label>
+          <select id="passMemberSelect" class="form-control-dbyc"></select>
+          <input type="file" id="passPhotoFileInput" accept="image/*" style="display:none;">
+        </div>
+
+        <div id="idPassCardContainer"></div>
+      </div>
+    </section>
+
+
+    <!-- =======================================================
+         VIEW 6: LIVE IN-APP CERTIFICATE STUDIO & ADOBE EXPRESS
+         ======================================================= -->
+    <section id="view_certificates" class="app-section" style="display:none;">
+      <div class="main-content">
+        
+        <!-- Artwork Banner -->
+        <div class="section-art-banner banner-walk">
+          <h3 style="font-size:1.15rem; font-weight:900;">சான்றிதழ் அரங்கம் (Certificate Studio)</h3>
+          <p style="font-size:0.8rem; opacity:0.9;">Membership & 75% Attendance Awards • In-App Live Editor & Adobe Express Sync</p>
+        </div>
+
+        <!-- In-App Certificate Live Editor Panel -->
+        <div class="cert-live-editor-box">
+          <h4>✏️ Live Certificate Editor & Customizer</h4>
+          
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:10px;">
+            <div>
+              <label style="font-size:0.75rem; font-weight:700; color:#475569;">Select Candidate:</label>
+              <select id="certMemberSelect" class="form-control-dbyc"></select>
+            </div>
+            <div>
+              <label style="font-size:0.75rem; font-weight:700; color:#475569;">Certificate Type Template:</label>
+              <select id="certTypeSelect" class="form-control-dbyc">
+                <option value="MEMBERSHIP">Official Membership Certificate</option>
+                <option value="ATTENDANCE">75% Attendance Excellence Award</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:10px;">
+            <div>
+              <label style="font-size:0.75rem; font-weight:700; color:#475569;">Candidate Name:</label>
+              <input type="text" id="liveCertName" class="form-control-dbyc" placeholder="Full Name">
+            </div>
+            <div>
+              <label style="font-size:0.75rem; font-weight:700; color:#475569;">Certificate Main Title:</label>
+              <input type="text" id="liveCertTitle" class="form-control-dbyc" placeholder="Certificate Title">
+            </div>
+          </div>
+
+          <div style="margin-bottom:10px;">
+            <label style="font-size:0.75rem; font-weight:700; color:#475569;">Custom Body & Award Description:</label>
+            <textarea id="liveCertBody" class="form-control-dbyc" rows="2" placeholder="Award description..."></textarea>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px;">
+            <div>
+              <label style="font-size:0.75rem; font-weight:700; color:#475569;">Issue Date:</label>
+              <input type="text" id="liveCertDate" class="form-control-dbyc">
+            </div>
+            <div>
+              <label style="font-size:0.75rem; font-weight:700; color:#475569;">Director Signatory:</label>
+              <input type="text" id="liveCertDirector" class="form-control-dbyc" value="Rev. Fr. Director, SDB">
+            </div>
+            <div>
+              <label style="font-size:0.75rem; font-weight:700; color:#475569;">Asst. Director Signatory:</label>
+              <input type="text" id="liveCertAsstDirector" class="form-control-dbyc" value="Rev. Fr. Asst. Director, SDB">
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Rendered Certificate -->
+        <div id="certRenderContainer"></div>
+
+        <!-- Action Links: Adobe Express, Google Docs, Print -->
+        <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:16px;">
+          <button class="btn-dbyc-primary" onclick="window.print()">
+            🖨️ Print Certificate
+          </button>
+          <a href="https://new.express.adobe.com/new/upload" target="_blank" class="btn-adobe-express" title="Open Adobe Express to upload and enhance your certificate">
+            🎨 Open in Adobe Express Editor
+          </a>
+          <a href="https://docs.google.com/document/create" target="_blank" class="btn-google-docs" title="Create editable Google Docs certificate">
+            📝 Open in Google Docs
+          </a>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =======================================================
+         VIEW 7: DBYC NEWS & ANNOUNCEMENTS (Writer Sheet & Live Ticker)
+         ======================================================= -->
+    <section id="view_news" class="app-section" style="display:none;">
+      <div class="main-content">
+        
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">📰 DBYC செய்திகள் & அறிவிப்புகள் (News Desk)</h2>
+            <small style="color:#64748b;">Don Bosco Youth Centre, Basin Bridge, Chennai - 600 012</small>
+          </div>
+          <button id="toggleNewsComposerBtn" class="btn-dbyc-primary" style="background:#0284c7;">
+            ✍️ Write News (செய்தி எழுது)
+          </button>
+        </div>
+
+        <!-- Dedicated News Composer Sheet -->
+        <div id="inlineNewsComposerCard" style="background:linear-gradient(180deg, #f0f9ff 0%, #ffffff 100%); border:2px solid #0284c7; border-radius:12px; padding:16px; margin-bottom:18px; box-shadow:var(--shadow-md);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:1.3rem;">✍️</span>
+              <div>
+                <h3 style="font-size:1.05rem; font-weight:800; color:#004b98;">DBYC News Composer Sheet</h3>
+                <small style="color:#64748b;">Type here to publish news and broadcast to Running Ticker</small>
+              </div>
+            </div>
+            <span class="role-badge leader" style="background:#0284c7; color:#fff;">Live Broadcaster</span>
+          </div>
+
+          <!-- Quick Template Chips -->
+          <div style="margin-bottom:12px;">
+            <small style="font-weight:700; color:#475569; font-size:0.75rem;">QUICK TEMPLATES (விரைவு வார்ப்புருக்கள்):</small>
+            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;">
+              <button type="button" class="filter-chip news-template-btn" data-template="assembly">📢 Sunday Assembly</button>
+              <button type="button" class="filter-chip news-template-btn" data-template="football">⚽ Football Tournament</button>
+              <button type="button" class="filter-chip news-template-btn" data-template="oratory">⛪ Don Bosco Oratory Feast</button>
+              <button type="button" class="filter-chip news-template-btn" data-template="exam">🎓 Tuition & Mentorship</button>
+            </div>
+          </div>
+
+          <form id="inlineNewsForm">
+            <input type="hidden" id="inlineNewsEditId" value="">
+
+            <div class="form-group-dbyc">
+              <label>1. News Title / Headline (தலைப்பு) *</label>
+              <input type="text" id="inlineNewsTitle" class="form-control-dbyc" placeholder="e.g. DBYC Annual Football Tournament Fixture Released" required>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px;">
+              <div class="form-group-dbyc">
+                <label>2. Category</label>
+                <select id="inlineNewsCategory" class="form-control-dbyc">
+                  <option value="Centre News">📢 Centre News (மன்ற செய்தி)</option>
+                  <option value="Sports">⚽ Sports & Tournaments (விளையாட்டு)</option>
+                  <option value="Celebration">🎉 Celebration (விழா)</option>
+                  <option value="Assembly Circular">📋 Assembly Circular (சுற்றறிக்கை)</option>
+                  <option value="Youth Activity">🌟 Youth Activity (இளைஞர் நிகழ்வு)</option>
+                </select>
+              </div>
+
+              <div class="form-group-dbyc">
+                <label>3. Priority / Ticker Tag</label>
+                <select id="inlineNewsPriority" class="form-control-dbyc">
+                  <option value="Breaking">🔴 Breaking (Top Marquee Ticker)</option>
+                  <option value="Urgent">🟡 Urgent (முக்கிய அறிவிப்பு)</option>
+                  <option value="Normal">🟢 Normal (பொது சுற்றறிக்கை)</option>
+                </select>
+              </div>
+
+              <div class="form-group-dbyc">
+                <label>4. Target Group</label>
+                <select id="inlineNewsTargetGroup" class="form-control-dbyc">
+                  <option value="All Groups">All 6 Groups (அனைத்து குழுக்கள்)</option>
+                  <option value="Sub Juniors Group">Sub Juniors (6-14)</option>
+                  <option value="Junior Group">Juniors (15-18)</option>
+                  <option value="Inters Group">Inters (19-25)</option>
+                  <option value="Senior Group">Seniors (25-34)</option>
+                  <option value="Super Seniors Group">Super Seniors (34-55)</option>
+                  <option value="Elders Group">Elders (56+)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group-dbyc">
+              <label>5. Full News Details / Summary (செய்தி விவரம்) *</label>
+              <textarea id="inlineNewsSummary" class="form-control-dbyc" rows="3" placeholder="Type complete news details, timings, rules, or guidelines here..." required></textarea>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; gap:10px; flex-wrap:wrap;">
+              <div style="display:flex; align-items:center; gap:6px;">
+                <input type="checkbox" id="inlineNewsBroadcastTicker" checked>
+                <label for="inlineNewsBroadcastTicker" style="margin:0; font-size:0.82rem; font-weight:700; color:#004b98; cursor:pointer;">
+                  Broadcast to Top Running News Marquee Ticker
+                </label>
+              </div>
+              <div style="display:flex; gap:8px;">
+                <button type="button" id="inlineNewsClearBtn" class="btn-dbyc-primary" style="background:#64748b; padding:8px 12px; font-size:0.85rem;">Clear</button>
+                <button type="submit" id="inlineNewsSubmitBtn" class="btn-dbyc-primary" style="background:#059669; padding:8px 18px; font-size:0.88rem; font-weight:800;">
+                  📢 Publish News & Update Ticker
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- News Filter Chips -->
+        <div class="filter-bar" style="margin-bottom:12px;">
+          <button class="filter-chip news-filter-chip active" data-filter="APPROVED">📢 Published News (வெளியிடப்பட்டவை)</button>
+          <button class="filter-chip news-filter-chip" data-filter="MY_NEWS">👤 My Submitted News</button>
+          <button class="filter-chip news-filter-chip" data-filter="PENDING" data-role-required="admin">⭐ Pending Qualification</button>
+        </div>
+
+        <!-- Published News Feed -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <h3 style="font-size:0.95rem; font-weight:800; color:#1e293b;">News Articles & Announcements</h3>
+          <div id="newsCountBadge" class="role-badge leader" style="background:#0284c7; color:#fff;">3 Articles</div>
+        </div>
+
+        <div id="newsListContainer" class="member-list"></div>
+      </div>
+    </section>
+
+
+    <!-- =======================================================
+         VIEW: DBYC LIVE SCORES & SPORTS MATCH CENTRE
+         ======================================================= -->
+    <section id="view_livescore" class="app-section" style="display:none;">
+      <div class="main-content">
+        
+        <!-- Live Sports Header Banner -->
+        <div class="section-art-banner banner-walk">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px;">
+            <div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <h3 style="font-size:1.2rem; font-weight:900;">⚽ DBYC நேரலை போட்டி மதிப்பெண் (Live Scoreboard)</h3>
+                <span class="role-badge" style="background:#dc2626; color:#ffffff; font-weight:900; animation:scanPulse 1.5s infinite;">🔴 LIVE NOW</span>
+              </div>
+              <p style="font-size:0.82rem; opacity:0.95; margin-top:4px;">Don Bosco Youth Centre, Basin Bridge Ground • 6 Group Championships</p>
+            </div>
+            <button id="openAddMatchBtn" class="btn-dbyc-primary" style="background:#f59e0b; color:#000; font-weight:800; border:none; padding:8px 14px;">
+              + New Match / போட்டி சேர்
+            </button>
+          </div>
+        </div>
+
+        <!-- Sport Category Filter Bar -->
+        <div class="filter-bar" style="margin-bottom:14px;">
+          <button class="filter-chip live-sport-chip active" data-sport="ALL">🏆 All Sports (அனைத்தும்)</button>
+          <button class="filter-chip live-sport-chip" data-sport="Football">⚽ Football (கால்பந்து)</button>
+          <button class="filter-chip live-sport-chip" data-sport="Table Tennis">🏓 Table Tennis</button>
+          <button class="filter-chip live-sport-chip" data-sport="Volleyball">🏐 Volleyball (கைப்பந்து)</button>
+          <button class="filter-chip live-sport-chip" data-sport="Carrom">🎯 Carrom (கேரம்)</button>
+          <button class="filter-chip live-sport-chip" data-sport="Cricket">🏏 Cricket (கிரிக்கெட்)</button>
+        </div>
+
+        <!-- Schedule / Add Match Card (Collapsible) -->
+        <div id="addMatchComposerCard" style="display:none; background:#ffffff; border:2px solid #004b98; border-radius:12px; padding:16px; margin-bottom:18px; box-shadow:var(--shadow-md);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h3 style="font-size:1rem; font-weight:800; color:#004b98;">Schedule or Launch New Match</h3>
+            <button id="closeAddMatchBtn" style="background:none; border:none; font-size:1.3rem; cursor:pointer;">&times;</button>
+          </div>
+          <form id="createMatchForm">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+              <div class="form-group-dbyc">
+                <label>Tournament / Event Title *</label>
+                <input type="text" id="matchTournamentInput" class="form-control-dbyc" placeholder="e.g. DBYC Annual Cup 2026" required>
+              </div>
+              <div class="form-group-dbyc">
+                <label>Sport *</label>
+                <select id="matchSportSelect" class="form-control-dbyc">
+                  <option value="Football">⚽ Football (கால்பந்து)</option>
+                  <option value="Table Tennis">🏓 Table Tennis (மேசைப்பந்து)</option>
+                  <option value="Volleyball">🏐 Volleyball (கைப்பந்து)</option>
+                  <option value="Carrom">🎯 Carrom (கேரம்)</option>
+                  <option value="Cricket">🏏 Cricket (கிரிக்கெட்)</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+              <div class="form-group-dbyc">
+                <label>Team A (Group / Unit) *</label>
+                <select id="matchTeamASelect" class="form-control-dbyc">
+                  <option value="Sub Juniors Group">Sub Juniors Group (6-14)</option>
+                  <option value="Junior Group">Junior Group (15-18)</option>
+                  <option value="Inters Group">Inters Group (19-25)</option>
+                  <option value="Senior Group">Senior Group (25-34)</option>
+                  <option value="Super Seniors Group">Super Seniors Group (34-55)</option>
+                  <option value="Elders Group">Elders Group (56+)</option>
+                </select>
+              </div>
+              <div class="form-group-dbyc">
+                <label>Team B (Group / Unit) *</label>
+                <select id="matchTeamBSelect" class="form-control-dbyc">
+                  <option value="Junior Group">Junior Group (15-18)</option>
+                  <option value="Sub Juniors Group">Sub Juniors Group (6-14)</option>
+                  <option value="Inters Group">Inters Group (19-25)</option>
+                  <option value="Senior Group">Senior Group (25-34)</option>
+                  <option value="Super Seniors Group">Super Seniors Group (34-55)</option>
+                  <option value="Elders Group">Elders Group (56+)</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px;">
+              <div class="form-group-dbyc">
+                <label>Venue</label>
+                <input type="text" id="matchVenueInput" class="form-control-dbyc" value="DBYC Basin Bridge Ground">
+              </div>
+              <div class="form-group-dbyc">
+                <label>Initial Status</label>
+                <select id="matchStatusSelect" class="form-control-dbyc">
+                  <option value="LIVE">🔴 LIVE NOW</option>
+                  <option value="UPCOMING">⏳ UPCOMING</option>
+                  <option value="COMPLETED">🏆 COMPLETED</option>
+                </select>
+              </div>
+              <div class="form-group-dbyc">
+                <label>Match Stage / Time</label>
+                <input type="text" id="matchStageInput" class="form-control-dbyc" value="1st Half (00')">
+              </div>
+            </div>
+
+            <button type="submit" class="btn-dbyc-primary" style="width:100%; background:#059669; padding:10px; font-weight:800; margin-top:6px;">
+              🚀 Launch Match on Live Scoreboard
+            </button>
+          </form>
+        </div>
+
+        <!-- Live Matches Container -->
+        <div id="liveMatchesContainer"></div>
+
+      </div>
+    </section>
+
+
+    <!-- =======================================================
+         VIEW: DBYC LIVE TELECAST, VIDEOS & MEDIA STUDIO
+         ======================================================= -->
+    <section id="view_media" class="app-section" style="display:none;">
+      <div class="main-content">
+        
+        <!-- Live Telecast & Media Header Banner -->
+        <div class="section-art-banner banner-gather">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px;">
+            <div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <h3 style="font-size:1.2rem; font-weight:900;">🎥 DBYC நேரலை ஒளிபரப்பு & மீடியா (Live Telecast & Media)</h3>
+                <span class="role-badge" style="background:#dc2626; color:#ffffff; font-weight:900; animation:scanPulse 1.5s infinite;">🔴 ON AIR</span>
+              </div>
+              <p style="font-size:0.82rem; opacity:0.95; margin-top:4px;">Official YouTube Channel & Instagram Hub • Don Bosco Basin Bridge</p>
+            </div>
+
+            <!-- Social Links & Restricted Upload Button -->
+            <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+              <a href="https://www.youtube.com/@DonBoscoYouthCentreBasinBridge" target="_blank" class="btn-social-yt" title="Watch DBYC YouTube Channel">
+                ▶ YouTube Live
+              </a>
+              <a href="https://www.instagram.com/dbyc_basinbridge" target="_blank" class="btn-social-insta" title="View DBYC Instagram">
+                📸 Instagram
+              </a>
+              <button id="openAddMediaBtn" class="btn-dbyc-primary" style="background:#f59e0b; color:#000; font-weight:800; border:none; padding:8px 12px;" title="Authorized: Director, Asst. Director & Minutes Incharge">
+                📤 Upload Media (பதிவேற்று)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1. Featured Live Telecast Player Box -->
+        <div class="live-stream-player-card">
+          <div class="responsive-video-wrapper">
+            <iframe id="featuredLivePlayerIframe" src="https://www.youtube.com/embed/live_stream?channel=UC_DBYC_BASIN_BRIDGE" title="DBYC Live Telecast" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+          <div class="live-stream-info-bar">
+            <div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span class="role-badge" style="background:#dc2626; color:#ffffff; font-weight:800; animation:scanPulse 1.5s infinite;">🔴 LIVE STREAM</span>
+                <h3 id="liveStreamTitle" style="font-size:1.05rem; font-weight:800; margin:0;">Sunday Holy Mass & Don Bosco Youth General Assembly LIVE</h3>
+              </div>
+              <p id="liveStreamDesc" style="font-size:0.82rem; color:#94a3b8; margin-top:4px;">Broadcasting live from Don Bosco Technical Campus Auditorium, Basin Bridge, Chennai - 600 012.</p>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button id="btnSwitchStreamDemo" class="btn-dbyc-primary" style="background:#0284c7; padding:6px 12px; font-size:0.8rem;">🔄 Switch Stream</button>
+              <a id="btnOpenStreamYt" href="https://www.youtube.com/@DonBoscoYouthCentreBasinBridge" target="_blank" class="btn-social-yt">Open in YouTube</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Restricted Media Upload Composer (Minutes Incharge / Director / Asst. Director) -->
+        <div id="addMediaComposerCard" style="display:none; background:#ffffff; border:2px solid #e11d48; border-radius:12px; padding:16px; margin-bottom:18px; box-shadow:var(--shadow-md);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:1.3rem;">📤</span>
+              <div>
+                <h3 style="font-size:1rem; font-weight:800; color:#be123c;">Upload & Broadcast Media (YouTube & Instagram)</h3>
+                <small style="color:#64748b;">Exclusive for Minutes Incharge, Rev. Fr. Director & Rev. Fr. Asst. Director</small>
+              </div>
+            </div>
+            <button id="closeAddMediaBtn" style="background:none; border:none; font-size:1.3rem; cursor:pointer;">&times;</button>
+          </div>
+
+          <!-- Media Type Selector Tabs -->
+          <div class="login-tabs" style="margin-bottom:12px;">
+            <button type="button" class="tab-btn active" id="tabMediaVideo">🎥 YouTube Video</button>
+            <button type="button" class="tab-btn" id="tabMediaPhoto">📸 Event Photo / Instagram</button>
+            <button type="button" class="tab-btn" id="tabMediaTelecast">🔴 Live Stream Setup</button>
+          </div>
+
+          <!-- Form 1: YouTube Video -->
+          <div id="mediaPaneVideo">
+            <form id="createVideoForm">
+              <div class="form-group-dbyc">
+                <label>Video Title (தலைப்பு) *</label>
+                <input type="text" id="videoTitleInput" class="form-control-dbyc" placeholder="e.g. DBYC Inter-Group Football Match Highlights" required>
+              </div>
+              <div style="display:grid; grid-template-columns: 2fr 1fr; gap:10px;">
+                <div class="form-group-dbyc">
+                  <label>YouTube Video URL or Video ID *</label>
+                  <input type="text" id="videoYtUrlInput" class="form-control-dbyc" placeholder="e.g. https://www.youtube.com/watch?v=dQw4w9WgXcQ or dQw4w9WgXcQ" required>
+                </div>
+                <div class="form-group-dbyc">
+                  <label>Category</label>
+                  <select id="videoCategorySelect" class="form-control-dbyc">
+                    <option value="Sports">⚽ Sports Match</option>
+                    <option value="Celebration">🎉 Feast & Celebration</option>
+                    <option value="Spiritual">⛪ Holy Mass & Prayer</option>
+                    <option value="Training">🎓 Coaching & Drills</option>
+                    <option value="Council">📋 Council & Minutes</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group-dbyc">
+                <label>Description / Details</label>
+                <textarea id="videoDescInput" class="form-control-dbyc" rows="2" placeholder="Match details, goalscorers, or program summary..."></textarea>
+              </div>
+              <button type="submit" class="btn-dbyc-primary" style="width:100%; background:#dc2626; padding:10px; font-weight:800;">
+                ▶ Publish YouTube Video to DBYC Media Feed
+              </button>
+            </form>
+          </div>
+
+          <!-- Form 2: Event Photo & Instagram -->
+          <div id="mediaPanePhoto" style="display:none;">
+            <form id="createPhotoForm">
+              <div class="form-group-dbyc">
+                <label>Photo Caption / Title (தலைப்பு) *</label>
+                <input type="text" id="photoTitleInput" class="form-control-dbyc" placeholder="e.g. Don Bosco Youth Centre Annual Day Trophy Ceremony" required>
+              </div>
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <div class="form-group-dbyc">
+                  <label>Album / Event Name</label>
+                  <input type="text" id="photoAlbumInput" class="form-control-dbyc" value="Don Bosco Feast 2026">
+                </div>
+                <div class="form-group-dbyc">
+                  <label>Linked Instagram Post URL (Optional)</label>
+                  <input type="url" id="photoInstaUrlInput" class="form-control-dbyc" placeholder="https://www.instagram.com/p/...">
+                </div>
+              </div>
+              <div class="form-group-dbyc">
+                <label>Upload Image File (Scanned, Camera or Photo):</label>
+                <div id="mediaPhotoDropZone" style="border:2px dashed #ec4899; border-radius:10px; padding:16px; text-align:center; background:#fdf2f8; cursor:pointer;">
+                  <span style="font-size:2rem;">📸</span>
+                  <p style="font-size:0.85rem; font-weight:700; color:#be185d; margin:4px 0 2px;">Click or Drop Photo Here</p>
+                  <input type="file" id="mediaPhotoFileInput" accept="image/*" style="display:none;">
+                </div>
+                <div id="mediaPhotoPreview" style="display:none; margin-top:10px; text-align:center;">
+                  <img id="mediaPhotoPreviewImg" src="" alt="Preview" style="max-height:160px; border-radius:8px; border:1px solid #cbd5e1;">
+                </div>
+              </div>
+              <button type="submit" class="btn-dbyc-primary" style="width:100%; background:#be185d; padding:10px; font-weight:800;">
+                📸 Publish Photo to DBYC Instagram & Gallery
+              </button>
+            </form>
+          </div>
+
+          <!-- Form 3: Live Telecast Setup -->
+          <div id="mediaPaneTelecast" style="display:none;">
+            <form id="createTelecastForm">
+              <div class="form-group-dbyc">
+                <label>Live Event Title (நேரலை நிகழ்வு தலைப்பு) *</label>
+                <input type="text" id="telecastTitleInput" class="form-control-dbyc" placeholder="e.g. DBYC Annual Sports Meet Grand Finale Live" required>
+              </div>
+              <div class="form-group-dbyc">
+                <label>YouTube Live Stream Embed URL / Video ID *</label>
+                <input type="text" id="telecastUrlInput" class="form-control-dbyc" placeholder="e.g. https://www.youtube.com/embed/live_stream?channel=... or Video ID" required>
+              </div>
+              <div class="form-group-dbyc">
+                <label>Broadcast Status</label>
+                <select id="telecastStatusSelect" class="form-control-dbyc">
+                  <option value="LIVE">🔴 ON AIR (Broadcasting Now)</option>
+                  <option value="UPCOMING">⏳ SCHEDULED (Starts Soon)</option>
+                </select>
+              </div>
+              <button type="submit" class="btn-dbyc-primary" style="width:100%; background:#059669; padding:10px; font-weight:800;">
+                🔴 Set as Active Live Telecast Stream & Broadcast to Ticker
+              </button>
+            </form>
+          </div>
+
+        </div>
+
+        <!-- 3. Media Filter Chips -->
+        <div class="filter-bar" style="margin-bottom:14px;">
+          <button class="filter-chip media-filter-chip active" data-filter="ALL">🌟 All Media (அனைத்தும்)</button>
+          <button class="filter-chip media-filter-chip" data-filter="VIDEO">🎥 YouTube Videos</button>
+          <button class="filter-chip media-filter-chip" data-filter="PHOTO">📸 Photos & Instagram</button>
+          <button class="filter-chip media-filter-chip" data-filter="LIVE">🔴 Live Streams</button>
+          <button class="filter-chip media-filter-chip" data-filter="MY_UPLOADS">👤 My Uploads</button>
+        </div>
+
+        <!-- 4. Media Grid Container -->
+        <div id="mediaGalleryContainer" class="media-grid"></div>
+
+      </div>
+    </section>
+
+
+    <!-- =======================================================
+         VIEW: DIRECTOR & ASSISTANT DIRECTOR QUALIFICATION DESK
+         ======================================================= -->
+    <section id="view_qualifications" class="app-section" style="display:none;">
+      <div class="main-content">
+        
+        <div class="qualification-banner">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px; position:relative; z-index:2;">
+            <div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <h3 style="font-size:1.25rem; font-weight:900;">⭐ இயக்குநர் & உதவி இயக்குநர் ஒப்புதல் மையம்</h3>
+                <span id="qualPendingHeaderBadge" class="qualification-badge-pending" style="background:#ffffff; color:#c2410c;">0 PENDING</span>
+              </div>
+              <p style="font-size:0.85rem; opacity:0.95; margin-top:4px;">
+                Review and qualify member-submitted News, Minutes, Videos & Photos before publishing.
+              </p>
+            </div>
+            <span class="role-badge" style="background:rgba(255,255,255,0.25); color:#fff; font-weight:800; border:1px solid rgba(255,255,255,0.4);">
+              Rev. Fr. Director & Asst. Director Authority
+            </span>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar" style="margin-bottom:16px;">
+          <button class="filter-chip qual-filter-chip active" data-filter="ALL">🌟 All Submissions (<span id="qualCountAll">0</span>)</button>
+          <button class="filter-chip qual-filter-chip" data-filter="NEWS">📰 News Articles (<span id="qualCountNews">0</span>)</button>
+          <button class="filter-chip qual-filter-chip" data-filter="MINUTES">📋 Minutes & Reports (<span id="qualCountMinutes">0</span>)</button>
+          <button class="filter-chip qual-filter-chip" data-filter="MEDIA">🎥 Videos & Photos (<span id="qualCountMedia">0</span>)</button>
+        </div>
+
+        <!-- Submissions Container -->
+        <div id="qualificationListContainer"></div>
+
+      </div>
+    </section>
+
+
+    <!-- =======================================================
+         VIEW 8: DBYC RULES (15 Rules Banner)
+         ======================================================= -->
+    <section id="view_rules" class="app-section" style="display:none;">
+      <div class="main-content">
+        
+        <div class="section-art-banner banner-gather">
+          <h3 style="font-size:1.15rem; font-weight:900;">தொன்போஸ்கோ இளைஞர் மன்றத்தின் விதிமுறைகள்</h3>
+          <p style="font-size:0.8rem; opacity:0.9;">15 Official Rules & Discipline Regulations (Basin Bridge, Chennai - 600 012)</p>
+        </div>
+
+        <div id="rulesListContainer" class="member-list"></div>
+      </div>
+    </section>
+
+
+    <!-- =======================================================
+         VIEW 9: BIRTHDAYS
+         ======================================================= -->
+    <section id="view_birthdays" class="app-section" style="display:none;">
+      <div class="main-content">
+        <div class="section-header">
+          <h2 class="section-title">🎂 Birthday Celebrations This Month</h2>
+        </div>
+        <div id="birthdaysListContainer" class="member-list"></div>
+      </div>
+    </section>
+
+
+    <!-- =======================================================
+         VIEW 10: CALENDAR
+         ======================================================= -->
+    <section id="view_calendar" class="app-section" style="display:none;">
+      <div class="main-content">
+        <div class="section-header">
+          <h2 class="section-title">📅 DBYC Event Calendar</h2>
+          <button id="openAddEventBtn" class="btn-dbyc-primary">+ Add Event</button>
+        </div>
+        <div id="eventsListContainer" class="member-list"></div>
+      </div>
+    </section>
+
+
+    <!-- =======================================================
+         VIEW 11: MINUTES OF MEETING
+         ======================================================= -->
+    <section id="view_minutes" class="app-section" style="display:none;">
+      <div class="main-content">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">📋 DBYC Minutes & Reports (கூட்ட குறிப்புகள்)</h2>
+            <small style="color:#64748b;">Official Executive Committee Minutes & Activity Reports</small>
+          </div>
+          <button id="openAddMinutesBtn" class="btn-dbyc-primary">+ Record / Submit Minutes</button>
+        </div>
+
+        <!-- Minutes Filter Chips -->
+        <div class="filter-bar" style="margin-bottom:12px;">
+          <button class="filter-chip min-filter-chip active" data-filter="APPROVED">📋 Official Minutes (அங்கீகரிக்கப்பட்டவை)</button>
+          <button class="filter-chip min-filter-chip" data-filter="MY_MINUTES">👤 My Submitted Reports</button>
+          <button class="filter-chip min-filter-chip" data-filter="PENDING" data-role-required="admin">⭐ Pending Qualification</button>
+        </div>
+
+        <div id="minutesListContainer" class="member-list"></div>
+      </div>
+    </section>
+
+
+    <!-- =======================================================
+         VIEW 12: MASTER CONTROL & APP MODIFICATION CENTER
+         ======================================================= -->
+    <section id="view_settings" class="app-section" style="display:none;">
+      <div class="main-content">
+        
+        <!-- Master Authority Banner -->
+        <div class="master-security-card" style="background:linear-gradient(135deg, #091a33 0%, #00264d 100%); color:#ffffff; border: 2px solid #f59e0b;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px;">
+            <div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:1.5rem;">🔒</span>
+                <h2 style="font-size:1.15rem; font-weight:900; color:#fde047; margin:0;">
+                  Master App Modification & System Control Center
+                </h2>
+              </div>
+              <p style="font-size:0.8rem; color:#cbd5e1; margin-top:4px;">
+                Don Bosco Youth Centre • Basin Bridge, Chennai - 600 012
+              </p>
+            </div>
+            <span class="badge-director-only" style="background:#f59e0b; color:#0f172a; font-weight:900;">
+              👑 Sole Authority: Rev. Fr. Director Only
+            </span>
+          </div>
+
+          <div style="background:rgba(255,255,255,0.08); border-radius:8px; padding:10px 14px; margin-top:12px; font-size:0.78rem; color:#e2e8f0; line-height:1.4;">
+            🛡️ <strong>Ironclad Modification Policy:</strong> All structural changes, backend endpoints, database modifications, rule alterations, role assignments, and resets can <strong>ONLY</strong> be performed by the Rev. Fr. Director. Unauthorized users are completely locked out.
+          </div>
+        </div>
+
+        <!-- 1. Master Director Security PIN / Password Manager -->
+        <div class="master-security-card">
+          <div class="master-security-header">
+            <div>
+              <h3 style="font-size:1rem; font-weight:800; color:#004b98; margin:0;">🔐 Director Master Security PIN / Password Manager</h3>
+              <small style="color:#64748b;">Set your private Director Master Passcode to safeguard all app modifications</small>
+            </div>
+            <span class="role-badge director">Master Key</span>
+          </div>
+
+          <form id="masterPinChangeForm">
+            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px;">
+              <div class="form-group-dbyc">
+                <label>Current Director PIN *</label>
+                <input type="password" id="currentDirectorPinInput" class="form-control-dbyc" placeholder="Current PIN (e.g. 1888)" required>
+              </div>
+              <div class="form-group-dbyc">
+                <label>New Master PIN / Passcode *</label>
+                <input type="password" id="newDirectorPinInput" class="form-control-dbyc" placeholder="Enter New PIN / Code" required minlength="4">
+              </div>
+              <div class="form-group-dbyc">
+                <label>Confirm New PIN *</label>
+                <input type="password" id="confirmDirectorPinInput" class="form-control-dbyc" placeholder="Re-enter New PIN" required minlength="4">
+              </div>
+            </div>
+            <button type="submit" class="btn-dbyc-primary" style="background:#004b98; font-weight:800; margin-top:6px;">
+              🔐 Update Director Master Security PIN
+            </button>
+          </form>
+        </div>
+
+        <!-- 2. Google Sheets Cloud Backend Endpoint -->
+        <div class="master-security-card">
+          <div class="master-security-header">
+            <div>
+              <h3 style="font-size:1rem; font-weight:800; color:#004b98; margin:0;">🔗 Google Apps Script Cloud Backend Endpoint</h3>
+              <small style="color:#64748b;">Connect your zero-budget Google Sheets database</small>
+            </div>
+            <span class="role-badge leader" style="background:#0284c7; color:#fff;">Live Cloud Sync</span>
+          </div>
+
+          <p style="font-size:0.82rem; color:#475569; margin-bottom:12px;">
+            Paste your deployed Google Apps Script Web App URL below to synchronize members, attendance, events, news, and match records with Google Sheets.
+          </p>
+
+          <input type="url" id="gasEndpointInput" class="form-control-dbyc" placeholder="https://script.google.com/macros/s/.../exec">
+          
+          <div style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;">
+            <button id="saveGasSettingsBtn" class="btn-dbyc-primary" style="background:#004b98;">💾 Save Endpoint</button>
+            <button id="syncNowBtn" class="btn-dbyc-primary" style="background:#10b981;">🔄 Sync with Google Sheets</button>
+          </div>
+        </div>
+
+        <!-- 3. Database Modifications & Maintenance (Director Authority) -->
+        <div class="master-security-card">
+          <div class="master-security-header">
+            <div>
+              <h3 style="font-size:1rem; font-weight:800; color:#0f172a; margin:0;">💾 Master Database Modification & Maintenance</h3>
+              <small style="color:#64748b;">Export, Import, or Factory Reset DBYC database</small>
+            </div>
+            <span class="badge-director-only">Director Protected</span>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:8px;">
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px;">
+              <strong style="font-size:0.85rem; color:#1e293b;">📥 Full Database Backup</strong>
+              <p style="font-size:0.75rem; color:#64748b; margin:4px 0 10px;">Download complete DBYC system database as JSON.</p>
+              <button id="exportAllDataBtn" class="btn-dbyc-primary" style="background:#475569; width:100%; font-size:0.82rem;">📥 Export Full Database JSON</button>
+            </div>
+
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px;">
+              <strong style="font-size:0.85rem; color:#1e293b;">📤 Restore / Bulk Import JSON</strong>
+              <p style="font-size:0.75rem; color:#64748b; margin:4px 0 10px;">Restore DBYC database from backup file.</p>
+              <button id="triggerImportBtn" class="btn-dbyc-primary" style="background:#0284c7; width:100%; font-size:0.82rem;" onclick="document.getElementById('bulkJsonFileInput').click()">📤 Import Database JSON</button>
+              <input type="file" id="bulkJsonFileInput" accept=".json" style="display:none;">
+            </div>
+          </div>
+
+          <div style="margin-top:16px; padding-top:14px; border-top:1px dashed #cbd5e1;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+              <div>
+                <strong style="color:#dc2626; font-size:0.85rem;">⚠️ Factory Reset Database</strong>
+                <p style="color:#64748b; font-size:0.75rem;">Wipe local modifications and restore official Basin Bridge dataset. Requires Director Master PIN.</p>
+              </div>
+              <button id="masterFactoryResetBtn" class="btn-dbyc-primary" style="background:#dc2626; font-size:0.82rem; font-weight:800;">
+                🗑️ Factory Reset Database
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. DBYC Organizational Hierarchy & Governance -->
+        <div class="master-security-card">
+          <div class="master-security-header">
+            <div>
+              <h3 style="font-size:1rem; font-weight:800; color:#004b98; margin:0;">🏛️ DBYC Governance & Group Structure</h3>
+              <small style="color:#64748b;">Official Leadership and 6 Group Age Brackets</small>
+            </div>
+            <span class="role-badge leader" style="background:#059669; color:#fff;">Official Hierarchy</span>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:0.82rem;">
+            <div style="background:#eff6ff; padding:10px; border-radius:6px; border-left:3px solid #004b98;">
+              <strong style="color:#004b98;">👑 Incharge / Sole Authority:</strong><br>
+              Rev. Fr. Director, SDB (Full Modification & Qualification Authority)
+            </div>
+            <div style="background:#f0fdf4; padding:10px; border-radius:6px; border-left:3px solid #16a34a;">
+              <strong style="color:#16a34a;">✝️ Direct Incharge:</strong><br>
+              Rev. Fr. Assistant Director, SDB (Operational Oversight & Qualification)
+            </div>
+          </div>
+
+          <div style="margin-top:12px; font-size:0.8rem; color:#475569;">
+            <strong>Official 6 DBYC Age Groups:</strong> Sub Juniors (6-14) • Juniors (15-18) • Inters (19-25) • Seniors (25-34) • Super Seniors (34-55) • Elders (56+)
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- =======================================================
+         BOTTOM NAVIGATION BAR
+         ======================================================= -->
+    <nav class="bottom-nav-bar">
+      <button class="bottom-nav-item active" data-view="dashboard">
+        <span class="bottom-nav-icon">📊</span>
+        <span>Home</span>
+      </button>
+      <button class="bottom-nav-item" data-view="profile">
+        <span class="bottom-nav-icon">👤</span>
+        <span>Profile</span>
+      </button>
+      <button class="bottom-nav-item" data-view="passes">
+        <span class="bottom-nav-icon">🪪</span>
+        <span>My Pass</span>
+      </button>
+      <button class="bottom-nav-item" data-view="attendance">
+        <span class="bottom-nav-icon">📷</span>
+        <span>Scan</span>
+      </button>
+      <button class="bottom-nav-item" data-view="birthdays">
+        <span class="bottom-nav-icon">🎂</span>
+        <span>Birthdays</span>
+      </button>
+    </nav>
+
+  </div>
+
+
+  <!-- =======================================================
+       MODALS
+       ======================================================= -->
+
+  <!-- 1. Edit Profile Modal -->
+  <div id="editProfileModal" class="modal-backdrop">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Edit My Profile (சுயவிவரம் திருத்து)</h3>
+        <button id="closeEditProfileBtn" style="background:none; border:none; font-size:1.4rem; cursor:pointer;">&times;</button>
+      </div>
+      <form id="editProfileForm">
+        <div class="form-group-dbyc">
+          <label>Full Name</label>
+          <input type="text" id="editProfName" class="form-control-dbyc" required>
+        </div>
+        <div class="form-group-dbyc">
+          <label>Mobile Number</label>
+          <input type="tel" id="editProfMobile" class="form-control-dbyc" required>
+        </div>
+        <div class="form-group-dbyc">
+          <label>Email ID</label>
+          <input type="email" id="editProfEmail" class="form-control-dbyc">
+        </div>
+        <div class="form-group-dbyc">
+          <label>Instagram ID</label>
+          <input type="text" id="editProfInsta" class="form-control-dbyc">
+        </div>
+        <div class="form-group-dbyc">
+          <label>Home Address</label>
+          <input type="text" id="editProfAddress" class="form-control-dbyc">
+        </div>
+        <div class="form-group-dbyc">
+          <label>Education / Work</label>
+          <input type="text" id="editProfEducation" class="form-control-dbyc">
+        </div>
+        <div class="form-group-dbyc">
+          <label>Occupation</label>
+          <input type="text" id="editProfOccupation" class="form-control-dbyc">
+        </div>
+        <div class="form-group-dbyc">
+          <label>Sports & Special Activities</label>
+          <input type="text" id="editProfActivities" class="form-control-dbyc" placeholder="e.g. Football, Carrom, Gym">
+        </div>
+        <div class="form-group-dbyc">
+          <label>Future Ambition</label>
+          <input type="text" id="editProfAmbition" class="form-control-dbyc">
+        </div>
+        <div class="form-group-dbyc">
+          <label>Blood Group</label>
+          <select id="editProfBlood" class="form-control-dbyc">
+            <option value="O+ve">O+ve</option>
+            <option value="A+ve">A+ve</option>
+            <option value="B+ve">B+ve</option>
+            <option value="AB+ve">AB+ve</option>
+            <option value="O-ve">O-ve</option>
+            <option value="A-ve">A-ve</option>
+            <option value="B-ve">B-ve</option>
+            <option value="AB-ve">AB-ve</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-dbyc-primary" style="width:100%; margin-top:8px;">💾 Save Changes</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. Edit Pass Modal -->
+  <div id="editPassModal" class="modal-backdrop">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Edit Digital QR Pass</h3>
+        <button id="closeEditPassBtn" style="background:none; border:none; font-size:1.4rem; cursor:pointer;">&times;</button>
+      </div>
+      <form id="editPassForm">
+        <div class="form-group-dbyc">
+          <label>Contact Mobile Number</label>
+          <input type="tel" id="editPassMobile" class="form-control-dbyc" required>
+        </div>
+        <div class="form-group-dbyc">
+          <label>Allocated Group</label>
+          <select id="editPassGroup" class="form-control-dbyc">
+            <option value="Sub Juniors Group">Sub Juniors Group (6-14 yrs)</option>
+            <option value="Junior Group">Junior Group (15-18 yrs)</option>
+            <option value="Inters Group">Inters Group (19-25 yrs)</option>
+            <option value="Senior Group">Senior Group (25-34 yrs)</option>
+            <option value="Super Seniors Group">Super Seniors Group (34-55 yrs)</option>
+            <option value="Elders Group">Elders Group (56+ yrs)</option>
+          </select>
+        </div>
+        <div class="form-group-dbyc">
+          <label>Special Activities & Sports</label>
+          <input type="text" id="editPassActivities" class="form-control-dbyc" placeholder="e.g. Football, Table Tennis">
+        </div>
+        <div class="form-group-dbyc">
+          <label>Blood Group</label>
+          <select id="editPassBlood" class="form-control-dbyc">
+            <option value="O+ve">O+ve</option>
+            <option value="A+ve">A+ve</option>
+            <option value="B+ve">B+ve</option>
+            <option value="AB+ve">AB+ve</option>
+            <option value="O-ve">O-ve</option>
+            <option value="A-ve">A-ve</option>
+            <option value="B-ve">B-ve</option>
+            <option value="AB-ve">AB-ve</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-dbyc-primary" style="width:100%;">💾 Update Pass</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. Add News Modal -->
+  <div id="addNewsModal" class="modal-backdrop">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Publish DBYC News Article</h3>
+        <button id="closeAddNewsBtn" style="background:none; border:none; font-size:1.4rem; cursor:pointer;">&times;</button>
+      </div>
+      <form id="newsForm">
+        <div class="form-group-dbyc">
+          <label>News Title / Headline *</label>
+          <input type="text" id="newsTitle" class="form-control-dbyc" required placeholder="e.g. DBYC Annual Football Tournament Fixture">
+        </div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+          <div class="form-group-dbyc">
+            <label>Category</label>
+            <select id="newsCategory" class="form-control-dbyc">
+              <option value="Centre News">Centre News</option>
+              <option value="Sports">Sports</option>
+              <option value="Youth Activity">Youth Activity</option>
+              <option value="Celebration">Celebration</option>
+              <option value="Assembly Circular">Assembly Circular</option>
+            </select>
+          </div>
+          <div class="form-group-dbyc">
+            <label>Priority Tag</label>
+            <select id="newsPriority" class="form-control-dbyc">
+              <option value="Normal">Normal</option>
+              <option value="Urgent">Urgent</option>
+              <option value="Breaking">Breaking</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group-dbyc">
+          <label>Date</label>
+          <input type="date" id="newsDate" class="form-control-dbyc">
+        </div>
+        <div class="form-group-dbyc">
+          <label>Summary / Details *</label>
+          <textarea id="newsSummary" class="form-control-dbyc" rows="3" required placeholder="Full news details..."></textarea>
+        </div>
+        <button type="submit" class="btn-dbyc-primary" style="width:100%;">📢 Publish News</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. Add Member Official Modal -->
+  <div id="addMemberModal" class="modal-backdrop">
+    <div class="modal-content" style="max-width: 600px;">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">உறுப்பினர் சேர்க்கை விண்ணப்பம்</h3>
+          <small style="color:#64748b;">Don Bosco Youth Centre, Basin Bridge, Chennai - 600 012</small>
+        </div>
+        <button id="closeAddMemberBtn" style="background:none; border:none; font-size:1.4rem; cursor:pointer;">&times;</button>
+      </div>
+
+      <form id="officialAppForm">
+        <div class="form-group-dbyc">
+          <label>1. பெயர் (Full Name) *</label>
+          <input type="text" id="formName" class="form-control-dbyc" required placeholder="e.g. Michael Raj">
+        </div>
+
+        <div style="display:grid; grid-template-columns: 2fr 1fr; gap: 10px;">
+          <div class="form-group-dbyc">
+            <label>2. பிறந்த தேதி (DOB) *</label>
+            <input type="date" id="formDob" class="form-control-dbyc" required>
+          </div>
+          <div class="form-group-dbyc">
+            <label>வயது (Age)</label>
+            <input type="number" id="formAge" class="form-control-dbyc" placeholder="Auto" readonly style="background:#f1f5f9;">
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="form-group-dbyc">
+            <label>3. கல்வித் தகுதி (Education)</label>
+            <input type="text" id="formEducation" class="form-control-dbyc" placeholder="e.g. 10th Std / B.Com">
+          </div>
+          <div class="form-group-dbyc">
+            <label>வேலை (Occupation)</label>
+            <input type="text" id="formOccupation" class="form-control-dbyc" placeholder="e.g. Student / Employed">
+          </div>
+        </div>
+
+        <div class="form-group-dbyc">
+          <label>4. கல்வி பயிலும் இடம் அல்லது பணிபுரியும் முகவரி</label>
+          <input type="text" id="formWorkAddress" class="form-control-dbyc" placeholder="School/College/Company Address">
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="form-group-dbyc">
+            <label>5. மதம் (Religion)</label>
+            <select id="formReligion" class="form-control-dbyc">
+              <option value="Christian">Christian</option>
+              <option value="Hindu">Hindu</option>
+              <option value="Muslim">Muslim</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-group-dbyc">
+            <label>6. திருமண நிலை (Marital Status)</label>
+            <select id="formMaritalStatus" class="form-control-dbyc">
+              <option value="திருமணமாகாதவர் (Unmarried)">திருமணமாகாதவர் (Unmarried)</option>
+              <option value="திருமணமானவர் (Married)">திருமணமானவர் (Married)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group-dbyc">
+          <label>7. வீட்டு முகவரி (Home Address) *</label>
+          <input type="text" id="formHomeAddress" class="form-control-dbyc" required placeholder="Door No, Street, Area, Chennai">
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="form-group-dbyc">
+            <label>தொடர்பு எண் (Mobile) *</label>
+            <input type="tel" id="formMobile" class="form-control-dbyc" required placeholder="9840XXXXXX">
+          </div>
+          <div class="form-group-dbyc">
+            <label>Email Id</label>
+            <input type="email" id="formEmail" class="form-control-dbyc" placeholder="name@email.com">
+          </div>
+        </div>
+
+        <div class="form-group-dbyc">
+          <label>Insta Id (Instagram Handle)</label>
+          <input type="text" id="formInstaId" class="form-control-dbyc" placeholder="@username">
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="form-group-dbyc">
+            <label>8. தந்தையின் பெயர் (Father)</label>
+            <input type="text" id="formFatherName" class="form-control-dbyc" placeholder="Father's name">
+          </div>
+          <div class="form-group-dbyc">
+            <label>9. தாயின் பெயர் (Mother)</label>
+            <input type="text" id="formMotherName" class="form-control-dbyc" placeholder="Mother's name">
+          </div>
+        </div>
+
+        <div class="form-group-dbyc">
+          <label>10. மன்றத்தில் எத்தனை வருடங்கள் உறுப்பினர் (Years in DBYC)</label>
+          <input type="number" id="formYearsInDbyc" class="form-control-dbyc" value="1" min="0">
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr 2fr; gap: 8px;">
+          <div class="form-group-dbyc">
+            <label>சகோதரர்கள்</label>
+            <input type="number" id="formBrothersCount" class="form-control-dbyc" value="0">
+          </div>
+          <div class="form-group-dbyc">
+            <label>சகோதரிகள்</label>
+            <input type="number" id="formSistersCount" class="form-control-dbyc" value="0">
+          </div>
+          <div class="form-group-dbyc">
+            <label>12. மன்றத்தில் உள்ள சகோதரர்</label>
+            <input type="text" id="formBrothersInDbyc" class="form-control-dbyc" placeholder="Name if any">
+          </div>
+        </div>
+
+        <div class="form-group-dbyc">
+          <label>13. மன்றத்தில் சேருவதன் நோக்கம் (Purpose of joining)</label>
+          <input type="text" id="formJoiningPurpose" class="form-control-dbyc" placeholder="e.g. Sports, leadership & fellowship">
+        </div>
+
+        <div class="form-group-dbyc">
+          <label>14. மன்றத்தில் நீங்கள் சேர விரும்புவது (Sports / Activities)</label>
+          <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; font-size:0.85rem; padding: 6px 0;">
+            <label><input type="checkbox" class="activity-checkbox" value="கால்பந்து (Football)" checked> கால்பந்து (Football)</label>
+            <label><input type="checkbox" class="activity-checkbox" value="கைப்பந்து (Volleyball)"> கைப்பந்து (Volleyball)</label>
+            <label><input type="checkbox" class="activity-checkbox" value="மேசைப்பந்து (Table Tennis)"> மேசைப்பந்து (TT)</label>
+            <label><input type="checkbox" class="activity-checkbox" value="கேரம் (Carrom)"> கேரம் (Carrom)</label>
+            <label><input type="checkbox" class="activity-checkbox" value="உடற்பயிற்சி கூடம் (Gym)"> Gym (உடற்பயிற்சி)</label>
+            <label><input type="checkbox" class="activity-checkbox" value="இதர (Others)"> இதர (Others)</label>
+          </div>
+        </div>
+
+        <div class="form-group-dbyc">
+          <label>15. உங்கள் எதிர்காலத் திட்டம் (Future Ambition)</label>
+          <input type="text" id="formFutureAmbition" class="form-control-dbyc" placeholder="e.g. Football Player / Engineer / Professional">
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 2fr; gap: 10px;">
+          <div class="form-group-dbyc">
+            <label>16. இரத்த பிரிவு (Blood)</label>
+            <select id="formBloodGroup" class="form-control-dbyc">
+              <option value="O+ve">O+ve</option>
+              <option value="A+ve">A+ve</option>
+              <option value="B+ve">B+ve</option>
+              <option value="AB+ve">AB+ve</option>
+              <option value="O-ve">O-ve</option>
+              <option value="A-ve">A-ve</option>
+              <option value="B-ve">B-ve</option>
+              <option value="AB-ve">AB-ve</option>
+            </select>
+          </div>
+          <div class="form-group-dbyc">
+            <label>17. சேர்க்கப்படும் குழு (Allocated Group) *</label>
+            <select id="formGroup" class="form-control-dbyc" required>
+              <option value="Sub Juniors Group">Sub Juniors Group (வயது: 6 - 14)</option>
+              <option value="Junior Group">Junior Group (வயது: 15 - 18)</option>
+              <option value="Inters Group">Inters Group (வயது: 19 - 25)</option>
+              <option value="Senior Group">Senior Group (வயது: 25 - 34)</option>
+              <option value="Super Seniors Group">Super Seniors Group (வயது: 34 - 55)</option>
+              <option value="Elders Group">Elders Group (வயது: 56+)</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="form-group-dbyc">
+            <label>Role in DBYC</label>
+            <select id="formRole" class="form-control-dbyc">
+              <option value="Member">Member (உறுப்பினர்)</option>
+              <option value="Group Leader">Group Leader (குழு தலைவர்)</option>
+              <option value="Group Incharge">Group Incharge (பொறுப்பாளர்)</option>
+              <option value="Assistant Director (Direct Incharge)">Assistant Director</option>
+              <option value="Director (Incharge)">Director</option>
+            </select>
+          </div>
+          <div class="form-group-dbyc">
+            <label>Join Date</label>
+            <input type="date" id="formJoinDate" class="form-control-dbyc">
+          </div>
+        </div>
+
+        <div class="form-group-dbyc">
+          <label>18. தனிப்பட்ட மற்றும் குடும்ப குறிப்புகள் (Notes)</label>
+          <textarea id="formNotes" class="form-control-dbyc" rows="2"></textarea>
+        </div>
+
+        <button type="submit" class="btn-dbyc-primary" style="width:100%; margin-top:8px; padding:12px; font-size:1rem;">
+          💾 சமர்ப்பிக்கவும் (Submit Official Application)
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 5. Add Event Modal -->
+  <div id="addEventModal" class="modal-backdrop">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Schedule New Event</h3>
+        <button id="closeAddEventBtn" style="background:none; border:none; font-size:1.4rem; cursor:pointer;">&times;</button>
+      </div>
+      <form id="eventForm">
+        <div class="form-group-dbyc">
+          <label>Event Title</label>
+          <input type="text" id="eventTitle" class="form-control-dbyc" required placeholder="e.g. Annual Sports Meet">
+        </div>
+        <div class="form-group-dbyc">
+          <label>Category</label>
+          <select id="eventCategory" class="form-control-dbyc">
+            <option value="Sports Tournament">Sports Tournament</option>
+            <option value="Celebration">Celebration</option>
+            <option value="Workshop">Workshop</option>
+            <option value="Council Meeting">Council Meeting</option>
+          </select>
+        </div>
+        <div class="form-group-dbyc">
+          <label>Date & Time</label>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <input type="date" id="eventDate" class="form-control-dbyc" required>
+            <input type="time" id="eventTime" class="form-control-dbyc" value="09:00">
+          </div>
+        </div>
+        <div class="form-group-dbyc">
+          <label>Venue</label>
+          <input type="text" id="eventVenue" class="form-control-dbyc" value="DBYC Basin Bridge Ground">
+        </div>
+        <div class="form-group-dbyc">
+          <label>Description</label>
+          <textarea id="eventDesc" class="form-control-dbyc" rows="2"></textarea>
+        </div>
+        <button type="submit" class="btn-dbyc-primary" style="width:100%;">+ Publish Event</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 6. Add Minutes Modal -->
+  <div id="addMinutesModal" class="modal-backdrop">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Record Meeting Minutes</h3>
+        <button id="closeAddMinutesBtn" style="background:none; border:none; font-size:1.4rem; cursor:pointer;">&times;</button>
+      </div>
+      <form id="minutesForm">
+        <div class="form-group-dbyc">
+          <label>Meeting Date</label>
+          <input type="date" id="minDate" class="form-control-dbyc" required>
+        </div>
+        <div class="form-group-dbyc">
+          <label>Meeting Title / Agenda</label>
+          <input type="text" id="minTitle" class="form-control-dbyc" required placeholder="e.g. Sunday Leaders Council Review">
+        </div>
+        <div class="form-group-dbyc">
+          <label>Presided By</label>
+          <input type="text" id="minPresided" class="form-control-dbyc" value="Rev. Fr. Director & Rev. Fr. Asst. Director">
+        </div>
+        <div class="form-group-dbyc">
+          <label>Attendees Count</label>
+          <input type="number" id="minAttendees" class="form-control-dbyc" value="20">
+        </div>
+        <div class="form-group-dbyc">
+          <label>Agenda Points</label>
+          <textarea id="minAgenda" class="form-control-dbyc" rows="2"></textarea>
+        </div>
+        <div class="form-group-dbyc">
+          <label>Decisions & Action Items</label>
+          <textarea id="minDecisions" class="form-control-dbyc" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn-dbyc-primary" style="width:100%;">+ Save Minutes</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 7. Scan Member QR & ID Card Modal -->
+  <div id="scanMemberModal" class="modal-backdrop">
+    <div class="modal-content" style="max-width: 540px;">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">📷 Scan Member QR / ID Pass</h3>
+          <small style="color:#64748b;">Instant lookup & attendance verification</small>
+        </div>
+        <button id="closeScanMemberBtn" style="background:none; border:none; font-size:1.4rem; cursor:pointer;">&times;</button>
+      </div>
+
+      <!-- Viewfinder Simulation / Camera -->
+      <div style="background:#0f172a; border-radius:12px; padding:20px; text-align:center; color:#fff; position:relative; overflow:hidden; margin-bottom:16px;">
+        <div style="width:160px; height:160px; border:2px dashed #38bdf8; border-radius:16px; margin:0 auto 12px; display:flex; align-items:center; justify-content:center; position:relative; background:rgba(56, 189, 248, 0.05);">
+          <span style="font-size:3rem; opacity:0.8;">📷</span>
+          <div style="position:absolute; top:0; left:0; right:0; height:2px; background:#38bdf8; box-shadow:0 0 8px #38bdf8;"></div>
+        </div>
+        <p style="font-size:0.82rem; color:#94a3b8; margin-bottom:10px;">Point camera at Member QR Code or ID Card</p>
+        <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+          <button id="startScanCamBtn" class="btn-dbyc-primary" style="background:#0284c7; padding:6px 12px; font-size:0.8rem;">🎥 Toggle Live Camera</button>
+          <button id="uploadScanImageBtn" class="btn-dbyc-primary" style="background:#475569; padding:6px 12px; font-size:0.8rem;">📁 Scan from Photo/Image</button>
+          <input type="file" id="scanImageFileInput" accept="image/*" style="display:none;">
+        </div>
+      </div>
+
+      <!-- Quick Manual Lookup -->
+      <div class="form-group-dbyc">
+        <label>Or Type Member ID / Mobile Number:</label>
+        <div style="display:flex; gap:8px;">
+          <input type="text" id="scanMemberSearchInput" class="form-control-dbyc" placeholder="e.g. DBYC-2026-SJ01 or 9840123456">
+          <button id="executeScanSearchBtn" class="btn-dbyc-primary" style="white-space:nowrap;">🔍 Search</button>
+        </div>
+      </div>
+
+      <!-- Quick Demo Chips -->
+      <div style="margin-bottom:14px;">
+        <small style="font-weight:700; color:#64748b; font-size:0.75rem;">QUICK DEMO SCANS:</small>
+        <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;">
+          <button class="filter-chip scan-demo-btn" style="font-size:0.75rem; padding:4px 8px;" data-id="DBYC-2026-SJ01">⚡ Michael (Sub Jr)</button>
+          <button class="filter-chip scan-demo-btn" style="font-size:0.75rem; padding:4px 8px;" data-id="DBYC-2026-JN02">⚡ David (Junior)</button>
+          <button class="filter-chip scan-demo-btn" style="font-size:0.75rem; padding:4px 8px;" data-id="DBYC-2026-IN03">⚡ Dominic (Inters)</button>
+          <button class="filter-chip scan-demo-btn" style="font-size:0.75rem; padding:4px 8px;" data-id="DBYC-2026-SR04">⚡ John (Senior)</button>
+        </div>
+      </div>
+
+      <!-- Scanned Member Result Card -->
+      <div id="scannedMemberResultCard" style="display:none; background:#f8fafc; border:2px solid #004b98; border-radius:12px; padding:14px; margin-top:10px;">
+        <div style="display:flex; gap:12px; align-items:center;">
+          <img id="scanResAvatar" src="assets/icon.svg" alt="Avatar" style="width:54px; height:54px; border-radius:50%; object-fit:cover; border:2px solid #004b98;">
+          <div style="flex:1;">
+            <div id="scanResName" style="font-weight:800; font-size:1rem; color:#004b98;">Member Name</div>
+            <div id="scanResIdGroup" style="font-size:0.78rem; color:#64748b;">ID • Group</div>
+            <div id="scanResAttBadge" style="font-size:0.75rem; font-weight:700; color:#059669; margin-top:2px;">✓ 75% Rule Eligible</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:6px; margin-top:12px; border-top:1px dashed #cbd5e1; padding-top:10px;">
+          <button id="scanResMarkAttBtn" class="btn-dbyc-primary" style="flex:1; background:#059669; padding:8px; font-size:0.82rem;">✅ Mark Today's Attendance</button>
+          <button id="scanResViewPassBtn" class="btn-dbyc-primary" style="background:#ea580c; padding:8px 12px; font-size:0.82rem;">🪪 View Pass</button>
+          <button id="scanResViewCertBtn" class="btn-dbyc-primary" style="background:#0284c7; padding:8px 12px; font-size:0.82rem;">📜 Certificate</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. Upload Member Application / Document / Data Modal -->
+  <div id="uploadMemberDocModal" class="modal-backdrop">
+    <div class="modal-content" style="max-width: 580px;">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">📁 Upload Member Application & Data</h3>
+          <small style="color:#64748b;">Scanned forms, member photos & bulk registry</small>
+        </div>
+        <button id="closeUploadDocBtn" style="background:none; border:none; font-size:1.4rem; cursor:pointer;">&times;</button>
+      </div>
+
+      <!-- Upload Tabs -->
+      <div class="login-tabs" style="margin-bottom:14px;">
+        <button type="button" class="tab-btn active" id="uploadTabScannedForm">📄 Scanned Form</button>
+        <button type="button" class="tab-btn" id="uploadTabPhoto">📸 Member Photo</button>
+        <button type="button" class="tab-btn" id="uploadTabBulk">📊 Bulk Excel / CSV</button>
+      </div>
+
+      <!-- Tab 1: Scanned Form Upload -->
+      <div id="uploadPaneForm">
+        <form id="scannedDocForm">
+          <div class="form-group-dbyc">
+            <label>Select Member (உறுப்பினர்):</label>
+            <select id="docTargetMemberSelect" class="form-control-dbyc"></select>
+          </div>
+          <div class="form-group-dbyc">
+            <label>Document Type:</label>
+            <select id="docTypeSelect" class="form-control-dbyc">
+              <option value="Scanned Official Application Form">Scanned Official Application Form (விண்ணப்ப படிவம்)</option>
+              <option value="ID / Aadhar / School Proof">ID / Aadhar / School Proof</option>
+              <option value="Medical / Fitness Certificate">Medical / Fitness Certificate</option>
+              <option value="Tournament Consent Form">Tournament Consent Form</option>
+            </select>
+          </div>
+          <div class="form-group-dbyc">
+            <label>Upload Document / Image (Paper Form Photo or PDF):</label>
+            <div id="docDropZone" style="border:2px dashed #004b98; border-radius:10px; padding:20px; text-align:center; background:#f8fafc; cursor:pointer;">
+              <span style="font-size:2rem;">📄</span>
+              <p style="font-size:0.85rem; font-weight:700; color:#004b98; margin:6px 0 2px;">Click or Drag & Drop Scanned Form Here</p>
+              <small style="color:#64748b;">Supports JPG, PNG, WEBP, PDF up to 10MB</small>
+              <input type="file" id="scannedFormFileInput" accept="image/*,.pdf" style="display:none;">
+            </div>
+            <div id="scannedFormPreview" style="display:none; margin-top:10px; text-align:center;">
+              <img id="scannedFormPreviewImg" src="" alt="Preview" style="max-height:160px; border-radius:8px; border:1px solid #cbd5e1; box-shadow:var(--shadow-sm);">
+              <div id="scannedFormFileName" style="font-size:0.78rem; color:#475569; margin-top:4px; font-weight:600;"></div>
+            </div>
+          </div>
+          <button type="submit" class="btn-dbyc-primary" style="width:100%; margin-top:8px;">💾 Save Scanned Document to Member Record</button>
+        </form>
+      </div>
+
+      <!-- Tab 2: Member Photo Upload -->
+      <div id="uploadPanePhoto" style="display:none;">
+        <form id="memberPhotoUploadForm">
+          <div class="form-group-dbyc">
+            <label>Select Member:</label>
+            <select id="photoTargetMemberSelect" class="form-control-dbyc"></select>
+          </div>
+          <div class="form-group-dbyc">
+            <label>Upload Passport / Profile Photo:</label>
+            <div id="photoDropZone" style="border:2px dashed #ea580c; border-radius:10px; padding:20px; text-align:center; background:#fff7ed; cursor:pointer;">
+              <span style="font-size:2rem;">📸</span>
+              <p style="font-size:0.85rem; font-weight:700; color:#ea580c; margin:6px 0 2px;">Select or Drop Profile Photo</p>
+              <input type="file" id="targetPhotoFileInput" accept="image/*" style="display:none;">
+            </div>
+            <div id="targetPhotoPreview" style="display:none; margin-top:10px; text-align:center;">
+              <img id="targetPhotoPreviewImg" src="" alt="Photo" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:2px solid #ea580c;">
+            </div>
+          </div>
+          <button type="submit" class="btn-dbyc-primary" style="width:100%; background:#ea580c; margin-top:8px;">📸 Update Member Photo</button>
+        </form>
+      </div>
+
+      <!-- Tab 3: Bulk Import -->
+      <div id="uploadPaneBulk" style="display:none;">
+        <div class="form-group-dbyc">
+          <label>Import CSV / Excel Records:</label>
+          <p style="font-size:0.8rem; color:#64748b; margin-bottom:8px;">Columns: Name, DOB, Mobile, Group, Role, BloodGroup, FatherName, HomeAddress, Activities</p>
+          <div id="bulkDropZone" style="border:2px dashed #059669; border-radius:10px; padding:16px; text-align:center; background:#f0fdf4; cursor:pointer;">
+            <span style="font-size:2rem;">📊</span>
+            <p style="font-size:0.85rem; font-weight:700; color:#059669; margin:4px 0 2px;">Select CSV / Excel File to Import</p>
+            <input type="file" id="bulkCsvFileInput" accept=".csv,.json,.txt" style="display:none;">
+          </div>
+        </div>
+        <div style="display:flex; gap:8px; margin-top:10px;">
+          <button id="importDemoBatchBtn" class="btn-dbyc-primary" style="flex:1; background:#0284c7; padding:10px; font-size:0.82rem;">⚡ Import 5 Sample Basin Bridge Members</button>
+          <button id="downloadCsvTemplateBtn" class="btn-dbyc-primary" style="background:#475569; padding:10px 14px; font-size:0.82rem;">📥 CSV Template</button>
+        </div>
+        <div id="bulkImportPreview" style="display:none; margin-top:12px; max-height:140px; overflow-y:auto; font-size:0.75rem; background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:8px;"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="dbycToast"></div>
+
+  <!-- App Script -->
+  <script src="js/app.js"></script>
+</body>
+</html>

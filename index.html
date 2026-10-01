@@ -6,7 +6,7 @@
   <title>DBYC - Don Bosco Youth Centre | Basin Bridge, Chennai - 600 012</title>
 
   <!-- PWA Meta Tags -->
-  <!-- PWA manifest: not used in GAS iframe -->
+  <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#004b98">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -15,6 +15,7 @@
   <link rel="apple-touch-icon" href="assets/icon.svg">
 
   <!-- Stylesheet -->
+
   <style>
 /* ==============================================================================
    DBYC - DON BOSCO YOUTH CENTRE, BASIN BRIDGE, CHENNAI - 600 012
@@ -1803,6 +1804,327 @@ body {
   color: #ffffff;
 }
 
+/* ==========================================
+   NAVIGATION BACK BUTTON (◀ Back Symbol)
+   ========================================== */
+.view-back-btn {
+  background: #ffffff;
+  color: #004b98;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  transition: all 0.2s ease;
+  margin-bottom: 12px;
+}
+
+.view-back-btn:hover {
+  background: #004b98;
+  color: #ffffff;
+  border-color: #004b98;
+  transform: translateX(-2px);
+}
+
+/* ==========================================
+   CAMERA VIEWING & PHOTO UPLOAD CAPTURE
+   ========================================== */
+.avatar-preview-box {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #f8fafc;
+  border: 1.5px dashed #94a3b8;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 14px;
+}
+
+.avatar-preview-circle {
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #004b98;
+  background: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  color: #64748b;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.camera-viewfinder-box {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  height: 320px;
+  margin: 0 auto 16px;
+  background: #000;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+
+.camera-viewfinder-box video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.camera-target-circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  border: 3px dashed rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+
+.camera-controls-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.btn-capture-camera {
+  background: #dc2626;
+  color: #ffffff;
+  border: 4px solid #ffffff;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.4);
+  transition: transform 0.15s;
+}
+
+.btn-capture-camera:hover {
+  transform: scale(1.08);
+}
+
+.btn-switch-camera {
+  background: #334155;
+  color: #ffffff;
+  border: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+/* ==========================================
+   4 HOUSE TEAMS & LIVE POINTS LEADERBOARD
+   ========================================== */
+.teams-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.team-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+  border-top: 6px solid #004b98;
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.team-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.team-card-red { border-top-color: #dc2626; }
+.team-card-blue { border-top-color: #0284c7; }
+.team-card-green { border-top-color: #16a34a; }
+.team-card-yellow { border-top-color: #d97706; }
+
+.team-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.team-name-title {
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.team-rank-badge {
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 20px;
+  color: #ffffff;
+}
+
+.rank-1 { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.rank-2 { background: linear-gradient(135deg, #94a3b8, #64748b); }
+.rank-3 { background: linear-gradient(135deg, #b45309, #78350f); }
+.rank-4 { background: #475569; }
+
+.team-points-score {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #004b98;
+  line-height: 1;
+  margin: 6px 0;
+}
+
+.team-points-progress {
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.team-points-bar {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.4s ease;
+}
+
+.points-history-feed {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 12px;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.points-history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 0.82rem;
+}
+
+.points-history-item:last-child {
+  border-bottom: none;
+}
+
+/* ==========================================
+   PRINT SETUP & PDF EXPORT STYLES
+   ========================================== */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 8mm;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .top-navbar,
+  .sidebar-drawer,
+  .sidebar-overlay,
+  .bottom-nav-bar,
+  .view-back-btn,
+  .pill-tool-btn,
+  .btn-dbyc-primary,
+  .btn-icon-sm,
+  .filter-bar,
+  .news-ticker-bar,
+  .modal-backdrop,
+  .no-print,
+  #directorDeskAlertBox,
+  #directorMasterControlBanner {
+    display: none !important;
+  }
+
+  .app-section {
+    display: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Show only active print view */
+  .app-section.print-active-view {
+    display: block !important;
+  }
+
+  /* Formal Registration Form Print Sheet */
+  .print-form-sheet {
+    display: block !important;
+    width: 100% !important;
+    max-width: 800px !important;
+    margin: 0 auto !important;
+    padding: 15px !important;
+    border: 2px solid #000000 !important;
+    font-size: 11pt !important;
+    page-break-inside: avoid;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .print-form-header {
+    text-align: center;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 10px;
+    margin-bottom: 12px;
+  }
+
+  .print-field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  /* Certificate Landscape Page */
+  .certificate-card-wrapper {
+    width: 100% !important;
+    max-width: 1000px !important;
+    margin: 0 auto !important;
+    border: 8px double #c89524 !important;
+    padding: 24px !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Member Pass Badge Print */
+  .member-pass-badge {
+    box-shadow: none !important;
+    border: 2px solid #000000 !important;
+    page-break-inside: avoid;
+  }
+}
+
+
 
 
 </style>
@@ -1977,6 +2299,12 @@ body {
               <span>DBYC Minutes</span>
             </a>
           </li>
+                    <li>
+            <a href="#teams" class="sidebar-menu-item" data-view="teams">
+              <span class="sidebar-menu-icon">🏆</span>
+              <span>4 House Teams & Points <span style="background:#f59e0b; color:#0f172a; font-size:0.65rem; padding:2px 6px; border-radius:10px; font-weight:800; margin-left:4px;">LIVE</span></span>
+            </a>
+          </li>
           <li>
             <a href="#livescore" class="sidebar-menu-item" data-view="livescore">
               <span class="sidebar-menu-icon">⚽</span>
@@ -2142,6 +2470,14 @@ body {
             <div class="app-tile-title">Calendar</div>
           </div>
 
+                    <div class="app-tile" onclick="switchView('teams')">
+            <div class="app-tile-icon" style="background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff; position:relative;">
+              🏆
+              <span style="position:absolute; top:2px; right:2px; width:10px; height:10px; background:#22c55e; border:2px solid #fff; border-radius:50%; animation:scanPulse 1s infinite;"></span>
+            </div>
+            <div class="app-tile-title">4 House Teams</div>
+          </div>
+
           <div class="app-tile" onclick="switchView('livescore')">
             <div class="app-tile-icon" style="background:linear-gradient(135deg, #ef4444, #f97316); color:#fff; position:relative;">
               ⚽
@@ -2191,6 +2527,7 @@ body {
          ======================================================= -->
     <section id="view_profile" class="app-section" style="display:none;">
       <div class="main-content">
+        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
         <div class="section-header">
           <div>
             <h2 class="section-title">👤 My Profile (சுயவிவரம்)</h2>
@@ -2269,6 +2606,7 @@ body {
          ======================================================= -->
     <section id="view_members" class="app-section" style="display:none;">
       <div class="main-content">
+        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
         
         <!-- Artwork Banner -->
         <div class="section-art-banner banner-oratory">
@@ -2311,6 +2649,7 @@ body {
          ======================================================= -->
     <section id="view_attendance" class="app-section" style="display:none;">
       <div class="main-content">
+        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
         <div class="section-header">
           <h2 class="section-title">📷 Live QR வருகைப் பதிவு (Attendance)</h2>
           <span id="todayAttCountBadge" class="role-badge leader">0 Marked Today</span>
@@ -2346,6 +2685,7 @@ body {
          ======================================================= -->
     <section id="view_passes" class="app-section" style="display:none;">
       <div class="main-content">
+        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
         <div class="section-header">
           <h2 class="section-title">🪪 உறுப்பினர் அடையாள அட்டை (Member QR Pass)</h2>
         </div>
@@ -2366,6 +2706,7 @@ body {
          ======================================================= -->
     <section id="view_certificates" class="app-section" style="display:none;">
       <div class="main-content">
+        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
         
         <!-- Artwork Banner -->
         <div class="section-art-banner banner-walk">
@@ -2447,6 +2788,7 @@ body {
          ======================================================= -->
     <section id="view_news" class="app-section" style="display:none;">
       <div class="main-content">
+        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
         
         <div class="section-header">
           <div>
@@ -2570,6 +2912,7 @@ body {
          ======================================================= -->
     <section id="view_livescore" class="app-section" style="display:none;">
       <div class="main-content">
+        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
         
         <!-- Live Sports Header Banner -->
         <div class="section-art-banner banner-walk">
@@ -2683,6 +3026,7 @@ body {
          ======================================================= -->
     <section id="view_media" class="app-section" style="display:none;">
       <div class="main-content">
+        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
         
         <!-- Live Telecast & Media Header Banner -->
         <div class="section-art-banner banner-gather">
@@ -2864,6 +3208,7 @@ body {
          ======================================================= -->
     <section id="view_qualifications" class="app-section" style="display:none;">
       <div class="main-content">
+        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
         
         <div class="qualification-banner">
           <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px; position:relative; z-index:2;">
@@ -2902,6 +3247,7 @@ body {
          ======================================================= -->
     <section id="view_rules" class="app-section" style="display:none;">
       <div class="main-content">
+        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
         
         <div class="section-art-banner banner-gather">
           <h3 style="font-size:1.15rem; font-weight:900;">தொன்போஸ்கோ இளைஞர் மன்றத்தின் விதிமுறைகள்</h3>
@@ -2918,6 +3264,7 @@ body {
          ======================================================= -->
     <section id="view_birthdays" class="app-section" style="display:none;">
       <div class="main-content">
+        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
         <div class="section-header">
           <h2 class="section-title">🎂 Birthday Celebrations This Month</h2>
         </div>
@@ -2931,6 +3278,7 @@ body {
          ======================================================= -->
     <section id="view_calendar" class="app-section" style="display:none;">
       <div class="main-content">
+        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
         <div class="section-header">
           <h2 class="section-title">📅 DBYC Event Calendar</h2>
           <button id="openAddEventBtn" class="btn-dbyc-primary">+ Add Event</button>
@@ -2945,6 +3293,7 @@ body {
          ======================================================= -->
     <section id="view_minutes" class="app-section" style="display:none;">
       <div class="main-content">
+        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
         <div class="section-header">
           <div>
             <h2 class="section-title">📋 DBYC Minutes & Reports (கூட்ட குறிப்புகள்)</h2>
@@ -2965,11 +3314,75 @@ body {
     </section>
 
 
+        <!-- =======================================================
+         VIEW: 4 HOUSE TEAMS & LIVE POINTS TOURNAMENT
+         ======================================================= -->
+    <section id="view_teams" class="app-section" style="display:none;">
+      <div class="main-content">
+        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
+        
+        <!-- Artwork Banner -->
+        <div class="section-art-banner banner-oratory" style="background:linear-gradient(135deg, #00264d 0%, #004b98 100%);">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px;">
+            <div>
+              <h3 style="font-size:1.2rem; font-weight:900; color:#fde047;">🏆 DBYC 4 House Teams & Live Points Tournament</h3>
+              <p style="font-size:0.82rem; opacity:0.95; color:#e0f2fe;">Don Bosco Youth Centre • 4 Teams Annual Championship & Live Points Board</p>
+            </div>
+            <button class="btn-dbyc-primary" style="background:#f59e0b; color:#0f172a; font-weight:900;" onclick="openAwardPointsModal()">
+              ⚡ Award Live Points (+/-)
+            </button>
+          </div>
+        </div>
+
+        <div class="section-header" style="margin-top:14px;">
+          <div>
+            <h3 style="font-size:1.05rem; font-weight:800; color:#0f172a;">Live Tournament Leaderboard (நேரலை புள்ளிகள் தரவரிசை)</h3>
+            <small style="color:#64748b;">Ranks updated dynamically based on Attendance, Sports, Discipline & Cultural Events</small>
+          </div>
+        </div>
+
+        <!-- 4 House Teams Leaderboard Cards Grid -->
+        <div id="teamsCardsContainer" class="teams-grid"></div>
+
+        <!-- Team Members Filter & Roster -->
+        <div style="background:#ffffff; border-radius:14px; padding:18px; box-shadow:var(--shadow-sm); margin-bottom:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <div>
+              <h4 style="font-size:1rem; font-weight:800; color:#004b98;">Team Members Roster (அணி உறுப்பினர்கள்)</h4>
+              <small style="color:#64748b;">View and manage members belonging to each house team</small>
+            </div>
+            <div class="filter-bar" style="margin:0;">
+              <button class="filter-chip team-roster-filter active" data-team="ALL">All Teams</button>
+              <button class="filter-chip team-roster-filter" data-team="TEAM-1">🔴 Red Dragons</button>
+              <button class="filter-chip team-roster-filter" data-team="TEAM-2">🔵 Blue Sharks</button>
+              <button class="filter-chip team-roster-filter" data-team="TEAM-3">🟢 Green Warriors</button>
+              <button class="filter-chip team-roster-filter" data-team="TEAM-4">🟡 Yellow Tigers</button>
+            </div>
+          </div>
+          <div id="teamMembersListContainer" class="member-list"></div>
+        </div>
+
+        <!-- Live Points Activity History Log -->
+        <div style="background:#ffffff; border-radius:14px; padding:18px; box-shadow:var(--shadow-sm);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div>
+              <h4 style="font-size:1rem; font-weight:800; color:#0f172a;">📜 Recent Points Activity Feed (புள்ளிகள் வரலாறு)</h4>
+              <small style="color:#64748b;">Official transaction log of points awarded by Director & Leaders</small>
+            </div>
+            <span class="role-badge leader" style="background:#059669; color:#fff;">Live Tally</span>
+          </div>
+          <div id="pointsHistoryContainer" class="points-history-feed"></div>
+        </div>
+
+      </div>
+    </section>
+
     <!-- =======================================================
          VIEW 12: MASTER CONTROL & APP MODIFICATION CENTER
          ======================================================= -->
     <section id="view_settings" class="app-section" style="display:none;">
       <div class="main-content">
+        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
         
         <!-- Master Authority Banner -->
         <div class="master-security-card" style="background:linear-gradient(135deg, #091a33 0%, #00264d 100%); color:#ffffff; border: 2px solid #f59e0b;">
@@ -3313,6 +3726,23 @@ body {
       </div>
 
       <form id="officialAppForm">
+        <!-- Member Photo Upload & Live Camera Capture Box -->
+        <div class="avatar-preview-box">
+          <div id="formMemberPhotoPreview" class="avatar-preview-circle">👤</div>
+          <div>
+            <strong style="font-size:0.9rem; color:#0f172a;">உறுப்பினர் புகைப்படம் (Member Photo)</strong>
+            <p style="font-size:0.75rem; color:#64748b; margin:2px 0 8px;">Upload image file or capture instantly with live camera</p>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:6px 12px; font-size:0.8rem;" onclick="document.getElementById('formPhotoFileInput').click()">
+                📁 Choose File
+              </button>
+              <input type="file" id="formPhotoFileInput" accept="image/*" style="display:none;">
+              <button type="button" class="btn-dbyc-primary" style="background:#ea580c; padding:6px 12px; font-size:0.8rem;" onclick="openLiveCameraCapture('formMember')">
+                📷 Take Photo (Camera)
+              </button>
+            </div>
+          </div>
+        </div>
         <div class="form-group-dbyc">
           <label>1. பெயர் (Full Name) *</label>
           <input type="text" id="formName" class="form-control-dbyc" required placeholder="e.g. Michael Raj">
@@ -3480,6 +3910,16 @@ body {
             <label>Join Date</label>
             <input type="date" id="formJoinDate" class="form-control-dbyc">
           </div>
+        </div>
+
+                <div class="form-group-dbyc">
+          <label>House Team / அணி ஒதுக்கீடு (4 House Teams) *</label>
+          <select id="formTeam" class="form-control-dbyc">
+            <option value="TEAM-1">🔴 Red Dragons (சிவப்பு டிராகன்கள்)</option>
+            <option value="TEAM-2">🔵 Blue Sharks (நீல சுறாக்கள்)</option>
+            <option value="TEAM-3">🟢 Green Warriors (பச்சை வீரர்கள்)</option>
+            <option value="TEAM-4">🟡 Yellow Tigers (மஞ்சள் புலிகள்)</option>
+          </select>
         </div>
 
         <div class="form-group-dbyc">
@@ -3734,6 +4174,7 @@ body {
   <div id="dbycToast"></div>
 
   <!-- App Script -->
+
   <script>
 /**
  * ==============================================================================
@@ -3805,6 +4246,8 @@ let appState = {
   matches: [],
   media: [],
   certificates: [],
+    teams: [],
+    teamPointsLog: [],
   gasUrl: ''
 };
 
@@ -3835,6 +4278,8 @@ function initApp() {
   setupEventsAndMinutesHandlers();
   setupRulesAndTamilHandlers();
   setupSettingsHandlers();
+  setupTeamHandlers();
+  setupCameraPhotoUploadListeners();
 
   // Session Check
   const savedUser = localStorage.getItem(DBYC_USER);
@@ -4195,7 +4640,23 @@ function seedBasinBridgeData() {
     }
   ];
 
-  appState.media = [
+  
+    // Seed 4 House Teams
+    appState.teams = [
+      { id: 'TEAM-1', name: 'Red Dragons', nameTa: 'சிவப்பு டிராகன்கள்', color: '#dc2626', captain: 'Stephen Paul', slogan: 'Courage & Passion (துணிவும் உற்சாகமும்)', points: 450, icon: '🐉' },
+      { id: 'TEAM-2', name: 'Blue Sharks', nameTa: 'நீல சுறாக்கள்', color: '#0284c7', captain: 'Michael Raj', slogan: 'Wisdom & Power (ஞானமும் வலிமையும்)', points: 520, icon: '🦈' },
+      { id: 'TEAM-3', name: 'Green Warriors', nameTa: 'பச்சை வீரர்கள்', color: '#16a34a', captain: 'Antony Cruz', slogan: 'Unity & Growth (ஒற்றுமையும் வளர்ச்சியும்)', points: 490, icon: '⚔️' },
+      { id: 'TEAM-4', name: 'Yellow Tigers', nameTa: 'மஞ்சள் புலிகள்', color: '#d97706', captain: 'Joseph Kumar', slogan: 'Speed & Glory (வேகமும் புகழும்)', points: 410, icon: '🐯' }
+    ];
+
+    appState.teamPointsLog = [
+      { id: 'LOG-1', date: '2026-09-28', teamId: 'TEAM-2', teamName: 'Blue Sharks', points: 50, category: 'Sports Tournament', reason: 'Won DBYC Inter-House Football 7s Opening Match', awardedBy: 'Rev. Fr. Director, SDB' },
+      { id: 'LOG-2', date: '2026-09-29', teamId: 'TEAM-3', teamName: 'Green Warriors', points: 30, category: 'Attendance Excellence', reason: 'Highest Sunday General Assembly Attendance (95%)', awardedBy: 'Rev. Fr. Asst. Director, SDB' },
+      { id: 'LOG-3', date: '2026-09-30', teamId: 'TEAM-1', teamName: 'Red Dragons', points: 40, category: 'Cultural / Quiz', reason: 'Don Bosco Life & Salesian History Quiz Champions', awardedBy: 'Antony Cruz (Leader)' },
+      { id: 'LOG-4', date: '2026-10-01', teamId: 'TEAM-4', teamName: 'Yellow Tigers', points: 25, category: 'Volunteering', reason: 'Oratory Grounds & Sports Equipment Maintenance', awardedBy: 'Rev. Fr. Director, SDB' }
+    ];
+
+    appState.media = [
     {
       id: 'MEDIA-01',
       type: 'LIVE',
@@ -4306,7 +4767,9 @@ function saveLocalData() {
     minutes: appState.minutes,
     news: appState.news,
     matches: appState.matches,
-    media: appState.media,
+        media: appState.media,
+    teams: appState.teams,
+    teamPointsLog: appState.teamPointsLog,
     certificates: appState.certificates
   }));
 }
@@ -4624,6 +5087,7 @@ function switchView(viewName) {
   if (viewName === 'qualifications') renderQualificationDesk();
   if (viewName === 'rules') renderDbycRules();
   if (viewName === 'settings') renderSettingsView();
+  if (viewName === 'teams') renderTeamsView();
 }
 
 // ==========================================
@@ -4809,6 +5273,11 @@ function setupMemberHandlers() {
   document.getElementById('openAddMemberBtn')?.addEventListener('click', () => {
     document.getElementById('officialAppForm').reset();
     document.getElementById('formJoinDate').value = new Date().toISOString().split('T')[0];
+    capturedMemberPhotoBase64 = '';
+    const previewCircle = document.getElementById('formMemberPhotoPreview');
+    if (previewCircle) {
+      previewCircle.innerHTML = '<span>👤</span>';
+    }
     modal.style.display = 'flex';
   });
 
@@ -4863,8 +5332,9 @@ function setupMemberHandlers() {
       maritalStatus, homeAddress, mobile, email, instaId, fatherName, motherName,
       yearsInDbyc, brothersCount, sistersCount, brothersInDbyc, joiningPurpose,
       activities: activities.join(', '), futureAmbition, bloodGroup, group, role, notes,
-      joinDate, photo: '', status: 'Active'
+      joinDate, photo: capturedMemberPhotoBase64 || '', status: 'Active'
     };
+    capturedMemberPhotoBase64 = '';
 
     appState.members.push(newMember);
     saveLocalData();
@@ -5167,11 +5637,11 @@ function setupUploadMemberDocModalHandlers() {
   // Tab 3: Bulk Import
   document.getElementById('importDemoBatchBtn')?.addEventListener('click', () => {
     const batch = [
-      { id: 'DBYC-2026-SJ07', name: 'Stephen Paul', dob: '2013-05-12', age: 13, mobile: '9840789012', pin: '0000', group: 'Sub Juniors Group', role: 'Member', joinDate: '2024-06-01', bloodGroup: 'O+ve', fatherName: 'Paul Raj', homeAddress: 'Basin Bridge, Chennai', activities: 'Football, Carrom', status: 'Active' },
-      { id: 'DBYC-2026-JN08', name: 'Samuel Jones', dob: '2009-08-20', age: 17, mobile: '9840890123', pin: '0000', group: 'Junior Group', role: 'Member', joinDate: '2022-06-01', bloodGroup: 'A+ve', fatherName: 'Jones Peter', homeAddress: 'Vyasarpadi, Chennai', activities: 'Table Tennis, Football', status: 'Active' },
-      { id: 'DBYC-2026-IN09', name: 'Ignatius Loyola', dob: '2003-02-14', age: 23, mobile: '9840901234', pin: '0000', group: 'Inters Group', role: 'Member', joinDate: '2019-06-01', bloodGroup: 'B+ve', fatherName: 'Loyola Xavier', homeAddress: 'Perambur, Chennai', activities: 'Gym, Football', status: 'Active' },
-      { id: 'DBYC-2026-SR10', name: 'Patrick Dennis', dob: '1995-11-30', age: 31, mobile: '9840012345', pin: '0000', group: 'Senior Group', role: 'Member', joinDate: '2016-06-01', bloodGroup: 'AB+ve', fatherName: 'Dennis George', homeAddress: 'Royapuram, Chennai', activities: 'Volleyball', status: 'Active' },
-      { id: 'DBYC-2026-SS11', name: 'Vincent De Paul', dob: '1981-04-17', age: 45, mobile: '9840112233', pin: '0000', group: 'Super Seniors Group', role: 'Member', joinDate: '2005-06-01', bloodGroup: 'O+ve', fatherName: 'De Paul', homeAddress: 'MKB Nagar, Chennai', activities: 'Table Tennis, Mentorship', status: 'Active' }
+      { id: 'DBYC-2026-SJ07', name: 'Stephen Paul', dob: '2013-05-12', age: 13, mobile: '9840789012', pin: '0000', group: 'Sub Juniors Group', teamId: 'TEAM-1', role: 'Member', joinDate: '2024-06-01', bloodGroup: 'O+ve', fatherName: 'Paul Raj', homeAddress: 'Basin Bridge, Chennai', activities: 'Football, Carrom', status: 'Active' },
+      { id: 'DBYC-2026-JN08', name: 'Samuel Jones', dob: '2009-08-20', age: 17, mobile: '9840890123', pin: '0000', group: 'Junior Group', teamId: 'TEAM-2', role: 'Member', joinDate: '2022-06-01', bloodGroup: 'A+ve', fatherName: 'Jones Peter', homeAddress: 'Vyasarpadi, Chennai', activities: 'Table Tennis, Football', status: 'Active' },
+      { id: 'DBYC-2026-IN09', name: 'Ignatius Loyola', dob: '2003-02-14', age: 23, mobile: '9840901234', pin: '0000', group: 'Inters Group', teamId: 'TEAM-3', role: 'Member', joinDate: '2019-06-01', bloodGroup: 'B+ve', fatherName: 'Loyola Xavier', homeAddress: 'Perambur, Chennai', activities: 'Gym, Football', status: 'Active' },
+      { id: 'DBYC-2026-SR10', name: 'Patrick Dennis', dob: '1995-11-30', age: 31, mobile: '9840012345', pin: '0000', group: 'Senior Group', teamId: 'TEAM-4', role: 'Member', joinDate: '2016-06-01', bloodGroup: 'AB+ve', fatherName: 'Dennis George', homeAddress: 'Royapuram, Chennai', activities: 'Volleyball', status: 'Active' },
+      { id: 'DBYC-2026-SS11', name: 'Vincent De Paul', dob: '1981-04-17', age: 45, mobile: '9840112233', pin: '0000', group: 'Super Seniors Group', teamId: 'TEAM-1', role: 'Member', joinDate: '2005-06-01', bloodGroup: 'O+ve', fatherName: 'De Paul', homeAddress: 'MKB Nagar, Chennai', activities: 'Table Tennis, Mentorship', status: 'Active' }
     ];
 
     let addedCount = 0;
@@ -5442,11 +5912,22 @@ function renderTodayAttendance() {
   `).join('');
 }
 
+let qrAttendanceStream = null;
+let qrScanInterval = null;
+
 function toggleQrCamera() {
   const container = document.getElementById('qrVideoContainer');
   const btn = document.getElementById('startCameraBtn');
 
   if (container.getAttribute('data-active') === 'true') {
+    if (qrAttendanceStream) {
+      qrAttendanceStream.getTracks().forEach(t => t.stop());
+      qrAttendanceStream = null;
+    }
+    if (qrScanInterval) {
+      clearInterval(qrScanInterval);
+      qrScanInterval = null;
+    }
     container.setAttribute('data-active', 'false');
     container.innerHTML = `<div style="color:#64748b; font-size:0.85rem;">Camera is inactive. Tap below to scan.</div>`;
     btn.textContent = '📷 Turn On Camera Scanner';
@@ -5456,22 +5937,64 @@ function toggleQrCamera() {
   container.setAttribute('data-active', 'true');
   btn.textContent = '⏹️ Stop Camera Scanner';
   container.innerHTML = `
-    <video id="qrVideo" playsinline autoplay></video>
+    <video id="qrVideo" playsinline autoplay style="width:100%; max-height:260px; object-fit:cover; border-radius:8px;"></video>
     <div class="scanner-target-box"></div>
+    <div style="font-size:0.75rem; color:#059669; font-weight:700; margin-top:6px; text-align:center;">🔴 Scanning Active - Hold Member QR Pass in target area</div>
   `;
 
   if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment', width: { ideal: 640 }, height: { ideal: 480 } } })
       .then(stream => {
+        qrAttendanceStream = stream;
         const video = document.getElementById('qrVideo');
-        if (video) video.srcObject = stream;
-        showToast('Camera active. Hold QR code in frame.');
+        if (video) {
+          video.srcObject = stream;
+          video.play();
+        }
+        showToast('📷 QR Scanner active. Point at Member Pass.');
+
+        if ('BarcodeDetector' in window) {
+          const barcodeDetector = new BarcodeDetector({ formats: ['qr_code'] });
+          qrScanInterval = setInterval(async () => {
+            const v = document.getElementById('qrVideo');
+            if (v && v.readyState === v.HAVE_ENOUGH_DATA) {
+              try {
+                const barcodes = await barcodeDetector.detect(v);
+                if (barcodes.length > 0) {
+                  const rawVal = barcodes[0].rawValue;
+                  let q = rawVal;
+                  if (rawVal.includes('DBYC-')) {
+                    const match = rawVal.match(/DBYC-[A-Za-z0-9-]+/);
+                    if (match) q = match[0];
+                  }
+                  processAttendanceCheckin(q);
+                  try {
+                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    const osc = ctx.createOscillator();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(880, ctx.currentTime);
+                    osc.connect(ctx.destination);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.15);
+                  } catch(e) {}
+                  clearInterval(qrScanInterval);
+                  setTimeout(() => {
+                    if (container.getAttribute('data-active') === 'true') {
+                      toggleQrCamera();
+                      toggleQrCamera();
+                    }
+                  }, 2500);
+                }
+              } catch (err) {}
+            }
+          }, 350);
+        }
       })
       .catch(err => {
-        container.innerHTML = `<div style="color:#ef4444; padding:10px;">Camera error: ${err.message}. Use manual check-in.</div>`;
+        container.innerHTML = `<div style="color:#ef4444; padding:10px;">Camera access error: ${err.message}. Please use manual check-in below.</div>`;
       });
   } else {
-    container.innerHTML = `<div style="color:#ef4444; padding:10px;">Camera API not supported in browser.</div>`;
+    container.innerHTML = `<div style="color:#ef4444; padding:10px;">Camera API not supported in browser. Use manual check-in below.</div>`;
   }
 }
 
@@ -7207,6 +7730,551 @@ function renderSettingsView() {
   if (gasInput && appState.gasUrl) gasInput.value = appState.gasUrl;
 }
 
+
+// ==========================================
+// 14. 4 HOUSE TEAMS & LIVE POINTS LEADERBOARD
+// ==========================================
+let currentTeamRosterFilter = 'ALL';
+
+function renderTeamsView(filter = currentTeamRosterFilter) {
+  currentTeamRosterFilter = filter;
+  const cardsContainer = document.getElementById('teamsCardsContainer');
+  const rosterContainer = document.getElementById('teamMembersListContainer');
+  const historyContainer = document.getElementById('pointsHistoryContainer');
+
+  if (!appState.teams || appState.teams.length === 0) {
+    appState.teams = [
+      { id: 'TEAM-1', name: 'Red Dragons', nameTa: 'சிவப்பு டிராகன்கள்', color: '#dc2626', captain: 'Stephen Paul', slogan: 'Courage & Passion (துணிவும் உற்சாகமும்)', points: 450, icon: '🐉' },
+      { id: 'TEAM-2', name: 'Blue Sharks', nameTa: 'நீல சுறாக்கள்', color: '#0284c7', captain: 'Michael Raj', slogan: 'Wisdom & Power (ஞானமும் வலிமையும்)', points: 520, icon: '🦈' },
+      { id: 'TEAM-3', name: 'Green Warriors', nameTa: 'பச்சை வீரர்கள்', color: '#16a34a', captain: 'Antony Cruz', slogan: 'Unity & Growth (ஒற்றுமையும் வளர்ச்சியும்)', points: 490, icon: '⚔️' },
+      { id: 'TEAM-4', name: 'Yellow Tigers', nameTa: 'மஞ்சள் புலிகள்', color: '#d97706', captain: 'Joseph Kumar', slogan: 'Speed & Glory (வேகமும் புகழும்)', points: 410, icon: '🐯' }
+    ];
+  }
+
+  // Sort teams by points descending to determine dynamic rank
+  const sortedTeams = [...appState.teams].sort((a, b) => (b.points || 0) - (a.points || 0));
+  const maxPts = Math.max(...sortedTeams.map(t => t.points || 1), 100);
+
+  const isLeaderOrAdmin = getUserRoleType() === 'DIRECTOR' || getUserRoleType() === 'LEADER';
+
+  if (cardsContainer) {
+    cardsContainer.innerHTML = sortedTeams.map((team, idx) => {
+      const rank = idx + 1;
+      const rankLabels = ['🥇 1st Place (முதலிடம்)', '🥈 2nd Place (2-ஆம் இடம்)', '🥉 3rd Place (3-ஆம் இடம்)', '4th Place (4-ஆம் இடம்)'];
+      const rankClass = `rank-${rank}`;
+      const pct = Math.min(100, Math.round(((team.points || 0) / maxPts) * 100));
+
+      const memberCount = (appState.members || []).filter(m => m.teamId === team.id).length;
+
+      let cardColorClass = 'team-card-blue';
+      if (team.id === 'TEAM-1') cardColorClass = 'team-card-red';
+      else if (team.id === 'TEAM-3') cardColorClass = 'team-card-green';
+      else if (team.id === 'TEAM-4') cardColorClass = 'team-card-yellow';
+
+      const editBtn = isLeaderOrAdmin ? `
+        <button class="btn-dbyc-primary" style="background:#f1f5f9; color:#0f172a; padding:4px 10px; font-size:0.75rem; border:1px solid #cbd5e1;" onclick="openEditTeamModal('${team.id}')">
+          ✏️ Edit Team
+        </button>
+      ` : '';
+
+      return `
+        <div class="team-card ${cardColorClass}">
+          <div class="team-header-row">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:1.6rem;">${team.icon || '🏆'}</span>
+              <div>
+                <h4 class="team-name-title">${team.name}</h4>
+                <small style="color:#64748b;">${team.nameTa || ''}</small>
+              </div>
+            </div>
+            <span class="team-rank-badge ${rankClass}">${rankLabels[idx]}</span>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:flex-end; margin:10px 0 4px;">
+            <div>
+              <small style="font-weight:700; color:#64748b; font-size:0.75rem;">TOTAL LIVE POINTS:</small>
+              <div class="team-points-score" style="color:${team.color || '#004b98'};">${team.points || 0} <span style="font-size:0.9rem; font-weight:700; color:#64748b;">pts</span></div>
+            </div>
+            <div style="text-align:right;">
+              <small style="color:#64748b; font-size:0.75rem;">Members: <strong>${memberCount}</strong></small><br>
+              <small style="color:#475569; font-size:0.75rem;">Captain: <strong>${team.captain || 'Assigned by DBYC'}</strong></small>
+            </div>
+          </div>
+
+          <div class="team-points-progress">
+            <div class="team-points-bar" style="width:${pct}%; background:${team.color || '#004b98'};"></div>
+          </div>
+
+          <div style="font-size:0.75rem; color:#64748b; font-style:italic; margin-top:8px;">"${team.slogan || 'Unity, Character & Victory'}"</div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; padding-top:10px; border-top:1px solid #e2e8f0;">
+            <button class="btn-dbyc-primary" style="background:#059669; padding:6px 12px; font-size:0.78rem; font-weight:800;" onclick="openAwardPointsModal('${team.id}')">
+              ⚡ Award Points
+            </button>
+            ${editBtn}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Render Team Members Roster
+  if (rosterContainer) {
+    let members = appState.members || [];
+    if (filter !== 'ALL') {
+      members = members.filter(m => m.teamId === filter);
+    }
+
+    if (members.length === 0) {
+      rosterContainer.innerHTML = `<div style="text-align:center; padding:24px; color:#64748b;">No members assigned to this team yet.</div>`;
+    } else {
+      rosterContainer.innerHTML = members.map(m => {
+        const teamObj = (appState.teams || []).find(t => t.id === m.teamId);
+        const teamBadge = teamObj 
+          ? `<span style="background:${teamObj.color}20; color:${teamObj.color}; padding:2px 8px; border-radius:12px; font-size:0.72rem; font-weight:800; border:1px solid ${teamObj.color};">${teamObj.name}</span>`
+          : `<span style="background:#e2e8f0; color:#475569; padding:2px 6px; border-radius:10px; font-size:0.7rem;">Unassigned</span>`;
+
+        const avatarHtml = m.photo 
+          ? `<img src="${m.photo}" alt="${m.name}" class="member-avatar">`
+          : `<div class="member-avatar">${getInitials(m.name)}</div>`;
+
+        return `
+          <div class="member-card">
+            <div class="member-card-left">
+              ${avatarHtml}
+              <div>
+                <div class="member-name">${m.name} ${teamBadge}</div>
+                <div class="member-sub">🆔 ${m.id} • 🏆 ${m.group} • 📞 ${m.mobile || 'N/A'}</div>
+              </div>
+            </div>
+            <div class="member-actions">
+              <button class="btn-icon-sm" title="View Pass" onclick="viewMemberPass('${m.id}')">🪪</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  }
+
+  // Render Points History Feed
+  if (historyContainer) {
+    const logs = appState.teamPointsLog || [];
+    if (logs.length === 0) {
+      historyContainer.innerHTML = `<div style="text-align:center; padding:12px; color:#64748b;">No points transactions recorded yet.</div>`;
+    } else {
+      historyContainer.innerHTML = logs.map(l => `
+        <div class="points-history-item">
+          <div>
+            <strong>${l.teamName || 'Team'}</strong> • <span style="color:#64748b;">${l.category}</span><br>
+            <span style="font-size:0.78rem; color:#334155;">${l.reason}</span>
+          </div>
+          <div style="text-align:right;">
+            <strong style="color:${l.points >= 0 ? '#16a34a' : '#dc2626'}; font-size:0.95rem;">${l.points >= 0 ? '+' : ''}${l.points} pts</strong><br>
+            <small style="color:#64748b; font-size:0.7rem;">${l.date} • ${l.awardedBy || 'Incharge'}</small>
+          </div>
+        </div>
+      `).join('');
+    }
+  }
+}
+
+function setupTeamHandlers() {
+  // Roster Filter Chips
+  document.querySelectorAll('.team-roster-filter').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.team-roster-filter').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      const team = chip.getAttribute('data-team') || 'ALL';
+      renderTeamsView(team);
+    });
+  });
+
+  // Quick Points Buttons
+  document.querySelectorAll('.quick-pts-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const val = btn.getAttribute('data-pts');
+      const input = document.getElementById('awardPointsValue');
+      if (input) input.value = val;
+    });
+  });
+
+  // Edit Team Form Submit
+  document.getElementById('editTeamForm')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const teamId = document.getElementById('editTeamId').value;
+    const team = (appState.teams || []).find(t => t.id === teamId);
+    if (!team) return;
+
+    team.name = document.getElementById('editTeamName').value.trim();
+    team.nameTa = document.getElementById('editTeamNameTa').value.trim();
+    team.captain = document.getElementById('editTeamCaptain').value.trim();
+    team.slogan = document.getElementById('editTeamSlogan').value.trim();
+    team.color = document.getElementById('editTeamColor').value;
+
+    saveLocalData();
+    document.getElementById('editTeamModal').style.display = 'none';
+    renderTeamsView();
+    showToast(`🏆 Team "${team.name}" details updated!`);
+    syncToGas('UPDATE_TEAMS', appState.teams);
+  });
+
+  // Award Points Form Submit
+  document.getElementById('awardPointsForm')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const teamId = document.getElementById('awardTargetTeamSelect').value;
+    const category = document.getElementById('awardCategorySelect').value;
+    const pts = parseInt(document.getElementById('awardPointsValue').value, 10) || 0;
+    const reason = document.getElementById('awardPointsReason').value.trim();
+
+    const team = (appState.teams || []).find(t => t.id === teamId);
+    if (!team) return;
+
+    team.points = (team.points || 0) + pts;
+
+    const logEntry = {
+      id: 'LOG-' + Date.now(),
+      date: new Date().toISOString().split('T')[0],
+      teamId: team.id,
+      teamName: team.name,
+      points: pts,
+      category,
+      reason,
+      awardedBy: appState.currentUser ? appState.currentUser.name : 'Rev. Fr. Director, SDB'
+    };
+
+    if (!appState.teamPointsLog) appState.teamPointsLog = [];
+    appState.teamPointsLog.unshift(logEntry);
+
+    saveLocalData();
+    document.getElementById('awardPointsModal').style.display = 'none';
+    document.getElementById('awardPointsForm').reset();
+    renderTeamsView();
+    showToast(`⚡ ${pts >= 0 ? '+' : ''}${pts} Points awarded to ${team.name}!`);
+    syncToGas('AWARD_POINTS', { teamId, points: pts, logEntry });
+  });
+}
+
+window.openEditTeamModal = function(teamId) {
+  const team = (appState.teams || []).find(t => t.id === teamId);
+  if (!team) return;
+
+  document.getElementById('editTeamId').value = team.id;
+  document.getElementById('editTeamName').value = team.name;
+  document.getElementById('editTeamNameTa').value = team.nameTa || '';
+  document.getElementById('editTeamCaptain').value = team.captain || '';
+  document.getElementById('editTeamSlogan').value = team.slogan || '';
+  document.getElementById('editTeamColor').value = team.color || '#004b98';
+
+  const modal = document.getElementById('editTeamModal');
+  if (modal) modal.style.display = 'flex';
+};
+
+window.openAwardPointsModal = function(teamId = 'TEAM-1') {
+  const select = document.getElementById('awardTargetTeamSelect');
+  if (select) select.value = teamId;
+  const modal = document.getElementById('awardPointsModal');
+  if (modal) modal.style.display = 'flex';
+};
+
+
+// ==========================================
+// 15. LIVE CAMERA CAPTURE ENGINE
+// ==========================================
+let liveCameraStream = null;
+let currentCameraFacing = 'user'; // 'user' (front) or 'environment' (back)
+let cameraTargetForm = 'formMember'; // 'formMember' or 'profile'
+
+window.openLiveCameraCapture = function(target = 'formMember') {
+  cameraTargetForm = target;
+  const modal = document.getElementById('cameraCaptureModal');
+  if (modal) modal.style.display = 'flex';
+  startLiveCameraStream();
+};
+
+window.closeLiveCameraCapture = function() {
+  if (liveCameraStream) {
+    liveCameraStream.getTracks().forEach(track => track.stop());
+    liveCameraStream = null;
+  }
+  const modal = document.getElementById('cameraCaptureModal');
+  if (modal) modal.style.display = 'none';
+};
+
+function startLiveCameraStream() {
+  if (liveCameraStream) {
+    liveCameraStream.getTracks().forEach(track => track.stop());
+    liveCameraStream = null;
+  }
+
+  const video = document.getElementById('liveCameraVideo');
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    showToast('⚠️ Camera not supported on this browser. Please use file upload.');
+    return;
+  }
+
+  navigator.mediaDevices.getUserMedia({
+    video: { facingMode: currentCameraFacing, width: { ideal: 640 }, height: { ideal: 640 } },
+    audio: false
+  })
+  .then(stream => {
+    liveCameraStream = stream;
+    if (video) {
+      video.srcObject = stream;
+      video.play();
+    }
+  })
+  .catch(err => {
+    console.error('Camera error:', err);
+    showToast('❌ Unable to access camera. Please allow camera permissions or upload file.');
+  });
+}
+
+window.switchCameraFacing = function() {
+  currentCameraFacing = currentCameraFacing === 'user' ? 'environment' : 'user';
+  startLiveCameraStream();
+  showToast(`Switched to ${currentCameraFacing === 'user' ? 'Front' : 'Rear'} Camera`);
+};
+
+let capturedMemberPhotoBase64 = '';
+
+window.captureLivePhoto = function() {
+  const video = document.getElementById('liveCameraVideo');
+  const canvas = document.getElementById('cameraCanvas');
+  if (!video || !canvas) return;
+
+  const width = video.videoWidth || 480;
+  const height = video.videoHeight || 480;
+  canvas.width = 300;
+  canvas.height = 300;
+
+  const ctx = canvas.getContext('2d');
+  const minDim = Math.min(width, height);
+  const startX = (width - minDim) / 2;
+  const startY = (height - minDim) / 2;
+
+  ctx.drawImage(video, startX, startY, minDim, minDim, 0, 0, 300, 300);
+  const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+
+  capturedMemberPhotoBase64 = dataUrl;
+
+  // Set preview in member registration form
+  const previewCircle = document.getElementById('formMemberPhotoPreview');
+  if (previewCircle) {
+    previewCircle.innerHTML = `<img src="${dataUrl}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
+  }
+
+  // If in profile editing
+  const profPreview = document.getElementById('profilePhotoDisplay');
+  if (profPreview && cameraTargetForm === 'profile') {
+    profPreview.src = dataUrl;
+    if (appState.currentUser) {
+      appState.currentUser.photo = dataUrl;
+      localStorage.setItem(DBYC_USER, JSON.stringify(appState.currentUser));
+      saveLocalData();
+    }
+  }
+
+  closeLiveCameraCapture();
+  showToast('📸 Photo captured & attached successfully!');
+};
+
+function setupCameraPhotoUploadListeners() {
+  const photoInput = document.getElementById('formPhotoFileInput');
+  photoInput?.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        capturedMemberPhotoBase64 = evt.target.result;
+        const previewCircle = document.getElementById('formMemberPhotoPreview');
+        if (previewCircle) {
+          previewCircle.innerHTML = `<img src="${capturedMemberPhotoBase64}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
+        }
+        showToast(`📁 Photo "${file.name}" selected!`);
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+}
+
+
+// ==========================================
+// 16. PDF DOWNLOAD & PRINT OPTIMIZATION
+// ==========================================
+window.printCertificate = function() {
+  document.querySelectorAll('.app-section').forEach(s => s.classList.remove('print-active-view'));
+  const certSec = document.getElementById('view_certificates');
+  if (certSec) certSec.classList.add('print-active-view');
+  window.print();
+};
+
+window.downloadCertificatePdf = function() {
+  showToast('📄 Generating High-Resolution Certificate PDF...');
+  setTimeout(() => {
+    window.printCertificate();
+  }, 400);
+};
+
+window.printMemberPass = function() {
+  document.querySelectorAll('.app-section').forEach(s => s.classList.remove('print-active-view'));
+  const passSec = document.getElementById('view_passes');
+  if (passSec) passSec.classList.add('print-active-view');
+  window.print();
+};
+
+window.downloadPassPdf = function() {
+  showToast('🪪 Preparing ID Card Pass PDF...');
+  setTimeout(() => {
+    window.printMemberPass();
+  }, 400);
+};
+
+window.printApplicationForm = function(memberId) {
+  const member = (appState.members || []).find(m => m.id === memberId) || appState.currentUser;
+  if (!member) {
+    showToast('Member not found for printing application form.');
+    return;
+  }
+
+  const printWindow = window.open('', '_blank');
+  if (!printWindow) {
+    showToast('Please allow popups to view printable application form.');
+    return;
+  }
+
+  const avatarSrc = member.photo || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj4KICA8ZGVmcz4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0ic3VuYnVyc3QiIGN4PSI1MCUiIGN5PSIzMCUiIHI9IjYwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIyNSUiIHN0b3AtY29sb3I9IiNmZWYwOGEiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI2MCUiIHN0b3AtY29sb3I9IiNmNTllMGIiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMDI4NGM3Ii8+CiAgICA8L3JhZGlhbEdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJza3lHcmFkIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMjg0YzciLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI2MCUiIHN0b3AtY29sb3I9IiMzOGJkZjgiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZTBmMmZlIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJicmlja0dyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZGMyNjI2Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzk5MWIxYiIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZ29sZENyb3NzIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZlZjA4YSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iI2VhYjMwOCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNjYThhMDQiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImZsYW1lR3JhZCIgeDE9IjAlIiB5MT0iMTAwJSIgeDI9IjAlIiB5Mj0iMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZWY0NDQ0Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjZjk3MzE2Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iODUlIiBzdG9wLWNvbG9yPSIjZWFiMzA4Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CgogIDwhLS0gT3V0ZXIgTmF2eSAmIEJsdWUgQm9yZGVyIFJpbmdzIC0tPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjQ4IiBmaWxsPSIjMDAyYjY2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNiIvPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjM2IiBmaWxsPSIjMDA0Yjk4IiBzdHJva2U9IiMzYjgyZjYiIHN0cm9rZS13aWR0aD0iNCIvPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjI2IiBmaWxsPSJ1cmwoI3NreUdyYWQpIi8+CgogIDwhLS0gR29sZGVuIENyb3NzIGluIEJhY2tncm91bmQgd2l0aCBSYXlzIC0tPgogIDwhLS0gU3VuYnVyc3QgUmF5cyAtLT4KICA8ZyBvcGFjaXR5PSIwLjQiPgogICAgPHBvbHlnb24gcG9pbnRzPSIyNTYsMjU2IDEyMCw0MCAxNjAsMzAiIGZpbGw9IiNmZmZmZmYiLz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMjU2LDI1NiAyMDAsMzAgMjUwLDI1IiBmaWxsPSIjZmZmZmZmIi8+CiAgICA8cG9seWdvbiBwb2ludHM9IjI1NiwyNTYgMjYyLDI1IDMxMiwzMCIgZmlsbD0iI2ZmZmZmZiIvPgogICAgPHBvbHlnb24gcG9pbnRzPSIyNTYsMjU2IDM1MiwzMCAzOTIsNDAiIGZpbGw9IiNmZmZmZmYiLz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMjU2LDI1NiA0MjAsODAgNDUwLDExMCIgZmlsbD0iI2ZmZmZmZiIvPgogICAgPHBvbHlnb24gcG9pbnRzPSIyNTYsMjU2IDYyLDExMCA5Miw4MCIgZmlsbD0iI2ZmZmZmZiIvPgogIDwvZz4KICAKICA8IS0tIENyb3NzIFZlcnRpY2FsIC0tPgogIDxyZWN0IHg9IjIzMiIgeT0iMzAiIHdpZHRoPSI0OCIgaGVpZ2h0PSIyNDAiIGZpbGw9InVybCgjZ29sZENyb3NzKSIgcng9IjQiLz4KICA8IS0tIENyb3NzIEhvcml6b250YWwgLS0+CiAgPHJlY3QgeD0iNTAiIHk9IjEyNSIgd2lkdGg9IjQxMiIgaGVpZ2h0PSI0MiIgZmlsbD0idXJsKCNnb2xkQ3Jvc3MpIiByeD0iNCIvPgoKICA8IS0tIExvd2VyIEJyaWNrIFdhbGwgKFNvbGlkIEJhc2UpIC0tPgogIDxjbGlwUGF0aCBpZD0id2FsbENsaXAiPgogICAgPGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyMjYiLz4KICA8L2NsaXBQYXRoPgogIAogIDxnIGNsaXAtcGF0aD0idXJsKCN3YWxsQ2xpcCkiPgogICAgPHJlY3QgeD0iMzAiIHk9IjI3MCIgd2lkdGg9IjQ1MiIgaGVpZ2h0PSIyMjAiIGZpbGw9InVybCgjYnJpY2tHcmFkKSIvPgogICAgCiAgICA8IS0tIEJyaWNrIE1vcnRhciBHcmlkIExpbmVzIC0tPgogICAgPCEtLSBIb3Jpem9udGFsIGxpbmVzIC0tPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMjcwIiB4Mj0iNDgyIiB5Mj0iMjcwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMjk2IiB4Mj0iNDgyIiB5Mj0iMjk2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMzIyIiB4Mj0iNDgyIiB5Mj0iMzIyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMzQ4IiB4Mj0iNDgyIiB5Mj0iMzQ4IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMzc0IiB4Mj0iNDgyIiB5Mj0iMzc0IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iNDAwIiB4Mj0iNDgyIiB5Mj0iNDAwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iNDI2IiB4Mj0iNDgyIiB5Mj0iNDI2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iNDUyIiB4Mj0iNDgyIiB5Mj0iNDUyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgoKICAgIDwhLS0gVmVydGljYWwgc3RhZ2dlcmVkIGxpbmVzIC0tPgogICAgPCEtLSBSb3cgMSAtLT4KICAgIDxsaW5lIHgxPSIxMDAiIHkxPSIyNzAiIHgyPSIxMDAiIHkyPSIyOTYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMTgwIiB5MT0iMjcwIiB4Mj0iMTgwIiB5Mj0iMjk2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjI2MCIgeTE9IjI3MCIgeDI9IjI2MCIgeTI9IjI5NiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzNDAiIHkxPSIyNzAiIHgyPSIzNDAiIHkyPSIyOTYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iNDIwIiB5MT0iMjcwIiB4Mj0iNDIwIiB5Mj0iMjk2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPCEtLSBSb3cgMiAtLT4KICAgIDxsaW5lIHgxPSI2MCIgeTE9IjI5NiIgeDI9IjYwIiB5Mj0iMzIyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjE0MCIgeTE9IjI5NiIgeDI9IjE0MCIgeTI9IjMyMiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIyMjAiIHkxPSIyOTYiIHgyPSIyMjAiIHkyPSIzMjIiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMzAwIiB5MT0iMjk2IiB4Mj0iMzAwIiB5Mj0iMzIyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjM4MCIgeTE9IjI5NiIgeDI9IjM4MCIgeTI9IjMyMiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSI0NjAiIHkxPSIyOTYiIHgyPSI0NjAiIHkyPSIzMjIiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8IS0tIFJvdyAzIC0tPgogICAgPGxpbmUgeDE9IjEwMCIgeTE9IjMyMiIgeDI9IjEwMCIgeTI9IjM0OCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIxODAiIHkxPSIzMjIiIHgyPSIxODAiIHkyPSIzNDgiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMjYwIiB5MT0iMzIyIiB4Mj0iMjYwIiB5Mj0iMzQ4IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjM0MCIgeTE9IjMyMiIgeDI9IjM0MCIgeTI9IjM0OCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSI0MjAiIHkxPSIzMjIiIHgyPSI0MjAiIHkyPSIzNDgiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8IS0tIFJvdyA0IC0tPgogICAgPGxpbmUgeDE9IjYwIiB5MT0iMzQ4IiB4Mj0iNjAiIHkyPSIzNzQiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMTQwIiB5MT0iMzQ4IiB4Mj0iMTQwIiB5Mj0iMzc0IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjIyMCIgeTE9IjM0OCIgeDI9IjIyMCIgeTI9IjM3NCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzMDAiIHkxPSIzNDgiIHgyPSIzMDAiIHkyPSIzNzQiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMzgwIiB5MT0iMzQ4IiB4Mj0iMzgwIiB5Mj0iMzc0IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPCEtLSBSb3cgNSAtLT4KICAgIDxsaW5lIHgxPSIxMDAiIHkxPSIzNzQiIHgyPSIxMDAiIHkyPSI0MDAiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMTgwIiB5MT0iMzc0IiB4Mj0iMTgwIiB5Mj0iNDAwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjI2MCIgeTE9IjM3NCIgeDI9IjI2MCIgeTI9IjQwMCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzNDAiIHkxPSIzNzQiIHgyPSIzNDAiIHkyPSI0MDAiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iNDIwIiB5MT0iMzc0IiB4Mj0iNDIwIiB5Mj0iNDAwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPCEtLSBSb3cgNiAtLT4KICAgIDxsaW5lIHgxPSIxNDAiIHkxPSI0MDAiIHgyPSIxNDAiIHkyPSI0MjYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMjIwIiB5MT0iNDAwIiB4Mj0iMjIwIiB5Mj0iNDI2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwMCIgeTE9IjQwMCIgeDI9IjMwMCIgeTI9IjQyNiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzODAiIHkxPSI0MDAiIHgyPSIzODAiIHkyPSI0MjYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPC9nPgoKICA8IS0tIFRyYWRpdGlvbmFsIENsYXkgT2lsIExhbXAgKERpecSBKSAtLT4KICA8cGF0aCBkPSJNIDEwNSAyMzAgQyAxMDUgMjcwLCAyNjUgMjcwLCAyNjUgMjMwIEMgMjY1IDIxMCwgMTA1IDIxMCwgMTA1IDIzMCBaIiBmaWxsPSIjZDk3NzA2IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNiIvPgogIDxlbGxpcHNlIGN4PSIxODUiIGN5PSIyMzAiIHJ4PSI3MiIgcnk9IjE4IiBmaWxsPSIjZmNkMzRkIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNCIvPgogIAogIDwhLS0gR2xvd2luZyBTYWNyZWQgRmxhbWUgLS0+CiAgPHBhdGggZD0iTSAyNTYgNzAgQyAyOTAgMTQwLCAyODAgMjE1LCAyNTYgMjIwIEMgMjMyIDIxNSwgMjIyIDE0MCwgMjU2IDcwIFoiIGZpbGw9InVybCgjZmxhbWVHcmFkKSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjMiLz4KCiAgPCEtLSBNYXNvbidzIFRyb3dlbCAoU3ltYm9sIG9mIFlvdXRoIEJ1aWxkaW5nIENoYXJhY3RlciAmIFdvcmspIC0tPgogIDxnPgogICAgPCEtLSBUcm93ZWwgQmxhZGUgLS0+CiAgICA8cG9seWdvbiBwb2ludHM9IjM2MCwyMDAgMjYwLDI3MCAzNzUsMjcwIiBmaWxsPSIjZjFmNWY5IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNiIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogICAgPCEtLSBIYW5kbGUgU2hhbmsgLS0+CiAgICA8cGF0aCBkPSJNIDM1MCwyMzAgTCAzNzAsMjEwIEwgNDE1LDE5MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICAgIDwhLS0gV29vZGVuIC8gQmxhY2sgSGFuZGxlIC0tPgogICAgPHJlY3QgeD0iMzYwIiB5PSIxODUiIHdpZHRoPSI2MCIgaGVpZ2h0PSIxOCIgcng9IjgiIHRyYW5zZm9ybT0icm90YXRlKC0zMCAzNjAgMTg1KSIgZmlsbD0iIzAwMDAwMCIvPgogICAgPCEtLSBQbHVtYiBMaW5lIHBvaW50aW5nIGRvd24gLS0+CiAgICA8bGluZSB4MT0iMzI0IiB5MT0iMjcwIiB4Mj0iMzI0IiB5Mj0iNDEwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iOCIvPgogICAgPGxpbmUgeDE9IjMyNCIgeTE9IjI3MCIgeDI9IjMyNCIgeTI9IjQxMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjQiLz4KICAgIDwhLS0gUGx1bWIgQXJyb3cgVGlwIC0tPgogICAgPHBvbHlnb24gcG9pbnRzPSIzMjQsNDMwIDMxMCw0MDUgMzM4LDQwNSIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjMiLz4KICA8L2c+Cjwvc3ZnPgo=';
+  const tenure = calculateTenure(member.joinDate || member.yearsInDbyc);
+
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>DBYC Application - ${member.name}</title>
+      <style>
+        @page { size: A4 portrait; margin: 12mm; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #000; margin: 0; padding: 10px; font-size: 11pt; line-height: 1.4; }
+        .header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 14px; position: relative; }
+        .title-ta { font-size: 16pt; font-weight: 900; margin: 0; }
+        .title-en { font-size: 13pt; font-weight: 800; margin: 2px 0; }
+        .subtitle { font-size: 10pt; color: #333; }
+        .photo-box { position: absolute; top: 0; right: 0; width: 85px; height: 95px; border: 1.5px solid #000; text-align: center; overflow: hidden; }
+        .photo-box img { width: 100%; height: 100%; object-fit: cover; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .field-row { border-bottom: 1px dotted #666; padding: 4px 0; font-size: 10.5pt; }
+        .field-row strong { color: #000; }
+        .full-row { grid-column: 1 / -1; border-bottom: 1px dotted #666; padding: 4px 0; }
+        .sign-box { display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; }
+        .sign-line { text-align: center; width: 200px; border-top: 1.5px solid #000; font-size: 10pt; font-weight: 700; }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <div class="photo-box">
+          <img src="${avatarSrc}" alt="Photo">
+        </div>
+        <div class="title-ta">தொன்போஸ்கோ இளைஞர் மன்றம்</div>
+        <div class="title-en">DON BOSCO YOUTH CENTRE (DBYC)</div>
+        <div class="subtitle">பேசின் பாலம், சென்னை - 600 012 • Salesian Province of Chennai</div>
+        <div style="font-weight:800; margin-top:6px; font-size:11pt; text-decoration:underline;">உறுப்பினர் சேர்க்கை & புதுப்பித்தல் விண்ணப்பம் (Application Form)</div>
+      </div>
+
+      <div class="form-grid">
+        <div class="field-row"><strong>உறுப்பினர் எண் (Member ID):</strong> ${member.id}</div>
+        <div class="field-row"><strong>சேர்க்கப்படும் குழு (Group):</strong> ${member.group}</div>
+        <div class="field-row"><strong>1. பெயர் (Full Name):</strong> ${member.name}</div>
+        <div class="field-row"><strong>2. பிறந்த தேதி (DOB):</strong> ${member.dob || 'N/A'} (Age: ${member.age || 'N/A'})</div>
+        <div class="field-row"><strong>3. கல்வித் தகுதி (Education):</strong> ${member.education || 'N/A'}</div>
+        <div class="field-row"><strong>வேலை (Occupation):</strong> ${member.occupation || 'N/A'}</div>
+        <div class="full-row"><strong>4. பணிபுரியும் இடம் / முகவரி:</strong> ${member.workAddress || 'N/A'}</div>
+        <div class="field-row"><strong>5. மதம் (Religion):</strong> ${member.religion || 'Christian'}</div>
+        <div class="field-row"><strong>6. திருமண நிலை:</strong> ${member.maritalStatus || 'Unmarried'}</div>
+        <div class="full-row"><strong>7. வீட்டு முகவரி (Address):</strong> ${member.homeAddress || 'Basin Bridge, Chennai - 600012'}</div>
+        <div class="field-row"><strong>தொடர்பு எண் (Mobile):</strong> ${member.mobile || 'N/A'}</div>
+        <div class="field-row"><strong>Email ID:</strong> ${member.email || 'N/A'}</div>
+        <div class="field-row"><strong>8. தந்தை பெயர் (Father):</strong> ${member.fatherName || 'N/A'}</div>
+        <div class="field-row"><strong>9. தாய் பெயர் (Mother):</strong> ${member.motherName || 'N/A'}</div>
+        <div class="field-row"><strong>10. மன்றத்தில் வருடங்கள் (Tenure):</strong> ${tenure}</div>
+        <div class="field-row"><strong>16. இரத்த பிரிவு (Blood Group):</strong> ${member.bloodGroup || 'O+ve'}</div>
+        <div class="full-row"><strong>14. விளையாட்டுகள் (Sports / Activities):</strong> ${member.activities || 'Football, Athletics, Gym'}</div>
+        <div class="full-row"><strong>15. எதிர்காலத் திட்டம் (Ambition):</strong> ${member.futureAmbition || 'N/A'}</div>
+      </div>
+
+      <div class="sign-box">
+        <div class="sign-line">விண்ணப்பதாரர் கையொப்பம்<br>(Applicant Signature)</div>
+        <div class="sign-line">உதவி இயக்குநர்<br>(Rev. Fr. Asst. Director)</div>
+        <div class="sign-line">இயக்குநர் ஒப்புதல்<br>(Rev. Fr. Director, SDB)</div>
+      </div>
+      <script>
+        window.onload = function() { window.print(); }
+      </script>
+    </body>
+    </html>
+  `);
+  printWindow.document.close();
+};
+
+window.downloadAttendanceSheetPdf = function() {
+  const today = new Date().toISOString().split('T')[0];
+  const todayAtt = (appState.attendance || []).filter(a => a.date === today);
+
+  const printWindow = window.open('', '_blank');
+  if (!printWindow) {
+    showToast('Please allow popups to export attendance.');
+    return;
+  }
+
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>DBYC Attendance Sheet - ${today}</title>
+      <style>
+        @page { size: A4 portrait; margin: 12mm; }
+        body { font-family: sans-serif; padding: 10px; font-size: 10.5pt; }
+        .header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 8px; margin-bottom: 12px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #333; padding: 6px 8px; text-align: left; }
+        th { background: #004b98; color: #fff; }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <h2 style="margin:0;">DON BOSCO YOUTH CENTRE (DBYC)</h2>
+        <p style="margin:2px 0;">Basin Bridge, Chennai - 600 012 • Daily Attendance Roster</p>
+        <strong>Date: ${today} • Total Present: ${todayAtt.length}</strong>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Member ID</th>
+            <th>Member Name</th>
+            <th>Group</th>
+            <th>Time</th>
+            <th>Marked By</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${todayAtt.map((a, i) => `
+            <tr>
+              <td>${i + 1}</td>
+              <td>${a.memberId}</td>
+              <td>${a.memberName}</td>
+              <td>${a.group}</td>
+              <td>${a.timestamp ? a.timestamp.split('T')[1].slice(0,5) : 'Present'}</td>
+              <td>${a.markedBy || 'QR Scanner'}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+      <script>window.onload = function() { window.print(); }</script>
+    </body>
+    </html>
+  `);
+  printWindow.document.close();
+};
+
+
 function setupSettingsHandlers() {
   const gasInput = document.getElementById('gasEndpointInput');
   if (gasInput && appState.gasUrl) gasInput.value = appState.gasUrl;
@@ -7401,5 +8469,121 @@ function showToast(msg) {
 }
 
 </script>
+  <!-- 8. Live Camera Capture Modal -->
+  <div id="cameraCaptureModal" class="modal-backdrop">
+    <div class="modal-content" style="max-width: 480px; text-align:center;">
+      <div class="modal-header">
+        <h3 class="modal-title">📷 Live Camera Photo Capture</h3>
+        <button id="closeCameraModalBtn" style="background:none; border:none; font-size:1.4rem; cursor:pointer;" onclick="closeLiveCameraCapture()">&times;</button>
+      </div>
+
+      <div class="camera-viewfinder-box">
+        <video id="liveCameraVideo" autoplay playsinline muted></video>
+        <div class="camera-target-circle"></div>
+      </div>
+      <canvas id="cameraCanvas" style="display:none;"></canvas>
+
+      <div class="camera-controls-bar">
+        <button type="button" class="btn-switch-camera" onclick="switchCameraFacing()" title="Switch Front/Rear Camera">🔄</button>
+        <button type="button" class="btn-capture-camera" onclick="captureLivePhoto()" title="Take Photo">📸</button>
+        <button type="button" class="btn-dbyc-primary" style="background:#64748b; padding:8px 14px;" onclick="closeLiveCameraCapture()">Cancel</button>
+      </div>
+      <p style="font-size:0.78rem; color:#64748b; margin-top:12px;">Align face in circle and tap 📸 Capture.</p>
+    </div>
+  </div>
+
+  <!-- 9. Edit Team Modal -->
+  <div id="editTeamModal" class="modal-backdrop">
+    <div class="modal-content" style="max-width: 480px;">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">✏️ Edit House Team Details</h3>
+          <small style="color:#64748b;">Customize team name, captain, and slogan</small>
+        </div>
+        <button style="background:none; border:none; font-size:1.4rem; cursor:pointer;" onclick="document.getElementById('editTeamModal').style.display='none'">&times;</button>
+      </div>
+      <form id="editTeamForm">
+        <input type="hidden" id="editTeamId">
+        <div class="form-group-dbyc">
+          <label>Team Name (English) *</label>
+          <input type="text" id="editTeamName" class="form-control-dbyc" required>
+        </div>
+        <div class="form-group-dbyc">
+          <label>Team Name (தமிழ்) *</label>
+          <input type="text" id="editTeamNameTa" class="form-control-dbyc" required>
+        </div>
+        <div class="form-group-dbyc">
+          <label>House Captain Name</label>
+          <input type="text" id="editTeamCaptain" class="form-control-dbyc" placeholder="e.g. Michael Raj">
+        </div>
+        <div class="form-group-dbyc">
+          <label>Team Slogan / Motto</label>
+          <input type="text" id="editTeamSlogan" class="form-control-dbyc" placeholder="e.g. Courage & Victory">
+        </div>
+        <div class="form-group-dbyc">
+          <label>Theme Color</label>
+          <input type="color" id="editTeamColor" class="form-control-dbyc" style="height:44px; padding:2px;">
+        </div>
+        <button type="submit" class="btn-dbyc-primary" style="width:100%; font-weight:800;">💾 Save Team Details</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 10. Award Live Points Modal -->
+  <div id="awardPointsModal" class="modal-backdrop">
+    <div class="modal-content" style="max-width: 500px;">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">⚡ Award Live Points to Team</h3>
+          <small style="color:#64748b;">Add or deduct points for tournaments & activities</small>
+        </div>
+        <button style="background:none; border:none; font-size:1.4rem; cursor:pointer;" onclick="document.getElementById('awardPointsModal').style.display='none'">&times;</button>
+      </div>
+      <form id="awardPointsForm">
+        <div class="form-group-dbyc">
+          <label>Select Team (அணி) *</label>
+          <select id="awardTargetTeamSelect" class="form-control-dbyc" required>
+            <option value="TEAM-1">🔴 Red Dragons</option>
+            <option value="TEAM-2">🔵 Blue Sharks</option>
+            <option value="TEAM-3">🟢 Green Warriors</option>
+            <option value="TEAM-4">🟡 Yellow Tigers</option>
+          </select>
+        </div>
+
+        <div class="form-group-dbyc">
+          <label>Category (நிகழ்வு வகை) *</label>
+          <select id="awardCategorySelect" class="form-control-dbyc" required>
+            <option value="Sports Tournament">⚽ Sports Tournament (விளையாட்டுப் போட்டி)</option>
+            <option value="Attendance Excellence">📋 Attendance Excellence (சிறந்த வருகை)</option>
+            <option value="Cultural / Quiz">📚 Cultural / Quiz / Oratory (கலை & வினாடிவினா)</option>
+            <option value="Discipline & Spirit">🌟 Discipline & Spirit (ஒழுக்கம் & ஒற்றுமை)</option>
+            <option value="Volunteering">🤝 Volunteering & Service (தன்னார்வ சேவை)</option>
+            <option value="Penalty / Deduction">⚠️ Penalty / Late (தண்டனைப் புள்ளி)</option>
+          </select>
+        </div>
+
+        <div class="form-group-dbyc">
+          <label>Points to Award / Deduct *</label>
+          <div style="display:flex; gap:6px; margin-bottom:8px; flex-wrap:wrap;">
+            <button type="button" class="filter-chip quick-pts-btn" data-pts="10">+10</button>
+            <button type="button" class="filter-chip quick-pts-btn" data-pts="25">+25</button>
+            <button type="button" class="filter-chip quick-pts-btn" data-pts="50">+50</button>
+            <button type="button" class="filter-chip quick-pts-btn" data-pts="100">+100</button>
+            <button type="button" class="filter-chip quick-pts-btn" data-pts="-10">-10</button>
+          </div>
+          <input type="number" id="awardPointsValue" class="form-control-dbyc" placeholder="e.g. 50" required value="25">
+        </div>
+
+        <div class="form-group-dbyc">
+          <label>Reason / Details (விவரம்) *</label>
+          <input type="text" id="awardPointsReason" class="form-control-dbyc" placeholder="e.g. Won Inter-House Football 7s match against Green Warriors" required>
+        </div>
+
+        <button type="submit" class="btn-dbyc-primary" style="width:100%; background:#059669; font-weight:800; font-size:0.95rem;">
+          ⚡ Submit & Update Live Points Table
+        </button>
+      </form>
+    </div>
+  </div>
 </body>
 </html>

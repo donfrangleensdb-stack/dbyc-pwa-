@@ -2769,7 +2769,7 @@ body {
 
         <!-- Action Links: Adobe Express, Google Docs, Print -->
         <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:16px;">
-          <button class="btn-dbyc-primary" onclick="window.print()">
+          <button class="btn-dbyc-primary" onclick="printCertificate()">
             🖨️ Print Certificate
           </button>
           <a href="https://new.express.adobe.com/new/upload" target="_blank" class="btn-adobe-express" title="Open Adobe Express to upload and enhance your certificate">
@@ -4311,6 +4311,18 @@ function loadLocalData() {
       appState.matches = parsed.matches || [];
       appState.media = parsed.media || [];
       appState.certificates = parsed.certificates || [];
+      appState.teams = (parsed.teams && parsed.teams.length > 0) ? parsed.teams : [
+        { id: 'TEAM-1', name: 'Red Dragons', nameTa: 'சிவப்பு டிராகன்கள்', color: '#dc2626', captain: 'Stephen Paul', slogan: 'Courage & Passion (துணிவும் உற்சாகமும்)', points: 450, icon: '🐉' },
+        { id: 'TEAM-2', name: 'Blue Sharks', nameTa: 'நீல சுறாக்கள்', color: '#0284c7', captain: 'Michael Raj', slogan: 'Wisdom & Power (ஞானமும் வலிமையும்)', points: 520, icon: '🦈' },
+        { id: 'TEAM-3', name: 'Green Warriors', nameTa: 'பச்சை வீரர்கள்', color: '#16a34a', captain: 'Antony Cruz', slogan: 'Unity & Growth (ஒற்றுமையும் வளர்ச்சியும்)', points: 490, icon: '⚔️' },
+        { id: 'TEAM-4', name: 'Yellow Tigers', nameTa: 'மஞ்சள் புலிகள்', color: '#d97706', captain: 'Joseph Kumar', slogan: 'Speed & Glory (வேகமும் புகழும்)', points: 410, icon: '🐯' }
+      ];
+      appState.teamPointsLog = (parsed.teamPointsLog && parsed.teamPointsLog.length > 0) ? parsed.teamPointsLog : [
+        { id: 'LOG-1', date: '2026-09-28', teamId: 'TEAM-2', teamName: 'Blue Sharks', points: 50, category: 'Sports Tournament', reason: 'Won DBYC Inter-House Football 7s Opening Match', awardedBy: 'Rev. Fr. Director, SDB' },
+        { id: 'LOG-2', date: '2026-09-29', teamId: 'TEAM-3', teamName: 'Green Warriors', points: 30, category: 'Attendance Excellence', reason: 'Highest Sunday General Assembly Attendance (95%)', awardedBy: 'Rev. Fr. Asst. Director, SDB' },
+        { id: 'LOG-3', date: '2026-09-30', teamId: 'TEAM-1', teamName: 'Red Dragons', points: 40, category: 'Cultural / Quiz', reason: 'Don Bosco Life & Salesian History Quiz Champions', awardedBy: 'Antony Cruz (Leader)' },
+        { id: 'LOG-4', date: '2026-10-01', teamId: 'TEAM-4', teamName: 'Yellow Tigers', points: 25, category: 'Volunteering', reason: 'Oratory Grounds & Sports Equipment Maintenance', awardedBy: 'Rev. Fr. Director, SDB' }
+      ];
     } catch (e) {
       seedBasinBridgeData();
     }
@@ -4329,6 +4341,7 @@ function seedBasinBridgeData() {
       mobile: '9876543210',
       pin: '1888',
       group: 'Elders Group',
+      teamId: 'TEAM-1',
       role: 'Director (Incharge)',
       joinDate: '2015-06-01',
       bloodGroup: 'O+ve',
@@ -5057,37 +5070,41 @@ function setupNavigation() {
 }
 
 function switchView(viewName) {
+  const cleanName = viewName.replace(/^view_/, '');
   const isDir = isDirectorOnly();
   const roleType = getUserRoleType();
-  if (viewName === 'settings' && !isDir) {
+  if (cleanName === 'settings' && !isDir) {
     showToast('🔒 Access Denied: App Modifications & System Settings are strictly reserved for Rev. Fr. Director only.');
     return;
   }
-  if (viewName === 'attendance' && roleType === 'MEMBER') {
+  if (cleanName === 'attendance' && roleType === 'MEMBER') {
     showToast('⚠️ QR Attendance Scanner is restricted to Group Incharges & Directors.');
     return;
   }
 
   document.querySelectorAll('.app-section').forEach(sec => sec.style.display = 'none');
-  const target = document.getElementById(`view_${viewName}`);
-  if (target) target.style.display = 'block';
+  const target = document.getElementById(`view_${cleanName}`);
+  if (target) {
+    target.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
-  if (viewName === 'dashboard') updateDashboardStats();
-  if (viewName === 'profile') renderMyProfile();
-  if (viewName === 'members') renderMembersRegistry();
-  if (viewName === 'attendance') renderTodayAttendance();
-  if (viewName === 'passes') renderMemberPassSelector();
-  if (viewName === 'certificates') renderCertificateStudio();
-  if (viewName === 'birthdays') renderBirthdays();
-  if (viewName === 'calendar') renderEventsList();
-  if (viewName === 'minutes') renderMinutesList();
-  if (viewName === 'news') renderNewsList();
-  if (viewName === 'livescore') renderLiveScores();
-  if (viewName === 'media') renderMediaStudio();
-  if (viewName === 'qualifications') renderQualificationDesk();
-  if (viewName === 'rules') renderDbycRules();
-  if (viewName === 'settings') renderSettingsView();
-  if (viewName === 'teams') renderTeamsView();
+  if (cleanName === 'dashboard') updateDashboardStats();
+  if (cleanName === 'profile') renderMyProfile();
+  if (cleanName === 'members') renderMembersRegistry();
+  if (cleanName === 'attendance') renderTodayAttendance();
+  if (cleanName === 'passes') renderMemberPassSelector();
+  if (cleanName === 'certificates') renderCertificateStudio();
+  if (cleanName === 'birthdays') renderBirthdays();
+  if (cleanName === 'calendar') renderEventsList();
+  if (cleanName === 'minutes') renderMinutesList();
+  if (cleanName === 'news') renderNewsList();
+  if (cleanName === 'livescore') renderLiveScores();
+  if (cleanName === 'media') renderMediaStudio();
+  if (cleanName === 'qualifications') renderQualificationDesk();
+  if (cleanName === 'rules') renderDbycRules();
+  if (cleanName === 'settings') renderSettingsView();
+  if (cleanName === 'teams') renderTeamsView();
 }
 
 // ==========================================
@@ -6334,8 +6351,7 @@ function renderCertPreview() {
 
 // Download Certificate as PNG and Open Adobe Express Upload
 window.downloadCertImageAndOpenAdobe = function() {
-  window.print();
-  showToast('🎨 Ready! You can drop the certificate directly into Adobe Express.');
+  showToast('🎨 Opening Adobe Express Editor for Certificate Enhancement...');
 };
 
 // ==========================================
@@ -8102,31 +8118,89 @@ function setupCameraPhotoUploadListeners() {
 // 16. PDF DOWNLOAD & PRINT OPTIMIZATION
 // ==========================================
 window.printCertificate = function() {
-  document.querySelectorAll('.app-section').forEach(s => s.classList.remove('print-active-view'));
-  const certSec = document.getElementById('view_certificates');
-  if (certSec) certSec.classList.add('print-active-view');
-  window.print();
+  const certContainer = document.getElementById('certRenderContainer');
+  if (!certContainer) {
+    showToast('Please open a certificate to print.');
+    return;
+  }
+  const printWindow = window.open('', '_blank');
+  if (!printWindow) {
+    showToast('Please allow popups to print certificate.');
+    return;
+  }
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>DBYC Certificate Print</title>
+      <style>
+        @page { size: A4 landscape; margin: 10mm; }
+        body { margin:0; padding:20px; font-family: -apple-system, sans-serif; display:flex; flex-direction:column; align-items:center; }
+        .no-print-bar { margin-bottom: 20px; display:flex; gap:10px; }
+        .btn-p { padding:8px 18px; font-size:14px; font-weight:700; background:#004b98; color:#fff; border:none; border-radius:6px; cursor:pointer; }
+        .btn-c { padding:8px 18px; font-size:14px; font-weight:700; background:#64748b; color:#fff; border:none; border-radius:6px; cursor:pointer; }
+        @media print { .no-print-bar { display: none !important; } }
+      </style>
+    </head>
+    <body>
+      <div class="no-print-bar">
+        <button class="btn-p" onclick="window.print()">🖨️ Print Certificate (Save as PDF)</button>
+        <button class="btn-c" onclick="window.close()">❌ Close</button>
+      </div>
+      <div style="width:100%; max-width:900px;">
+        ${certContainer.innerHTML}
+      </div>
+    </body>
+    </html>
+  `);
+  printWindow.document.close();
 };
 
 window.downloadCertificatePdf = function() {
-  showToast('📄 Generating High-Resolution Certificate PDF...');
-  setTimeout(() => {
-    window.printCertificate();
-  }, 400);
+  window.printCertificate();
 };
 
 window.printMemberPass = function() {
-  document.querySelectorAll('.app-section').forEach(s => s.classList.remove('print-active-view'));
-  const passSec = document.getElementById('view_passes');
-  if (passSec) passSec.classList.add('print-active-view');
-  window.print();
+  const passContainer = document.getElementById('idPassCardContainer');
+  if (!passContainer) {
+    showToast('Please select a member pass to print.');
+    return;
+  }
+  const printWindow = window.open('', '_blank');
+  if (!printWindow) {
+    showToast('Please allow popups to print pass.');
+    return;
+  }
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>DBYC Member Pass Print</title>
+      <style>
+        @page { size: A4 portrait; margin: 15mm; }
+        body { margin:0; padding:20px; font-family: -apple-system, sans-serif; display:flex; flex-direction:column; align-items:center; }
+        .no-print-bar { margin-bottom: 20px; display:flex; gap:10px; }
+        .btn-p { padding:8px 18px; font-size:14px; font-weight:700; background:#004b98; color:#fff; border:none; border-radius:6px; cursor:pointer; }
+        .btn-c { padding:8px 18px; font-size:14px; font-weight:700; background:#64748b; color:#fff; border:none; border-radius:6px; cursor:pointer; }
+        @media print { .no-print-bar { display: none !important; } }
+      </style>
+    </head>
+    <body>
+      <div class="no-print-bar">
+        <button class="btn-p" onclick="window.print()">🖨️ Print Pass (Save as PDF)</button>
+        <button class="btn-c" onclick="window.close()">❌ Close</button>
+      </div>
+      <div style="width:340px;">
+        ${passContainer.innerHTML}
+      </div>
+    </body>
+    </html>
+  `);
+  printWindow.document.close();
 };
 
 window.downloadPassPdf = function() {
-  showToast('🪪 Preparing ID Card Pass PDF...');
-  setTimeout(() => {
-    window.printMemberPass();
-  }, 400);
+  window.printMemberPass();
 };
 
 window.printApplicationForm = function(memberId) {
@@ -8204,9 +8278,7 @@ window.printApplicationForm = function(memberId) {
         <div class="sign-line">உதவி இயக்குநர்<br>(Rev. Fr. Asst. Director)</div>
         <div class="sign-line">இயக்குநர் ஒப்புதல்<br>(Rev. Fr. Director, SDB)</div>
       </div>
-      <script>
-        window.onload = function() { window.print(); }
-      </script>
+      
     </body>
     </html>
   `);
@@ -8267,7 +8339,7 @@ window.downloadAttendanceSheetPdf = function() {
           `).join('')}
         </tbody>
       </table>
-      <script>window.onload = function() { window.print(); }</script>
+      
     </body>
     </html>
   `);
@@ -8467,6 +8539,28 @@ function showToast(msg) {
   toast.classList.add('show');
   setTimeout(() => { toast.classList.remove('show'); }, 3200);
 }
+
+// Global Window Function Bindings for Inline HTML Callers
+window.switchView = switchView;
+window.renderTeamsView = renderTeamsView;
+window.openEditTeamModal = openEditTeamModal;
+window.openAwardPointsModal = openAwardPointsModal;
+window.openLiveCameraCapture = openLiveCameraCapture;
+window.closeLiveCameraCapture = closeLiveCameraCapture;
+window.switchCameraFacing = switchCameraFacing;
+window.captureLivePhoto = captureLivePhoto;
+window.printCertificate = printCertificate;
+window.downloadCertificatePdf = downloadCertificatePdf;
+window.printMemberPass = printMemberPass;
+window.downloadPassPdf = downloadPassPdf;
+window.printApplicationForm = printApplicationForm;
+window.downloadAttendanceSheetPdf = downloadAttendanceSheetPdf;
+window.toggleQrCamera = toggleQrCamera;
+window.processAttendanceCheckin = processAttendanceCheckin;
+window.openCertificateFor = openCertificateFor;
+window.viewMemberPass = viewMemberPass;
+window.openEditPassModal = openEditPassModal;
+window.deleteMember = deleteMember;
 
 </script>
   <!-- 8. Live Camera Capture Modal -->

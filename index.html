@@ -3944,10 +3944,10 @@ body {
           <h3 class="modal-title" id="memberFormModalTitle">உறுப்பினர் விண்ணப்பப் படிவம் (Member Registration & Editor)</h3>
           <small style="color:#64748b;">Don Bosco Youth Centre, Basin Bridge, Chennai - 600 012 • 18 Official Form Fields</small>
         </div>
-        <button id="closeAddMemberBtn" style="background:none; border:none; font-size:1.4rem; cursor:pointer;">&times;</button>
+        <button id="closeAddMemberBtn" onclick="window.closeAddMemberModal();" style="background:none; border:none; font-size:1.4rem; cursor:pointer;">&times;</button>
       </div>
 
-      <form id="officialAppForm">
+      <form id="officialAppForm" novalidate onsubmit="event.preventDefault(); window.saveMemberRegistrationFormDirect(event);">
         <input type="hidden" id="formEditingMemberId" value="">
         <!-- Member Photo Upload & Live Camera Capture Box -->
         <div class="avatar-preview-box">
@@ -4159,8 +4159,8 @@ body {
 
         <!-- Action Buttons: Direct Save (Zero OTP Required When Logged In) -->
         <div style="display:flex; flex-direction:column; gap:8px; margin-top:14px;">
-          <button type="submit" id="btnSubmitFormDirect" class="btn-dbyc-primary" style="width:100%; padding:14px; font-size:1rem; font-weight:800; background:#004b98; border-radius:10px; box-shadow:0 3px 8px rgba(0,75,152,0.3);">
-            💾 படிவத்தை சேமிக்கவும் (Direct Save Application Form)
+          <button type="button" id="btnSubmitFormDirect" class="btn-dbyc-primary" style="width:100%; padding:14px; font-size:1rem; font-weight:800; background:#004b98; border-radius:10px; box-shadow:0 4px 12px rgba(0,75,152,0.35); cursor:pointer;" onclick="window.saveMemberRegistrationFormDirect(event);">
+            💾 படிவத்தை சேமிக்கவும் (Save Member Registration Form)
           </button>
         </div>
       </form>
@@ -6443,10 +6443,10 @@ function setupMemberHandlers() {
     const titleEl = document.getElementById('memberFormModalTitle');
     if (titleEl) titleEl.textContent = `✏️ உறுப்பினர் படிவத் திருத்தம் (Edit Form - ${m.name})`;
 
-    // Pre-populate all 18+ fields accurately
+    // Helper to safely set input values
     const setVal = (id, val) => {
       const el = document.getElementById(id);
-      if (el) el.value = val !== undefined && val !== null ? val : '';
+      if (el) el.value = (val !== undefined && val !== null) ? val : '';
     };
 
     setVal('formName', m.name);
@@ -6504,9 +6504,13 @@ function setupMemberHandlers() {
     if (modal) modal.style.display = 'none';
   };
 
+  document.getElementById('closeAddMemberBtn')?.addEventListener('click', window.closeAddMemberModal);
   document.getElementById('closeAddMemberModalBtn')?.addEventListener('click', window.closeAddMemberModal);
 
-  function collectFormData() {
+  // Global Direct Save Function for Member Registration & Editing
+  window.saveMemberRegistrationFormDirect = function(e) {
+    if (e && e.preventDefault) e.preventDefault();
+
     const getVal = (id) => (document.getElementById(id)?.value || '').trim();
 
     const name = getVal('formName');
@@ -6542,54 +6546,60 @@ function setupMemberHandlers() {
       activities.push(cb.value);
     });
 
-    return {
+    if (!name) {
+      showToast('⚠️ தயவுசெய்து பெயர் (Member Name) உள்ளிடவும்.');
+      document.getElementById('formName')?.focus();
+      return;
+    }
+
+    if (!mobile) {
+      showToast('⚠️ தயவுசெய்து மொபைல் எண் (Mobile Number) உள்ளிடவும்.');
+      document.getElementById('formMobile')?.focus();
+      return;
+    }
+
+    const formData = {
       name, dob, age, education, occupation, workAddress, religion, maritalStatus,
       homeAddress, mobile, pin, email, instaId, fatherName, motherName, yearsInDbyc,
       brothersCount, sistersCount, brothersInDbyc, joiningPurpose, futureAmbition,
       bloodGroup, group, role, teamId, notes, joinDate, activities: activities.join(', ')
     };
-  }
 
-  // Submit Handler: Save Form Changes (Zero OTP required when logged in)
-  document.getElementById('officialAppForm')?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const formData = collectFormData();
     const editingId = (document.getElementById('formEditingMemberId')?.value || '').trim();
 
-    if (!formData.name || !formData.mobile) {
-      showToast('⚠️ Please enter Member Name and Mobile Number.');
-      return;
-    }
-
     if (editingId) {
-      // EDIT EXISTING MEMBER
-      const member = appState.members.find(x => x.id === editingId);
+      // 1. EDIT EXISTING MEMBER
+      const member = appState.members.find(x => x.id === editingId || x.mobile === editingId);
       if (member) {
         Object.assign(member, formData);
         if (capturedMemberPhotoBase64) {
           member.photo = capturedMemberPhotoBase64;
         }
 
-        // Keep registered phone number, email and PIN perfectly synchronized
+        // Synchronize contact info and PIN
         member.mobile = formData.mobile;
         member.email = formData.email;
         if (formData.pin) member.pin = formData.pin;
 
-        // If Director, update master pin as well
+        // If Director, update master pin
         if ((member.role || '').toLowerCase().includes('director') && !(member.role || '').toLowerCase().includes('asst') && formData.pin) {
           setDirectorMasterPin(formData.pin);
         }
 
         saveLocalData();
 
-        // Update active session if editing current user or editing user with same mobile/id
-        if (appState.currentUser && (appState.currentUser.id === editingId || appState.currentUser.mobile === member.mobile)) {
+        // If editing current user, update session
+        if (appState.currentUser && (appState.currentUser.id === editingId || appState.currentUser.mobile === member.mobile || appState.currentUser.id === member.id)) {
           appState.currentUser = member;
           localStorage.setItem(DBYC_USER, JSON.stringify(member));
-          updateProfileView();
+          const sidebarNameEl = document.getElementById('sidebarUserName');
+          if (sidebarNameEl) sidebarNameEl.textContent = member.name;
+          const sidebarRoleEl = document.getElementById('sidebarUserRole');
+          if (sidebarRoleEl) sidebarRoleEl.textContent = `${member.role} • ${member.group}`;
+          renderMyProfile();
         }
 
-        showToast(`✅ உறுப்பினர் படிவம் வெற்றிகரமாக புதுப்பிக்கப்பட்டது! (${member.name} • 📞 ${member.mobile})`);
+        showToast(`✅ [${member.name}] உறுப்பினர் விவரங்கள் வெற்றிகரமாக சேமிக்கப்பட்டன! (Mobile: ${member.mobile})`);
         renderMembersRegistry();
         updateDashboardStats();
         
@@ -6599,7 +6609,7 @@ function setupMemberHandlers() {
       }
     }
 
-    // CREATE NEW MEMBER
+    // 2. CREATE NEW MEMBER
     const year = new Date().getFullYear();
     const groupPrefix = getGroupCode(formData.group);
     const count = appState.members.length + 1;
@@ -6619,7 +6629,10 @@ function setupMemberHandlers() {
     const modal = document.getElementById('addMemberModal');
     if (modal) modal.style.display = 'none';
     showToast(`🎉 புதிய உறுப்பினர் சேர்க்கை வெற்றிகரமாக முடிந்தது! (${newMember.name} • ID: ${memberId})`);
-  });
+  };
+
+  // Form submit listener fallback
+  document.getElementById('officialAppForm')?.addEventListener('submit', window.saveMemberRegistrationFormDirect);
 }
 
 function renderMembersRegistry() {

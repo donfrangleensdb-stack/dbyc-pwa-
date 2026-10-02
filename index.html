@@ -2808,12 +2808,15 @@ body {
         </div>
 
         <div class="section-header">
-          <div style="font-size:0.85rem; color:#64748b; font-weight:700;">Active Members Database</div>
-          <div style="display:flex; gap:6px;">
+          <div>
+            <div style="font-size:0.95rem; color:#004b98; font-weight:800;">உறுப்பினர்கள் மற்றும் விண்ணப்பங்கள் (Members & Forms)</div>
+            <small style="color:#64748b; font-size:0.75rem;">Click '✏️ Edit Form' on any member to edit or update via Mobile OTP</small>
+          </div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
             <button id="registryScanQrBtn" class="btn-dbyc-primary" style="background:#0284c7; padding:8px 10px;" title="Scan Member QR">📷 Scan</button>
             <button id="registryUploadDocBtn" class="btn-dbyc-primary" style="background:#f59e0b; color:#000; padding:8px 10px;" title="Upload Document / Bulk">📁 Upload</button>
             <input type="file" id="bulkUploadFileInput" style="display:none;">
-            <button id="openAddMemberBtn" class="btn-dbyc-primary">+ New Reg</button>
+            <button id="openAddMemberBtn" class="btn-dbyc-primary" style="background:#16a34a; font-weight:800;">+ New Registration</button>
           </div>
         </div>
 
@@ -6569,12 +6572,9 @@ function renderMembersRegistry() {
       ? `<img src="${m.photo}" alt="${m.name}" class="member-avatar">`
       : `<div class="member-avatar">${getInitials(m.name)}</div>`;
 
-    // Edit Form Button: Available for Leaders & Directors to edit any member's application form
-    const editBtnHtml = `<button class="btn-icon-sm" style="background:#0284c7; color:#ffffff; font-weight:700; padding:5px 8px; border-radius:6px; border:none; cursor:pointer;" title="Edit Application Form (Google OTP Protected)" onclick="openEditMemberForm('${m.id}')">✏️ Edit</button>`;
-
     // Strict Rule: Printing feature (📋) is restricted to Leaders and Directors only!
     const printBtnHtml = isLeaderOrAdmin 
-      ? `<button class="btn-icon-sm" title="Print Official Form (Leader/Director Only)" onclick="printApplicationForm('${m.id}')">📋</button>`
+      ? `<button class="btn-icon-sm" style="background:#f1f5f9; color:#0f172a;" title="Print Official Form (Leader/Director Only)" onclick="printApplicationForm('${m.id}')">📋</button>`
       : '';
 
     // Director-Only Modification Authority: Delete Member
@@ -6585,26 +6585,41 @@ function renderMembersRegistry() {
       : '';
 
     return `
-      <div class="member-card">
+      <div class="member-card" style="position:relative;">
         <div class="member-card-left">
           ${avatarHtml}
-          <div>
-            <div class="member-name">${m.name} <span class="${roleClass}">${m.role}</span></div>
-            <div class="member-sub">
-              <span>🆔 ${m.id}</span> • <span>📞 ${m.mobile}</span> • <span>🩸 ${m.bloodGroup || 'N/A'}</span>
+          <div style="flex:1;">
+            <div class="member-name" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+              <span>${m.name}</span>
+              <span class="${roleClass}">${m.role}</span>
+              <span style="font-size:0.75rem; background:#f1f5f9; color:#475569; padding:2px 8px; border-radius:100px; font-weight:700;">${m.group}</span>
             </div>
-            <div class="member-sub" style="margin-top:4px;">
-              <span>🏆 ${m.group} (Age: ${m.age || 'N/A'})</span> • <span>⏳ ${tenure} in DBYC</span>
+            <div class="member-sub" style="margin-top:3px;">
+              <span>🆔 <strong>${m.id}</strong></span> • <span>📞 <strong>${m.mobile}</strong></span> • <span>🩸 ${m.bloodGroup || 'N/A'}</span>
             </div>
-            <div class="member-sub" style="margin-top:4px;">
-              <span>📊 ${attCount} Sessions (${attPct}% Att.)</span> • 
+            <div class="member-sub" style="margin-top:3px;">
+              <span>⏳ ${tenure} in DBYC</span> • <span>📊 ${attCount} Sessions (${attPct}% Att.)</span> • 
               <span style="color:${isEligible ? '#059669' : '#dc2626'}; font-weight:700;">
-                ${isEligible ? '✓ 75% Rule Satisfied' : '⚠️ <75% Attendance'}
+                ${isEligible ? '✓ 75% Active' : '⚠️ <75% Att.'}
               </span>
+            </div>
+
+            <!-- Prominent Registration Form Action Buttons -->
+            <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; align-items:center;">
+              <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:6px 14px; font-size:0.8rem; font-weight:800; border-radius:8px; display:inline-flex; align-items:center; gap:5px; box-shadow:0 2px 6px rgba(2,132,199,0.25);" onclick="openEditMemberForm('${m.id}')" title="Edit Full Official Application Form & Details">
+                ✏️ Edit Form (படிவம் திருத்து)
+              </button>
+              <button type="button" class="btn-dbyc-primary" style="background:#334155; padding:6px 12px; font-size:0.8rem; font-weight:700; border-radius:8px; display:inline-flex; align-items:center; gap:5px;" onclick="printApplicationForm('${m.id}')" title="Print & Inspect Full 18-Field Application Form">
+                📋 View Form
+              </button>
+              <button type="button" class="btn-dbyc-primary" style="background:#004b98; padding:6px 12px; font-size:0.8rem; font-weight:700; border-radius:8px; display:inline-flex; align-items:center; gap:5px;" onclick="viewMemberPass('${m.id}')" title="Digital QR Pass">
+                🪪 QR Pass
+              </button>
             </div>
           </div>
         </div>
-        <div class="member-actions">
+        <div class="member-actions" style="margin-top:8px;">
+          <button class="btn-icon-sm" style="background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd;" title="Edit Full Registration Form" onclick="openEditMemberForm('${m.id}')">✏️</button>
           <button class="btn-icon-sm" title="View Digital QR Pass" onclick="viewMemberPass('${m.id}')">🪪</button>
           <button class="btn-icon-sm" title="Generate Certificate" onclick="openCertificateFor('${m.id}')">📜</button>
           ${printBtnHtml}

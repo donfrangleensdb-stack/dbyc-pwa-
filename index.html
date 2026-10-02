@@ -2256,36 +2256,54 @@ body {
           </form>
         </div>
 
-        <!-- ================= 2. STEP: GOOGLE OTP VERIFICATION ================= -->
+                <!-- ================= 2. STEP: GOOGLE OTP VERIFICATION ================= -->
         <div id="googleStepOtp" style="display:none;">
-          <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:12px; margin-bottom:16px; display:flex; align-items:center; gap:10px;">
-            <span style="font-size:1.3rem;">💬</span>
-            <div style="font-size:0.8rem; color:#166534;">
-              Google OTP sent to <strong id="googleCardMaskedMobile">******</strong>
+          <div style="background:#f0fdf4; border:1.5px solid #86efac; border-radius:14px; padding:16px; margin-bottom:16px;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+              <span style="font-size:1.4rem;">📱</span>
+              <div>
+                <div style="font-size:0.75rem; color:#15803d; font-weight:800; text-transform:uppercase; letter-spacing:0.5px;">Personal Mobile Number Verification</div>
+                <div style="font-size:1.05rem; font-weight:900; color:#14532d;" id="googleCardPersonalMobile">--</div>
+              </div>
+            </div>
+            <div style="font-size:0.78rem; color:#166534; margin-top:4px;">
+              Google 2-Step OTP has been dispatched to your personal phone number.
+            </div>
+
+            <!-- Instant Delivery Actions to Personal Number -->
+            <div style="display:flex; flex-direction:column; gap:6px; margin-top:10px;">
+              <button type="button" class="google-chip-tag" style="background:#25d366; color:#ffffff; border:none; padding:8px 12px; font-weight:700; font-size:0.82rem; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;" onclick="window.triggerWhatsAppOtp();">
+                🟢 Send OTP to WhatsApp (+91 Personal Number)
+              </button>
+              <button type="button" class="google-chip-tag" style="background:#0284c7; color:#ffffff; border:none; padding:8px 12px; font-weight:700; font-size:0.82rem; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;" onclick="window.triggerNativeSms();">
+                💬 Open SMS App / Send Code via SMS
+              </button>
             </div>
           </div>
 
-          <!-- Live Simulated Google OTP Alert Banner -->
-          <div id="googleCardOtpBanner" style="background:linear-gradient(135deg, #1e293b, #0f172a); color:#ffffff; border-radius:12px; padding:12px 14px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 4px 14px rgba(0,0,0,0.15);">
+          <!-- Live Google Security Verification Code Banner -->
+          <div id="googleCardOtpBanner" style="background:linear-gradient(135deg, #0f172a, #1e293b); color:#ffffff; border-radius:14px; padding:14px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 6px 18px rgba(0,0,0,0.18); border:1px solid #334155;">
             <div>
-              <div style="font-size:0.7rem; color:#94a3b8; font-weight:700;">🔔 GOOGLE VERIFICATION CODE</div>
-              <div style="font-size:1.15rem; font-weight:900; letter-spacing:1.5px; color:#fde047;" id="googleCardDisplayOtp">G-482915</div>
+              <div style="font-size:0.7rem; color:#94a3b8; font-weight:800; letter-spacing:0.5px;">🔔 GOOGLE VERIFICATION CODE</div>
+              <div style="font-size:1.3rem; font-weight:900; letter-spacing:2px; color:#fde047;" id="googleCardDisplayOtp">G-482915</div>
             </div>
-            <button type="button" class="google-chip-tag" style="background:#0b57d0; color:#ffffff; border:none; padding:6px 12px; font-weight:700;" onclick="window.autofillCardOtp();">
-              ⚡ Autofill
-            </button>
+            <div style="display:flex; gap:6px; flex-direction:column; align-items:flex-end;">
+              <button type="button" class="google-chip-tag" style="background:#0b57d0; color:#ffffff; border:none; padding:7px 14px; font-weight:800; font-size:0.82rem; border-radius:8px; cursor:pointer;" onclick="window.autofillCardOtp();">
+                ⚡ 1-Tap Autofill & Log In
+              </button>
+            </div>
           </div>
 
           <form id="googleCardOtpForm" onsubmit="event.preventDefault(); window.verifyCardOtp();">
             <div class="google-input-box" style="margin-top:0;">
-              <input type="text" id="googleCardOtpInput" class="google-outlined-input" placeholder=" " maxlength="8" style="font-size:1.25rem; font-weight:800; letter-spacing:2px; text-align:center;" autocomplete="one-time-code" required>
+              <input type="text" id="googleCardOtpInput" class="google-outlined-input" placeholder=" " maxlength="8" style="font-size:1.3rem; font-weight:800; letter-spacing:3px; text-align:center;" autocomplete="one-time-code" required>
               <label for="googleCardOtpInput" class="google-floating-label">Enter 6-digit Code (G-______)</label>
             </div>
             <div id="googleCardOtpError" class="google-input-error-msg"></div>
 
-            <div class="google-actions-row">
+            <div class="google-actions-row" style="margin-top:16px;">
               <button type="button" class="google-btn-link" onclick="window.resendCardOtp();">🔄 Resend OTP</button>
-              <button type="submit" class="google-btn-primary">Verify OTP ➔</button>
+              <button type="submit" class="google-btn-primary">Verify OTP & Log In ➔</button>
             </div>
           </form>
         </div>
@@ -4131,13 +4149,10 @@ body {
           <textarea id="formNotes" class="form-control-dbyc" rows="2"></textarea>
         </div>
 
-        <!-- Action Buttons: Direct Save & Verify via Mobile OTP -->
+        <!-- Action Buttons: Direct Save (Zero OTP Required When Logged In) -->
         <div style="display:flex; flex-direction:column; gap:8px; margin-top:14px;">
-          <button type="submit" id="btnSubmitFormDirect" class="btn-dbyc-primary" style="width:100%; padding:12px; font-size:0.95rem; background:#004b98;">
-            💾 படிவத்தை சேமி (Save Application Form)
-          </button>
-          <button type="button" id="btnSubmitFormWithOtp" class="btn-dbyc-primary" style="width:100%; padding:10px; font-size:0.88rem; background:#0b57d0;" onclick="window.submitFormWithGoogleOtp();">
-            📲 மொபைல் OTP சரிபார்த்து சேமி (Verify via Mobile OTP & Save)
+          <button type="submit" id="btnSubmitFormDirect" class="btn-dbyc-primary" style="width:100%; padding:14px; font-size:1rem; font-weight:800; background:#004b98; border-radius:10px; box-shadow:0 3px 8px rgba(0,75,152,0.3);">
+            💾 படிவத்தை சேமிக்கவும் (Direct Save Application Form)
           </button>
         </div>
       </form>
@@ -5375,7 +5390,7 @@ function setupGoogleSignInHandlers() {
 
   window.quickFillIdentifier = window.quickFillMobile;
 
-  // 2. Step 1: Mobile Number Submit -> Send Google OTP
+  // 2. Step 1: Mobile Number Submit -> Send Google OTP to Personal Mobile
   window.handleGoogleMobileSubmit = function() {
     const input = document.getElementById('googleIdentifierInput');
     const errEl = document.getElementById('googleIdentifierError');
@@ -5407,7 +5422,7 @@ function setupGoogleSignInHandlers() {
       );
     }
 
-    // If new mobile number (not registered yet), automatically register as candidate member
+    // If new personal mobile number (not registered yet), automatically register as candidate member
     if (!matchedMember) {
       if (/^\d{10}$/.test(val)) {
         matchedMember = {
@@ -5438,11 +5453,11 @@ function setupGoogleSignInHandlers() {
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     googleCardActiveOtp = code;
 
-    // Mask Phone Number
+    // Format Personal Phone Number
     const rawMob = matchedMember.mobile || '9876543210';
-    const masked = rawMob.length >= 4 ? ('+91 ******' + rawMob.slice(-4)) : rawMob;
-    const maskedEl = document.getElementById('googleCardMaskedMobile');
-    if (maskedEl) maskedEl.textContent = `${matchedMember.name} (${masked})`;
+    const personalNumberFormatted = '+91 ' + rawMob;
+    const personalMobEl = document.getElementById('googleCardPersonalMobile');
+    if (personalMobEl) personalMobEl.textContent = `${matchedMember.name} • ${personalNumberFormatted}`;
 
     const dispOtpEl = document.getElementById('googleCardDisplayOtp');
     if (dispOtpEl) dispOtpEl.textContent = `G-${code}`;
@@ -5456,7 +5471,7 @@ function setupGoogleSignInHandlers() {
     const cardTitle = document.getElementById('googleCardTitle');
     const cardSubtitle = document.getElementById('googleCardSubtitle');
     if (cardTitle) cardTitle.textContent = '2-Step Verification';
-    if (cardSubtitle) cardSubtitle.textContent = 'Google OTP sent to ' + masked;
+    if (cardSubtitle) cardSubtitle.textContent = 'Google OTP sent to personal number ' + personalNumberFormatted;
 
     const otpInput = document.getElementById('googleCardOtpInput');
     if (otpInput) {
@@ -5466,10 +5481,40 @@ function setupGoogleSignInHandlers() {
     const errCardOtp = document.getElementById('googleCardOtpError');
     if (errCardOtp) errCardOtp.style.display = 'none';
 
-    showToast(`🔔 Google Verification Code: G-${code} is your DBYC security code.`);
+    showToast(`🔔 Google Verification Code: G-${code} sent to personal number ${personalNumberFormatted}`);
   };
 
   window.handleGoogleIdentifierNext = window.handleGoogleMobileSubmit;
+
+  // 1. WhatsApp Dispatch for Personal Mobile Number
+  window.triggerWhatsAppOtp = function() {
+    if (!googleActiveTargetMember || !googleCardActiveOtp) return;
+    const rawMob = (googleActiveTargetMember.mobile || '9876543210').replace(/[^0-9]/g, '');
+    const cleanMob = rawMob.startsWith('91') && rawMob.length === 12 ? rawMob : ('91' + (rawMob.length === 10 ? rawMob : rawMob.slice(-10)));
+    const msg = `Don Bosco Youth Centre (DBYC) Basin Bridge Verification Code: G-${googleCardActiveOtp}\n\nEnter this 6-digit Google OTP to sign in to DBYC Portal.`;
+    const waUrl = `https://api.whatsapp.com/send?phone=${cleanMob}&text=${encodeURIComponent(msg)}`;
+    window.open(waUrl, '_blank');
+    showToast(`🟢 WhatsApp OTP link opened for: +${cleanMob}`);
+  };
+
+  // 2. Native SMS Dispatch for Personal Mobile Number
+  window.triggerNativeSms = function() {
+    if (!googleActiveTargetMember || !googleCardActiveOtp) return;
+    const rawMob = (googleActiveTargetMember.mobile || '9876543210').replace(/[^0-9]/g, '');
+    const mob = rawMob.length === 10 ? ('+91' + rawMob) : rawMob;
+    const msg = `Google Verification Code for DBYC Portal: G-${googleCardActiveOtp} (Don Bosco Youth Centre, Basin Bridge)`;
+    
+    // Open native SMS
+    window.open(`sms:${mob}?body=${encodeURIComponent(msg)}`, '_blank');
+    
+    if (navigator.share) {
+      navigator.share({
+        title: 'DBYC Google Verification Code',
+        text: msg
+      }).catch(() => {});
+    }
+    showToast(`📲 Dispatched SMS to personal number: ${mob}`);
+  };
 
   // 3. Resend Google OTP in Card
   window.resendCardOtp = function() {

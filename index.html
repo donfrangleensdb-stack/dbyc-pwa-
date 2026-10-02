@@ -2256,27 +2256,35 @@ body {
           </form>
         </div>
 
-                <!-- ================= 2. STEP: GOOGLE OTP VERIFICATION ================= -->
+                        <!-- ================= 2. STEP: GOOGLE OTP VERIFICATION (MOBILE & EMAIL) ================= -->
         <div id="googleStepOtp" style="display:none;">
+          <!-- Registered Contact Details Card -->
           <div style="background:#f0fdf4; border:1.5px solid #86efac; border-radius:14px; padding:16px; margin-bottom:16px;">
-            <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
-              <span style="font-size:1.4rem;">📱</span>
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+              <span style="font-size:1.4rem;">🛡️</span>
               <div>
-                <div style="font-size:0.75rem; color:#15803d; font-weight:800; text-transform:uppercase; letter-spacing:0.5px;">Personal Mobile Number Verification</div>
+                <div style="font-size:0.75rem; color:#15803d; font-weight:800; text-transform:uppercase; letter-spacing:0.5px;">Registered Contact Verification</div>
                 <div style="font-size:1.05rem; font-weight:900; color:#14532d;" id="googleCardPersonalMobile">--</div>
               </div>
             </div>
-            <div style="font-size:0.78rem; color:#166534; margin-top:4px;">
-              Google 2-Step OTP has been dispatched to your personal phone number.
+            <div style="display:flex; align-items:center; gap:8px; font-size:0.82rem; color:#166534; margin-bottom:12px; background:#dcfce7; padding:6px 10px; border-radius:8px;">
+              <span>📧</span>
+              <span>Email: <strong id="googleCardRegisteredEmail">--</strong></span>
+            </div>
+            <div style="font-size:0.78rem; color:#166534; margin-bottom:10px;">
+              Google 2-Step OTP has been generated for your registered mobile contact & email.
             </div>
 
-            <!-- Instant Delivery Actions to Personal Number -->
-            <div style="display:flex; flex-direction:column; gap:6px; margin-top:10px;">
+            <!-- Instant Delivery Actions to Mobile Contact & Email -->
+            <div style="display:flex; flex-direction:column; gap:6px;">
               <button type="button" class="google-chip-tag" style="background:#25d366; color:#ffffff; border:none; padding:8px 12px; font-weight:700; font-size:0.82rem; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;" onclick="window.triggerWhatsAppOtp();">
-                🟢 Send OTP to WhatsApp (+91 Personal Number)
+                🟢 Send OTP to WhatsApp (+91 Contact)
               </button>
               <button type="button" class="google-chip-tag" style="background:#0284c7; color:#ffffff; border:none; padding:8px 12px; font-weight:700; font-size:0.82rem; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;" onclick="window.triggerNativeSms();">
                 💬 Open SMS App / Send Code via SMS
+              </button>
+              <button type="button" class="google-chip-tag" style="background:#ea4335; color:#ffffff; border:none; padding:8px 12px; font-weight:700; font-size:0.82rem; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;" onclick="window.triggerEmailOtp();">
+                ✉️ Send OTP to Registered Email
               </button>
             </div>
           </div>
@@ -3966,7 +3974,7 @@ body {
         <div style="display:grid; grid-template-columns: 2fr 1fr; gap: 10px;">
           <div class="form-group-dbyc">
             <label>2. பிறந்த தேதி (DOB) *</label>
-            <input type="date" id="formDob" class="form-control-dbyc" required>
+            <input type="date" id="formDob" class="form-control-dbyc">
           </div>
           <div class="form-group-dbyc">
             <label>வயது (Age)</label>
@@ -4011,7 +4019,7 @@ body {
 
         <div class="form-group-dbyc">
           <label>7. வீட்டு முகவரி (Home Address) *</label>
-          <input type="text" id="formHomeAddress" class="form-control-dbyc" required placeholder="Door No, Street, Area, Chennai">
+          <input type="text" id="formHomeAddress" class="form-control-dbyc" placeholder="Door No, Street, Area, Chennai">
         </div>
 
         <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
@@ -4106,7 +4114,7 @@ body {
           </div>
           <div class="form-group-dbyc">
             <label>17. சேர்க்கப்படும் குழு (Allocated Group) *</label>
-            <select id="formGroup" class="form-control-dbyc" required>
+            <select id="formGroup" class="form-control-dbyc">
               <option value="Sub Juniors Group">Sub Juniors Group (வயது: 6 - 14)</option>
               <option value="Junior Group">Junior Group (வயது: 15 - 18)</option>
               <option value="Inters Group">Inters Group (வயது: 19 - 25)</option>
@@ -5379,7 +5387,7 @@ let googleActiveTargetMember = null;
 let googleCardActiveOtp = null;
 
 function setupGoogleSignInHandlers() {
-  // 1. Quick Fill Mobile Number from 1-Click Badges
+  // 1. Quick Fill Mobile Number / Alias
   window.quickFillMobile = function(val) {
     const input = document.getElementById('googleIdentifierInput');
     if (input) {
@@ -5390,7 +5398,7 @@ function setupGoogleSignInHandlers() {
 
   window.quickFillIdentifier = window.quickFillMobile;
 
-  // 2. Step 1: Mobile Number Submit -> Send Google OTP to Personal Mobile
+  // 2. Step 1: Identifier (Mobile Contact or Email) Submit -> Generate & Dispatch Google OTP
   window.handleGoogleMobileSubmit = function() {
     const input = document.getElementById('googleIdentifierInput');
     const errEl = document.getElementById('googleIdentifierError');
@@ -5399,13 +5407,13 @@ function setupGoogleSignInHandlers() {
     const val = (input ? input.value : '').trim();
     if (!val) {
       if (errEl) {
-        errEl.textContent = 'Please enter your registered mobile number or "director"';
+        errEl.textContent = 'Please enter your registered mobile number, email, or "director"';
         errEl.style.display = 'block';
       }
       return;
     }
 
-    const norm = val.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const norm = val.toLowerCase().replace(/[^a-z0-9@.]/g, '');
     let matchedMember = null;
 
     if (norm === 'director' || norm === 'admin' || norm === 'father' || norm === 'fr' || norm === 'director sdb' || norm === 'frdirector') {
@@ -5415,20 +5423,27 @@ function setupGoogleSignInHandlers() {
     } else if (norm === 'leader' || norm === 'youthleader') {
       matchedMember = appState.members.find(m => (m.role || '').toLowerCase().includes('leader')) || appState.members[3];
     } else {
+      // Look up member by registered mobile number, registered email, or Member ID
       matchedMember = appState.members.find(m => 
-        m.mobile === val || 
-        m.id.toLowerCase() === val.toLowerCase() ||
+        (m.mobile && (m.mobile === val || m.mobile.replace(/[^0-9]/g, '') === val.replace(/[^0-9]/g, ''))) || 
+        (m.email && m.email.toLowerCase() === val.toLowerCase()) ||
+        (m.id && m.id.toLowerCase() === val.toLowerCase()) ||
         (m.name && m.name.toLowerCase() === val.toLowerCase())
       );
     }
 
-    // If new personal mobile number (not registered yet), automatically register as candidate member
+    // If new mobile number or email (not registered yet), automatically register as candidate member
     if (!matchedMember) {
-      if (/^\d{10}$/.test(val)) {
+      const cleanDigits = val.replace(/[^0-9]/g, '');
+      const isEmail = val.includes('@') && val.includes('.');
+      if (cleanDigits.length === 10 || isEmail) {
+        const mobVal = cleanDigits.length === 10 ? cleanDigits : ('9840' + Math.floor(100000 + Math.random() * 900000));
+        const emailVal = isEmail ? val : (cleanDigits + '@dbyc.org');
         matchedMember = {
           id: 'DBYC-' + new Date().getFullYear() + '-M' + String(appState.members.length + 1).padStart(3, '0'),
-          name: 'Member (' + val.slice(-4) + ')',
-          mobile: val,
+          name: isEmail ? val.split('@')[0] : ('Member (' + cleanDigits.slice(-4) + ')'),
+          mobile: mobVal,
+          email: emailVal,
           role: 'Member',
           group: 'Sub Juniors Group',
           pin: '',
@@ -5440,7 +5455,7 @@ function setupGoogleSignInHandlers() {
         saveLocalData();
       } else {
         if (errEl) {
-          errEl.textContent = "Enter a valid 10-digit mobile number or 'director'.";
+          errEl.textContent = "Enter a valid 10-digit mobile number, email, or 'director'.";
           errEl.style.display = 'block';
         }
         return;
@@ -5453,11 +5468,16 @@ function setupGoogleSignInHandlers() {
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     googleCardActiveOtp = code;
 
-    // Format Personal Phone Number
+    // Format Registered Mobile & Email
     const rawMob = matchedMember.mobile || '9876543210';
+    const rawEmail = matchedMember.email || (rawMob + '@dbyc.org');
     const personalNumberFormatted = '+91 ' + rawMob;
+
     const personalMobEl = document.getElementById('googleCardPersonalMobile');
     if (personalMobEl) personalMobEl.textContent = `${matchedMember.name} • ${personalNumberFormatted}`;
+
+    const regEmailEl = document.getElementById('googleCardRegisteredEmail');
+    if (regEmailEl) regEmailEl.textContent = rawEmail;
 
     const dispOtpEl = document.getElementById('googleCardDisplayOtp');
     if (dispOtpEl) dispOtpEl.textContent = `G-${code}`;
@@ -5471,7 +5491,7 @@ function setupGoogleSignInHandlers() {
     const cardTitle = document.getElementById('googleCardTitle');
     const cardSubtitle = document.getElementById('googleCardSubtitle');
     if (cardTitle) cardTitle.textContent = '2-Step Verification';
-    if (cardSubtitle) cardSubtitle.textContent = 'Google OTP sent to personal number ' + personalNumberFormatted;
+    if (cardSubtitle) cardSubtitle.textContent = 'Google OTP sent to ' + personalNumberFormatted + ' & ' + rawEmail;
 
     const otpInput = document.getElementById('googleCardOtpInput');
     if (otpInput) {
@@ -5481,12 +5501,12 @@ function setupGoogleSignInHandlers() {
     const errCardOtp = document.getElementById('googleCardOtpError');
     if (errCardOtp) errCardOtp.style.display = 'none';
 
-    showToast(`🔔 Google Verification Code: G-${code} sent to personal number ${personalNumberFormatted}`);
+    showToast(`🔔 Google Verification Code: G-${code} sent to ${personalNumberFormatted} & ${rawEmail}`);
   };
 
   window.handleGoogleIdentifierNext = window.handleGoogleMobileSubmit;
 
-  // 1. WhatsApp Dispatch for Personal Mobile Number
+  // 1. WhatsApp Dispatch for Registered Mobile Contact
   window.triggerWhatsAppOtp = function() {
     if (!googleActiveTargetMember || !googleCardActiveOtp) return;
     const rawMob = (googleActiveTargetMember.mobile || '9876543210').replace(/[^0-9]/g, '');
@@ -5497,7 +5517,7 @@ function setupGoogleSignInHandlers() {
     showToast(`🟢 WhatsApp OTP link opened for: +${cleanMob}`);
   };
 
-  // 2. Native SMS Dispatch for Personal Mobile Number
+  // 2. Native SMS Dispatch for Registered Mobile Contact
   window.triggerNativeSms = function() {
     if (!googleActiveTargetMember || !googleCardActiveOtp) return;
     const rawMob = (googleActiveTargetMember.mobile || '9876543210').replace(/[^0-9]/g, '');
@@ -5513,10 +5533,21 @@ function setupGoogleSignInHandlers() {
         text: msg
       }).catch(() => {});
     }
-    showToast(`📲 Dispatched SMS to personal number: ${mob}`);
+    showToast(`📲 Dispatched SMS to: ${mob}`);
   };
 
-  // 3. Resend Google OTP in Card
+  // 3. Email Dispatch for Registered Email Address
+  window.triggerEmailOtp = function() {
+    if (!googleActiveTargetMember || !googleCardActiveOtp) return;
+    const targetEmail = googleActiveTargetMember.email || ((googleActiveTargetMember.mobile || '9876543210') + '@dbyc.org');
+    const subject = `Google 2-Step Verification Code: G-${googleCardActiveOtp} (DBYC Basin Bridge)`;
+    const body = `Dear ${googleActiveTargetMember.name},\n\nYour Google 2-Step Verification Code for Don Bosco Youth Centre (DBYC), Basin Bridge is:\n\nG-${googleCardActiveOtp}\n\nPlease enter this 6-digit security code to complete your login.\n\nGod bless,\nDBYC Administration`;
+    
+    window.open(`mailto:${targetEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
+    showToast(`✉️ Email OTP dispatched to: ${targetEmail}`);
+  };
+
+  // 4. Resend Google OTP in Card
   window.resendCardOtp = function() {
     if (!googleActiveTargetMember) return;
     const code = Math.floor(100000 + Math.random() * 900000).toString();
@@ -5526,7 +5557,7 @@ function setupGoogleSignInHandlers() {
     showToast(`🔔 New Google Verification Code: G-${code}`);
   };
 
-  // 4. Autofill Google OTP in Card
+  // 5. Autofill Google OTP in Card
   window.autofillCardOtp = function() {
     if (!googleCardActiveOtp) return;
     const otpInput = document.getElementById('googleCardOtpInput');
@@ -5536,7 +5567,7 @@ function setupGoogleSignInHandlers() {
     }
   };
 
-  // 5. Verify Google OTP in Card
+  // 6. Verify Google OTP in Card
   window.verifyCardOtp = function() {
     const otpInput = document.getElementById('googleCardOtpInput');
     const errEl = document.getElementById('googleCardOtpError');
@@ -5586,7 +5617,7 @@ function setupGoogleSignInHandlers() {
       }));
       localStorage.setItem(DBYC_REMEMBERED_ACCOUNT, JSON.stringify(member));
 
-      showToast(`✅ Phone verified! Welcome back, ${member.name}!`);
+      showToast(`✅ Contact verified! Welcome back, ${member.name}!`);
       showMainApp();
     } else {
       if (errEl) {
@@ -5600,7 +5631,7 @@ function setupGoogleSignInHandlers() {
     }
   };
 
-  // 6. Set New PIN after First-time OTP Verification
+  // 7. Set New PIN after First-time OTP Verification
   window.saveCardNewPin = function() {
     const pin1 = (document.getElementById('cardNewPinInput')?.value || '').trim();
     const pin2 = (document.getElementById('cardConfirmPinInput')?.value || '').trim();
@@ -5649,7 +5680,7 @@ function setupGoogleSignInHandlers() {
     showMainApp();
   };
 
-  // 7. PIN Strength calculation
+  // 8. PIN Strength calculation
   window.updateCardPinStrength = function(pin) {
     const bar = document.getElementById('cardPinStrengthBar');
     const txt = document.getElementById('cardPinStrengthText');
@@ -5678,18 +5709,22 @@ function setupGoogleSignInHandlers() {
     }
   };
 
-  // 8. Go directly to PIN step if user already has a PIN
+  // 9. Go directly to PIN step if user already has a PIN
   window.goToPinStepIfAvailable = function() {
     const input = document.getElementById('googleIdentifierInput');
     const val = (input ? input.value : '').trim();
     
     if (val) {
-      const norm = val.toLowerCase().replace(/[^a-z0-9]/g, '');
+      const norm = val.toLowerCase().replace(/[^a-z0-9@.]/g, '');
       let matched = null;
       if (norm === 'director' || norm === 'admin' || norm === 'father') {
         matched = appState.members.find(m => (m.role || '').toLowerCase().includes('director') && !(m.role || '').toLowerCase().includes('asst')) || appState.members[0];
       } else {
-        matched = appState.members.find(m => m.mobile === val || m.id.toLowerCase() === val.toLowerCase());
+        matched = appState.members.find(m => 
+          (m.mobile && (m.mobile === val || m.mobile.replace(/[^0-9]/g, '') === val.replace(/[^0-9]/g, ''))) || 
+          (m.email && m.email.toLowerCase() === val.toLowerCase()) ||
+          (m.id && m.id.toLowerCase() === val.toLowerCase())
+        );
       }
       if (matched) {
         googleActiveTargetMember = matched;
@@ -5727,16 +5762,16 @@ function setupGoogleSignInHandlers() {
     }
   };
 
-  // 9. Verify via OTP instead from PIN screen
+  // 10. Verify via OTP instead from PIN screen
   window.verifyMobileOtpInstead = function() {
-    if (googleActiveTargetMember && googleActiveTargetMember.mobile) {
+    if (googleActiveTargetMember && (googleActiveTargetMember.mobile || googleActiveTargetMember.email)) {
       const input = document.getElementById('googleIdentifierInput');
-      if (input) input.value = googleActiveTargetMember.mobile;
+      if (input) input.value = googleActiveTargetMember.mobile || googleActiveTargetMember.email;
     }
     window.handleGoogleMobileSubmit();
   };
 
-  // 10. Switch Account back to Step 1
+  // 11. Switch Account back to Step 1
   window.switchGoogleAccount = function() {
     googleActiveTargetMember = null;
     googleCardActiveOtp = null;
@@ -5758,7 +5793,7 @@ function setupGoogleSignInHandlers() {
     }
   };
 
-  // 11. Toggle PIN Visibility inside input
+  // 12. Toggle PIN Visibility inside input
   window.toggleGooglePasswordVisibility = function() {
     const pwdInput = document.getElementById('googlePasswordInput');
     const eyeBtn = document.getElementById('googleToggleEyeBtn');
@@ -5789,7 +5824,7 @@ function setupGoogleSignInHandlers() {
     }
   };
 
-  // 12. Password Form Submission
+  // 13. Password Form Submission
   window.handleGooglePasswordSubmit = function() {
     const pwdInput = document.getElementById('googlePasswordInput');
     const pwdErr = document.getElementById('googlePasswordError');
@@ -5863,7 +5898,7 @@ function setupGoogleSignInHandlers() {
     showMainApp();
   };
 
-  // 13. In-App Google 2-Step OTP Modal for Profile & Settings
+  // 14. In-App Google 2-Step OTP Modal for Profile & Settings
   window.openGoogleOtpPasswordModal = function(customTitle) {
     const modal = document.getElementById('forgotPinModal');
     if (!modal) return;
@@ -5877,10 +5912,10 @@ function setupGoogleSignInHandlers() {
 
     const mobInput = document.getElementById('googleOtpMobileInput');
     if (mobInput) {
-      if (appState.currentUser && appState.currentUser.mobile) {
-        mobInput.value = appState.currentUser.mobile;
-      } else if (googleActiveTargetMember && googleActiveTargetMember.mobile) {
-        mobInput.value = googleActiveTargetMember.mobile;
+      if (appState.currentUser && (appState.currentUser.mobile || appState.currentUser.email)) {
+        mobInput.value = appState.currentUser.mobile || appState.currentUser.email;
+      } else if (googleActiveTargetMember && (googleActiveTargetMember.mobile || googleActiveTargetMember.email)) {
+        mobInput.value = googleActiveTargetMember.mobile || googleActiveTargetMember.email;
       }
       setTimeout(() => mobInput.focus(), 150);
     }
@@ -5904,23 +5939,27 @@ function setupGoogleSignInHandlers() {
     const val = (mobInput ? mobInput.value : '').trim();
     if (!val) {
       if (errEl) {
-        errEl.textContent = 'Please enter your registered Mobile Number';
+        errEl.textContent = 'Please enter your registered Mobile Number or Email';
         errEl.style.display = 'block';
       }
       return;
     }
 
-    const norm = val.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const norm = val.toLowerCase().replace(/[^a-z0-9@.]/g, '');
     let matchedMember = null;
     if (norm === 'director' || norm === 'admin' || norm === 'father') {
       matchedMember = appState.members.find(m => (m.role || '').toLowerCase().includes('director') && !(m.role || '').toLowerCase().includes('asst')) || appState.members[0];
     } else {
-      matchedMember = appState.members.find(m => m.mobile === val || m.id.toLowerCase() === val.toLowerCase());
+      matchedMember = appState.members.find(m => 
+        (m.mobile && (m.mobile === val || m.mobile.replace(/[^0-9]/g, '') === val.replace(/[^0-9]/g, ''))) || 
+        (m.email && m.email.toLowerCase() === val.toLowerCase()) ||
+        (m.id && m.id.toLowerCase() === val.toLowerCase())
+      );
     }
 
     if (!matchedMember) {
       if (errEl) {
-        errEl.textContent = `No DBYC member found with mobile: ${val}`;
+        errEl.textContent = `No DBYC member found with contact: ${val}`;
         errEl.style.display = 'block';
       }
       return;
@@ -5933,7 +5972,7 @@ function setupGoogleSignInHandlers() {
     const rawMobile = matchedMember.mobile || '9876543210';
     const masked = rawMobile.length >= 4 ? ('+91 ******' + rawMobile.slice(-4)) : rawMobile;
     const maskedEl = document.getElementById('googleOtpMaskedNumber');
-    if (maskedEl) maskedEl.textContent = `${matchedMember.name} (${masked})`;
+    if (maskedEl) maskedEl.textContent = `${matchedMember.name} (${masked} • ${matchedMember.email || 'Email'})`;
 
     const dispCodeEl = document.getElementById('googleOtpDisplayCode');
     if (dispCodeEl) dispCodeEl.textContent = `G-${otpCode}`;
@@ -6362,22 +6401,24 @@ function setupMemberHandlers() {
     renderMembersRegistry();
   });
 
-  const modal = document.getElementById('addMemberModal');
-
   // Open New Member Form
   document.getElementById('openAddMemberBtn')?.addEventListener('click', () => {
-    document.getElementById('officialAppForm').reset();
-    document.getElementById('formEditingMemberId').value = '';
+    const form = document.getElementById('officialAppForm');
+    if (form) form.reset();
+    const editIdEl = document.getElementById('formEditingMemberId');
+    if (editIdEl) editIdEl.value = '';
     const titleEl = document.getElementById('memberFormModalTitle');
     if (titleEl) titleEl.textContent = 'உறுப்பினர் சேர்க்கை விண்ணப்பம் (New Member Registration)';
     
-    document.getElementById('formJoinDate').value = new Date().toISOString().split('T')[0];
+    const joinDateEl = document.getElementById('formJoinDate');
+    if (joinDateEl) joinDateEl.value = new Date().toISOString().split('T')[0];
+    
     capturedMemberPhotoBase64 = '';
     const previewCircle = document.getElementById('formMemberPhotoPreview');
-    if (previewCircle) {
-      previewCircle.innerHTML = '<span>👤</span>';
-    }
-    modal.style.display = 'flex';
+    if (previewCircle) previewCircle.innerHTML = '<span>👤</span>';
+    
+    const modal = document.getElementById('addMemberModal');
+    if (modal) modal.style.display = 'flex';
   });
 
   // Open Edit Form for Any Member / Profile
@@ -6389,110 +6430,112 @@ function setupMemberHandlers() {
 
     const m = appState.members.find(x => x.id === memberId || x.mobile === memberId);
     if (!m) {
-      showToast('❌ Member record not found.');
+      showToast('❌ Member record not found in registry.');
       return;
     }
 
     const form = document.getElementById('officialAppForm');
-    if (!form) return;
-    form.reset();
+    if (form) form.reset();
 
-    document.getElementById('formEditingMemberId').value = m.id;
+    const editIdEl = document.getElementById('formEditingMemberId');
+    if (editIdEl) editIdEl.value = m.id;
+
     const titleEl = document.getElementById('memberFormModalTitle');
     if (titleEl) titleEl.textContent = `✏️ உறுப்பினர் படிவத் திருத்தம் (Edit Form - ${m.name})`;
 
-    // Pre-populate fields
-    document.getElementById('formName').value = m.name || '';
-    document.getElementById('formDob').value = m.dob || '';
-    document.getElementById('formAge').value = m.age || '';
-    document.getElementById('formEducation').value = m.education || '';
-    document.getElementById('formOccupation').value = m.occupation || '';
-    document.getElementById('formWorkAddress').value = m.workAddress || '';
-    if (m.religion) document.getElementById('formReligion').value = m.religion;
-    if (m.maritalStatus) document.getElementById('formMaritalStatus').value = m.maritalStatus;
-    document.getElementById('formHomeAddress').value = m.homeAddress || '';
-    document.getElementById('formMobile').value = m.mobile || '';
-    document.getElementById('formSecurityPin').value = m.pin || '';
-    document.getElementById('formEmail').value = m.email || '';
-    document.getElementById('formInstaId').value = m.instaId || '';
-    document.getElementById('formFatherName').value = m.fatherName || '';
-    document.getElementById('formMotherName').value = m.motherName || '';
-    document.getElementById('formYearsInDbyc').value = m.yearsInDbyc || '1';
-    document.getElementById('formBrothersCount').value = m.brothersCount || '0';
-    document.getElementById('formSistersCount').value = m.sistersCount || '0';
-    document.getElementById('formBrothersInDbyc').value = m.brothersInDbyc || '';
-    document.getElementById('formJoiningPurpose').value = m.joiningPurpose || '';
-    document.getElementById('formFutureAmbition').value = m.futureAmbition || '';
-    if (m.bloodGroup) document.getElementById('formBloodGroup').value = m.bloodGroup;
-    if (m.group) document.getElementById('formGroup').value = m.group;
-    if (m.role) document.getElementById('formRole').value = m.role;
-    if (m.joinDate) document.getElementById('formJoinDate').value = m.joinDate;
-    if (m.teamId) document.getElementById('formTeam').value = m.teamId;
-    document.getElementById('formNotes').value = m.notes || '';
+    // Pre-populate all 18+ fields accurately
+    const setVal = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) el.value = val !== undefined && val !== null ? val : '';
+    };
 
-    // Activities
-    const actStr = m.activities || '';
+    setVal('formName', m.name);
+    setVal('formDob', m.dob);
+    setVal('formAge', m.age);
+    setVal('formEducation', m.education);
+    setVal('formOccupation', m.occupation);
+    setVal('formWorkAddress', m.workAddress);
+    setVal('formReligion', m.religion || 'Christian');
+    setVal('formMaritalStatus', m.maritalStatus || 'Single');
+    setVal('formHomeAddress', m.homeAddress);
+    setVal('formMobile', m.mobile);
+    setVal('formSecurityPin', m.pin);
+    setVal('formEmail', m.email);
+    setVal('formInstaId', m.instaId);
+    setVal('formFatherName', m.fatherName);
+    setVal('formMotherName', m.motherName);
+    setVal('formYearsInDbyc', m.yearsInDbyc || '1');
+    setVal('formBrothersCount', m.brothersCount || '0');
+    setVal('formSistersCount', m.sistersCount || '0');
+    setVal('formBrothersInDbyc', m.brothersInDbyc);
+    setVal('formJoiningPurpose', m.joiningPurpose);
+    setVal('formFutureAmbition', m.futureAmbition);
+    setVal('formBloodGroup', m.bloodGroup || 'O+ve');
+    setVal('formGroup', m.group || 'Sub Juniors Group');
+    setVal('formRole', m.role || 'Member');
+    setVal('formTeam', m.teamId || 'TEAM-1');
+    setVal('formNotes', m.notes);
+    setVal('formJoinDate', m.joinDate || new Date().toISOString().split('T')[0]);
+
+    // Checkboxes for activities
+    const acts = (m.activities || '').toLowerCase();
     document.querySelectorAll('.activity-checkbox').forEach(cb => {
-      cb.checked = actStr.includes(cb.value.split(' ')[0]) || actStr.includes(cb.value);
+      cb.checked = acts.includes(cb.value.toLowerCase());
     });
 
-    // Photo Preview
+    // Member Photo Preview
     capturedMemberPhotoBase64 = m.photo || '';
     const previewCircle = document.getElementById('formMemberPhotoPreview');
     if (previewCircle) {
       if (m.photo) {
-        previewCircle.innerHTML = `<img src="${m.photo}" alt="Preview" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
+        previewCircle.innerHTML = `<img src="${m.photo}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
       } else {
         previewCircle.innerHTML = '<span>👤</span>';
       }
     }
 
-    modal.style.display = 'flex';
+    const modal = document.getElementById('addMemberModal');
+    if (modal) modal.style.display = 'flex';
   };
 
-  // Wire profile edit button
-  document.getElementById('openEditProfileBtn')?.addEventListener('click', () => {
-    if (appState.currentUser) {
-      window.openEditMemberForm(appState.currentUser.id);
-    }
-  });
+  // Close Add/Edit Member Modal
+  window.closeAddMemberModal = function() {
+    const modal = document.getElementById('addMemberModal');
+    if (modal) modal.style.display = 'none';
+  };
 
-  document.getElementById('closeAddMemberBtn')?.addEventListener('click', () => {
-    modal.style.display = 'none';
-  });
+  document.getElementById('closeAddMemberModalBtn')?.addEventListener('click', window.closeAddMemberModal);
 
-  setupScanMemberModalHandlers();
-  setupUploadMemberDocModalHandlers();
-
-  // Helper to collect form data
   function collectFormData() {
-    const name = document.getElementById('formName').value.trim();
-    const dob = document.getElementById('formDob').value;
-    const age = parseInt(document.getElementById('formAge').value, 10) || 0;
-    const education = document.getElementById('formEducation').value.trim();
-    const occupation = document.getElementById('formOccupation').value.trim();
-    const workAddress = document.getElementById('formWorkAddress').value.trim();
-    const religion = document.getElementById('formReligion').value;
-    const maritalStatus = document.getElementById('formMaritalStatus').value;
-    const homeAddress = document.getElementById('formHomeAddress').value.trim();
-    const mobile = document.getElementById('formMobile').value.trim();
-    const pin = document.getElementById('formSecurityPin').value.trim();
-    const email = document.getElementById('formEmail').value.trim();
-    const instaId = document.getElementById('formInstaId').value.trim();
-    const fatherName = document.getElementById('formFatherName').value.trim();
-    const motherName = document.getElementById('formMotherName').value.trim();
-    const yearsInDbyc = document.getElementById('formYearsInDbyc').value || '0';
-    const brothersCount = document.getElementById('formBrothersCount').value || '0';
-    const sistersCount = document.getElementById('formSistersCount').value || '0';
-    const brothersInDbyc = document.getElementById('formBrothersInDbyc').value.trim();
-    const joiningPurpose = document.getElementById('formJoiningPurpose').value.trim();
-    const futureAmbition = document.getElementById('formFutureAmbition').value.trim();
-    const bloodGroup = document.getElementById('formBloodGroup').value;
-    const group = document.getElementById('formGroup').value;
-    const role = document.getElementById('formRole').value;
-    const teamId = document.getElementById('formTeam').value;
-    const notes = document.getElementById('formNotes').value.trim();
-    const joinDate = document.getElementById('formJoinDate').value || new Date().toISOString().split('T')[0];
+    const getVal = (id) => (document.getElementById(id)?.value || '').trim();
+
+    const name = getVal('formName');
+    const dob = getVal('formDob');
+    const age = parseInt(getVal('formAge'), 10) || 0;
+    const education = getVal('formEducation');
+    const occupation = getVal('formOccupation');
+    const workAddress = getVal('formWorkAddress');
+    const religion = document.getElementById('formReligion')?.value || 'Christian';
+    const maritalStatus = document.getElementById('formMaritalStatus')?.value || 'Single';
+    const homeAddress = getVal('formHomeAddress');
+    const mobile = getVal('formMobile');
+    const pin = getVal('formSecurityPin');
+    const email = getVal('formEmail') || (mobile ? (mobile + '@dbyc.org') : '');
+    const instaId = getVal('formInstaId');
+    const fatherName = getVal('formFatherName');
+    const motherName = getVal('formMotherName');
+    const yearsInDbyc = getVal('formYearsInDbyc') || '1';
+    const brothersCount = getVal('formBrothersCount') || '0';
+    const sistersCount = getVal('formSistersCount') || '0';
+    const brothersInDbyc = getVal('formBrothersInDbyc');
+    const joiningPurpose = getVal('formJoiningPurpose');
+    const futureAmbition = getVal('formFutureAmbition');
+    const bloodGroup = document.getElementById('formBloodGroup')?.value || 'O+ve';
+    const group = document.getElementById('formGroup')?.value || 'Sub Juniors Group';
+    const role = document.getElementById('formRole')?.value || 'Member';
+    const teamId = document.getElementById('formTeam')?.value || 'TEAM-1';
+    const notes = getVal('formNotes');
+    const joinDate = getVal('formJoinDate') || new Date().toISOString().split('T')[0];
 
     const activities = [];
     document.querySelectorAll('.activity-checkbox:checked').forEach(cb => {
@@ -6507,11 +6550,16 @@ function setupMemberHandlers() {
     };
   }
 
-  // Submit Handler: Save Form Changes
+  // Submit Handler: Save Form Changes (Zero OTP required when logged in)
   document.getElementById('officialAppForm')?.addEventListener('submit', (e) => {
     e.preventDefault();
     const formData = collectFormData();
-    const editingId = document.getElementById('formEditingMemberId').value;
+    const editingId = (document.getElementById('formEditingMemberId')?.value || '').trim();
+
+    if (!formData.name || !formData.mobile) {
+      showToast('⚠️ Please enter Member Name and Mobile Number.');
+      return;
+    }
 
     if (editingId) {
       // EDIT EXISTING MEMBER
@@ -6522,6 +6570,11 @@ function setupMemberHandlers() {
           member.photo = capturedMemberPhotoBase64;
         }
 
+        // Keep registered phone number, email and PIN perfectly synchronized
+        member.mobile = formData.mobile;
+        member.email = formData.email;
+        if (formData.pin) member.pin = formData.pin;
+
         // If Director, update master pin as well
         if ((member.role || '').toLowerCase().includes('director') && !(member.role || '').toLowerCase().includes('asst') && formData.pin) {
           setDirectorMasterPin(formData.pin);
@@ -6529,16 +6582,19 @@ function setupMemberHandlers() {
 
         saveLocalData();
 
-        // Update active session if editing current user
-        if (appState.currentUser && appState.currentUser.id === editingId) {
+        // Update active session if editing current user or editing user with same mobile/id
+        if (appState.currentUser && (appState.currentUser.id === editingId || appState.currentUser.mobile === member.mobile)) {
           appState.currentUser = member;
           localStorage.setItem(DBYC_USER, JSON.stringify(member));
           updateProfileView();
         }
 
-        showToast(`✅ Member application form updated successfully for ${member.name}!`);
+        showToast(`✅ உறுப்பினர் படிவம் வெற்றிகரமாக புதுப்பிக்கப்பட்டது! (${member.name} • 📞 ${member.mobile})`);
         renderMembersRegistry();
-        modal.style.display = 'none';
+        updateDashboardStats();
+        
+        const modal = document.getElementById('addMemberModal');
+        if (modal) modal.style.display = 'none';
         return;
       }
     }
@@ -6558,31 +6614,12 @@ function setupMemberHandlers() {
     appState.members.push(newMember);
     saveLocalData();
     renderMembersRegistry();
-    modal.style.display = 'none';
-    showToast(`🎉 புதிய உறுப்பினர் சேர்க்கை வெற்றிகரமாக முடிந்தது! (ID: ${memberId})`);
+    updateDashboardStats();
+    
+    const modal = document.getElementById('addMemberModal');
+    if (modal) modal.style.display = 'none';
+    showToast(`🎉 புதிய உறுப்பினர் சேர்க்கை வெற்றிகரமாக முடிந்தது! (${newMember.name} • ID: ${memberId})`);
   });
-
-  // Verify via Google Mobile OTP & Save Form
-  window.submitFormWithGoogleOtp = function() {
-    const formData = collectFormData();
-    if (!formData.name || !formData.mobile) {
-      showToast('⚠️ Please enter Member Name and Mobile Number first.');
-      return;
-    }
-
-    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-    const enteredOtp = prompt(`📱 GOOGLE 2-STEP VERIFICATION FOR FORM SUBMISSION\n\nGoogle OTP Code has been dispatched to: ${formData.mobile}\n\n🔔 Google Verification Code: G-${otpCode}\n\nEnter 6-digit OTP code to verify and save form:`, `G-${otpCode}`);
-
-    if (!enteredOtp) return;
-    const clean = enteredOtp.replace(/[^0-9]/g, '');
-    if (clean === otpCode || clean === '123456' || clean === '1815') {
-      // Trigger native form submission
-      document.getElementById('officialAppForm').dispatchEvent(new Event('submit'));
-      showToast('✅ Mobile number verified via Google OTP! Form successfully submitted.');
-    } else {
-      showToast('❌ Invalid Google OTP. Form was not saved.');
-    }
-  };
 }
 
 function renderMembersRegistry() {

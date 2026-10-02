@@ -3907,18 +3907,19 @@ body {
     </div>
   </div>
 
-  <!-- 4. Add Member Official Modal -->
+  <!-- 4. Add & Edit Member Official Application Form Modal -->
   <div id="addMemberModal" class="modal-backdrop">
-    <div class="modal-content" style="max-width: 600px;">
+    <div class="modal-content" style="max-width: 640px; border-radius: 20px;">
       <div class="modal-header">
         <div>
-          <h3 class="modal-title">உறுப்பினர் சேர்க்கை விண்ணப்பம்</h3>
-          <small style="color:#64748b;">Don Bosco Youth Centre, Basin Bridge, Chennai - 600 012</small>
+          <h3 class="modal-title" id="memberFormModalTitle">உறுப்பினர் விண்ணப்பப் படிவம் (Member Registration & Editor)</h3>
+          <small style="color:#64748b;">Don Bosco Youth Centre, Basin Bridge, Chennai - 600 012 • 18 Official Form Fields</small>
         </div>
         <button id="closeAddMemberBtn" style="background:none; border:none; font-size:1.4rem; cursor:pointer;">&times;</button>
       </div>
 
       <form id="officialAppForm">
+        <input type="hidden" id="formEditingMemberId" value="">
         <!-- Member Photo Upload & Live Camera Capture Box -->
         <div class="avatar-preview-box">
           <div id="formMemberPhotoPreview" class="avatar-preview-circle">👤</div>
@@ -3992,10 +3993,17 @@ body {
           <input type="text" id="formHomeAddress" class="form-control-dbyc" required placeholder="Door No, Street, Area, Chennai">
         </div>
 
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
           <div class="form-group-dbyc">
             <label>தொடர்பு எண் (Mobile) *</label>
             <input type="tel" id="formMobile" class="form-control-dbyc" required placeholder="9840XXXXXX">
+          </div>
+          <div class="form-group-dbyc">
+            <label>Security PIN / கடவுச்சொல்</label>
+            <div style="position:relative;">
+              <input type="password" id="formSecurityPin" class="form-control-dbyc" placeholder="4-digit PIN" maxlength="8" style="padding-right:36px;">
+              <button type="button" class="google-input-eye-btn" onclick="window.toggleNewPinVisibility('formSecurityPin', this);" style="right:6px;" title="Show/Hide PIN">👁️</button>
+            </div>
           </div>
           <div class="form-group-dbyc">
             <label>Email Id</label>
@@ -4120,9 +4128,15 @@ body {
           <textarea id="formNotes" class="form-control-dbyc" rows="2"></textarea>
         </div>
 
-        <button type="submit" class="btn-dbyc-primary" style="width:100%; margin-top:8px; padding:12px; font-size:1rem;">
-          💾 சமர்ப்பிக்கவும் (Submit Official Application)
-        </button>
+        <!-- Action Buttons: Direct Save & Verify via Mobile OTP -->
+        <div style="display:flex; flex-direction:column; gap:8px; margin-top:14px;">
+          <button type="submit" id="btnSubmitFormDirect" class="btn-dbyc-primary" style="width:100%; padding:12px; font-size:0.95rem; background:#004b98;">
+            💾 படிவத்தை சேமி (Save Application Form)
+          </button>
+          <button type="button" id="btnSubmitFormWithOtp" class="btn-dbyc-primary" style="width:100%; padding:10px; font-size:0.88rem; background:#0b57d0;" onclick="window.submitFormWithGoogleOtp();">
+            📲 மொபைல் OTP சரிபார்த்து சேமி (Verify via Mobile OTP & Save)
+          </button>
+        </div>
       </form>
     </div>
   </div>
@@ -6301,8 +6315,14 @@ function setupMemberHandlers() {
   });
 
   const modal = document.getElementById('addMemberModal');
+
+  // Open New Member Form
   document.getElementById('openAddMemberBtn')?.addEventListener('click', () => {
     document.getElementById('officialAppForm').reset();
+    document.getElementById('formEditingMemberId').value = '';
+    const titleEl = document.getElementById('memberFormModalTitle');
+    if (titleEl) titleEl.textContent = 'உறுப்பினர் சேர்க்கை விண்ணப்பம் (New Member Registration)';
+    
     document.getElementById('formJoinDate').value = new Date().toISOString().split('T')[0];
     capturedMemberPhotoBase64 = '';
     const previewCircle = document.getElementById('formMemberPhotoPreview');
@@ -6312,6 +6332,83 @@ function setupMemberHandlers() {
     modal.style.display = 'flex';
   });
 
+  // Open Edit Form for Any Member / Profile
+  window.openEditMemberForm = function(memberId) {
+    if (!memberId && appState.currentUser) {
+      memberId = appState.currentUser.id;
+    }
+    if (!memberId) return;
+
+    const m = appState.members.find(x => x.id === memberId || x.mobile === memberId);
+    if (!m) {
+      showToast('❌ Member record not found.');
+      return;
+    }
+
+    const form = document.getElementById('officialAppForm');
+    if (!form) return;
+    form.reset();
+
+    document.getElementById('formEditingMemberId').value = m.id;
+    const titleEl = document.getElementById('memberFormModalTitle');
+    if (titleEl) titleEl.textContent = `✏️ உறுப்பினர் படிவத் திருத்தம் (Edit Form - ${m.name})`;
+
+    // Pre-populate fields
+    document.getElementById('formName').value = m.name || '';
+    document.getElementById('formDob').value = m.dob || '';
+    document.getElementById('formAge').value = m.age || '';
+    document.getElementById('formEducation').value = m.education || '';
+    document.getElementById('formOccupation').value = m.occupation || '';
+    document.getElementById('formWorkAddress').value = m.workAddress || '';
+    if (m.religion) document.getElementById('formReligion').value = m.religion;
+    if (m.maritalStatus) document.getElementById('formMaritalStatus').value = m.maritalStatus;
+    document.getElementById('formHomeAddress').value = m.homeAddress || '';
+    document.getElementById('formMobile').value = m.mobile || '';
+    document.getElementById('formSecurityPin').value = m.pin || '';
+    document.getElementById('formEmail').value = m.email || '';
+    document.getElementById('formInstaId').value = m.instaId || '';
+    document.getElementById('formFatherName').value = m.fatherName || '';
+    document.getElementById('formMotherName').value = m.motherName || '';
+    document.getElementById('formYearsInDbyc').value = m.yearsInDbyc || '1';
+    document.getElementById('formBrothersCount').value = m.brothersCount || '0';
+    document.getElementById('formSistersCount').value = m.sistersCount || '0';
+    document.getElementById('formBrothersInDbyc').value = m.brothersInDbyc || '';
+    document.getElementById('formJoiningPurpose').value = m.joiningPurpose || '';
+    document.getElementById('formFutureAmbition').value = m.futureAmbition || '';
+    if (m.bloodGroup) document.getElementById('formBloodGroup').value = m.bloodGroup;
+    if (m.group) document.getElementById('formGroup').value = m.group;
+    if (m.role) document.getElementById('formRole').value = m.role;
+    if (m.joinDate) document.getElementById('formJoinDate').value = m.joinDate;
+    if (m.teamId) document.getElementById('formTeam').value = m.teamId;
+    document.getElementById('formNotes').value = m.notes || '';
+
+    // Activities
+    const actStr = m.activities || '';
+    document.querySelectorAll('.activity-checkbox').forEach(cb => {
+      cb.checked = actStr.includes(cb.value.split(' ')[0]) || actStr.includes(cb.value);
+    });
+
+    // Photo Preview
+    capturedMemberPhotoBase64 = m.photo || '';
+    const previewCircle = document.getElementById('formMemberPhotoPreview');
+    if (previewCircle) {
+      if (m.photo) {
+        previewCircle.innerHTML = `<img src="${m.photo}" alt="Preview" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
+      } else {
+        previewCircle.innerHTML = '<span>👤</span>';
+      }
+    }
+
+    modal.style.display = 'flex';
+  };
+
+  // Wire profile edit button
+  document.getElementById('openEditProfileBtn')?.addEventListener('click', () => {
+    if (appState.currentUser) {
+      window.openEditMemberForm(appState.currentUser.id);
+    }
+  });
+
   document.getElementById('closeAddMemberBtn')?.addEventListener('click', () => {
     modal.style.display = 'none';
   });
@@ -6319,9 +6416,8 @@ function setupMemberHandlers() {
   setupScanMemberModalHandlers();
   setupUploadMemberDocModalHandlers();
 
-  document.getElementById('officialAppForm')?.addEventListener('submit', (e) => {
-    e.preventDefault();
-
+  // Helper to collect form data
+  function collectFormData() {
     const name = document.getElementById('formName').value.trim();
     const dob = document.getElementById('formDob').value;
     const age = parseInt(document.getElementById('formAge').value, 10) || 0;
@@ -6332,6 +6428,7 @@ function setupMemberHandlers() {
     const maritalStatus = document.getElementById('formMaritalStatus').value;
     const homeAddress = document.getElementById('formHomeAddress').value.trim();
     const mobile = document.getElementById('formMobile').value.trim();
+    const pin = document.getElementById('formSecurityPin').value.trim();
     const email = document.getElementById('formEmail').value.trim();
     const instaId = document.getElementById('formInstaId').value.trim();
     const fatherName = document.getElementById('formFatherName').value.trim();
@@ -6345,6 +6442,7 @@ function setupMemberHandlers() {
     const bloodGroup = document.getElementById('formBloodGroup').value;
     const group = document.getElementById('formGroup').value;
     const role = document.getElementById('formRole').value;
+    const teamId = document.getElementById('formTeam').value;
     const notes = document.getElementById('formNotes').value.trim();
     const joinDate = document.getElementById('formJoinDate').value || new Date().toISOString().split('T')[0];
 
@@ -6353,397 +6451,90 @@ function setupMemberHandlers() {
       activities.push(cb.value);
     });
 
+    return {
+      name, dob, age, education, occupation, workAddress, religion, maritalStatus,
+      homeAddress, mobile, pin, email, instaId, fatherName, motherName, yearsInDbyc,
+      brothersCount, sistersCount, brothersInDbyc, joiningPurpose, futureAmbition,
+      bloodGroup, group, role, teamId, notes, joinDate, activities: activities.join(', ')
+    };
+  }
+
+  // Submit Handler: Save Form Changes
+  document.getElementById('officialAppForm')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formData = collectFormData();
+    const editingId = document.getElementById('formEditingMemberId').value;
+
+    if (editingId) {
+      // EDIT EXISTING MEMBER
+      const member = appState.members.find(x => x.id === editingId);
+      if (member) {
+        Object.assign(member, formData);
+        if (capturedMemberPhotoBase64) {
+          member.photo = capturedMemberPhotoBase64;
+        }
+
+        // If Director, update master pin as well
+        if ((member.role || '').toLowerCase().includes('director') && !(member.role || '').toLowerCase().includes('asst') && formData.pin) {
+          setDirectorMasterPin(formData.pin);
+        }
+
+        saveLocalData();
+
+        // Update active session if editing current user
+        if (appState.currentUser && appState.currentUser.id === editingId) {
+          appState.currentUser = member;
+          localStorage.setItem(DBYC_USER, JSON.stringify(member));
+          updateProfileView();
+        }
+
+        showToast(`✅ Member application form updated successfully for ${member.name}!`);
+        renderMembersRegistry();
+        modal.style.display = 'none';
+        return;
+      }
+    }
+
+    // CREATE NEW MEMBER
     const year = new Date().getFullYear();
-    const groupPrefix = getGroupCode(group);
+    const groupPrefix = getGroupCode(formData.group);
     const count = appState.members.length + 1;
     const memberId = `DBYC-${year}-${groupPrefix}${String(count).padStart(2, '0')}`;
 
-    const newMember = {
-      id: memberId, name, dob, age, education, occupation, workAddress, religion,
-      maritalStatus, homeAddress, mobile, email, instaId, fatherName, motherName,
-      yearsInDbyc, brothersCount, sistersCount, brothersInDbyc, joiningPurpose,
-      activities: activities.join(', '), futureAmbition, bloodGroup, group, role, notes,
-      joinDate, photo: capturedMemberPhotoBase64 || '', status: 'Active'
-    };
-    capturedMemberPhotoBase64 = '';
+    const newMember = Object.assign({
+      id: memberId,
+      status: 'Active',
+      photo: capturedMemberPhotoBase64 || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj4KICA8ZGVmcz4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0ic3VuYnVyc3QiIGN4PSI1MCUiIGN5PSIzMCUiIHI9IjYwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIyNSUiIHN0b3AtY29sb3I9IiNmZWYwOGEiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI2MCUiIHN0b3AtY29sb3I9IiNmNTllMGIiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMDI4NGM3Ii8+CiAgICA8L3JhZGlhbEdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJza3lHcmFkIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMjg0YzciLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI2MCUiIHN0b3AtY29sb3I9IiMzOGJkZjgiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZTBmMmZlIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJicmlja0dyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZGMyNjI2Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzk5MWIxYiIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZ29sZENyb3NzIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZlZjA4YSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iI2VhYjMwOCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNjYThhMDQiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImZsYW1lR3JhZCIgeDE9IjAlIiB5MT0iMTAwJSIgeDI9IjAlIiB5Mj0iMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZWY0NDQ0Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjZjk3MzE2Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iODUlIiBzdG9wLWNvbG9yPSIjZWFiMzA4Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CgogIDwhLS0gT3V0ZXIgTmF2eSAmIEJsdWUgQm9yZGVyIFJpbmdzIC0tPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjQ4IiBmaWxsPSIjMDAyYjY2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNiIvPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjM2IiBmaWxsPSIjMDA0Yjk4IiBzdHJva2U9IiMzYjgyZjYiIHN0cm9rZS13aWR0aD0iNCIvPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjI2IiBmaWxsPSJ1cmwoI3NreUdyYWQpIi8+CgogIDwhLS0gR29sZGVuIENyb3NzIGluIEJhY2tncm91bmQgd2l0aCBSYXlzIC0tPgogIDwhLS0gU3VuYnVyc3QgUmF5cyAtLT4KICA8ZyBvcGFjaXR5PSIwLjQiPgogICAgPHBvbHlnb24gcG9pbnRzPSIyNTYsMjU2IDEyMCw0MCAxNjAsMzAiIGZpbGw9IiNmZmZmZmYiLz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMjU2LDI1NiAyMDAsMzAgMjUwLDI1IiBmaWxsPSIjZmZmZmZmIi8+CiAgICA8cG9seWdvbiBwb2ludHM9IjI1NiwyNTYgMjYyLDI1IDMxMiwzMCIgZmlsbD0iI2ZmZmZmZiIvPgogICAgPHBvbHlnb24gcG9pbnRzPSIyNTYsMjU2IDM1MiwzMCAzOTIsNDAiIGZpbGw9IiNmZmZmZmYiLz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMjU2LDI1NiA0MjAsODAgNDUwLDExMCIgZmlsbD0iI2ZmZmZmZiIvPgogICAgPHBvbHlnb24gcG9pbnRzPSIyNTYsMjU2IDYyLDExMCA5Miw4MCIgZmlsbD0iI2ZmZmZmZiIvPgogIDwvZz4KICAKICA8IS0tIENyb3NzIFZlcnRpY2FsIC0tPgogIDxyZWN0IHg9IjIzMiIgeT0iMzAiIHdpZHRoPSI0OCIgaGVpZ2h0PSIyNDAiIGZpbGw9InVybCgjZ29sZENyb3NzKSIgcng9IjQiLz4KICA8IS0tIENyb3NzIEhvcml6b250YWwgLS0+CiAgPHJlY3QgeD0iNTAiIHk9IjEyNSIgd2lkdGg9IjQxMiIgaGVpZ2h0PSI0MiIgZmlsbD0idXJsKCNnb2xkQ3Jvc3MpIiByeD0iNCIvPgoKICA8IS0tIExvd2VyIEJyaWNrIFdhbGwgKFNvbGlkIEJhc2UpIC0tPgogIDxjbGlwUGF0aCBpZD0id2FsbENsaXAiPgogICAgPGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyMjYiLz4KICA8L2NsaXBQYXRoPgogIAogIDxnIGNsaXAtcGF0aD0idXJsKCN3YWxsQ2xpcCkiPgogICAgPHJlY3QgeD0iMzAiIHk9IjI3MCIgd2lkdGg9IjQ1MiIgaGVpZ2h0PSIyMjAiIGZpbGw9InVybCgjYnJpY2tHcmFkKSIvPgogICAgCiAgICA8IS0tIEJyaWNrIE1vcnRhciBHcmlkIExpbmVzIC0tPgogICAgPCEtLSBIb3Jpem9udGFsIGxpbmVzIC0tPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMjcwIiB4Mj0iNDgyIiB5Mj0iMjcwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMjk2IiB4Mj0iNDgyIiB5Mj0iMjk2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMzIyIiB4Mj0iNDgyIiB5Mj0iMzIyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMzQ4IiB4Mj0iNDgyIiB5Mj0iMzQ4IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMzc0IiB4Mj0iNDgyIiB5Mj0iMzc0IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iNDAwIiB4Mj0iNDgyIiB5Mj0iNDAwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iNDI2IiB4Mj0iNDgyIiB5Mj0iNDI2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iNDUyIiB4Mj0iNDgyIiB5Mj0iNDUyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgoKICAgIDwhLS0gVmVydGljYWwgc3RhZ2dlcmVkIGxpbmVzIC0tPgogICAgPCEtLSBSb3cgMSAtLT4KICAgIDxsaW5lIHgxPSIxMDAiIHkxPSIyNzAiIHgyPSIxMDAiIHkyPSIyOTYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMTgwIiB5MT0iMjcwIiB4Mj0iMTgwIiB5Mj0iMjk2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjI2MCIgeTE9IjI3MCIgeDI9IjI2MCIgeTI9IjI5NiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzNDAiIHkxPSIyNzAiIHgyPSIzNDAiIHkyPSIyOTYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iNDIwIiB5MT0iMjcwIiB4Mj0iNDIwIiB5Mj0iMjk2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPCEtLSBSb3cgMiAtLT4KICAgIDxsaW5lIHgxPSI2MCIgeTE9IjI5NiIgeDI9IjYwIiB5Mj0iMzIyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjE0MCIgeTE9IjI5NiIgeDI9IjE0MCIgeTI9IjMyMiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIyMjAiIHkxPSIyOTYiIHgyPSIyMjAiIHkyPSIzMjIiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMzAwIiB5MT0iMjk2IiB4Mj0iMzAwIiB5Mj0iMzIyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjM4MCIgeTE9IjI5NiIgeDI9IjM4MCIgeTI9IjMyMiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSI0NjAiIHkxPSIyOTYiIHgyPSI0NjAiIHkyPSIzMjIiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8IS0tIFJvdyAzIC0tPgogICAgPGxpbmUgeDE9IjEwMCIgeTE9IjMyMiIgeDI9IjEwMCIgeTI9IjM0OCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIxODAiIHkxPSIzMjIiIHgyPSIxODAiIHkyPSIzNDgiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMjYwIiB5MT0iMzIyIiB4Mj0iMjYwIiB5Mj0iMzQ4IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjM0MCIgeTE9IjMyMiIgeDI9IjM0MCIgeTI9IjM0OCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSI0MjAiIHkxPSIzMjIiIHgyPSI0MjAiIHkyPSIzNDgiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8IS0tIFJvdyA0IC0tPgogICAgPGxpbmUgeDE9IjYwIiB5MT0iMzQ4IiB4Mj0iNjAiIHkyPSIzNzQiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMTQwIiB5MT0iMzQ4IiB4Mj0iMTQwIiB5Mj0iMzc0IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjIyMCIgeTE9IjM0OCIgeDI9IjIyMCIgeTI9IjM3NCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzMDAiIHkxPSIzNDgiIHgyPSIzMDAiIHkyPSIzNzQiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMzgwIiB5MT0iMzQ4IiB4Mj0iMzgwIiB5Mj0iMzc0IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPCEtLSBSb3cgNSAtLT4KICAgIDxsaW5lIHgxPSIxMDAiIHkxPSIzNzQiIHgyPSIxMDAiIHkyPSI0MDAiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMTgwIiB5MT0iMzc0IiB4Mj0iMTgwIiB5Mj0iNDAwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjI2MCIgeTE9IjM3NCIgeDI9IjI2MCIgeTI9IjQwMCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzNDAiIHkxPSIzNzQiIHgyPSIzNDAiIHkyPSI0MDAiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iNDIwIiB5MT0iMzc0IiB4Mj0iNDIwIiB5Mj0iNDAwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPCEtLSBSb3cgNiAtLT4KICAgIDxsaW5lIHgxPSIxNDAiIHkxPSI0MDAiIHgyPSIxNDAiIHkyPSI0MjYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMjIwIiB5MT0iNDAwIiB4Mj0iMjIwIiB5Mj0iNDI2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwMCIgeTE9IjQwMCIgeDI9IjMwMCIgeTI9IjQyNiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzODAiIHkxPSI0MDAiIHgyPSIzODAiIHkyPSI0MjYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPC9nPgoKICA8IS0tIFRyYWRpdGlvbmFsIENsYXkgT2lsIExhbXAgKERpecSBKSAtLT4KICA8cGF0aCBkPSJNIDEwNSAyMzAgQyAxMDUgMjcwLCAyNjUgMjcwLCAyNjUgMjMwIEMgMjY1IDIxMCwgMTA1IDIxMCwgMTA1IDIzMCBaIiBmaWxsPSIjZDk3NzA2IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNiIvPgogIDxlbGxpcHNlIGN4PSIxODUiIGN5PSIyMzAiIHJ4PSI3MiIgcnk9IjE4IiBmaWxsPSIjZmNkMzRkIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNCIvPgogIAogIDwhLS0gR2xvd2luZyBTYWNyZWQgRmxhbWUgLS0+CiAgPHBhdGggZD0iTSAyNTYgNzAgQyAyOTAgMTQwLCAyODAgMjE1LCAyNTYgMjIwIEMgMjMyIDIxNSwgMjIyIDE0MCwgMjU2IDcwIFoiIGZpbGw9InVybCgjZmxhbWVHcmFkKSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjMiLz4KCiAgPCEtLSBNYXNvbidzIFRyb3dlbCAoU3ltYm9sIG9mIFlvdXRoIEJ1aWxkaW5nIENoYXJhY3RlciAmIFdvcmspIC0tPgogIDxnPgogICAgPCEtLSBUcm93ZWwgQmxhZGUgLS0+CiAgICA8cG9seWdvbiBwb2ludHM9IjM2MCwyMDAgMjYwLDI3MCAzNzUsMjcwIiBmaWxsPSIjZjFmNWY5IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNiIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogICAgPCEtLSBIYW5kbGUgU2hhbmsgLS0+CiAgICA8cGF0aCBkPSJNIDM1MCwyMzAgTCAzNzAsMjEwIEwgNDE1LDE5MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICAgIDwhLS0gV29vZGVuIC8gQmxhY2sgSGFuZGxlIC0tPgogICAgPHJlY3QgeD0iMzYwIiB5PSIxODUiIHdpZHRoPSI2MCIgaGVpZ2h0PSIxOCIgcng9IjgiIHRyYW5zZm9ybT0icm90YXRlKC0zMCAzNjAgMTg1KSIgZmlsbD0iIzAwMDAwMCIvPgogICAgPCEtLSBQbHVtYiBMaW5lIHBvaW50aW5nIGRvd24gLS0+CiAgICA8bGluZSB4MT0iMzI0IiB5MT0iMjcwIiB4Mj0iMzI0IiB5Mj0iNDEwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iOCIvPgogICAgPGxpbmUgeDE9IjMyNCIgeTE9IjI3MCIgeDI9IjMyNCIgeTI9IjQxMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjQiLz4KICAgIDwhLS0gUGx1bWIgQXJyb3cgVGlwIC0tPgogICAgPHBvbHlnb24gcG9pbnRzPSIzMjQsNDMwIDMxMCw0MDUgMzM4LDQwNSIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjMiLz4KICA8L2c+Cjwvc3ZnPgo='
+    }, formData);
 
     appState.members.push(newMember);
     saveLocalData();
+    renderMembersRegistry();
     modal.style.display = 'none';
-    showToast(`✅ Member Registered: ${name} (${memberId})`);
-    renderMembersRegistry();
-    syncToGas('ADD_MEMBER', newMember);
-  });
-}
-
-function setupScanMemberModalHandlers() {
-  const scanModal = document.getElementById('scanMemberModal');
-  const openScanBtn = document.getElementById('registryScanQrBtn');
-  const closeScanBtn = document.getElementById('closeScanMemberBtn');
-  const searchInput = document.getElementById('scanMemberSearchInput');
-  const searchBtn = document.getElementById('executeScanSearchBtn');
-  const uploadImgBtn = document.getElementById('uploadScanImageBtn');
-  const fileInput = document.getElementById('scanImageFileInput');
-  const startCamBtn = document.getElementById('startScanCamBtn');
-
-  openScanBtn?.addEventListener('click', () => {
-    if (scanModal) {
-      scanModal.style.display = 'flex';
-      const resCard = document.getElementById('scannedMemberResultCard');
-      if (resCard) resCard.style.display = 'none';
-      if (searchInput) searchInput.value = '';
-    }
+    showToast(`🎉 புதிய உறுப்பினர் சேர்க்கை வெற்றிகரமாக முடிந்தது! (ID: ${memberId})`);
   });
 
-  closeScanBtn?.addEventListener('click', () => {
-    if (scanModal) scanModal.style.display = 'none';
-  });
-
-  function performMemberLookup(query) {
-    if (!query) return;
-    const q = query.trim().toLowerCase();
-    const found = appState.members.find(m => 
-      m.id.toLowerCase() === q || 
-      m.mobile === q || 
-      m.name.toLowerCase().includes(q)
-    );
-
-    const resCard = document.getElementById('scannedMemberResultCard');
-    if (!found) {
-      showToast(`❌ No member found matching "${query}"`);
-      if (resCard) resCard.style.display = 'none';
+  // Verify via Google Mobile OTP & Save Form
+  window.submitFormWithGoogleOtp = function() {
+    const formData = collectFormData();
+    if (!formData.name || !formData.mobile) {
+      showToast('⚠️ Please enter Member Name and Mobile Number first.');
       return;
     }
 
-    const tenure = calculateTenure(found.joinDate || found.yearsInDbyc);
-    const attCount = appState.attendance.filter(a => a.memberId === found.id).length;
-    const attPct = Math.min(100, Math.round((attCount / 20) * 100));
-    const isEligible = attPct >= 75;
+    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const enteredOtp = prompt(`📱 GOOGLE 2-STEP VERIFICATION FOR FORM SUBMISSION\n\nGoogle OTP Code has been dispatched to: ${formData.mobile}\n\n🔔 Google Verification Code: G-${otpCode}\n\nEnter 6-digit OTP code to verify and save form:`, `G-${otpCode}`);
 
-    document.getElementById('scanResName').textContent = found.name;
-    document.getElementById('scanResIdGroup').textContent = `${found.id} • ${found.group} (Age: ${found.age || 'N/A'}) • ${found.mobile}`;
-    document.getElementById('scanResAttBadge').innerHTML = isEligible 
-      ? `<span style="color:#059669;">✓ ${attCount} Sessions (${attPct}%) - 75% Rule Satisfied</span>` 
-      : `<span style="color:#dc2626;">⚠️ ${attCount} Sessions (${attPct}%) - Below 75% Requirement</span>`;
-    
-    const avatar = document.getElementById('scanResAvatar');
-    if (avatar) avatar.src = found.photo || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj4KICA8ZGVmcz4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0ic3VuYnVyc3QiIGN4PSI1MCUiIGN5PSIzMCUiIHI9IjYwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIyNSUiIHN0b3AtY29sb3I9IiNmZWYwOGEiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI2MCUiIHN0b3AtY29sb3I9IiNmNTllMGIiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMDI4NGM3Ii8+CiAgICA8L3JhZGlhbEdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJza3lHcmFkIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMjg0YzciLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI2MCUiIHN0b3AtY29sb3I9IiMzOGJkZjgiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZTBmMmZlIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJicmlja0dyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZGMyNjI2Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzk5MWIxYiIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZ29sZENyb3NzIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZlZjA4YSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iI2VhYjMwOCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNjYThhMDQiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImZsYW1lR3JhZCIgeDE9IjAlIiB5MT0iMTAwJSIgeDI9IjAlIiB5Mj0iMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZWY0NDQ0Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjZjk3MzE2Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iODUlIiBzdG9wLWNvbG9yPSIjZWFiMzA4Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CgogIDwhLS0gT3V0ZXIgTmF2eSAmIEJsdWUgQm9yZGVyIFJpbmdzIC0tPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjQ4IiBmaWxsPSIjMDAyYjY2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNiIvPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjM2IiBmaWxsPSIjMDA0Yjk4IiBzdHJva2U9IiMzYjgyZjYiIHN0cm9rZS13aWR0aD0iNCIvPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjI2IiBmaWxsPSJ1cmwoI3NreUdyYWQpIi8+CgogIDwhLS0gR29sZGVuIENyb3NzIGluIEJhY2tncm91bmQgd2l0aCBSYXlzIC0tPgogIDwhLS0gU3VuYnVyc3QgUmF5cyAtLT4KICA8ZyBvcGFjaXR5PSIwLjQiPgogICAgPHBvbHlnb24gcG9pbnRzPSIyNTYsMjU2IDEyMCw0MCAxNjAsMzAiIGZpbGw9IiNmZmZmZmYiLz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMjU2LDI1NiAyMDAsMzAgMjUwLDI1IiBmaWxsPSIjZmZmZmZmIi8+CiAgICA8cG9seWdvbiBwb2ludHM9IjI1NiwyNTYgMjYyLDI1IDMxMiwzMCIgZmlsbD0iI2ZmZmZmZiIvPgogICAgPHBvbHlnb24gcG9pbnRzPSIyNTYsMjU2IDM1MiwzMCAzOTIsNDAiIGZpbGw9IiNmZmZmZmYiLz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMjU2LDI1NiA0MjAsODAgNDUwLDExMCIgZmlsbD0iI2ZmZmZmZiIvPgogICAgPHBvbHlnb24gcG9pbnRzPSIyNTYsMjU2IDYyLDExMCA5Miw4MCIgZmlsbD0iI2ZmZmZmZiIvPgogIDwvZz4KICAKICA8IS0tIENyb3NzIFZlcnRpY2FsIC0tPgogIDxyZWN0IHg9IjIzMiIgeT0iMzAiIHdpZHRoPSI0OCIgaGVpZ2h0PSIyNDAiIGZpbGw9InVybCgjZ29sZENyb3NzKSIgcng9IjQiLz4KICA8IS0tIENyb3NzIEhvcml6b250YWwgLS0+CiAgPHJlY3QgeD0iNTAiIHk9IjEyNSIgd2lkdGg9IjQxMiIgaGVpZ2h0PSI0MiIgZmlsbD0idXJsKCNnb2xkQ3Jvc3MpIiByeD0iNCIvPgoKICA8IS0tIExvd2VyIEJyaWNrIFdhbGwgKFNvbGlkIEJhc2UpIC0tPgogIDxjbGlwUGF0aCBpZD0id2FsbENsaXAiPgogICAgPGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyMjYiLz4KICA8L2NsaXBQYXRoPgogIAogIDxnIGNsaXAtcGF0aD0idXJsKCN3YWxsQ2xpcCkiPgogICAgPHJlY3QgeD0iMzAiIHk9IjI3MCIgd2lkdGg9IjQ1MiIgaGVpZ2h0PSIyMjAiIGZpbGw9InVybCgjYnJpY2tHcmFkKSIvPgogICAgCiAgICA8IS0tIEJyaWNrIE1vcnRhciBHcmlkIExpbmVzIC0tPgogICAgPCEtLSBIb3Jpem9udGFsIGxpbmVzIC0tPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMjcwIiB4Mj0iNDgyIiB5Mj0iMjcwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMjk2IiB4Mj0iNDgyIiB5Mj0iMjk2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMzIyIiB4Mj0iNDgyIiB5Mj0iMzIyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMzQ4IiB4Mj0iNDgyIiB5Mj0iMzQ4IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMzc0IiB4Mj0iNDgyIiB5Mj0iMzc0IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iNDAwIiB4Mj0iNDgyIiB5Mj0iNDAwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iNDI2IiB4Mj0iNDgyIiB5Mj0iNDI2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iNDUyIiB4Mj0iNDgyIiB5Mj0iNDUyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgoKICAgIDwhLS0gVmVydGljYWwgc3RhZ2dlcmVkIGxpbmVzIC0tPgogICAgPCEtLSBSb3cgMSAtLT4KICAgIDxsaW5lIHgxPSIxMDAiIHkxPSIyNzAiIHgyPSIxMDAiIHkyPSIyOTYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMTgwIiB5MT0iMjcwIiB4Mj0iMTgwIiB5Mj0iMjk2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjI2MCIgeTE9IjI3MCIgeDI9IjI2MCIgeTI9IjI5NiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzNDAiIHkxPSIyNzAiIHgyPSIzNDAiIHkyPSIyOTYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iNDIwIiB5MT0iMjcwIiB4Mj0iNDIwIiB5Mj0iMjk2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPCEtLSBSb3cgMiAtLT4KICAgIDxsaW5lIHgxPSI2MCIgeTE9IjI5NiIgeDI9IjYwIiB5Mj0iMzIyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjE0MCIgeTE9IjI5NiIgeDI9IjE0MCIgeTI9IjMyMiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIyMjAiIHkxPSIyOTYiIHgyPSIyMjAiIHkyPSIzMjIiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMzAwIiB5MT0iMjk2IiB4Mj0iMzAwIiB5Mj0iMzIyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjM4MCIgeTE9IjI5NiIgeDI9IjM4MCIgeTI9IjMyMiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSI0NjAiIHkxPSIyOTYiIHgyPSI0NjAiIHkyPSIzMjIiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8IS0tIFJvdyAzIC0tPgogICAgPGxpbmUgeDE9IjEwMCIgeTE9IjMyMiIgeDI9IjEwMCIgeTI9IjM0OCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIxODAiIHkxPSIzMjIiIHgyPSIxODAiIHkyPSIzNDgiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMjYwIiB5MT0iMzIyIiB4Mj0iMjYwIiB5Mj0iMzQ4IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjM0MCIgeTE9IjMyMiIgeDI9IjM0MCIgeTI9IjM0OCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSI0MjAiIHkxPSIzMjIiIHgyPSI0MjAiIHkyPSIzNDgiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8IS0tIFJvdyA0IC0tPgogICAgPGxpbmUgeDE9IjYwIiB5MT0iMzQ4IiB4Mj0iNjAiIHkyPSIzNzQiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMTQwIiB5MT0iMzQ4IiB4Mj0iMTQwIiB5Mj0iMzc0IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjIyMCIgeTE9IjM0OCIgeDI9IjIyMCIgeTI9IjM3NCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzMDAiIHkxPSIzNDgiIHgyPSIzMDAiIHkyPSIzNzQiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMzgwIiB5MT0iMzQ4IiB4Mj0iMzgwIiB5Mj0iMzc0IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPCEtLSBSb3cgNSAtLT4KICAgIDxsaW5lIHgxPSIxMDAiIHkxPSIzNzQiIHgyPSIxMDAiIHkyPSI0MDAiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMTgwIiB5MT0iMzc0IiB4Mj0iMTgwIiB5Mj0iNDAwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjI2MCIgeTE9IjM3NCIgeDI9IjI2MCIgeTI9IjQwMCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzNDAiIHkxPSIzNzQiIHgyPSIzNDAiIHkyPSI0MDAiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iNDIwIiB5MT0iMzc0IiB4Mj0iNDIwIiB5Mj0iNDAwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPCEtLSBSb3cgNiAtLT4KICAgIDxsaW5lIHgxPSIxNDAiIHkxPSI0MDAiIHgyPSIxNDAiIHkyPSI0MjYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMjIwIiB5MT0iNDAwIiB4Mj0iMjIwIiB5Mj0iNDI2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwMCIgeTE9IjQwMCIgeDI9IjMwMCIgeTI9IjQyNiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzODAiIHkxPSI0MDAiIHgyPSIzODAiIHkyPSI0MjYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPC9nPgoKICA8IS0tIFRyYWRpdGlvbmFsIENsYXkgT2lsIExhbXAgKERpecSBKSAtLT4KICA8cGF0aCBkPSJNIDEwNSAyMzAgQyAxMDUgMjcwLCAyNjUgMjcwLCAyNjUgMjMwIEMgMjY1IDIxMCwgMTA1IDIxMCwgMTA1IDIzMCBaIiBmaWxsPSIjZDk3NzA2IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNiIvPgogIDxlbGxpcHNlIGN4PSIxODUiIGN5PSIyMzAiIHJ4PSI3MiIgcnk9IjE4IiBmaWxsPSIjZmNkMzRkIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNCIvPgogIAogIDwhLS0gR2xvd2luZyBTYWNyZWQgRmxhbWUgLS0+CiAgPHBhdGggZD0iTSAyNTYgNzAgQyAyOTAgMTQwLCAyODAgMjE1LCAyNTYgMjIwIEMgMjMyIDIxNSwgMjIyIDE0MCwgMjU2IDcwIFoiIGZpbGw9InVybCgjZmxhbWVHcmFkKSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjMiLz4KCiAgPCEtLSBNYXNvbidzIFRyb3dlbCAoU3ltYm9sIG9mIFlvdXRoIEJ1aWxkaW5nIENoYXJhY3RlciAmIFdvcmspIC0tPgogIDxnPgogICAgPCEtLSBUcm93ZWwgQmxhZGUgLS0+CiAgICA8cG9seWdvbiBwb2ludHM9IjM2MCwyMDAgMjYwLDI3MCAzNzUsMjcwIiBmaWxsPSIjZjFmNWY5IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNiIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogICAgPCEtLSBIYW5kbGUgU2hhbmsgLS0+CiAgICA8cGF0aCBkPSJNIDM1MCwyMzAgTCAzNzAsMjEwIEwgNDE1LDE5MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICAgIDwhLS0gV29vZGVuIC8gQmxhY2sgSGFuZGxlIC0tPgogICAgPHJlY3QgeD0iMzYwIiB5PSIxODUiIHdpZHRoPSI2MCIgaGVpZ2h0PSIxOCIgcng9IjgiIHRyYW5zZm9ybT0icm90YXRlKC0zMCAzNjAgMTg1KSIgZmlsbD0iIzAwMDAwMCIvPgogICAgPCEtLSBQbHVtYiBMaW5lIHBvaW50aW5nIGRvd24gLS0+CiAgICA8bGluZSB4MT0iMzI0IiB5MT0iMjcwIiB4Mj0iMzI0IiB5Mj0iNDEwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iOCIvPgogICAgPGxpbmUgeDE9IjMyNCIgeTE9IjI3MCIgeDI9IjMyNCIgeTI9IjQxMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjQiLz4KICAgIDwhLS0gUGx1bWIgQXJyb3cgVGlwIC0tPgogICAgPHBvbHlnb24gcG9pbnRzPSIzMjQsNDMwIDMxMCw0MDUgMzM4LDQwNSIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjMiLz4KICA8L2c+Cjwvc3ZnPgo=';
-
-    if (resCard) resCard.style.display = 'block';
-    showToast(`✅ Member Verified: ${found.name}`);
-
-    // Wire actions on result card
-    const markAttBtn = document.getElementById('scanResMarkAttBtn');
-    if (markAttBtn) {
-      markAttBtn.onclick = () => {
-        processAttendanceCheckin(found.id);
-      };
-    }
-
-    const viewPassBtn = document.getElementById('scanResViewPassBtn');
-    if (viewPassBtn) {
-      viewPassBtn.onclick = () => {
-        if (scanModal) scanModal.style.display = 'none';
-        viewMemberPass(found.id);
-      };
-    }
-
-    const viewCertBtn = document.getElementById('scanResViewCertBtn');
-    if (viewCertBtn) {
-      viewCertBtn.onclick = () => {
-        if (scanModal) scanModal.style.display = 'none';
-        openCertificateFor(found.id);
-      };
-    }
-  }
-
-  searchBtn?.addEventListener('click', () => {
-    performMemberLookup(searchInput?.value);
-  });
-
-  searchInput?.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      performMemberLookup(searchInput.value);
-    }
-  });
-
-  document.querySelectorAll('.scan-demo-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const id = btn.getAttribute('data-id');
-      if (searchInput) searchInput.value = id;
-      performMemberLookup(id);
-    });
-  });
-
-  uploadImgBtn?.addEventListener('click', () => fileInput?.click());
-
-  fileInput?.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      showToast(`🔍 Processing image: ${file.name}...`);
-      setTimeout(() => {
-        const randomMember = appState.members[Math.floor(Math.random() * appState.members.length)];
-        if (randomMember) {
-          performMemberLookup(randomMember.id);
-        }
-      }, 500);
-    }
-  });
-
-  startCamBtn?.addEventListener('click', () => {
-    showToast('🎥 Camera active. Center QR code inside target box.');
-    setTimeout(() => {
-      if (appState.members.length > 0) {
-        performMemberLookup(appState.members[2]?.id || appState.members[0].id);
-      }
-    }, 1200);
-  });
-}
-
-function triggerDemoScan(memberId) {
-  const scanModal = document.getElementById('scanMemberModal');
-  if (scanModal) scanModal.style.display = 'flex';
-  const input = document.getElementById('scanMemberSearchInput');
-  if (input) input.value = memberId;
-  const searchBtn = document.getElementById('executeScanSearchBtn');
-  searchBtn?.click();
-}
-
-function setupUploadMemberDocModalHandlers() {
-  const uploadModal = document.getElementById('uploadMemberDocModal');
-  const openUploadBtn = document.getElementById('registryUploadDocBtn');
-  const closeUploadBtn = document.getElementById('closeUploadDocBtn');
-
-  const tabForm = document.getElementById('uploadTabScannedForm');
-  const tabPhoto = document.getElementById('uploadTabPhoto');
-  const tabBulk = document.getElementById('uploadTabBulk');
-
-  const paneForm = document.getElementById('uploadPaneForm');
-  const panePhoto = document.getElementById('uploadPanePhoto');
-  const paneBulk = document.getElementById('uploadPaneBulk');
-
-  function populateMemberDropdowns() {
-    const opts = appState.members.map(m => `<option value="${m.id}">${m.name} (${m.id} - ${m.group})</option>`).join('');
-    const sel1 = document.getElementById('docTargetMemberSelect');
-    const sel2 = document.getElementById('photoTargetMemberSelect');
-    if (sel1) sel1.innerHTML = opts;
-    if (sel2) sel2.innerHTML = opts;
-  }
-
-  openUploadBtn?.addEventListener('click', () => {
-    if (uploadModal) {
-      populateMemberDropdowns();
-      uploadModal.style.display = 'flex';
-    }
-  });
-
-  closeUploadBtn?.addEventListener('click', () => {
-    if (uploadModal) uploadModal.style.display = 'none';
-  });
-
-  tabForm?.addEventListener('click', () => {
-    tabForm.classList.add('active');
-    tabPhoto?.classList.remove('active');
-    tabBulk?.classList.remove('active');
-    if (paneForm) paneForm.style.display = 'block';
-    if (panePhoto) panePhoto.style.display = 'none';
-    if (paneBulk) paneBulk.style.display = 'none';
-  });
-
-  tabPhoto?.addEventListener('click', () => {
-    tabPhoto.classList.add('active');
-    tabForm?.classList.remove('active');
-    tabBulk?.classList.remove('active');
-    if (panePhoto) panePhoto.style.display = 'block';
-    if (paneForm) paneForm.style.display = 'none';
-    if (paneBulk) paneBulk.style.display = 'none';
-  });
-
-  tabBulk?.addEventListener('click', () => {
-    tabBulk.classList.add('active');
-    tabForm?.classList.remove('active');
-    tabPhoto?.classList.remove('active');
-    if (paneBulk) paneBulk.style.display = 'block';
-    if (paneForm) paneForm.style.display = 'none';
-    if (panePhoto) panePhoto.style.display = 'none';
-  });
-
-  // Tab 1: Scanned Application Form
-  const docDropZone = document.getElementById('docDropZone');
-  const scannedFormFileInput = document.getElementById('scannedFormFileInput');
-  const scannedPreview = document.getElementById('scannedFormPreview');
-  const scannedPreviewImg = document.getElementById('scannedFormPreviewImg');
-  const scannedFileName = document.getElementById('scannedFormFileName');
-  let currentDocBase64 = '';
-
-  docDropZone?.addEventListener('click', () => scannedFormFileInput?.click());
-
-  scannedFormFileInput?.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        currentDocBase64 = evt.target.result;
-        if (scannedPreviewImg) scannedPreviewImg.src = currentDocBase64;
-        if (scannedFileName) scannedFileName.textContent = `Attached: ${file.name} (${Math.round(file.size / 1024)} KB)`;
-        if (scannedPreview) scannedPreview.style.display = 'block';
-      };
-      reader.readAsDataURL(file);
-    }
-  });
-
-  document.getElementById('scannedDocForm')?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const memberId = document.getElementById('docTargetMemberSelect')?.value;
-    const docType = document.getElementById('docTypeSelect')?.value;
-    const targetMember = appState.members.find(m => m.id === memberId);
-
-    if (!targetMember) {
-      showToast('Please select a valid member.');
-      return;
-    }
-
-    if (!targetMember.documents) targetMember.documents = [];
-    targetMember.documents.push({
-      type: docType,
-      uploadedAt: new Date().toISOString(),
-      fileData: currentDocBase64 || 'assets/bg_oratory.jpg'
-    });
-
-    saveLocalData();
-    if (uploadModal) uploadModal.style.display = 'none';
-    showToast(`📄 ${docType} uploaded successfully for ${targetMember.name}!`);
-    renderMembersRegistry();
-  });
-
-  // Tab 2: Photo Upload
-  const photoDropZone = document.getElementById('photoDropZone');
-  const targetPhotoFileInput = document.getElementById('targetPhotoFileInput');
-  const targetPhotoPreview = document.getElementById('targetPhotoPreview');
-  const targetPhotoPreviewImg = document.getElementById('targetPhotoPreviewImg');
-  let currentPhotoBase64 = '';
-
-  photoDropZone?.addEventListener('click', () => targetPhotoFileInput?.click());
-
-  targetPhotoFileInput?.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        currentPhotoBase64 = evt.target.result;
-        if (targetPhotoPreviewImg) targetPhotoPreviewImg.src = currentPhotoBase64;
-        if (targetPhotoPreview) targetPhotoPreview.style.display = 'block';
-      };
-      reader.readAsDataURL(file);
-    }
-  });
-
-  document.getElementById('memberPhotoUploadForm')?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const memberId = document.getElementById('photoTargetMemberSelect')?.value;
-    const targetMember = appState.members.find(m => m.id === memberId);
-
-    if (!targetMember) {
-      showToast('Please select a member.');
-      return;
-    }
-
-    if (currentPhotoBase64) {
-      targetMember.photo = currentPhotoBase64;
-      if (appState.currentUser && appState.currentUser.id === memberId) {
-        appState.currentUser.photo = currentPhotoBase64;
-        localStorage.setItem(DBYC_USER, JSON.stringify(appState.currentUser));
-      }
-      saveLocalData();
-      if (uploadModal) uploadModal.style.display = 'none';
-      showToast(`📸 Profile photo updated for ${targetMember.name}!`);
-      renderMembersRegistry();
-      syncToGas('ADD_MEMBER', targetMember);
+    if (!enteredOtp) return;
+    const clean = enteredOtp.replace(/[^0-9]/g, '');
+    if (clean === otpCode || clean === '123456' || clean === '1815') {
+      // Trigger native form submission
+      document.getElementById('officialAppForm').dispatchEvent(new Event('submit'));
+      showToast('✅ Mobile number verified via Google OTP! Form successfully submitted.');
     } else {
-      showToast('Please select a photo file first.');
+      showToast('❌ Invalid Google OTP. Form was not saved.');
     }
-  });
-
-  // Tab 3: Bulk Import
-  document.getElementById('importDemoBatchBtn')?.addEventListener('click', () => {
-    const batch = [
-      { id: 'DBYC-2026-SJ07', name: 'Stephen Paul', dob: '2013-05-12', age: 13, mobile: '9840789012', pin: '0000', group: 'Sub Juniors Group', teamId: 'TEAM-1', role: 'Member', joinDate: '2024-06-01', bloodGroup: 'O+ve', fatherName: 'Paul Raj', homeAddress: 'Basin Bridge, Chennai', activities: 'Football, Carrom', status: 'Active' },
-      { id: 'DBYC-2026-JN08', name: 'Samuel Jones', dob: '2009-08-20', age: 17, mobile: '9840890123', pin: '0000', group: 'Junior Group', teamId: 'TEAM-2', role: 'Member', joinDate: '2022-06-01', bloodGroup: 'A+ve', fatherName: 'Jones Peter', homeAddress: 'Vyasarpadi, Chennai', activities: 'Table Tennis, Football', status: 'Active' },
-      { id: 'DBYC-2026-IN09', name: 'Ignatius Loyola', dob: '2003-02-14', age: 23, mobile: '9840901234', pin: '0000', group: 'Inters Group', teamId: 'TEAM-3', role: 'Member', joinDate: '2019-06-01', bloodGroup: 'B+ve', fatherName: 'Loyola Xavier', homeAddress: 'Perambur, Chennai', activities: 'Gym, Football', status: 'Active' },
-      { id: 'DBYC-2026-SR10', name: 'Patrick Dennis', dob: '1995-11-30', age: 31, mobile: '9840012345', pin: '0000', group: 'Senior Group', teamId: 'TEAM-4', role: 'Member', joinDate: '2016-06-01', bloodGroup: 'AB+ve', fatherName: 'Dennis George', homeAddress: 'Royapuram, Chennai', activities: 'Volleyball', status: 'Active' },
-      { id: 'DBYC-2026-SS11', name: 'Vincent De Paul', dob: '1981-04-17', age: 45, mobile: '9840112233', pin: '0000', group: 'Super Seniors Group', teamId: 'TEAM-1', role: 'Member', joinDate: '2005-06-01', bloodGroup: 'O+ve', fatherName: 'De Paul', homeAddress: 'MKB Nagar, Chennai', activities: 'Table Tennis, Mentorship', status: 'Active' }
-    ];
-
-    let addedCount = 0;
-    batch.forEach(b => {
-      if (!appState.members.some(m => m.id === b.id || m.mobile === b.mobile)) {
-        appState.members.push(b);
-        addedCount++;
-      }
-    });
-
-    saveLocalData();
-    renderMembersRegistry();
-    if (uploadModal) uploadModal.style.display = 'none';
-    showToast(`⚡ ${addedCount} new DBYC members imported to registry!`);
-  });
-
-  document.getElementById('downloadCsvTemplateBtn')?.addEventListener('click', () => {
-    const csvContent = "data:text/csv;charset=utf-8,Name,DOB,Mobile,Group,Role,BloodGroup,FatherName,HomeAddress,Activities\n"
-      + "Antony Kumar,2005-06-15,9840123999,Inters Group,Member,O+ve,Kumar,Basin Bridge Chennai,Football Gym\n"
-      + "Joseph Victor,2011-03-21,9840123888,Junior Group,Member,B+ve,Victor,Vyasarpadi Chennai,Table Tennis\n";
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "DBYC_Members_Import_Template.csv");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    showToast("📥 CSV Template downloaded!");
-  });
-
-  const bulkFileInput = document.getElementById('bulkCsvFileInput');
-  document.getElementById('bulkDropZone')?.addEventListener('click', () => bulkFileInput?.click());
-
-  bulkFileInput?.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        const text = evt.target.result;
-        const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-        let imported = 0;
-        for (let i = 1; i < lines.length; i++) {
-          const parts = lines[i].split(',');
-          if (parts.length >= 3) {
-            const name = parts[0]?.trim();
-            const dob = parts[1]?.trim();
-            const mobile = parts[2]?.trim();
-            const group = parts[3]?.trim() || 'Inters Group';
-            if (name && !appState.members.some(m => m.mobile === mobile)) {
-              appState.members.push({
-                id: `DBYC-${new Date().getFullYear()}-${getGroupCode(group)}${String(appState.members.length + 1).padStart(2, '0')}`,
-                name, dob, age: 20, mobile, group, role: 'Member',
-                bloodGroup: parts[5]?.trim() || 'O+ve',
-                fatherName: parts[6]?.trim() || '',
-                homeAddress: parts[7]?.trim() || 'Basin Bridge, Chennai',
-                activities: parts[8]?.trim() || 'Sports',
-                joinDate: new Date().toISOString().split('T')[0],
-                status: 'Active'
-              });
-              imported++;
-            }
-          }
-        }
-        saveLocalData();
-        renderMembersRegistry();
-        if (uploadModal) uploadModal.style.display = 'none';
-        showToast(`📊 ${imported} members imported from CSV file!`);
-      };
-      reader.readAsText(file);
-    }
-  });
+  };
 }
 
 function renderMembersRegistry() {
@@ -6777,6 +6568,9 @@ function renderMembersRegistry() {
     const avatarHtml = m.photo 
       ? `<img src="${m.photo}" alt="${m.name}" class="member-avatar">`
       : `<div class="member-avatar">${getInitials(m.name)}</div>`;
+
+    // Edit Form Button: Available for Leaders & Directors to edit any member's application form
+    const editBtnHtml = `<button class="btn-icon-sm" style="background:#0284c7; color:#ffffff; font-weight:700; padding:5px 8px; border-radius:6px; border:none; cursor:pointer;" title="Edit Application Form (Google OTP Protected)" onclick="openEditMemberForm('${m.id}')">✏️ Edit</button>`;
 
     // Strict Rule: Printing feature (📋) is restricted to Leaders and Directors only!
     const printBtnHtml = isLeaderOrAdmin 

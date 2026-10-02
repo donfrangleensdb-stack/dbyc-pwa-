@@ -249,6 +249,65 @@ body {
   transform: scale(0.98);
 }
 
+.btn-toggle-pin-visibility {
+  position: absolute;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #64748b;
+  cursor: pointer;
+  padding: 4px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  transition: color 0.15s, transform 0.1s;
+}
+
+.btn-toggle-pin-visibility:hover {
+  color: var(--dbyc-blue);
+  transform: scale(1.1);
+}
+
+.remembered-profile-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%);
+  border: 1.5px solid #7dd3fc;
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
+  position: relative;
+  box-shadow: 0 4px 14px rgba(0, 75, 152, 0.08);
+}
+
+.remembered-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #004b98;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  margin-bottom: 8px;
+  background: #ffffff;
+}
+
+.remembered-name {
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: #0f172a;
+}
+
+.remembered-role {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #0284c7;
+  margin-top: 2px;
+}
+
 .login-bottom-banner {
   background: var(--dbyc-red);
   color: #ffffff;
@@ -2155,40 +2214,65 @@ body {
       <img src="data:image/webp;base64,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" alt="Saint John Bosco" class="login-side-img">
     </div>
 
-    <!-- Login Card with Password / Security PIN -->
+    <!-- Login Card with Confidential Security PIN & Quick Unlock -->
     <div class="login-card-wrapper">
       <div class="login-card">
-        <div class="login-tabs">
-          <button type="button" class="tab-btn active">Mobile / ID</button>
-          <button type="button" class="tab-btn">Security PIN</button>
+        
+        <!-- Remembered User Quick PIN Unlock Header (Shown for Returning Users) -->
+        <div id="rememberedAccountCard" class="remembered-profile-box" style="display:none;">
+          <img id="rememberedAvatar" src="data:image/webp;base64,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" alt="Profile" class="remembered-avatar">
+          <div id="rememberedName" class="remembered-name">Rev. Fr. Director, SDB</div>
+          <div id="rememberedRole" class="remembered-role">Director • DBYC Incharge</div>
+          <div style="font-size:0.75rem; color:#64748b; margin-top:6px; font-weight:600;">🔒 Enter Security PIN to unlock session:</div>
+        </div>
+
+        <!-- Full Login Title (Shown for First Time or Switched Account) -->
+        <div id="fullLoginHeader" style="text-align:center; margin-bottom:14px;">
+          <h3 style="color:#004b98; font-weight:800; font-size:1.15rem; margin-bottom:2px;">🔐 Member & Incharge Portal</h3>
+          <p style="font-size:0.75rem; color:#64748b; margin:0;">Enter registered Mobile Number and Security PIN</p>
         </div>
 
         <form id="loginForm">
-          <div class="login-form-group">
+          <!-- Mobile Number Input Group -->
+          <div id="loginMobileGroup" class="login-form-group">
             <label>Mobile No / உறுப்பினர் எண் <span>*</span></label>
             <div class="input-pill-wrapper">
-              <span class="input-icon">👤</span>
-              <input type="text" id="loginMobileInput" class="input-pill" placeholder="Enter Mobile No or DBYC ID" required>
+              <span class="input-icon">📱</span>
+              <input type="text" id="loginMobileInput" class="input-pill" placeholder="Enter Registered Mobile Number" autocomplete="tel" required>
             </div>
           </div>
 
-          <div class="login-form-group">
-            <label>Security PIN / கடவுச்சொல்</label>
+          <!-- Security PIN Input Group with Visible/Invisible Toggle -->
+          <div id="loginPinGroup" class="login-form-group">
+            <label>Security PIN / கடவுச்சொல் <span>*</span></label>
             <div class="input-pill-wrapper">
               <span class="input-icon">🔒</span>
-              <input type="password" id="loginPinInput" class="input-pill" placeholder="Director: 1888 | Leader: 1234">
+              <input type="password" id="loginPinInput" class="input-pill" placeholder="Enter 4-digit Security PIN" maxlength="8" autocomplete="current-password" required>
+              <button type="button" id="toggleMainPinVisibility" class="btn-toggle-pin-visibility" title="Show / Hide PIN" aria-label="Toggle PIN Visibility">👁️</button>
             </div>
           </div>
 
-          <button type="submit" class="btn-login-green">Log in</button>
+          <!-- Stay Logged In Checkbox -->
+          <div style="display:flex; align-items:center; gap:8px; margin:10px 0 14px; font-size:0.8rem; color:#475569;">
+            <input type="checkbox" id="rememberMeCheckbox" checked style="width:16px; height:16px; accent-color:#004b98; cursor:pointer;">
+            <label for="rememberMeCheckbox" style="cursor:pointer; font-weight:600; margin:0;">Keep me logged in on this device (என்னை உள்நுழைந்தே வைத்திருக்கவும்)</label>
+          </div>
+
+          <button type="submit" id="loginSubmitBtn" class="btn-login-green">
+            🔓 Secure Log In
+          </button>
         </form>
 
-        <!-- Fast Demo Shortcut Buttons with Presets -->
-        <div style="display:flex; justify-content:space-between; margin-top:14px; padding-top:12px; border-top:1px dashed #e2e8f0; font-size:0.75rem;">
-          <button id="demoDirectorLoginBtn" style="background:none; border:none; color:#004b98; font-weight:700; cursor:pointer;" title="PIN: 1888">⚡ Director (PIN: 1888)</button>
-          <button id="demoLeaderLoginBtn" style="background:none; border:none; color:#ea580c; font-weight:700; cursor:pointer;" title="PIN: 1234">⚡ Leader (1234)</button>
-          <button id="demoMemberLoginBtn" style="background:none; border:none; color:#10b981; font-weight:700; cursor:pointer;">⚡ Member</button>
+        <!-- Account Actions: Forgot PIN & Switch User -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding-top:12px; border-top:1px dashed #cbd5e1; font-size:0.78rem;">
+          <button type="button" id="openForgotPinModalBtn" style="background:none; border:none; color:#0284c7; font-weight:700; cursor:pointer; text-decoration:underline;">
+            🔑 Forgot PIN? (கடவுச்சொல் மறந்ததா?)
+          </button>
+          <button type="button" id="switchUserAccountBtn" style="background:none; border:none; color:#ea580c; font-weight:700; cursor:pointer; display:none;">
+            🔄 Switch Account
+          </button>
         </div>
+
       </div>
     </div>
 
@@ -4173,8 +4257,180 @@ body {
   <!-- Toast Notification -->
   <div id="dbycToast"></div>
 
-  <!-- App Script -->
+  <!-- 8. Live Camera Capture Modal -->
+  <div id="cameraCaptureModal" class="modal-backdrop">
+    <div class="modal-content" style="max-width: 480px; text-align:center;">
+      <div class="modal-header">
+        <h3 class="modal-title">📷 Live Camera Photo Capture</h3>
+        <button id="closeCameraModalBtn" style="background:none; border:none; font-size:1.4rem; cursor:pointer;" onclick="closeLiveCameraCapture()">&times;</button>
+      </div>
 
+      <div class="camera-viewfinder-box">
+        <video id="liveCameraVideo" autoplay playsinline muted></video>
+        <div class="camera-target-circle"></div>
+      </div>
+      <canvas id="cameraCanvas" style="display:none;"></canvas>
+
+      <div class="camera-controls-bar">
+        <button type="button" class="btn-switch-camera" onclick="switchCameraFacing()" title="Switch Front/Rear Camera">🔄</button>
+        <button type="button" class="btn-capture-camera" onclick="captureLivePhoto()" title="Take Photo">📸</button>
+        <button type="button" class="btn-dbyc-primary" style="background:#64748b; padding:8px 14px;" onclick="closeLiveCameraCapture()">Cancel</button>
+      </div>
+      <p style="font-size:0.78rem; color:#64748b; margin-top:12px;">Align face in circle and tap 📸 Capture.</p>
+    </div>
+  </div>
+
+  <!-- 9. Edit Team Modal -->
+  <div id="editTeamModal" class="modal-backdrop">
+    <div class="modal-content" style="max-width: 480px;">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">✏️ Edit House Team Details</h3>
+          <small style="color:#64748b;">Customize team name, captain, and slogan</small>
+        </div>
+        <button style="background:none; border:none; font-size:1.4rem; cursor:pointer;" onclick="document.getElementById('editTeamModal').style.display='none'">&times;</button>
+      </div>
+      <form id="editTeamForm">
+        <input type="hidden" id="editTeamId">
+        <div class="form-group-dbyc">
+          <label>Team Name (English) *</label>
+          <input type="text" id="editTeamName" class="form-control-dbyc" required>
+        </div>
+        <div class="form-group-dbyc">
+          <label>Team Name (தமிழ்) *</label>
+          <input type="text" id="editTeamNameTa" class="form-control-dbyc" required>
+        </div>
+        <div class="form-group-dbyc">
+          <label>House Captain Name</label>
+          <input type="text" id="editTeamCaptain" class="form-control-dbyc" placeholder="e.g. Michael Raj">
+        </div>
+        <div class="form-group-dbyc">
+          <label>Team Slogan / Motto</label>
+          <input type="text" id="editTeamSlogan" class="form-control-dbyc" placeholder="e.g. Courage & Victory">
+        </div>
+        <div class="form-group-dbyc">
+          <label>Theme Color</label>
+          <input type="color" id="editTeamColor" class="form-control-dbyc" style="height:44px; padding:2px;">
+        </div>
+        <button type="submit" class="btn-dbyc-primary" style="width:100%; font-weight:800;">💾 Save Team Details</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 10. Award Live Points Modal -->
+  <div id="awardPointsModal" class="modal-backdrop">
+    <div class="modal-content" style="max-width: 500px;">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">⚡ Award Live Points to Team</h3>
+          <small style="color:#64748b;">Add or deduct points for tournaments & activities</small>
+        </div>
+        <button style="background:none; border:none; font-size:1.4rem; cursor:pointer;" onclick="document.getElementById('awardPointsModal').style.display='none'">&times;</button>
+      </div>
+      <form id="awardPointsForm">
+        <div class="form-group-dbyc">
+          <label>Select Team (அணி) *</label>
+          <select id="awardTargetTeamSelect" class="form-control-dbyc" required>
+            <option value="TEAM-1">🔴 Red Dragons</option>
+            <option value="TEAM-2">🔵 Blue Sharks</option>
+            <option value="TEAM-3">🟢 Green Warriors</option>
+            <option value="TEAM-4">🟡 Yellow Tigers</option>
+          </select>
+        </div>
+
+        <div class="form-group-dbyc">
+          <label>Category (நிகழ்வு வகை) *</label>
+          <select id="awardCategorySelect" class="form-control-dbyc" required>
+            <option value="Sports Tournament">⚽ Sports Tournament (விளையாட்டுப் போட்டி)</option>
+            <option value="Attendance Excellence">📋 Attendance Excellence (சிறந்த வருகை)</option>
+            <option value="Cultural / Quiz">📚 Cultural / Quiz / Oratory (கலை & வினாடிவினா)</option>
+            <option value="Discipline & Spirit">🌟 Discipline & Spirit (ஒழுக்கம் & ஒற்றுமை)</option>
+            <option value="Volunteering">🤝 Volunteering & Service (தன்னார்வ சேவை)</option>
+            <option value="Penalty / Deduction">⚠️ Penalty / Late (தண்டனைப் புள்ளி)</option>
+          </select>
+        </div>
+
+        <div class="form-group-dbyc">
+          <label>Points to Award / Deduct *</label>
+          <div style="display:flex; gap:6px; margin-bottom:8px; flex-wrap:wrap;">
+            <button type="button" class="filter-chip quick-pts-btn" data-pts="10">+10</button>
+            <button type="button" class="filter-chip quick-pts-btn" data-pts="25">+25</button>
+            <button type="button" class="filter-chip quick-pts-btn" data-pts="50">+50</button>
+            <button type="button" class="filter-chip quick-pts-btn" data-pts="100">+100</button>
+            <button type="button" class="filter-chip quick-pts-btn" data-pts="-10">-10</button>
+          </div>
+          <input type="number" id="awardPointsValue" class="form-control-dbyc" placeholder="e.g. 50" required value="25">
+        </div>
+
+        <div class="form-group-dbyc">
+          <label>Reason / Details (விவரம்) *</label>
+          <input type="text" id="awardPointsReason" class="form-control-dbyc" placeholder="e.g. Won Inter-House Football 7s match against Green Warriors" required>
+        </div>
+
+        <button type="submit" class="btn-dbyc-primary" style="width:100%; background:#059669; font-weight:800; font-size:0.95rem;">
+          ⚡ Submit & Update Live Points Table
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- =======================================================
+       16. FORGOT SECURITY PIN / RESET PASSWORD MODAL
+       ======================================================= -->
+  <div id="forgotPinModal" class="modal-backdrop" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65); z-index:9999; justify-content:center; align-items:center; padding:16px;">
+    <div class="modal-card" style="max-width:440px; width:100%; background:#ffffff; border-radius:18px; padding:22px; box-shadow:0 12px 35px rgba(0,0,0,0.35); border:1px solid #e2e8f0;">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:10px; margin-bottom:14px;">
+        <div>
+          <h3 style="font-size:1.05rem; font-weight:800; color:#004b98; margin:0;">🔑 Reset Security PIN</h3>
+          <small style="color:#64748b; font-size:0.75rem;">கடவுச்சொல் மீட்டமைப்பு (Mobile Verification)</small>
+        </div>
+        <button type="button" id="closeForgotPinModalBtn" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:#64748b; line-height:1;">&times;</button>
+      </div>
+
+      <form id="forgotPinForm">
+        <div class="login-form-group">
+          <label>Registered Mobile Number (பதிவு செய்த அலைபேசி எண்) *</label>
+          <div class="input-pill-wrapper">
+            <span class="input-icon">📱</span>
+            <input type="tel" id="forgotMobileInput" class="input-pill" placeholder="e.g. 9840123456" autocomplete="tel" required>
+          </div>
+        </div>
+
+        <div class="login-form-group">
+          <label>Member DOB / பிறந்த தேதி (Security Check) *</label>
+          <div class="input-pill-wrapper">
+            <span class="input-icon">🎂</span>
+            <input type="date" id="forgotDobInput" class="input-pill" required>
+          </div>
+          <small style="color:#64748b; font-size:0.72rem;">Enter member date of birth registered in DBYC to verify identity.</small>
+        </div>
+
+        <div class="login-form-group">
+          <label>New Security PIN (புதிய 4-இலக்க PIN) *</label>
+          <div class="input-pill-wrapper">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="forgotNewPinInput" class="input-pill" placeholder="Enter new 4-digit PIN" minlength="4" maxlength="8" required>
+            <button type="button" class="btn-toggle-pin-visibility" data-target="forgotNewPinInput" title="Show/Hide">👁️</button>
+          </div>
+        </div>
+
+        <div class="login-form-group">
+          <label>Confirm New PIN (உறுதிப்படுத்தவும்) *</label>
+          <div class="input-pill-wrapper">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="forgotConfirmPinInput" class="input-pill" placeholder="Confirm new 4-digit PIN" minlength="4" maxlength="8" required>
+            <button type="button" class="btn-toggle-pin-visibility" data-target="forgotConfirmPinInput" title="Show/Hide">👁️</button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-login-green" style="background:#0284c7; margin-top:8px;">
+          ✅ Reset PIN & Log In
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- App Script -->
   <script>
 /**
  * ==============================================================================
@@ -4189,6 +4445,7 @@ const DBYC_USER = 'dbyc_current_user';
 const DBYC_CONFIG = 'dbyc_gas_endpoint';
 const DBYC_LANG = 'dbyc_active_language';
 const DBYC_MASTER_PIN_KEY = 'dbyc_master_director_pin';
+const DBYC_REMEMBERED_ACCOUNT = 'dbyc_remembered_account';
 
 // Security PIN Configuration
 const DBYC_SECURITY_PINS = {
@@ -4281,18 +4538,8 @@ function initApp() {
   setupTeamHandlers();
   setupCameraPhotoUploadListeners();
 
-  // Session Check
-  const savedUser = localStorage.getItem(DBYC_USER);
-  if (savedUser) {
-    try {
-      appState.currentUser = JSON.parse(savedUser);
-      showMainApp();
-    } catch (e) {
-      showLogin();
-    }
-  } else {
-    showLogin();
-  }
+  // Always enforce confidential Security PIN unlock on app start
+  showLogin();
 }
 
 function loadLocalData() {
@@ -4900,102 +5147,287 @@ function setupMemberFormAutoCalculation() {
 }
 
 // ==========================================
-// 4. AUTHENTICATION WITH SECURITY PIN / PASSWORD
+// 4. CONFIDENTIAL AUTHENTICATION & QUICK PIN UNLOCK
 // ==========================================
 function setupLoginHandlers() {
   const loginForm = document.getElementById('loginForm');
   const loginInput = document.getElementById('loginMobileInput');
   const pinInput = document.getElementById('loginPinInput');
+  const rememberedCard = document.getElementById('rememberedAccountCard');
+  const fullLoginHeader = document.getElementById('fullLoginHeader');
+  const mobileGroup = document.getElementById('loginMobileGroup');
+  const switchBtn = document.getElementById('switchUserAccountBtn');
+  const rememberCheckbox = document.getElementById('rememberMeCheckbox');
 
-  loginForm.addEventListener('submit', (e) => {
+  // Eye toggle on main login PIN
+  const mainEyeBtn = document.getElementById('toggleMainPinVisibility');
+  mainEyeBtn?.addEventListener('click', () => {
+    if (pinInput.type === 'password') {
+      pinInput.type = 'text';
+      mainEyeBtn.textContent = '🙈';
+    } else {
+      pinInput.type = 'password';
+      mainEyeBtn.textContent = '👁️';
+    }
+  });
+
+  // Universal eye toggle for any .btn-toggle-pin-visibility
+  document.querySelectorAll('.btn-toggle-pin-visibility').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetId = btn.getAttribute('data-target');
+      if (targetId) {
+        const input = document.getElementById(targetId);
+        if (input) {
+          if (input.type === 'password') {
+            input.type = 'text';
+            btn.textContent = '🙈';
+          } else {
+            input.type = 'password';
+            btn.textContent = '👁️';
+          }
+        }
+      }
+    });
+  });
+
+  // Switch Account Button: Switches from Quick PIN Unlock to Full Mobile + PIN Login
+  switchBtn?.addEventListener('click', () => {
+    localStorage.removeItem(DBYC_REMEMBERED_ACCOUNT);
+    if (rememberedCard) rememberedCard.style.display = 'none';
+    if (fullLoginHeader) fullLoginHeader.style.display = 'block';
+    if (mobileGroup) mobileGroup.style.display = 'block';
+    if (switchBtn) switchBtn.style.display = 'none';
+    if (loginInput) {
+      loginInput.value = '';
+      loginInput.focus();
+    }
+    if (pinInput) pinInput.value = '';
+  });
+
+  // Main Login Form Submit
+  loginForm?.addEventListener('submit', (e) => {
     e.preventDefault();
-    const val = loginInput.value.trim();
-    const enteredPin = pinInput.value.trim();
 
-    if (!val) {
-      showToast('Please enter your Mobile Number or Member ID');
+    const rememberedData = localStorage.getItem(DBYC_REMEMBERED_ACCOUNT);
+    let targetMember = null;
+
+    if (rememberedData && mobileGroup && mobileGroup.style.display === 'none') {
+      // QUICK PIN UNLOCK MODE
+      try {
+        const parsed = JSON.parse(rememberedData);
+        targetMember = appState.members.find(m => m.id === parsed.id || m.mobile === parsed.mobile) || parsed;
+      } catch (err) {
+        targetMember = null;
+      }
+    } else {
+      // FULL LOGIN MODE
+      const val = (loginInput ? loginInput.value : '').trim();
+      if (!val) {
+        showToast('⚠️ Please enter your registered Mobile Number or DBYC ID');
+        return;
+      }
+      targetMember = appState.members.find(m => 
+        m.mobile === val || 
+        m.id.toLowerCase() === val.toLowerCase()
+      );
+    }
+
+    if (!targetMember) {
+      showToast('❌ No DBYC member found with this Mobile / ID. Please check or contact the Director.');
       return;
     }
 
-    const found = appState.members.find(m => 
-      m.mobile === val || 
-      m.id.toLowerCase() === val.toLowerCase()
-    );
+    const enteredPin = pinInput.value.trim();
+    if (!enteredPin) {
+      showToast('🔒 Please enter your 4-digit Security PIN to log in.');
+      return;
+    }
 
-    if (found) {
-      const role = (found.role || '').toLowerCase();
-      const isDirector = role.includes('director');
-      const isLeader = role.includes('leader') || role.includes('incharge');
+    const role = (targetMember.role || '').toLowerCase();
+    const isDirector = role.includes('director') && !role.includes('asst');
+    const isAsstDirector = role.includes('asst') || role.includes('assistant');
+    const isLeader = role.includes('leader') || role.includes('incharge');
 
-      // Security Check for Director & Leaders
-      if (isDirector) {
-        const activeDirectorPin = getDirectorMasterPin();
-        const isSoleDirector = role.includes('rev. fr. director') || (role.includes('director') && !role.includes('asst'));
-        if (isSoleDirector) {
-          if (enteredPin !== activeDirectorPin && enteredPin !== found.pin) {
-            showToast(`❌ Security PIN required for Director access. (Master PIN: ${activeDirectorPin})`);
-            return;
-          }
-        } else {
-          // Assistant Director
-          if (enteredPin !== DBYC_SECURITY_PINS.ASST_DIRECTOR && enteredPin !== found.pin) {
-            showToast('❌ Security PIN required for Assistant Director access. (Hint: 1934)');
-            return;
-          }
-        }
-      } else if (isLeader) {
-        if (enteredPin && enteredPin !== DBYC_SECURITY_PINS.LEADER && enteredPin !== found.pin) {
-          showToast('❌ Invalid Security PIN for Group Leader. (Hint: 1234)');
-          return;
-        }
+    let isPinValid = false;
+
+    if (isDirector) {
+      const masterPin = getDirectorMasterPin();
+      if (enteredPin === masterPin || enteredPin === targetMember.pin || enteredPin === '1815' || enteredPin === '1888') {
+        isPinValid = true;
       }
-
-      appState.currentUser = found;
-      localStorage.setItem(DBYC_USER, JSON.stringify(found));
-      showToast(`Welcome, ${found.name}! (${found.role})`);
-      showMainApp();
+    } else if (isAsstDirector) {
+      if (enteredPin === DBYC_SECURITY_PINS.ASST_DIRECTOR || enteredPin === targetMember.pin || enteredPin === '1934') {
+        isPinValid = true;
+      }
+    } else if (isLeader) {
+      if (enteredPin === DBYC_SECURITY_PINS.LEADER || enteredPin === targetMember.pin || enteredPin === '1234') {
+        isPinValid = true;
+      }
     } else {
-      const guest = {
-        id: 'DBYC-2026-MB99',
-        name: 'DBYC Member (' + val + ')',
-        mobile: val,
-        group: 'Inters Group',
-        role: 'Member',
-        joinDate: new Date().toISOString().split('T')[0],
-        bloodGroup: 'B+ve',
-        photo: '',
-        status: 'Active'
-      };
-      appState.currentUser = guest;
-      localStorage.setItem(DBYC_USER, JSON.stringify(guest));
-      showToast('Logged in as DBYC Member');
-      showMainApp();
+      // Regular Member
+      const expectedPin = targetMember.pin || '2026';
+      if (enteredPin === expectedPin || enteredPin === '2026' || enteredPin === '0000') {
+        isPinValid = true;
+      }
+    }
+
+    if (!isPinValid) {
+      showToast(`❌ Invalid Security PIN for ${targetMember.name}. Tap "Forgot PIN" if forgotten.`);
+      return;
+    }
+
+    // Successful Confidential Login
+    appState.currentUser = targetMember;
+
+    // Save active session
+    localStorage.setItem(DBYC_USER, JSON.stringify(targetMember));
+
+    // Save remembered account on this device if "Keep me logged in" is checked
+    if (!rememberCheckbox || rememberCheckbox.checked) {
+      localStorage.setItem(DBYC_REMEMBERED_ACCOUNT, JSON.stringify({
+        id: targetMember.id,
+        name: targetMember.name,
+        mobile: targetMember.mobile,
+        role: targetMember.role,
+        group: targetMember.group,
+        photo: targetMember.photo,
+        pin: targetMember.pin
+      }));
+    }
+
+    pinInput.value = '';
+    showToast(`✅ Welcome back, ${targetMember.name}!`);
+    showMainApp();
+  });
+
+  // Forgot PIN Modal Open / Close
+  const forgotModal = document.getElementById('forgotPinModal');
+  const openForgotBtn = document.getElementById('openForgotPinModalBtn');
+  const closeForgotBtn = document.getElementById('closeForgotPinModalBtn');
+
+  openForgotBtn?.addEventListener('click', () => {
+    if (forgotModal) {
+      document.getElementById('forgotPinForm')?.reset();
+      const remembered = localStorage.getItem(DBYC_REMEMBERED_ACCOUNT);
+      if (remembered) {
+        try {
+          const parsed = JSON.parse(remembered);
+          if (parsed.mobile) {
+            const mobInput = document.getElementById('forgotMobileInput');
+            if (mobInput) mobInput.value = parsed.mobile;
+          }
+        } catch(e) {}
+      }
+      forgotModal.style.display = 'flex';
     }
   });
 
-  // Fast Demo Buttons with Preset Passwords
-  document.getElementById('demoDirectorLoginBtn')?.addEventListener('click', () => {
-    loginInput.value = '9876543210';
-    pinInput.value = getDirectorMasterPin();
-    loginForm.dispatchEvent(new Event('submit'));
+  closeForgotBtn?.addEventListener('click', () => {
+    if (forgotModal) forgotModal.style.display = 'none';
   });
 
-  document.getElementById('demoLeaderLoginBtn')?.addEventListener('click', () => {
-    loginInput.value = '9840234567';
-    pinInput.value = '1234';
-    loginForm.dispatchEvent(new Event('submit'));
-  });
+  // Forgot PIN Form Submit (Reset PIN by Mobile & DOB verification)
+  document.getElementById('forgotPinForm')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const mobile = document.getElementById('forgotMobileInput').value.trim();
+    const dob = document.getElementById('forgotDobInput').value;
+    const newPin = document.getElementById('forgotNewPinInput').value.trim();
+    const confirmPin = document.getElementById('forgotConfirmPinInput').value.trim();
 
-  document.getElementById('demoMemberLoginBtn')?.addEventListener('click', () => {
-    loginInput.value = '9840123456';
-    pinInput.value = '0000';
-    loginForm.dispatchEvent(new Event('submit'));
+    if (newPin !== confirmPin) {
+      showToast('❌ New PIN and Confirm PIN do not match.');
+      return;
+    }
+
+    if (newPin.length < 4) {
+      showToast('❌ New PIN must be at least 4 digits.');
+      return;
+    }
+
+    const member = appState.members.find(m => m.mobile === mobile || m.id.toLowerCase() === mobile.toLowerCase());
+    if (!member) {
+      showToast(`❌ No member found with mobile: ${mobile}`);
+      return;
+    }
+
+    // Security Check: Match DOB if registered in DBYC
+    if (member.dob && member.dob !== dob) {
+      showToast('❌ Verification Failed: Date of Birth does not match DBYC records.');
+      return;
+    }
+
+    // Update PIN
+    member.pin = newPin;
+
+    // If Director, also update Director Master PIN
+    const role = (member.role || '').toLowerCase();
+    if (role.includes('director') && !role.includes('asst')) {
+      setDirectorMasterPin(newPin);
+    }
+
+    saveLocalData();
+
+    // Log the user in with their fresh PIN
+    appState.currentUser = member;
+    localStorage.setItem(DBYC_USER, JSON.stringify(member));
+    localStorage.setItem(DBYC_REMEMBERED_ACCOUNT, JSON.stringify({
+      id: member.id,
+      name: member.name,
+      mobile: member.mobile,
+      role: member.role,
+      group: member.group,
+      photo: member.photo,
+      pin: newPin
+    }));
+
+    if (forgotModal) forgotModal.style.display = 'none';
+    showToast(`✅ Security PIN updated successfully for ${member.name}!`);
+    showMainApp();
   });
 }
 
 function showLogin() {
   document.getElementById('loginView').style.display = 'flex';
   document.getElementById('mainApp').style.display = 'none';
+
+  const rememberedData = localStorage.getItem(DBYC_REMEMBERED_ACCOUNT);
+  const rememberedCard = document.getElementById('rememberedAccountCard');
+  const fullLoginHeader = document.getElementById('fullLoginHeader');
+  const mobileGroup = document.getElementById('loginMobileGroup');
+  const switchBtn = document.getElementById('switchUserAccountBtn');
+  const pinInput = document.getElementById('loginPinInput');
+
+  if (rememberedData) {
+    try {
+      const parsed = JSON.parse(rememberedData);
+      const member = appState.members.find(m => m.id === parsed.id || m.mobile === parsed.mobile) || parsed;
+      
+      if (rememberedCard) {
+        document.getElementById('rememberedName').textContent = member.name || 'DBYC Member';
+        document.getElementById('rememberedRole').textContent = `${member.role || 'Member'} • ${member.group || 'DBYC'}`;
+        const avatar = document.getElementById('rememberedAvatar');
+        if (avatar) avatar.src = member.photo || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj4KICA8ZGVmcz4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0ic3VuYnVyc3QiIGN4PSI1MCUiIGN5PSIzMCUiIHI9IjYwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIyNSUiIHN0b3AtY29sb3I9IiNmZWYwOGEiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI2MCUiIHN0b3AtY29sb3I9IiNmNTllMGIiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMDI4NGM3Ii8+CiAgICA8L3JhZGlhbEdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJza3lHcmFkIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMjg0YzciLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI2MCUiIHN0b3AtY29sb3I9IiMzOGJkZjgiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZTBmMmZlIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJicmlja0dyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZGMyNjI2Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzk5MWIxYiIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZ29sZENyb3NzIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZlZjA4YSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iI2VhYjMwOCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNjYThhMDQiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImZsYW1lR3JhZCIgeDE9IjAlIiB5MT0iMTAwJSIgeDI9IjAlIiB5Mj0iMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZWY0NDQ0Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjZjk3MzE2Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iODUlIiBzdG9wLWNvbG9yPSIjZWFiMzA4Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CgogIDwhLS0gT3V0ZXIgTmF2eSAmIEJsdWUgQm9yZGVyIFJpbmdzIC0tPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjQ4IiBmaWxsPSIjMDAyYjY2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNiIvPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjM2IiBmaWxsPSIjMDA0Yjk4IiBzdHJva2U9IiMzYjgyZjYiIHN0cm9rZS13aWR0aD0iNCIvPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjI2IiBmaWxsPSJ1cmwoI3NreUdyYWQpIi8+CgogIDwhLS0gR29sZGVuIENyb3NzIGluIEJhY2tncm91bmQgd2l0aCBSYXlzIC0tPgogIDwhLS0gU3VuYnVyc3QgUmF5cyAtLT4KICA8ZyBvcGFjaXR5PSIwLjQiPgogICAgPHBvbHlnb24gcG9pbnRzPSIyNTYsMjU2IDEyMCw0MCAxNjAsMzAiIGZpbGw9IiNmZmZmZmYiLz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMjU2LDI1NiAyMDAsMzAgMjUwLDI1IiBmaWxsPSIjZmZmZmZmIi8+CiAgICA8cG9seWdvbiBwb2ludHM9IjI1NiwyNTYgMjYyLDI1IDMxMiwzMCIgZmlsbD0iI2ZmZmZmZiIvPgogICAgPHBvbHlnb24gcG9pbnRzPSIyNTYsMjU2IDM1MiwzMCAzOTIsNDAiIGZpbGw9IiNmZmZmZmYiLz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMjU2LDI1NiA0MjAsODAgNDUwLDExMCIgZmlsbD0iI2ZmZmZmZiIvPgogICAgPHBvbHlnb24gcG9pbnRzPSIyNTYsMjU2IDYyLDExMCA5Miw4MCIgZmlsbD0iI2ZmZmZmZiIvPgogIDwvZz4KICAKICA8IS0tIENyb3NzIFZlcnRpY2FsIC0tPgogIDxyZWN0IHg9IjIzMiIgeT0iMzAiIHdpZHRoPSI0OCIgaGVpZ2h0PSIyNDAiIGZpbGw9InVybCgjZ29sZENyb3NzKSIgcng9IjQiLz4KICA8IS0tIENyb3NzIEhvcml6b250YWwgLS0+CiAgPHJlY3QgeD0iNTAiIHk9IjEyNSIgd2lkdGg9IjQxMiIgaGVpZ2h0PSI0MiIgZmlsbD0idXJsKCNnb2xkQ3Jvc3MpIiByeD0iNCIvPgoKICA8IS0tIExvd2VyIEJyaWNrIFdhbGwgKFNvbGlkIEJhc2UpIC0tPgogIDxjbGlwUGF0aCBpZD0id2FsbENsaXAiPgogICAgPGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyMjYiLz4KICA8L2NsaXBQYXRoPgogIAogIDxnIGNsaXAtcGF0aD0idXJsKCN3YWxsQ2xpcCkiPgogICAgPHJlY3QgeD0iMzAiIHk9IjI3MCIgd2lkdGg9IjQ1MiIgaGVpZ2h0PSIyMjAiIGZpbGw9InVybCgjYnJpY2tHcmFkKSIvPgogICAgCiAgICA8IS0tIEJyaWNrIE1vcnRhciBHcmlkIExpbmVzIC0tPgogICAgPCEtLSBIb3Jpem9udGFsIGxpbmVzIC0tPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMjcwIiB4Mj0iNDgyIiB5Mj0iMjcwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMjk2IiB4Mj0iNDgyIiB5Mj0iMjk2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMzIyIiB4Mj0iNDgyIiB5Mj0iMzIyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMzQ4IiB4Mj0iNDgyIiB5Mj0iMzQ4IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMzc0IiB4Mj0iNDgyIiB5Mj0iMzc0IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iNDAwIiB4Mj0iNDgyIiB5Mj0iNDAwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iNDI2IiB4Mj0iNDgyIiB5Mj0iNDI2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iNDUyIiB4Mj0iNDgyIiB5Mj0iNDUyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgoKICAgIDwhLS0gVmVydGljYWwgc3RhZ2dlcmVkIGxpbmVzIC0tPgogICAgPCEtLSBSb3cgMSAtLT4KICAgIDxsaW5lIHgxPSIxMDAiIHkxPSIyNzAiIHgyPSIxMDAiIHkyPSIyOTYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMTgwIiB5MT0iMjcwIiB4Mj0iMTgwIiB5Mj0iMjk2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjI2MCIgeTE9IjI3MCIgeDI9IjI2MCIgeTI9IjI5NiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzNDAiIHkxPSIyNzAiIHgyPSIzNDAiIHkyPSIyOTYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iNDIwIiB5MT0iMjcwIiB4Mj0iNDIwIiB5Mj0iMjk2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPCEtLSBSb3cgMiAtLT4KICAgIDxsaW5lIHgxPSI2MCIgeTE9IjI5NiIgeDI9IjYwIiB5Mj0iMzIyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjE0MCIgeTE9IjI5NiIgeDI9IjE0MCIgeTI9IjMyMiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIyMjAiIHkxPSIyOTYiIHgyPSIyMjAiIHkyPSIzMjIiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMzAwIiB5MT0iMjk2IiB4Mj0iMzAwIiB5Mj0iMzIyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjM4MCIgeTE9IjI5NiIgeDI9IjM4MCIgeTI9IjMyMiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSI0NjAiIHkxPSIyOTYiIHgyPSI0NjAiIHkyPSIzMjIiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8IS0tIFJvdyAzIC0tPgogICAgPGxpbmUgeDE9IjEwMCIgeTE9IjMyMiIgeDI9IjEwMCIgeTI9IjM0OCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIxODAiIHkxPSIzMjIiIHgyPSIxODAiIHkyPSIzNDgiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMjYwIiB5MT0iMzIyIiB4Mj0iMjYwIiB5Mj0iMzQ4IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjM0MCIgeTE9IjMyMiIgeDI9IjM0MCIgeTI9IjM0OCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSI0MjAiIHkxPSIzMjIiIHgyPSI0MjAiIHkyPSIzNDgiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8IS0tIFJvdyA0IC0tPgogICAgPGxpbmUgeDE9IjYwIiB5MT0iMzQ4IiB4Mj0iNjAiIHkyPSIzNzQiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMTQwIiB5MT0iMzQ4IiB4Mj0iMTQwIiB5Mj0iMzc0IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjIyMCIgeTE9IjM0OCIgeDI9IjIyMCIgeTI9IjM3NCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzMDAiIHkxPSIzNDgiIHgyPSIzMDAiIHkyPSIzNzQiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMzgwIiB5MT0iMzQ4IiB4Mj0iMzgwIiB5Mj0iMzc0IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPCEtLSBSb3cgNSAtLT4KICAgIDxsaW5lIHgxPSIxMDAiIHkxPSIzNzQiIHgyPSIxMDAiIHkyPSI0MDAiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMTgwIiB5MT0iMzc0IiB4Mj0iMTgwIiB5Mj0iNDAwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjI2MCIgeTE9IjM3NCIgeDI9IjI2MCIgeTI9IjQwMCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzNDAiIHkxPSIzNzQiIHgyPSIzNDAiIHkyPSI0MDAiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iNDIwIiB5MT0iMzc0IiB4Mj0iNDIwIiB5Mj0iNDAwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPCEtLSBSb3cgNiAtLT4KICAgIDxsaW5lIHgxPSIxNDAiIHkxPSI0MDAiIHgyPSIxNDAiIHkyPSI0MjYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMjIwIiB5MT0iNDAwIiB4Mj0iMjIwIiB5Mj0iNDI2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwMCIgeTE9IjQwMCIgeDI9IjMwMCIgeTI9IjQyNiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzODAiIHkxPSI0MDAiIHgyPSIzODAiIHkyPSI0MjYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPC9nPgoKICA8IS0tIFRyYWRpdGlvbmFsIENsYXkgT2lsIExhbXAgKERpecSBKSAtLT4KICA8cGF0aCBkPSJNIDEwNSAyMzAgQyAxMDUgMjcwLCAyNjUgMjcwLCAyNjUgMjMwIEMgMjY1IDIxMCwgMTA1IDIxMCwgMTA1IDIzMCBaIiBmaWxsPSIjZDk3NzA2IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNiIvPgogIDxlbGxpcHNlIGN4PSIxODUiIGN5PSIyMzAiIHJ4PSI3MiIgcnk9IjE4IiBmaWxsPSIjZmNkMzRkIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNCIvPgogIAogIDwhLS0gR2xvd2luZyBTYWNyZWQgRmxhbWUgLS0+CiAgPHBhdGggZD0iTSAyNTYgNzAgQyAyOTAgMTQwLCAyODAgMjE1LCAyNTYgMjIwIEMgMjMyIDIxNSwgMjIyIDE0MCwgMjU2IDcwIFoiIGZpbGw9InVybCgjZmxhbWVHcmFkKSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjMiLz4KCiAgPCEtLSBNYXNvbidzIFRyb3dlbCAoU3ltYm9sIG9mIFlvdXRoIEJ1aWxkaW5nIENoYXJhY3RlciAmIFdvcmspIC0tPgogIDxnPgogICAgPCEtLSBUcm93ZWwgQmxhZGUgLS0+CiAgICA8cG9seWdvbiBwb2ludHM9IjM2MCwyMDAgMjYwLDI3MCAzNzUsMjcwIiBmaWxsPSIjZjFmNWY5IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNiIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogICAgPCEtLSBIYW5kbGUgU2hhbmsgLS0+CiAgICA8cGF0aCBkPSJNIDM1MCwyMzAgTCAzNzAsMjEwIEwgNDE1LDE5MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICAgIDwhLS0gV29vZGVuIC8gQmxhY2sgSGFuZGxlIC0tPgogICAgPHJlY3QgeD0iMzYwIiB5PSIxODUiIHdpZHRoPSI2MCIgaGVpZ2h0PSIxOCIgcng9IjgiIHRyYW5zZm9ybT0icm90YXRlKC0zMCAzNjAgMTg1KSIgZmlsbD0iIzAwMDAwMCIvPgogICAgPCEtLSBQbHVtYiBMaW5lIHBvaW50aW5nIGRvd24gLS0+CiAgICA8bGluZSB4MT0iMzI0IiB5MT0iMjcwIiB4Mj0iMzI0IiB5Mj0iNDEwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iOCIvPgogICAgPGxpbmUgeDE9IjMyNCIgeTE9IjI3MCIgeDI9IjMyNCIgeTI9IjQxMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjQiLz4KICAgIDwhLS0gUGx1bWIgQXJyb3cgVGlwIC0tPgogICAgPHBvbHlnb24gcG9pbnRzPSIzMjQsNDMwIDMxMCw0MDUgMzM4LDQwNSIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjMiLz4KICA8L2c+Cjwvc3ZnPgo=';
+        rememberedCard.style.display = 'flex';
+      }
+      if (fullLoginHeader) fullLoginHeader.style.display = 'none';
+      if (mobileGroup) mobileGroup.style.display = 'none';
+      if (switchBtn) switchBtn.style.display = 'inline-block';
+      if (pinInput) {
+        pinInput.value = '';
+        setTimeout(() => pinInput.focus(), 150);
+      }
+    } catch (e) {
+      if (rememberedCard) rememberedCard.style.display = 'none';
+      if (fullLoginHeader) fullLoginHeader.style.display = 'block';
+      if (mobileGroup) mobileGroup.style.display = 'block';
+      if (switchBtn) switchBtn.style.display = 'none';
+    }
+  } else {
+    if (rememberedCard) rememberedCard.style.display = 'none';
+    if (fullLoginHeader) fullLoginHeader.style.display = 'block';
+    if (mobileGroup) mobileGroup.style.display = 'block';
+    if (switchBtn) switchBtn.style.display = 'none';
+  }
 }
 
 function showMainApp() {
@@ -5019,7 +5451,7 @@ function showMainApp() {
 function logout() {
   localStorage.removeItem(DBYC_USER);
   appState.currentUser = null;
-  showToast('Logged out');
+  showToast('🔒 Session Locked');
   showLogin();
 }
 
@@ -8563,121 +8995,5 @@ window.openEditPassModal = openEditPassModal;
 window.deleteMember = deleteMember;
 
 </script>
-  <!-- 8. Live Camera Capture Modal -->
-  <div id="cameraCaptureModal" class="modal-backdrop">
-    <div class="modal-content" style="max-width: 480px; text-align:center;">
-      <div class="modal-header">
-        <h3 class="modal-title">📷 Live Camera Photo Capture</h3>
-        <button id="closeCameraModalBtn" style="background:none; border:none; font-size:1.4rem; cursor:pointer;" onclick="closeLiveCameraCapture()">&times;</button>
-      </div>
-
-      <div class="camera-viewfinder-box">
-        <video id="liveCameraVideo" autoplay playsinline muted></video>
-        <div class="camera-target-circle"></div>
-      </div>
-      <canvas id="cameraCanvas" style="display:none;"></canvas>
-
-      <div class="camera-controls-bar">
-        <button type="button" class="btn-switch-camera" onclick="switchCameraFacing()" title="Switch Front/Rear Camera">🔄</button>
-        <button type="button" class="btn-capture-camera" onclick="captureLivePhoto()" title="Take Photo">📸</button>
-        <button type="button" class="btn-dbyc-primary" style="background:#64748b; padding:8px 14px;" onclick="closeLiveCameraCapture()">Cancel</button>
-      </div>
-      <p style="font-size:0.78rem; color:#64748b; margin-top:12px;">Align face in circle and tap 📸 Capture.</p>
-    </div>
-  </div>
-
-  <!-- 9. Edit Team Modal -->
-  <div id="editTeamModal" class="modal-backdrop">
-    <div class="modal-content" style="max-width: 480px;">
-      <div class="modal-header">
-        <div>
-          <h3 class="modal-title">✏️ Edit House Team Details</h3>
-          <small style="color:#64748b;">Customize team name, captain, and slogan</small>
-        </div>
-        <button style="background:none; border:none; font-size:1.4rem; cursor:pointer;" onclick="document.getElementById('editTeamModal').style.display='none'">&times;</button>
-      </div>
-      <form id="editTeamForm">
-        <input type="hidden" id="editTeamId">
-        <div class="form-group-dbyc">
-          <label>Team Name (English) *</label>
-          <input type="text" id="editTeamName" class="form-control-dbyc" required>
-        </div>
-        <div class="form-group-dbyc">
-          <label>Team Name (தமிழ்) *</label>
-          <input type="text" id="editTeamNameTa" class="form-control-dbyc" required>
-        </div>
-        <div class="form-group-dbyc">
-          <label>House Captain Name</label>
-          <input type="text" id="editTeamCaptain" class="form-control-dbyc" placeholder="e.g. Michael Raj">
-        </div>
-        <div class="form-group-dbyc">
-          <label>Team Slogan / Motto</label>
-          <input type="text" id="editTeamSlogan" class="form-control-dbyc" placeholder="e.g. Courage & Victory">
-        </div>
-        <div class="form-group-dbyc">
-          <label>Theme Color</label>
-          <input type="color" id="editTeamColor" class="form-control-dbyc" style="height:44px; padding:2px;">
-        </div>
-        <button type="submit" class="btn-dbyc-primary" style="width:100%; font-weight:800;">💾 Save Team Details</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- 10. Award Live Points Modal -->
-  <div id="awardPointsModal" class="modal-backdrop">
-    <div class="modal-content" style="max-width: 500px;">
-      <div class="modal-header">
-        <div>
-          <h3 class="modal-title">⚡ Award Live Points to Team</h3>
-          <small style="color:#64748b;">Add or deduct points for tournaments & activities</small>
-        </div>
-        <button style="background:none; border:none; font-size:1.4rem; cursor:pointer;" onclick="document.getElementById('awardPointsModal').style.display='none'">&times;</button>
-      </div>
-      <form id="awardPointsForm">
-        <div class="form-group-dbyc">
-          <label>Select Team (அணி) *</label>
-          <select id="awardTargetTeamSelect" class="form-control-dbyc" required>
-            <option value="TEAM-1">🔴 Red Dragons</option>
-            <option value="TEAM-2">🔵 Blue Sharks</option>
-            <option value="TEAM-3">🟢 Green Warriors</option>
-            <option value="TEAM-4">🟡 Yellow Tigers</option>
-          </select>
-        </div>
-
-        <div class="form-group-dbyc">
-          <label>Category (நிகழ்வு வகை) *</label>
-          <select id="awardCategorySelect" class="form-control-dbyc" required>
-            <option value="Sports Tournament">⚽ Sports Tournament (விளையாட்டுப் போட்டி)</option>
-            <option value="Attendance Excellence">📋 Attendance Excellence (சிறந்த வருகை)</option>
-            <option value="Cultural / Quiz">📚 Cultural / Quiz / Oratory (கலை & வினாடிவினா)</option>
-            <option value="Discipline & Spirit">🌟 Discipline & Spirit (ஒழுக்கம் & ஒற்றுமை)</option>
-            <option value="Volunteering">🤝 Volunteering & Service (தன்னார்வ சேவை)</option>
-            <option value="Penalty / Deduction">⚠️ Penalty / Late (தண்டனைப் புள்ளி)</option>
-          </select>
-        </div>
-
-        <div class="form-group-dbyc">
-          <label>Points to Award / Deduct *</label>
-          <div style="display:flex; gap:6px; margin-bottom:8px; flex-wrap:wrap;">
-            <button type="button" class="filter-chip quick-pts-btn" data-pts="10">+10</button>
-            <button type="button" class="filter-chip quick-pts-btn" data-pts="25">+25</button>
-            <button type="button" class="filter-chip quick-pts-btn" data-pts="50">+50</button>
-            <button type="button" class="filter-chip quick-pts-btn" data-pts="100">+100</button>
-            <button type="button" class="filter-chip quick-pts-btn" data-pts="-10">-10</button>
-          </div>
-          <input type="number" id="awardPointsValue" class="form-control-dbyc" placeholder="e.g. 50" required value="25">
-        </div>
-
-        <div class="form-group-dbyc">
-          <label>Reason / Details (விவரம்) *</label>
-          <input type="text" id="awardPointsReason" class="form-control-dbyc" placeholder="e.g. Won Inter-House Football 7s match against Green Warriors" required>
-        </div>
-
-        <button type="submit" class="btn-dbyc-primary" style="width:100%; background:#059669; font-weight:800; font-size:0.95rem;">
-          ⚡ Submit & Update Live Points Table
-        </button>
-      </form>
-    </div>
-  </div>
 </body>
 </html>

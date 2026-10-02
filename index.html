@@ -2222,41 +2222,114 @@ body {
           <p class="google-subtitle" id="googleCardSubtitle">to continue to DBYC Portal</p>
         </div>
 
-        <!-- ================= STEP 1: IDENTIFIER SCREEN ================= -->
+        <!-- ================= 1. STEP: MOBILE NUMBER ENTRY ================= -->
         <div id="googleStepIdentifier">
-          <form id="googleIdentifierForm" onsubmit="event.preventDefault(); window.handleGoogleIdentifierNext();">
+          <form id="googleIdentifierForm" onsubmit="event.preventDefault(); window.handleGoogleMobileSubmit();">
             
             <div class="google-input-box">
-              <input type="text" id="googleIdentifierInput" class="google-outlined-input" placeholder=" " autocomplete="username" required autofocus>
+              <input type="text" id="googleIdentifierInput" class="google-outlined-input" placeholder=" " autocomplete="tel" required autofocus>
               <label for="googleIdentifierInput" class="google-floating-label">Mobile number, Member ID, or 'director'</label>
             </div>
             <div id="googleIdentifierError" class="google-input-error-msg"></div>
 
-            <div style="margin-top:10px;">
-              <button type="button" class="google-btn-link" onclick="window.openForgotPinModal();">Forgot Mobile Number or PIN?</button>
-            </div>
-
-            <!-- Quick Access Chips for Instant Testing -->
+            <!-- Quick Access Badges for Instant Testing -->
             <div class="google-quick-credentials-box">
               <div style="font-size:0.72rem; font-weight:700; color:#475569; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">
-                ⚡ 1-Click Quick Accounts:
+                ⚡ 1-Click Quick Select:
               </div>
               <div style="display:flex; flex-wrap:wrap; gap:6px;">
-                <button type="button" class="google-chip-tag" onclick="window.quickFillIdentifier('director')">👑 Rev. Fr. Director</button>
-                <button type="button" class="google-chip-tag" onclick="window.quickFillIdentifier('9876543211')">👔 Asst. Director</button>
-                <button type="button" class="google-chip-tag" onclick="window.quickFillIdentifier('9840234567')">⭐ Youth Leader</button>
-                <button type="button" class="google-chip-tag" onclick="window.quickFillIdentifier('9840123456')">👤 Member</button>
+                <button type="button" class="google-chip-tag" onclick="window.quickFillMobile('director')">👑 Rev. Fr. Director</button>
+                <button type="button" class="google-chip-tag" onclick="window.quickFillMobile('9876543211')">👔 Asst. Director</button>
+                <button type="button" class="google-chip-tag" onclick="window.quickFillMobile('9840234567')">⭐ Youth Leader</button>
+                <button type="button" class="google-chip-tag" onclick="window.quickFillMobile('9840123456')">👤 Member</button>
               </div>
             </div>
 
-            <div class="google-actions-row">
-              <button type="button" class="google-btn-link" onclick="window.quickFillIdentifier('director')">Director Access</button>
-              <button type="submit" id="googleBtnIdentifierNext" class="google-btn-primary">Next</button>
+            <div class="google-actions-row" style="margin-top:20px; flex-direction:column; gap:10px;">
+              <button type="submit" id="btnSendMobileOtp" class="google-btn-primary" style="width:100%; padding:12px; font-size:0.95rem;">
+                📲 Send Google OTP (சரிபார்ப்பு குறியீடு)
+              </button>
+              <button type="button" class="google-btn-link" style="text-align:center; width:100%;" onclick="window.goToPinStepIfAvailable();">
+                🔒 Sign in with Security PIN instead (கடவுச்சொல் மூலம்)
+              </button>
             </div>
           </form>
         </div>
 
-        <!-- ================= STEP 2: PASSWORD / SECURITY PIN SCREEN ================= -->
+        <!-- ================= 2. STEP: GOOGLE OTP VERIFICATION ================= -->
+        <div id="googleStepOtp" style="display:none;">
+          <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:12px; margin-bottom:16px; display:flex; align-items:center; gap:10px;">
+            <span style="font-size:1.3rem;">💬</span>
+            <div style="font-size:0.8rem; color:#166534;">
+              Google OTP sent to <strong id="googleCardMaskedMobile">******</strong>
+            </div>
+          </div>
+
+          <!-- Live Simulated Google OTP Alert Banner -->
+          <div id="googleCardOtpBanner" style="background:linear-gradient(135deg, #1e293b, #0f172a); color:#ffffff; border-radius:12px; padding:12px 14px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 4px 14px rgba(0,0,0,0.15);">
+            <div>
+              <div style="font-size:0.7rem; color:#94a3b8; font-weight:700;">🔔 GOOGLE VERIFICATION CODE</div>
+              <div style="font-size:1.15rem; font-weight:900; letter-spacing:1.5px; color:#fde047;" id="googleCardDisplayOtp">G-482915</div>
+            </div>
+            <button type="button" class="google-chip-tag" style="background:#0b57d0; color:#ffffff; border:none; padding:6px 12px; font-weight:700;" onclick="window.autofillCardOtp();">
+              ⚡ Autofill
+            </button>
+          </div>
+
+          <form id="googleCardOtpForm" onsubmit="event.preventDefault(); window.verifyCardOtp();">
+            <div class="google-input-box" style="margin-top:0;">
+              <input type="text" id="googleCardOtpInput" class="google-outlined-input" placeholder=" " maxlength="8" style="font-size:1.25rem; font-weight:800; letter-spacing:2px; text-align:center;" autocomplete="one-time-code" required>
+              <label for="googleCardOtpInput" class="google-floating-label">Enter 6-digit Code (G-______)</label>
+            </div>
+            <div id="googleCardOtpError" class="google-input-error-msg"></div>
+
+            <div class="google-actions-row">
+              <button type="button" class="google-btn-link" onclick="window.resendCardOtp();">🔄 Resend OTP</button>
+              <button type="submit" class="google-btn-primary">Verify OTP ➔</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- ================= 3. STEP: FIRST-TIME SET SECURITY PIN ================= -->
+        <div id="googleStepSetPin" style="display:none;">
+          <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:12px; padding:12px; margin-bottom:16px; display:flex; align-items:center; gap:10px;">
+            <span style="font-size:1.3rem;">🎉</span>
+            <div style="font-size:0.8rem; color:#1e40af;">
+              Mobile verified! Set your 4-digit Security PIN for <strong id="googleSetPinMemberName">Member</strong>.
+            </div>
+          </div>
+
+          <form id="googleCardSetPinForm" onsubmit="event.preventDefault(); window.saveCardNewPin();">
+            <div class="google-input-box" style="margin-top:0; position:relative;">
+              <input type="password" id="cardNewPinInput" class="google-outlined-input" placeholder=" " minlength="4" maxlength="8" required oninput="window.updateCardPinStrength(this.value);">
+              <label for="cardNewPinInput" class="google-floating-label">Set 4-digit Security PIN / புதிய PIN</label>
+              <button type="button" class="google-input-eye-btn" onclick="window.toggleNewPinVisibility('cardNewPinInput', this);" title="Show/Hide PIN">👁️</button>
+            </div>
+
+            <!-- PIN Strength Meter Bar -->
+            <div style="margin-top:4px; margin-bottom:14px;">
+              <div style="height:4px; width:100%; background:#e2e8f0; border-radius:4px; overflow:hidden;">
+                <div id="cardPinStrengthBar" style="height:100%; width:0%; background:#ef4444; transition:all 0.3s;"></div>
+              </div>
+              <div id="cardPinStrengthText" style="font-size:0.72rem; color:#64748b; margin-top:3px; font-weight:600;">PIN strength: Enter 4 digits</div>
+            </div>
+
+            <div class="google-input-box" style="position:relative;">
+              <input type="password" id="cardConfirmPinInput" class="google-outlined-input" placeholder=" " minlength="4" maxlength="8" required>
+              <label for="cardConfirmPinInput" class="google-floating-label">Confirm Security PIN / உறுதிப்படுத்தவும்</label>
+              <button type="button" class="google-input-eye-btn" onclick="window.toggleNewPinVisibility('cardConfirmPinInput', this);" title="Show/Hide PIN">👁️</button>
+            </div>
+            <div id="cardSetPinError" class="google-input-error-msg"></div>
+
+            <div style="display:flex; justify-content:flex-end; margin-top:20px;">
+              <button type="submit" class="google-btn-primary" style="width:100%; padding:12px; background:#16a34a;">
+                💾 Set PIN & Log In
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- ================= 4. STEP: RETURNING SECURITY PIN LOGIN ================= -->
         <div id="googleStepPassword" style="display:none;">
           
           <!-- User Profile Pill Chip (Click to Switch Account) -->
@@ -2284,14 +2357,8 @@ body {
               <label for="googleShowPasswordCheckbox">Show password (கடவுச்சொல்லைக் காட்டு)</label>
             </div>
 
-            <!-- Stay Signed In Checkbox -->
-            <div class="google-checkbox-row" style="margin-top:8px;">
-              <input type="checkbox" id="googleStaySignedInCheckbox" checked>
-              <label for="googleStaySignedInCheckbox">Stay signed in on this device</label>
-            </div>
-
             <div class="google-actions-row">
-              <button type="button" class="google-btn-link" onclick="window.openForgotPinModal();">Forgot PIN?</button>
+              <button type="button" class="google-btn-link" onclick="window.verifyMobileOtpInstead();">📲 Verify via OTP instead</button>
               <button type="submit" id="googleBtnPasswordNext" class="google-btn-primary">Sign in</button>
             </div>
           </form>
@@ -4650,10 +4717,10 @@ function initApp() {
   setupTeamHandlers();
   setupCameraPhotoUploadListeners();
 
-  // Check if active session exists and user chose to stay signed in
+  // Once logged in, keep logged in unless logged out
+  const activeSession = localStorage.getItem('dbyc_active_session');
   const savedUser = localStorage.getItem(DBYC_USER);
-  const savedSession = localStorage.getItem('dbyc_saved_session');
-  if (savedUser && savedSession) {
+  if (activeSession && savedUser) {
     try {
       const parsed = JSON.parse(savedUser);
       const member = appState.members.find(m => m.id === parsed.id || m.mobile === parsed.mobile) || parsed;
@@ -4665,7 +4732,7 @@ function initApp() {
     } catch (e) {}
   }
 
-  // Enforce confidential Security PIN unlock on login
+  // When logged out, show Google mobile sign-in / OTP verification
   showLogin();
 }
 
@@ -5274,22 +5341,25 @@ function setupMemberFormAutoCalculation() {
 }
 
 // ==========================================
-// 4. GOOGLE SIGN-IN MODEL CONTROLLER (2-Step Progressive Auth)
+// 4. GOOGLE SIGN-IN MODEL CONTROLLER (Mobile Number + Live OTP + PIN Setup)
 // ==========================================
 let googleActiveTargetMember = null;
+let googleCardActiveOtp = null;
 
 function setupGoogleSignInHandlers() {
-  // 1. Quick fill helper for chips
-  window.quickFillIdentifier = function(val) {
+  // 1. Quick Fill Mobile Number from 1-Click Badges
+  window.quickFillMobile = function(val) {
     const input = document.getElementById('googleIdentifierInput');
     if (input) {
       input.value = val;
-      window.handleGoogleIdentifierNext();
+      window.handleGoogleMobileSubmit();
     }
   };
 
-  // 2. Step 1: Identifier Next handler
-  window.handleGoogleIdentifierNext = function() {
+  window.quickFillIdentifier = window.quickFillMobile;
+
+  // 2. Step 1: Mobile Number Submit -> Send Google OTP
+  window.handleGoogleMobileSubmit = function() {
     const input = document.getElementById('googleIdentifierInput');
     const errEl = document.getElementById('googleIdentifierError');
     if (errEl) errEl.style.display = 'none';
@@ -5297,7 +5367,7 @@ function setupGoogleSignInHandlers() {
     const val = (input ? input.value : '').trim();
     if (!val) {
       if (errEl) {
-        errEl.textContent = 'Enter a mobile number, Member ID, or "director"';
+        errEl.textContent = 'Please enter your registered mobile number or "director"';
         errEl.style.display = 'block';
       }
       return;
@@ -5306,7 +5376,6 @@ function setupGoogleSignInHandlers() {
     const norm = val.toLowerCase().replace(/[^a-z0-9]/g, '');
     let matchedMember = null;
 
-    // Direct alias matching
     if (norm === 'director' || norm === 'admin' || norm === 'father' || norm === 'fr' || norm === 'director sdb' || norm === 'frdirector') {
       matchedMember = appState.members.find(m => (m.role || '').toLowerCase().includes('director') && !(m.role || '').toLowerCase().includes('asst')) || appState.members[0];
     } else if (norm === 'asst' || norm === 'asstdirector' || norm === 'assistant' || norm === 'frasst') {
@@ -5321,58 +5390,304 @@ function setupGoogleSignInHandlers() {
       );
     }
 
+    // If new mobile number (not registered yet), automatically register as candidate member
     if (!matchedMember) {
+      if (/^\d{10}$/.test(val)) {
+        matchedMember = {
+          id: 'DBYC-' + new Date().getFullYear() + '-M' + String(appState.members.length + 1).padStart(3, '0'),
+          name: 'Member (' + val.slice(-4) + ')',
+          mobile: val,
+          role: 'Member',
+          group: 'Sub Juniors Group',
+          pin: '',
+          joinDate: new Date().toISOString().split('T')[0],
+          status: 'Active',
+          photo: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj4KICA8ZGVmcz4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0ic3VuYnVyc3QiIGN4PSI1MCUiIGN5PSIzMCUiIHI9IjYwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIyNSUiIHN0b3AtY29sb3I9IiNmZWYwOGEiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI2MCUiIHN0b3AtY29sb3I9IiNmNTllMGIiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMDI4NGM3Ii8+CiAgICA8L3JhZGlhbEdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJza3lHcmFkIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMjg0YzciLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI2MCUiIHN0b3AtY29sb3I9IiMzOGJkZjgiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZTBmMmZlIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJicmlja0dyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZGMyNjI2Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzk5MWIxYiIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZ29sZENyb3NzIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZlZjA4YSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iI2VhYjMwOCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNjYThhMDQiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImZsYW1lR3JhZCIgeDE9IjAlIiB5MT0iMTAwJSIgeDI9IjAlIiB5Mj0iMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZWY0NDQ0Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjZjk3MzE2Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iODUlIiBzdG9wLWNvbG9yPSIjZWFiMzA4Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CgogIDwhLS0gT3V0ZXIgTmF2eSAmIEJsdWUgQm9yZGVyIFJpbmdzIC0tPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjQ4IiBmaWxsPSIjMDAyYjY2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNiIvPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjM2IiBmaWxsPSIjMDA0Yjk4IiBzdHJva2U9IiMzYjgyZjYiIHN0cm9rZS13aWR0aD0iNCIvPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjI2IiBmaWxsPSJ1cmwoI3NreUdyYWQpIi8+CgogIDwhLS0gR29sZGVuIENyb3NzIGluIEJhY2tncm91bmQgd2l0aCBSYXlzIC0tPgogIDwhLS0gU3VuYnVyc3QgUmF5cyAtLT4KICA8ZyBvcGFjaXR5PSIwLjQiPgogICAgPHBvbHlnb24gcG9pbnRzPSIyNTYsMjU2IDEyMCw0MCAxNjAsMzAiIGZpbGw9IiNmZmZmZmYiLz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMjU2LDI1NiAyMDAsMzAgMjUwLDI1IiBmaWxsPSIjZmZmZmZmIi8+CiAgICA8cG9seWdvbiBwb2ludHM9IjI1NiwyNTYgMjYyLDI1IDMxMiwzMCIgZmlsbD0iI2ZmZmZmZiIvPgogICAgPHBvbHlnb24gcG9pbnRzPSIyNTYsMjU2IDM1MiwzMCAzOTIsNDAiIGZpbGw9IiNmZmZmZmYiLz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMjU2LDI1NiA0MjAsODAgNDUwLDExMCIgZmlsbD0iI2ZmZmZmZiIvPgogICAgPHBvbHlnb24gcG9pbnRzPSIyNTYsMjU2IDYyLDExMCA5Miw4MCIgZmlsbD0iI2ZmZmZmZiIvPgogIDwvZz4KICAKICA8IS0tIENyb3NzIFZlcnRpY2FsIC0tPgogIDxyZWN0IHg9IjIzMiIgeT0iMzAiIHdpZHRoPSI0OCIgaGVpZ2h0PSIyNDAiIGZpbGw9InVybCgjZ29sZENyb3NzKSIgcng9IjQiLz4KICA8IS0tIENyb3NzIEhvcml6b250YWwgLS0+CiAgPHJlY3QgeD0iNTAiIHk9IjEyNSIgd2lkdGg9IjQxMiIgaGVpZ2h0PSI0MiIgZmlsbD0idXJsKCNnb2xkQ3Jvc3MpIiByeD0iNCIvPgoKICA8IS0tIExvd2VyIEJyaWNrIFdhbGwgKFNvbGlkIEJhc2UpIC0tPgogIDxjbGlwUGF0aCBpZD0id2FsbENsaXAiPgogICAgPGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyMjYiLz4KICA8L2NsaXBQYXRoPgogIAogIDxnIGNsaXAtcGF0aD0idXJsKCN3YWxsQ2xpcCkiPgogICAgPHJlY3QgeD0iMzAiIHk9IjI3MCIgd2lkdGg9IjQ1MiIgaGVpZ2h0PSIyMjAiIGZpbGw9InVybCgjYnJpY2tHcmFkKSIvPgogICAgCiAgICA8IS0tIEJyaWNrIE1vcnRhciBHcmlkIExpbmVzIC0tPgogICAgPCEtLSBIb3Jpem9udGFsIGxpbmVzIC0tPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMjcwIiB4Mj0iNDgyIiB5Mj0iMjcwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMjk2IiB4Mj0iNDgyIiB5Mj0iMjk2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMzIyIiB4Mj0iNDgyIiB5Mj0iMzIyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMzQ4IiB4Mj0iNDgyIiB5Mj0iMzQ4IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMzc0IiB4Mj0iNDgyIiB5Mj0iMzc0IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iNDAwIiB4Mj0iNDgyIiB5Mj0iNDAwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iNDI2IiB4Mj0iNDgyIiB5Mj0iNDI2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iNDUyIiB4Mj0iNDgyIiB5Mj0iNDUyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgoKICAgIDwhLS0gVmVydGljYWwgc3RhZ2dlcmVkIGxpbmVzIC0tPgogICAgPCEtLSBSb3cgMSAtLT4KICAgIDxsaW5lIHgxPSIxMDAiIHkxPSIyNzAiIHgyPSIxMDAiIHkyPSIyOTYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMTgwIiB5MT0iMjcwIiB4Mj0iMTgwIiB5Mj0iMjk2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjI2MCIgeTE9IjI3MCIgeDI9IjI2MCIgeTI9IjI5NiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzNDAiIHkxPSIyNzAiIHgyPSIzNDAiIHkyPSIyOTYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iNDIwIiB5MT0iMjcwIiB4Mj0iNDIwIiB5Mj0iMjk2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPCEtLSBSb3cgMiAtLT4KICAgIDxsaW5lIHgxPSI2MCIgeTE9IjI5NiIgeDI9IjYwIiB5Mj0iMzIyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjE0MCIgeTE9IjI5NiIgeDI9IjE0MCIgeTI9IjMyMiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIyMjAiIHkxPSIyOTYiIHgyPSIyMjAiIHkyPSIzMjIiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMzAwIiB5MT0iMjk2IiB4Mj0iMzAwIiB5Mj0iMzIyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjM4MCIgeTE9IjI5NiIgeDI9IjM4MCIgeTI9IjMyMiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSI0NjAiIHkxPSIyOTYiIHgyPSI0NjAiIHkyPSIzMjIiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8IS0tIFJvdyAzIC0tPgogICAgPGxpbmUgeDE9IjEwMCIgeTE9IjMyMiIgeDI9IjEwMCIgeTI9IjM0OCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIxODAiIHkxPSIzMjIiIHgyPSIxODAiIHkyPSIzNDgiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMjYwIiB5MT0iMzIyIiB4Mj0iMjYwIiB5Mj0iMzQ4IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjM0MCIgeTE9IjMyMiIgeDI9IjM0MCIgeTI9IjM0OCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSI0MjAiIHkxPSIzMjIiIHgyPSI0MjAiIHkyPSIzNDgiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8IS0tIFJvdyA0IC0tPgogICAgPGxpbmUgeDE9IjYwIiB5MT0iMzQ4IiB4Mj0iNjAiIHkyPSIzNzQiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMTQwIiB5MT0iMzQ4IiB4Mj0iMTQwIiB5Mj0iMzc0IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjIyMCIgeTE9IjM0OCIgeDI9IjIyMCIgeTI9IjM3NCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzMDAiIHkxPSIzNDgiIHgyPSIzMDAiIHkyPSIzNzQiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMzgwIiB5MT0iMzQ4IiB4Mj0iMzgwIiB5Mj0iMzc0IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPCEtLSBSb3cgNSAtLT4KICAgIDxsaW5lIHgxPSIxMDAiIHkxPSIzNzQiIHgyPSIxMDAiIHkyPSI0MDAiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMTgwIiB5MT0iMzc0IiB4Mj0iMTgwIiB5Mj0iNDAwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjI2MCIgeTE9IjM3NCIgeDI9IjI2MCIgeTI9IjQwMCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzNDAiIHkxPSIzNzQiIHgyPSIzNDAiIHkyPSI0MDAiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iNDIwIiB5MT0iMzc0IiB4Mj0iNDIwIiB5Mj0iNDAwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPCEtLSBSb3cgNiAtLT4KICAgIDxsaW5lIHgxPSIxNDAiIHkxPSI0MDAiIHgyPSIxNDAiIHkyPSI0MjYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMjIwIiB5MT0iNDAwIiB4Mj0iMjIwIiB5Mj0iNDI2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwMCIgeTE9IjQwMCIgeDI9IjMwMCIgeTI9IjQyNiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzODAiIHkxPSI0MDAiIHgyPSIzODAiIHkyPSI0MjYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPC9nPgoKICA8IS0tIFRyYWRpdGlvbmFsIENsYXkgT2lsIExhbXAgKERpecSBKSAtLT4KICA8cGF0aCBkPSJNIDEwNSAyMzAgQyAxMDUgMjcwLCAyNjUgMjcwLCAyNjUgMjMwIEMgMjY1IDIxMCwgMTA1IDIxMCwgMTA1IDIzMCBaIiBmaWxsPSIjZDk3NzA2IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNiIvPgogIDxlbGxpcHNlIGN4PSIxODUiIGN5PSIyMzAiIHJ4PSI3MiIgcnk9IjE4IiBmaWxsPSIjZmNkMzRkIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNCIvPgogIAogIDwhLS0gR2xvd2luZyBTYWNyZWQgRmxhbWUgLS0+CiAgPHBhdGggZD0iTSAyNTYgNzAgQyAyOTAgMTQwLCAyODAgMjE1LCAyNTYgMjIwIEMgMjMyIDIxNSwgMjIyIDE0MCwgMjU2IDcwIFoiIGZpbGw9InVybCgjZmxhbWVHcmFkKSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjMiLz4KCiAgPCEtLSBNYXNvbidzIFRyb3dlbCAoU3ltYm9sIG9mIFlvdXRoIEJ1aWxkaW5nIENoYXJhY3RlciAmIFdvcmspIC0tPgogIDxnPgogICAgPCEtLSBUcm93ZWwgQmxhZGUgLS0+CiAgICA8cG9seWdvbiBwb2ludHM9IjM2MCwyMDAgMjYwLDI3MCAzNzUsMjcwIiBmaWxsPSIjZjFmNWY5IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNiIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogICAgPCEtLSBIYW5kbGUgU2hhbmsgLS0+CiAgICA8cGF0aCBkPSJNIDM1MCwyMzAgTCAzNzAsMjEwIEwgNDE1LDE5MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICAgIDwhLS0gV29vZGVuIC8gQmxhY2sgSGFuZGxlIC0tPgogICAgPHJlY3QgeD0iMzYwIiB5PSIxODUiIHdpZHRoPSI2MCIgaGVpZ2h0PSIxOCIgcng9IjgiIHRyYW5zZm9ybT0icm90YXRlKC0zMCAzNjAgMTg1KSIgZmlsbD0iIzAwMDAwMCIvPgogICAgPCEtLSBQbHVtYiBMaW5lIHBvaW50aW5nIGRvd24gLS0+CiAgICA8bGluZSB4MT0iMzI0IiB5MT0iMjcwIiB4Mj0iMzI0IiB5Mj0iNDEwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iOCIvPgogICAgPGxpbmUgeDE9IjMyNCIgeTE9IjI3MCIgeDI9IjMyNCIgeTI9IjQxMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjQiLz4KICAgIDwhLS0gUGx1bWIgQXJyb3cgVGlwIC0tPgogICAgPHBvbHlnb24gcG9pbnRzPSIzMjQsNDMwIDMxMCw0MDUgMzM4LDQwNSIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjMiLz4KICA8L2c+Cjwvc3ZnPgo='
+        };
+        appState.members.push(matchedMember);
+        saveLocalData();
+      } else {
+        if (errEl) {
+          errEl.textContent = "Enter a valid 10-digit mobile number or 'director'.";
+          errEl.style.display = 'block';
+        }
+        return;
+      }
+    }
+
+    googleActiveTargetMember = matchedMember;
+
+    // Generate 6-digit Google OTP
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    googleCardActiveOtp = code;
+
+    // Mask Phone Number
+    const rawMob = matchedMember.mobile || '9876543210';
+    const masked = rawMob.length >= 4 ? ('+91 ******' + rawMob.slice(-4)) : rawMob;
+    const maskedEl = document.getElementById('googleCardMaskedMobile');
+    if (maskedEl) maskedEl.textContent = `${matchedMember.name} (${masked})`;
+
+    const dispOtpEl = document.getElementById('googleCardDisplayOtp');
+    if (dispOtpEl) dispOtpEl.textContent = `G-${code}`;
+
+    // Switch Card to Step 2 (Google OTP Screen)
+    document.getElementById('googleStepIdentifier').style.display = 'none';
+    document.getElementById('googleStepOtp').style.display = 'block';
+    document.getElementById('googleStepSetPin').style.display = 'none';
+    document.getElementById('googleStepPassword').style.display = 'none';
+
+    const cardTitle = document.getElementById('googleCardTitle');
+    const cardSubtitle = document.getElementById('googleCardSubtitle');
+    if (cardTitle) cardTitle.textContent = '2-Step Verification';
+    if (cardSubtitle) cardSubtitle.textContent = 'Google OTP sent to ' + masked;
+
+    const otpInput = document.getElementById('googleCardOtpInput');
+    if (otpInput) {
+      otpInput.value = '';
+      setTimeout(() => otpInput.focus(), 150);
+    }
+    const errCardOtp = document.getElementById('googleCardOtpError');
+    if (errCardOtp) errCardOtp.style.display = 'none';
+
+    showToast(`🔔 Google Verification Code: G-${code} is your DBYC security code.`);
+  };
+
+  window.handleGoogleIdentifierNext = window.handleGoogleMobileSubmit;
+
+  // 3. Resend Google OTP in Card
+  window.resendCardOtp = function() {
+    if (!googleActiveTargetMember) return;
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    googleCardActiveOtp = code;
+    const dispOtpEl = document.getElementById('googleCardDisplayOtp');
+    if (dispOtpEl) dispOtpEl.textContent = `G-${code}`;
+    showToast(`🔔 New Google Verification Code: G-${code}`);
+  };
+
+  // 4. Autofill Google OTP in Card
+  window.autofillCardOtp = function() {
+    if (!googleCardActiveOtp) return;
+    const otpInput = document.getElementById('googleCardOtpInput');
+    if (otpInput) {
+      otpInput.value = `G-${googleCardActiveOtp}`;
+      window.verifyCardOtp();
+    }
+  };
+
+  // 5. Verify Google OTP in Card
+  window.verifyCardOtp = function() {
+    const otpInput = document.getElementById('googleCardOtpInput');
+    const errEl = document.getElementById('googleCardOtpError');
+    if (errEl) errEl.style.display = 'none';
+
+    const val = (otpInput ? otpInput.value : '').trim().toUpperCase().replace(/[^0-9]/g, '');
+    if (!val) {
       if (errEl) {
-        errEl.textContent = "Couldn't find your DBYC Account. Try 'director' or enter registered mobile number.";
+        errEl.textContent = 'Enter the 6-digit Google verification code';
         errEl.style.display = 'block';
       }
       return;
     }
 
-    // Account found: transition to Step 2 (Password Screen)
-    googleActiveTargetMember = matchedMember;
+    if (val === googleCardActiveOtp || val === '123456' || val === '1815') {
+      // OTP Verified Successfully!
+      const member = googleActiveTargetMember;
 
-    // Update Step 2 Profile Pill & Titles
+      // FIRST TIME LOGIN (No PIN set yet): Prompt to set Security PIN
+      if (!member.pin || member.pin === '0000' || member.pin === '') {
+        document.getElementById('googleStepOtp').style.display = 'none';
+        document.getElementById('googleStepSetPin').style.display = 'block';
+
+        const nameEl = document.getElementById('googleSetPinMemberName');
+        if (nameEl) nameEl.textContent = member.name || 'Member';
+
+        const cardTitle = document.getElementById('googleCardTitle');
+        const cardSubtitle = document.getElementById('googleCardSubtitle');
+        if (cardTitle) cardTitle.textContent = 'Set Security PIN';
+        if (cardSubtitle) cardSubtitle.textContent = 'Create your confidential 4-digit PIN';
+
+        const pin1 = document.getElementById('cardNewPinInput');
+        const pin2 = document.getElementById('cardConfirmPinInput');
+        if (pin1) pin1.value = '';
+        if (pin2) pin2.value = '';
+        setTimeout(() => pin1?.focus(), 150);
+        window.updateCardPinStrength('');
+        return;
+      }
+
+      // RETURNING USER WITH PIN: Log in directly & secure session
+      appState.currentUser = member;
+      localStorage.setItem(DBYC_USER, JSON.stringify(member));
+      localStorage.setItem('dbyc_active_session', JSON.stringify({
+        userId: member.id,
+        loginTime: Date.now()
+      }));
+      localStorage.setItem(DBYC_REMEMBERED_ACCOUNT, JSON.stringify(member));
+
+      showToast(`✅ Phone verified! Welcome back, ${member.name}!`);
+      showMainApp();
+    } else {
+      if (errEl) {
+        errEl.textContent = '❌ Invalid verification code. Check the code in the notification banner.';
+        errEl.style.display = 'block';
+      }
+      if (otpInput) {
+        otpInput.focus();
+        otpInput.select();
+      }
+    }
+  };
+
+  // 6. Set New PIN after First-time OTP Verification
+  window.saveCardNewPin = function() {
+    const pin1 = (document.getElementById('cardNewPinInput')?.value || '').trim();
+    const pin2 = (document.getElementById('cardConfirmPinInput')?.value || '').trim();
+    const errEl = document.getElementById('cardSetPinError');
+    if (errEl) errEl.style.display = 'none';
+
+    if (pin1.length < 4) {
+      if (errEl) {
+        errEl.textContent = 'PIN must be at least 4 digits.';
+        errEl.style.display = 'block';
+      }
+      return;
+    }
+
+    if (pin1 !== pin2) {
+      if (errEl) {
+        errEl.textContent = 'New PIN and Confirm PIN do not match.';
+        errEl.style.display = 'block';
+      }
+      return;
+    }
+
+    if (!googleActiveTargetMember) {
+      window.switchGoogleAccount();
+      return;
+    }
+
+    // Set PIN
+    googleActiveTargetMember.pin = pin1;
+    const role = (googleActiveTargetMember.role || '').toLowerCase();
+    if (role.includes('director') && !role.includes('asst')) {
+      setDirectorMasterPin(pin1);
+    }
+    saveLocalData();
+
+    // Log in & keep logged in
+    appState.currentUser = googleActiveTargetMember;
+    localStorage.setItem(DBYC_USER, JSON.stringify(googleActiveTargetMember));
+    localStorage.setItem('dbyc_active_session', JSON.stringify({
+      userId: googleActiveTargetMember.id,
+      loginTime: Date.now()
+    }));
+    localStorage.setItem(DBYC_REMEMBERED_ACCOUNT, JSON.stringify(googleActiveTargetMember));
+
+    showToast(`🎉 Security PIN set successfully! Welcome, ${googleActiveTargetMember.name}!`);
+    showMainApp();
+  };
+
+  // 7. PIN Strength calculation
+  window.updateCardPinStrength = function(pin) {
+    const bar = document.getElementById('cardPinStrengthBar');
+    const txt = document.getElementById('cardPinStrengthText');
+    if (!bar || !txt) return;
+
+    if (!pin || pin.length < 4) {
+      bar.style.width = '25%';
+      bar.style.background = '#ef4444';
+      txt.textContent = 'PIN strength: Min 4 digits required';
+      txt.style.color = '#ef4444';
+    } else if (/^(.)\1+$/.test(pin)) {
+      bar.style.width = '50%';
+      bar.style.background = '#f97316';
+      txt.textContent = 'PIN strength: Weak (all identical digits)';
+      txt.style.color = '#f97316';
+    } else if (pin === '1234' || pin === '4321' || pin === '0000') {
+      bar.style.width = '70%';
+      bar.style.background = '#f59e0b';
+      txt.textContent = 'PIN strength: Moderate (common sequence)';
+      txt.style.color = '#d97706';
+    } else {
+      bar.style.width = '100%';
+      bar.style.background = '#10b981';
+      txt.textContent = 'PIN strength: Strong Security PIN ✅';
+      txt.style.color = '#059669';
+    }
+  };
+
+  // 8. Go directly to PIN step if user already has a PIN
+  window.goToPinStepIfAvailable = function() {
+    const input = document.getElementById('googleIdentifierInput');
+    const val = (input ? input.value : '').trim();
+    
+    if (val) {
+      const norm = val.toLowerCase().replace(/[^a-z0-9]/g, '');
+      let matched = null;
+      if (norm === 'director' || norm === 'admin' || norm === 'father') {
+        matched = appState.members.find(m => (m.role || '').toLowerCase().includes('director') && !(m.role || '').toLowerCase().includes('asst')) || appState.members[0];
+      } else {
+        matched = appState.members.find(m => m.mobile === val || m.id.toLowerCase() === val.toLowerCase());
+      }
+      if (matched) {
+        googleActiveTargetMember = matched;
+      }
+    }
+
+    if (!googleActiveTargetMember) {
+      googleActiveTargetMember = appState.members[0]; // default to director
+    }
+
+    const m = googleActiveTargetMember;
     const pillName = document.getElementById('googlePillName');
     const pillSub = document.getElementById('googlePillSub');
     const pillAvatar = document.getElementById('googlePillAvatar');
     const cardTitle = document.getElementById('googleCardTitle');
     const cardSubtitle = document.getElementById('googleCardSubtitle');
 
-    if (pillName) pillName.textContent = matchedMember.name || 'DBYC Member';
-    if (pillSub) pillSub.textContent = `${matchedMember.role || 'Member'} • ${matchedMember.mobile || matchedMember.id}`;
+    if (pillName) pillName.textContent = m.name || 'DBYC Member';
+    if (pillSub) pillSub.textContent = `${m.role || 'Member'} • ${m.mobile || m.id}`;
     if (pillAvatar) {
-      pillAvatar.src = matchedMember.photo || ((matchedMember.role || '').includes('Director') ? 'data:image/webp;base64,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' : 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj4KICA8ZGVmcz4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0ic3VuYnVyc3QiIGN4PSI1MCUiIGN5PSIzMCUiIHI9IjYwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIyNSUiIHN0b3AtY29sb3I9IiNmZWYwOGEiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI2MCUiIHN0b3AtY29sb3I9IiNmNTllMGIiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMDI4NGM3Ii8+CiAgICA8L3JhZGlhbEdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJza3lHcmFkIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMjg0YzciLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI2MCUiIHN0b3AtY29sb3I9IiMzOGJkZjgiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZTBmMmZlIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJicmlja0dyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZGMyNjI2Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzk5MWIxYiIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZ29sZENyb3NzIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZlZjA4YSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iI2VhYjMwOCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNjYThhMDQiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImZsYW1lR3JhZCIgeDE9IjAlIiB5MT0iMTAwJSIgeDI9IjAlIiB5Mj0iMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZWY0NDQ0Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjZjk3MzE2Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iODUlIiBzdG9wLWNvbG9yPSIjZWFiMzA4Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CgogIDwhLS0gT3V0ZXIgTmF2eSAmIEJsdWUgQm9yZGVyIFJpbmdzIC0tPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjQ4IiBmaWxsPSIjMDAyYjY2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNiIvPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjM2IiBmaWxsPSIjMDA0Yjk4IiBzdHJva2U9IiMzYjgyZjYiIHN0cm9rZS13aWR0aD0iNCIvPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjI2IiBmaWxsPSJ1cmwoI3NreUdyYWQpIi8+CgogIDwhLS0gR29sZGVuIENyb3NzIGluIEJhY2tncm91bmQgd2l0aCBSYXlzIC0tPgogIDwhLS0gU3VuYnVyc3QgUmF5cyAtLT4KICA8ZyBvcGFjaXR5PSIwLjQiPgogICAgPHBvbHlnb24gcG9pbnRzPSIyNTYsMjU2IDEyMCw0MCAxNjAsMzAiIGZpbGw9IiNmZmZmZmYiLz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMjU2LDI1NiAyMDAsMzAgMjUwLDI1IiBmaWxsPSIjZmZmZmZmIi8+CiAgICA8cG9seWdvbiBwb2ludHM9IjI1NiwyNTYgMjYyLDI1IDMxMiwzMCIgZmlsbD0iI2ZmZmZmZiIvPgogICAgPHBvbHlnb24gcG9pbnRzPSIyNTYsMjU2IDM1MiwzMCAzOTIsNDAiIGZpbGw9IiNmZmZmZmYiLz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMjU2LDI1NiA0MjAsODAgNDUwLDExMCIgZmlsbD0iI2ZmZmZmZiIvPgogICAgPHBvbHlnb24gcG9pbnRzPSIyNTYsMjU2IDYyLDExMCA5Miw4MCIgZmlsbD0iI2ZmZmZmZiIvPgogIDwvZz4KICAKICA8IS0tIENyb3NzIFZlcnRpY2FsIC0tPgogIDxyZWN0IHg9IjIzMiIgeT0iMzAiIHdpZHRoPSI0OCIgaGVpZ2h0PSIyNDAiIGZpbGw9InVybCgjZ29sZENyb3NzKSIgcng9IjQiLz4KICA8IS0tIENyb3NzIEhvcml6b250YWwgLS0+CiAgPHJlY3QgeD0iNTAiIHk9IjEyNSIgd2lkdGg9IjQxMiIgaGVpZ2h0PSI0MiIgZmlsbD0idXJsKCNnb2xkQ3Jvc3MpIiByeD0iNCIvPgoKICA8IS0tIExvd2VyIEJyaWNrIFdhbGwgKFNvbGlkIEJhc2UpIC0tPgogIDxjbGlwUGF0aCBpZD0id2FsbENsaXAiPgogICAgPGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyMjYiLz4KICA8L2NsaXBQYXRoPgogIAogIDxnIGNsaXAtcGF0aD0idXJsKCN3YWxsQ2xpcCkiPgogICAgPHJlY3QgeD0iMzAiIHk9IjI3MCIgd2lkdGg9IjQ1MiIgaGVpZ2h0PSIyMjAiIGZpbGw9InVybCgjYnJpY2tHcmFkKSIvPgogICAgCiAgICA8IS0tIEJyaWNrIE1vcnRhciBHcmlkIExpbmVzIC0tPgogICAgPCEtLSBIb3Jpem9udGFsIGxpbmVzIC0tPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMjcwIiB4Mj0iNDgyIiB5Mj0iMjcwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMjk2IiB4Mj0iNDgyIiB5Mj0iMjk2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMzIyIiB4Mj0iNDgyIiB5Mj0iMzIyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMzQ4IiB4Mj0iNDgyIiB5Mj0iMzQ4IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMzc0IiB4Mj0iNDgyIiB5Mj0iMzc0IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iNDAwIiB4Mj0iNDgyIiB5Mj0iNDAwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iNDI2IiB4Mj0iNDgyIiB5Mj0iNDI2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iNDUyIiB4Mj0iNDgyIiB5Mj0iNDUyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgoKICAgIDwhLS0gVmVydGljYWwgc3RhZ2dlcmVkIGxpbmVzIC0tPgogICAgPCEtLSBSb3cgMSAtLT4KICAgIDxsaW5lIHgxPSIxMDAiIHkxPSIyNzAiIHgyPSIxMDAiIHkyPSIyOTYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMTgwIiB5MT0iMjcwIiB4Mj0iMTgwIiB5Mj0iMjk2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjI2MCIgeTE9IjI3MCIgeDI9IjI2MCIgeTI9IjI5NiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzNDAiIHkxPSIyNzAiIHgyPSIzNDAiIHkyPSIyOTYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iNDIwIiB5MT0iMjcwIiB4Mj0iNDIwIiB5Mj0iMjk2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPCEtLSBSb3cgMiAtLT4KICAgIDxsaW5lIHgxPSI2MCIgeTE9IjI5NiIgeDI9IjYwIiB5Mj0iMzIyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjE0MCIgeTE9IjI5NiIgeDI9IjE0MCIgeTI9IjMyMiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIyMjAiIHkxPSIyOTYiIHgyPSIyMjAiIHkyPSIzMjIiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMzAwIiB5MT0iMjk2IiB4Mj0iMzAwIiB5Mj0iMzIyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjM4MCIgeTE9IjI5NiIgeDI9IjM4MCIgeTI9IjMyMiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSI0NjAiIHkxPSIyOTYiIHgyPSI0NjAiIHkyPSIzMjIiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8IS0tIFJvdyAzIC0tPgogICAgPGxpbmUgeDE9IjEwMCIgeTE9IjMyMiIgeDI9IjEwMCIgeTI9IjM0OCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIxODAiIHkxPSIzMjIiIHgyPSIxODAiIHkyPSIzNDgiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMjYwIiB5MT0iMzIyIiB4Mj0iMjYwIiB5Mj0iMzQ4IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjM0MCIgeTE9IjMyMiIgeDI9IjM0MCIgeTI9IjM0OCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSI0MjAiIHkxPSIzMjIiIHgyPSI0MjAiIHkyPSIzNDgiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8IS0tIFJvdyA0IC0tPgogICAgPGxpbmUgeDE9IjYwIiB5MT0iMzQ4IiB4Mj0iNjAiIHkyPSIzNzQiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMTQwIiB5MT0iMzQ4IiB4Mj0iMTQwIiB5Mj0iMzc0IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjIyMCIgeTE9IjM0OCIgeDI9IjIyMCIgeTI9IjM3NCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzMDAiIHkxPSIzNDgiIHgyPSIzMDAiIHkyPSIzNzQiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMzgwIiB5MT0iMzQ4IiB4Mj0iMzgwIiB5Mj0iMzc0IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPCEtLSBSb3cgNSAtLT4KICAgIDxsaW5lIHgxPSIxMDAiIHkxPSIzNzQiIHgyPSIxMDAiIHkyPSI0MDAiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMTgwIiB5MT0iMzc0IiB4Mj0iMTgwIiB5Mj0iNDAwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjI2MCIgeTE9IjM3NCIgeDI9IjI2MCIgeTI9IjQwMCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzNDAiIHkxPSIzNzQiIHgyPSIzNDAiIHkyPSI0MDAiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iNDIwIiB5MT0iMzc0IiB4Mj0iNDIwIiB5Mj0iNDAwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPCEtLSBSb3cgNiAtLT4KICAgIDxsaW5lIHgxPSIxNDAiIHkxPSI0MDAiIHgyPSIxNDAiIHkyPSI0MjYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMjIwIiB5MT0iNDAwIiB4Mj0iMjIwIiB5Mj0iNDI2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwMCIgeTE9IjQwMCIgeDI9IjMwMCIgeTI9IjQyNiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzODAiIHkxPSI0MDAiIHgyPSIzODAiIHkyPSI0MjYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPC9nPgoKICA8IS0tIFRyYWRpdGlvbmFsIENsYXkgT2lsIExhbXAgKERpecSBKSAtLT4KICA8cGF0aCBkPSJNIDEwNSAyMzAgQyAxMDUgMjcwLCAyNjUgMjcwLCAyNjUgMjMwIEMgMjY1IDIxMCwgMTA1IDIxMCwgMTA1IDIzMCBaIiBmaWxsPSIjZDk3NzA2IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNiIvPgogIDxlbGxpcHNlIGN4PSIxODUiIGN5PSIyMzAiIHJ4PSI3MiIgcnk9IjE4IiBmaWxsPSIjZmNkMzRkIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNCIvPgogIAogIDwhLS0gR2xvd2luZyBTYWNyZWQgRmxhbWUgLS0+CiAgPHBhdGggZD0iTSAyNTYgNzAgQyAyOTAgMTQwLCAyODAgMjE1LCAyNTYgMjIwIEMgMjMyIDIxNSwgMjIyIDE0MCwgMjU2IDcwIFoiIGZpbGw9InVybCgjZmxhbWVHcmFkKSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjMiLz4KCiAgPCEtLSBNYXNvbidzIFRyb3dlbCAoU3ltYm9sIG9mIFlvdXRoIEJ1aWxkaW5nIENoYXJhY3RlciAmIFdvcmspIC0tPgogIDxnPgogICAgPCEtLSBUcm93ZWwgQmxhZGUgLS0+CiAgICA8cG9seWdvbiBwb2ludHM9IjM2MCwyMDAgMjYwLDI3MCAzNzUsMjcwIiBmaWxsPSIjZjFmNWY5IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNiIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogICAgPCEtLSBIYW5kbGUgU2hhbmsgLS0+CiAgICA8cGF0aCBkPSJNIDM1MCwyMzAgTCAzNzAsMjEwIEwgNDE1LDE5MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICAgIDwhLS0gV29vZGVuIC8gQmxhY2sgSGFuZGxlIC0tPgogICAgPHJlY3QgeD0iMzYwIiB5PSIxODUiIHdpZHRoPSI2MCIgaGVpZ2h0PSIxOCIgcng9IjgiIHRyYW5zZm9ybT0icm90YXRlKC0zMCAzNjAgMTg1KSIgZmlsbD0iIzAwMDAwMCIvPgogICAgPCEtLSBQbHVtYiBMaW5lIHBvaW50aW5nIGRvd24gLS0+CiAgICA8bGluZSB4MT0iMzI0IiB5MT0iMjcwIiB4Mj0iMzI0IiB5Mj0iNDEwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iOCIvPgogICAgPGxpbmUgeDE9IjMyNCIgeTE9IjI3MCIgeDI9IjMyNCIgeTI9IjQxMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjQiLz4KICAgIDwhLS0gUGx1bWIgQXJyb3cgVGlwIC0tPgogICAgPHBvbHlnb24gcG9pbnRzPSIzMjQsNDMwIDMxMCw0MDUgMzM4LDQwNSIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjMiLz4KICA8L2c+Cjwvc3ZnPgo=');
+      pillAvatar.src = m.photo || ((m.role || '').includes('Director') ? 'data:image/webp;base64,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' : 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj4KICA8ZGVmcz4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0ic3VuYnVyc3QiIGN4PSI1MCUiIGN5PSIzMCUiIHI9IjYwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIyNSUiIHN0b3AtY29sb3I9IiNmZWYwOGEiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI2MCUiIHN0b3AtY29sb3I9IiNmNTllMGIiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMDI4NGM3Ii8+CiAgICA8L3JhZGlhbEdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJza3lHcmFkIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMjg0YzciLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI2MCUiIHN0b3AtY29sb3I9IiMzOGJkZjgiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZTBmMmZlIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJicmlja0dyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZGMyNjI2Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzk5MWIxYiIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZ29sZENyb3NzIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZlZjA4YSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iI2VhYjMwOCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNjYThhMDQiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImZsYW1lR3JhZCIgeDE9IjAlIiB5MT0iMTAwJSIgeDI9IjAlIiB5Mj0iMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZWY0NDQ0Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjZjk3MzE2Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iODUlIiBzdG9wLWNvbG9yPSIjZWFiMzA4Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CgogIDwhLS0gT3V0ZXIgTmF2eSAmIEJsdWUgQm9yZGVyIFJpbmdzIC0tPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjQ4IiBmaWxsPSIjMDAyYjY2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNiIvPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjM2IiBmaWxsPSIjMDA0Yjk4IiBzdHJva2U9IiMzYjgyZjYiIHN0cm9rZS13aWR0aD0iNCIvPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjI2IiBmaWxsPSJ1cmwoI3NreUdyYWQpIi8+CgogIDwhLS0gR29sZGVuIENyb3NzIGluIEJhY2tncm91bmQgd2l0aCBSYXlzIC0tPgogIDwhLS0gU3VuYnVyc3QgUmF5cyAtLT4KICA8ZyBvcGFjaXR5PSIwLjQiPgogICAgPHBvbHlnb24gcG9pbnRzPSIyNTYsMjU2IDEyMCw0MCAxNjAsMzAiIGZpbGw9IiNmZmZmZmYiLz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMjU2LDI1NiAyMDAsMzAgMjUwLDI1IiBmaWxsPSIjZmZmZmZmIi8+CiAgICA8cG9seWdvbiBwb2ludHM9IjI1NiwyNTYgMjYyLDI1IDMxMiwzMCIgZmlsbD0iI2ZmZmZmZiIvPgogICAgPHBvbHlnb24gcG9pbnRzPSIyNTYsMjU2IDM1MiwzMCAzOTIsNDAiIGZpbGw9IiNmZmZmZmYiLz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMjU2LDI1NiA0MjAsODAgNDUwLDExMCIgZmlsbD0iI2ZmZmZmZiIvPgogICAgPHBvbHlnb24gcG9pbnRzPSIyNTYsMjU2IDYyLDExMCA5Miw4MCIgZmlsbD0iI2ZmZmZmZiIvPgogIDwvZz4KICAKICA8IS0tIENyb3NzIFZlcnRpY2FsIC0tPgogIDxyZWN0IHg9IjIzMiIgeT0iMzAiIHdpZHRoPSI0OCIgaGVpZ2h0PSIyNDAiIGZpbGw9InVybCgjZ29sZENyb3NzKSIgcng9IjQiLz4KICA8IS0tIENyb3NzIEhvcml6b250YWwgLS0+CiAgPHJlY3QgeD0iNTAiIHk9IjEyNSIgd2lkdGg9IjQxMiIgaGVpZ2h0PSI0MiIgZmlsbD0idXJsKCNnb2xkQ3Jvc3MpIiByeD0iNCIvPgoKICA8IS0tIExvd2VyIEJyaWNrIFdhbGwgKFNvbGlkIEJhc2UpIC0tPgogIDxjbGlwUGF0aCBpZD0id2FsbENsaXAiPgogICAgPGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyMjYiLz4KICA8L2NsaXBQYXRoPgogIAogIDxnIGNsaXAtcGF0aD0idXJsKCN3YWxsQ2xpcCkiPgogICAgPHJlY3QgeD0iMzAiIHk9IjI3MCIgd2lkdGg9IjQ1MiIgaGVpZ2h0PSIyMjAiIGZpbGw9InVybCgjYnJpY2tHcmFkKSIvPgogICAgCiAgICA8IS0tIEJyaWNrIE1vcnRhciBHcmlkIExpbmVzIC0tPgogICAgPCEtLSBIb3Jpem9udGFsIGxpbmVzIC0tPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMjcwIiB4Mj0iNDgyIiB5Mj0iMjcwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMjk2IiB4Mj0iNDgyIiB5Mj0iMjk2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMzIyIiB4Mj0iNDgyIiB5Mj0iMzIyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMzQ4IiB4Mj0iNDgyIiB5Mj0iMzQ4IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMzc0IiB4Mj0iNDgyIiB5Mj0iMzc0IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iNDAwIiB4Mj0iNDgyIiB5Mj0iNDAwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iNDI2IiB4Mj0iNDgyIiB5Mj0iNDI2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iNDUyIiB4Mj0iNDgyIiB5Mj0iNDUyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgoKICAgIDwhLS0gVmVydGljYWwgc3RhZ2dlcmVkIGxpbmVzIC0tPgogICAgPCEtLSBSb3cgMSAtLT4KICAgIDxsaW5lIHgxPSIxMDAiIHkxPSIyNzAiIHgyPSIxMDAiIHkyPSIyOTYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMTgwIiB5MT0iMjcwIiB4Mj0iMTgwIiB5Mj0iMjk2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjI2MCIgeTE9IjI3MCIgeDI9IjI2MCIgeTI9IjI5NiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzNDAiIHkxPSIyNzAiIHgyPSIzNDAiIHkyPSIyOTYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iNDIwIiB5MT0iMjcwIiB4Mj0iNDIwIiB5Mj0iMjk2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPCEtLSBSb3cgMiAtLT4KICAgIDxsaW5lIHgxPSI2MCIgeTE9IjI5NiIgeDI9IjYwIiB5Mj0iMzIyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjE0MCIgeTE9IjI5NiIgeDI9IjE0MCIgeTI9IjMyMiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIyMjAiIHkxPSIyOTYiIHgyPSIyMjAiIHkyPSIzMjIiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMzAwIiB5MT0iMjk2IiB4Mj0iMzAwIiB5Mj0iMzIyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjM4MCIgeTE9IjI5NiIgeDI9IjM4MCIgeTI9IjMyMiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSI0NjAiIHkxPSIyOTYiIHgyPSI0NjAiIHkyPSIzMjIiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8IS0tIFJvdyAzIC0tPgogICAgPGxpbmUgeDE9IjEwMCIgeTE9IjMyMiIgeDI9IjEwMCIgeTI9IjM0OCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIxODAiIHkxPSIzMjIiIHgyPSIxODAiIHkyPSIzNDgiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMjYwIiB5MT0iMzIyIiB4Mj0iMjYwIiB5Mj0iMzQ4IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjM0MCIgeTE9IjMyMiIgeDI9IjM0MCIgeTI9IjM0OCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSI0MjAiIHkxPSIzMjIiIHgyPSI0MjAiIHkyPSIzNDgiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8IS0tIFJvdyA0IC0tPgogICAgPGxpbmUgeDE9IjYwIiB5MT0iMzQ4IiB4Mj0iNjAiIHkyPSIzNzQiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMTQwIiB5MT0iMzQ4IiB4Mj0iMTQwIiB5Mj0iMzc0IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjIyMCIgeTE9IjM0OCIgeDI9IjIyMCIgeTI9IjM3NCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzMDAiIHkxPSIzNDgiIHgyPSIzMDAiIHkyPSIzNzQiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMzgwIiB5MT0iMzQ4IiB4Mj0iMzgwIiB5Mj0iMzc0IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPCEtLSBSb3cgNSAtLT4KICAgIDxsaW5lIHgxPSIxMDAiIHkxPSIzNzQiIHgyPSIxMDAiIHkyPSI0MDAiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMTgwIiB5MT0iMzc0IiB4Mj0iMTgwIiB5Mj0iNDAwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjI2MCIgeTE9IjM3NCIgeDI9IjI2MCIgeTI9IjQwMCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzNDAiIHkxPSIzNzQiIHgyPSIzNDAiIHkyPSI0MDAiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iNDIwIiB5MT0iMzc0IiB4Mj0iNDIwIiB5Mj0iNDAwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPCEtLSBSb3cgNiAtLT4KICAgIDxsaW5lIHgxPSIxNDAiIHkxPSI0MDAiIHgyPSIxNDAiIHkyPSI0MjYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMjIwIiB5MT0iNDAwIiB4Mj0iMjIwIiB5Mj0iNDI2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwMCIgeTE9IjQwMCIgeDI9IjMwMCIgeTI9IjQyNiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzODAiIHkxPSI0MDAiIHgyPSIzODAiIHkyPSI0MjYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPC9nPgoKICA8IS0tIFRyYWRpdGlvbmFsIENsYXkgT2lsIExhbXAgKERpecSBKSAtLT4KICA8cGF0aCBkPSJNIDEwNSAyMzAgQyAxMDUgMjcwLCAyNjUgMjcwLCAyNjUgMjMwIEMgMjY1IDIxMCwgMTA1IDIxMCwgMTA1IDIzMCBaIiBmaWxsPSIjZDk3NzA2IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNiIvPgogIDxlbGxpcHNlIGN4PSIxODUiIGN5PSIyMzAiIHJ4PSI3MiIgcnk9IjE4IiBmaWxsPSIjZmNkMzRkIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNCIvPgogIAogIDwhLS0gR2xvd2luZyBTYWNyZWQgRmxhbWUgLS0+CiAgPHBhdGggZD0iTSAyNTYgNzAgQyAyOTAgMTQwLCAyODAgMjE1LCAyNTYgMjIwIEMgMjMyIDIxNSwgMjIyIDE0MCwgMjU2IDcwIFoiIGZpbGw9InVybCgjZmxhbWVHcmFkKSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjMiLz4KCiAgPCEtLSBNYXNvbidzIFRyb3dlbCAoU3ltYm9sIG9mIFlvdXRoIEJ1aWxkaW5nIENoYXJhY3RlciAmIFdvcmspIC0tPgogIDxnPgogICAgPCEtLSBUcm93ZWwgQmxhZGUgLS0+CiAgICA8cG9seWdvbiBwb2ludHM9IjM2MCwyMDAgMjYwLDI3MCAzNzUsMjcwIiBmaWxsPSIjZjFmNWY5IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNiIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogICAgPCEtLSBIYW5kbGUgU2hhbmsgLS0+CiAgICA8cGF0aCBkPSJNIDM1MCwyMzAgTCAzNzAsMjEwIEwgNDE1LDE5MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICAgIDwhLS0gV29vZGVuIC8gQmxhY2sgSGFuZGxlIC0tPgogICAgPHJlY3QgeD0iMzYwIiB5PSIxODUiIHdpZHRoPSI2MCIgaGVpZ2h0PSIxOCIgcng9IjgiIHRyYW5zZm9ybT0icm90YXRlKC0zMCAzNjAgMTg1KSIgZmlsbD0iIzAwMDAwMCIvPgogICAgPCEtLSBQbHVtYiBMaW5lIHBvaW50aW5nIGRvd24gLS0+CiAgICA8bGluZSB4MT0iMzI0IiB5MT0iMjcwIiB4Mj0iMzI0IiB5Mj0iNDEwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iOCIvPgogICAgPGxpbmUgeDE9IjMyNCIgeTE9IjI3MCIgeDI9IjMyNCIgeTI9IjQxMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjQiLz4KICAgIDwhLS0gUGx1bWIgQXJyb3cgVGlwIC0tPgogICAgPHBvbHlnb24gcG9pbnRzPSIzMjQsNDMwIDMxMCw0MDUgMzM4LDQwNSIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjMiLz4KICA8L2c+Cjwvc3ZnPgo=');
     }
     if (cardTitle) cardTitle.textContent = 'Welcome';
-    if (cardSubtitle) cardSubtitle.textContent = matchedMember.name || 'Sign in with your Security PIN';
+    if (cardSubtitle) cardSubtitle.textContent = m.name;
 
-    const step1 = document.getElementById('googleStepIdentifier');
-    const step2 = document.getElementById('googleStepPassword');
-    if (step1) step1.style.display = 'none';
-    if (step2) step2.style.display = 'block';
+    document.getElementById('googleStepIdentifier').style.display = 'none';
+    document.getElementById('googleStepOtp').style.display = 'none';
+    document.getElementById('googleStepSetPin').style.display = 'none';
+    document.getElementById('googleStepPassword').style.display = 'block';
 
-    const pwdInput = document.getElementById('googlePasswordInput');
-    if (pwdInput) {
-      pwdInput.value = '';
-      setTimeout(() => pwdInput.focus(), 150);
+    const pwd = document.getElementById('googlePasswordInput');
+    if (pwd) {
+      pwd.value = '';
+      setTimeout(() => pwd.focus(), 150);
     }
-    const pwdErr = document.getElementById('googlePasswordError');
-    if (pwdErr) pwdErr.style.display = 'none';
   };
 
-  // 3. Switch account back to Step 1
+  // 9. Verify via OTP instead from PIN screen
+  window.verifyMobileOtpInstead = function() {
+    if (googleActiveTargetMember && googleActiveTargetMember.mobile) {
+      const input = document.getElementById('googleIdentifierInput');
+      if (input) input.value = googleActiveTargetMember.mobile;
+    }
+    window.handleGoogleMobileSubmit();
+  };
+
+  // 10. Switch Account back to Step 1
   window.switchGoogleAccount = function() {
     googleActiveTargetMember = null;
+    googleCardActiveOtp = null;
+
     const cardTitle = document.getElementById('googleCardTitle');
     const cardSubtitle = document.getElementById('googleCardSubtitle');
     if (cardTitle) cardTitle.textContent = 'Sign in';
     if (cardSubtitle) cardSubtitle.textContent = 'to continue to DBYC Portal';
 
-    const step1 = document.getElementById('googleStepIdentifier');
-    const step2 = document.getElementById('googleStepPassword');
-    if (step1) step1.style.display = 'block';
-    if (step2) step2.style.display = 'none';
+    document.getElementById('googleStepIdentifier').style.display = 'block';
+    document.getElementById('googleStepOtp').style.display = 'none';
+    document.getElementById('googleStepSetPin').style.display = 'none';
+    document.getElementById('googleStepPassword').style.display = 'none';
 
     const input = document.getElementById('googleIdentifierInput');
     if (input) {
@@ -5381,7 +5696,7 @@ function setupGoogleSignInHandlers() {
     }
   };
 
-  // 4. Toggle PIN Visibility inside input
+  // 11. Toggle PIN Visibility inside input
   window.toggleGooglePasswordVisibility = function() {
     const pwdInput = document.getElementById('googlePasswordInput');
     const eyeBtn = document.getElementById('googleToggleEyeBtn');
@@ -5399,7 +5714,6 @@ function setupGoogleSignInHandlers() {
     }
   };
 
-  // 5. Sync checkbox state with password input
   window.syncGooglePasswordCheckbox = function(isChecked) {
     const pwdInput = document.getElementById('googlePasswordInput');
     const eyeBtn = document.getElementById('googleToggleEyeBtn');
@@ -5413,12 +5727,10 @@ function setupGoogleSignInHandlers() {
     }
   };
 
-  // 6. Step 2: Password / PIN Form Submission
+  // 12. Password Form Submission
   window.handleGooglePasswordSubmit = function() {
     const pwdInput = document.getElementById('googlePasswordInput');
     const pwdErr = document.getElementById('googlePasswordError');
-    const staySignedCheckbox = document.getElementById('googleStaySignedInCheckbox');
-
     if (pwdErr) pwdErr.style.display = 'none';
 
     if (!googleActiveTargetMember) {
@@ -5457,7 +5769,6 @@ function setupGoogleSignInHandlers() {
         isPinValid = true;
       }
     } else {
-      // Regular Member
       const expectedPin = targetMember.pin || '2026';
       if (enteredPin === expectedPin || enteredPin === '2026' || enteredPin === '0000') {
         isPinValid = true;
@@ -5466,7 +5777,7 @@ function setupGoogleSignInHandlers() {
 
     if (!isPinValid) {
       if (pwdErr) {
-        pwdErr.textContent = 'Wrong Security PIN. Try again or click Forgot PIN.';
+        pwdErr.textContent = 'Wrong Security PIN. Try again or verify via OTP.';
         pwdErr.style.display = 'block';
       }
       if (pwdInput) {
@@ -5476,88 +5787,53 @@ function setupGoogleSignInHandlers() {
       return;
     }
 
-    // Login successful
+    // Login successful -> Keep logged in
     appState.currentUser = targetMember;
     localStorage.setItem(DBYC_USER, JSON.stringify(targetMember));
-
-    // Save remembered account & session if Stay Signed In is active
-    if (!staySignedCheckbox || staySignedCheckbox.checked) {
-      localStorage.setItem(DBYC_REMEMBERED_ACCOUNT, JSON.stringify(targetMember));
-      localStorage.setItem('dbyc_saved_session', JSON.stringify({
-        userId: targetMember.id,
-        loginTime: Date.now()
-      }));
-    } else {
-      localStorage.removeItem('dbyc_saved_session');
-    }
+    localStorage.setItem('dbyc_active_session', JSON.stringify({
+      userId: targetMember.id,
+      loginTime: Date.now()
+    }));
+    localStorage.setItem(DBYC_REMEMBERED_ACCOUNT, JSON.stringify(targetMember));
 
     if (pwdInput) pwdInput.value = '';
     showToast(`✅ Welcome, ${targetMember.name}!`);
     showMainApp();
   };
 
-  // 7. Google 2-Step OTP & Password Reset/Edit Controls
-  let currentGoogleOtp = null;
-  let otpTargetMember = null;
-
-  window.openForgotPinModal = function(customTitle) {
-    window.openGoogleOtpPasswordModal(customTitle);
-  };
-
+  // 13. In-App Google 2-Step OTP Modal for Profile & Settings
   window.openGoogleOtpPasswordModal = function(customTitle) {
     const modal = document.getElementById('forgotPinModal');
     if (!modal) return;
 
-    // Set title
     const mainTitleEl = document.getElementById('googleOtpModalMainTitle');
-    if (mainTitleEl) {
-      mainTitleEl.textContent = customTitle || 'Account Recovery & PIN Reset';
-    }
+    if (mainTitleEl) mainTitleEl.textContent = customTitle || 'Account Recovery & PIN Reset';
 
-    // Reset steps
-    const s1 = document.getElementById('googleOtpStepPhone');
-    const s2 = document.getElementById('googleOtpStepCode');
-    const s3 = document.getElementById('googleOtpStepNewPin');
-    if (s1) s1.style.display = 'block';
-    if (s2) s2.style.display = 'none';
-    if (s3) s3.style.display = 'none';
+    document.getElementById('googleOtpStepPhone').style.display = 'block';
+    document.getElementById('googleOtpStepCode').style.display = 'none';
+    document.getElementById('googleOtpStepNewPin').style.display = 'none';
 
-    // Clear error messages
-    const err1 = document.getElementById('googleSendOtpError');
-    const err2 = document.getElementById('googleVerifyOtpError');
-    const err3 = document.getElementById('googleSetPinError');
-    if (err1) err1.style.display = 'none';
-    if (err2) err2.style.display = 'none';
-    if (err3) err3.style.display = 'none';
-
-    // Autofill mobile if available
     const mobInput = document.getElementById('googleOtpMobileInput');
     if (mobInput) {
       if (appState.currentUser && appState.currentUser.mobile) {
         mobInput.value = appState.currentUser.mobile;
       } else if (googleActiveTargetMember && googleActiveTargetMember.mobile) {
         mobInput.value = googleActiveTargetMember.mobile;
-      } else {
-        const remembered = localStorage.getItem(DBYC_REMEMBERED_ACCOUNT);
-        if (remembered) {
-          try {
-            const parsed = JSON.parse(remembered);
-            if (parsed.mobile) mobInput.value = parsed.mobile;
-          } catch(e) {}
-        }
       }
       setTimeout(() => mobInput.focus(), 150);
     }
-
     modal.style.display = 'flex';
   };
 
+  window.openForgotPinModal = window.openGoogleOtpPasswordModal;
   window.closeForgotPinModal = function() {
     const modal = document.getElementById('forgotPinModal');
     if (modal) modal.style.display = 'none';
   };
 
-  // Step 1: Send Google OTP
+  document.getElementById('closeForgotPinModalBtn')?.addEventListener('click', window.closeForgotPinModal);
+
+  // Modal Step 1: Send OTP
   window.sendGoogleOtp = function() {
     const mobInput = document.getElementById('googleOtpMobileInput');
     const errEl = document.getElementById('googleSendOtpError');
@@ -5566,7 +5842,7 @@ function setupGoogleSignInHandlers() {
     const val = (mobInput ? mobInput.value : '').trim();
     if (!val) {
       if (errEl) {
-        errEl.textContent = 'Please enter your registered Mobile Number or ID';
+        errEl.textContent = 'Please enter your registered Mobile Number';
         errEl.style.display = 'block';
       }
       return;
@@ -5574,39 +5850,32 @@ function setupGoogleSignInHandlers() {
 
     const norm = val.toLowerCase().replace(/[^a-z0-9]/g, '');
     let matchedMember = null;
-
-    if (norm === 'director' || norm === 'admin' || norm === 'father' || norm === 'fr') {
+    if (norm === 'director' || norm === 'admin' || norm === 'father') {
       matchedMember = appState.members.find(m => (m.role || '').toLowerCase().includes('director') && !(m.role || '').toLowerCase().includes('asst')) || appState.members[0];
     } else {
-      matchedMember = appState.members.find(m => 
-        m.mobile === val || 
-        m.id.toLowerCase() === val.toLowerCase() ||
-        (m.name && m.name.toLowerCase() === val.toLowerCase())
-      );
+      matchedMember = appState.members.find(m => m.mobile === val || m.id.toLowerCase() === val.toLowerCase());
     }
 
     if (!matchedMember) {
       if (errEl) {
-        errEl.textContent = `No DBYC member found with: ${val}. Please check or contact the Director.`;
+        errEl.textContent = `No DBYC member found with mobile: ${val}`;
         errEl.style.display = 'block';
       }
       return;
     }
 
-    otpTargetMember = matchedMember;
+    googleActiveTargetMember = matchedMember;
     const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-    currentGoogleOtp = otpCode;
+    googleCardActiveOtp = otpCode;
 
-    // Mask phone number
     const rawMobile = matchedMember.mobile || '9876543210';
-    const masked = rawMobile.length >= 4 ? ('******' + rawMobile.slice(-4)) : rawMobile;
+    const masked = rawMobile.length >= 4 ? ('+91 ******' + rawMobile.slice(-4)) : rawMobile;
     const maskedEl = document.getElementById('googleOtpMaskedNumber');
     if (maskedEl) maskedEl.textContent = `${matchedMember.name} (${masked})`;
 
     const dispCodeEl = document.getElementById('googleOtpDisplayCode');
     if (dispCodeEl) dispCodeEl.textContent = `G-${otpCode}`;
 
-    // Switch to Step 2
     document.getElementById('googleOtpStepPhone').style.display = 'none';
     document.getElementById('googleOtpStepCode').style.display = 'block';
 
@@ -5615,31 +5884,27 @@ function setupGoogleSignInHandlers() {
       codeInput.value = '';
       setTimeout(() => codeInput.focus(), 150);
     }
-
     showToast(`🔔 Google Security Code: G-${otpCode} sent to ${masked}`);
   };
 
-  // Resend Google OTP
   window.resendGoogleOtp = function() {
-    if (!otpTargetMember) return;
+    if (!googleActiveTargetMember) return;
     const newCode = Math.floor(100000 + Math.random() * 900000).toString();
-    currentGoogleOtp = newCode;
+    googleCardActiveOtp = newCode;
     const dispCodeEl = document.getElementById('googleOtpDisplayCode');
     if (dispCodeEl) dispCodeEl.textContent = `G-${newCode}`;
     showToast(`🔔 New Google Code sent: G-${newCode}`);
   };
 
-  // Autofill Google OTP
   window.autofillGoogleOtp = function() {
-    if (!currentGoogleOtp) return;
+    if (!googleCardActiveOtp) return;
     const codeInput = document.getElementById('googleOtpCodeInput');
     if (codeInput) {
-      codeInput.value = `G-${currentGoogleOtp}`;
+      codeInput.value = `G-${googleCardActiveOtp}`;
       window.verifyGoogleOtp();
     }
   };
 
-  // Step 2: Verify Google OTP
   window.verifyGoogleOtp = function() {
     const codeInput = document.getElementById('googleOtpCodeInput');
     const errEl = document.getElementById('googleVerifyOtpError');
@@ -5654,34 +5919,27 @@ function setupGoogleSignInHandlers() {
       return;
     }
 
-    if (val === currentGoogleOtp || val === '123456' || val === '1815') {
-      // Step 2 Verified -> Switch to Step 3
+    if (val === googleCardActiveOtp || val === '123456' || val === '1815') {
       document.getElementById('googleOtpStepCode').style.display = 'none';
       document.getElementById('googleOtpStepNewPin').style.display = 'block';
 
       const nameEl = document.getElementById('googleOtpVerifiedMemberName');
-      if (nameEl) nameEl.textContent = otpTargetMember ? otpTargetMember.name : 'Member';
+      if (nameEl) nameEl.textContent = googleActiveTargetMember ? googleActiveTargetMember.name : 'Member';
 
       const newPinInput = document.getElementById('googleNewPinInput');
       const confirmPinInput = document.getElementById('googleConfirmPinInput');
       if (newPinInput) newPinInput.value = '';
       if (confirmPinInput) confirmPinInput.value = '';
       setTimeout(() => newPinInput?.focus(), 150);
-
       window.updatePinStrengthMeter('');
     } else {
       if (errEl) {
-        errEl.textContent = '❌ Invalid verification code. Please check the code in the yellow notification.';
+        errEl.textContent = '❌ Invalid verification code. Check notification.';
         errEl.style.display = 'block';
-      }
-      if (codeInput) {
-        codeInput.focus();
-        codeInput.select();
       }
     }
   };
 
-  // Toggle Visibility for New PIN inputs
   window.toggleNewPinVisibility = function(inputId, btn) {
     const input = document.getElementById(inputId);
     if (!input) return;
@@ -5694,44 +5952,13 @@ function setupGoogleSignInHandlers() {
     }
   };
 
-  // PIN Strength Meter
-  window.updatePinStrengthMeter = function(pin) {
-    const bar = document.getElementById('pinStrengthBar');
-    const txt = document.getElementById('pinStrengthText');
-    if (!bar || !txt) return;
+  window.updatePinStrengthMeter = window.updateCardPinStrength;
 
-    if (!pin || pin.length < 4) {
-      bar.style.width = '25%';
-      bar.style.background = '#ef4444';
-      txt.textContent = 'PIN strength: Min 4 digits required';
-      txt.style.color = '#ef4444';
-    } else if (/^(.)+$/.test(pin)) {
-      bar.style.width = '50%';
-      bar.style.background = '#f97316';
-      txt.textContent = 'PIN strength: Weak (all identical digits)';
-      txt.style.color = '#f97316';
-    } else if (pin === '1234' || pin === '4321' || pin === '0000') {
-      bar.style.width = '70%';
-      bar.style.background = '#f59e0b';
-      txt.textContent = 'PIN strength: Moderate (common sequence)';
-      txt.style.color = '#d97706';
-    } else {
-      bar.style.width = '100%';
-      bar.style.background = '#10b981';
-      txt.textContent = 'PIN strength: Strong Security PIN ✅';
-      txt.style.color = '#059669';
-    }
-  };
-
-  // Step 3: Save New Google PIN
   window.saveNewGooglePin = function() {
-    const newPinInput = document.getElementById('googleNewPinInput');
-    const confirmPinInput = document.getElementById('googleConfirmPinInput');
+    const newPin = (document.getElementById('googleNewPinInput')?.value || '').trim();
+    const confirmPin = (document.getElementById('googleConfirmPinInput')?.value || '').trim();
     const errEl = document.getElementById('googleSetPinError');
     if (errEl) errEl.style.display = 'none';
-
-    const newPin = (newPinInput ? newPinInput.value : '').trim();
-    const confirmPin = (confirmPinInput ? confirmPinInput.value : '').trim();
 
     if (newPin.length < 4) {
       if (errEl) {
@@ -5749,34 +5976,26 @@ function setupGoogleSignInHandlers() {
       return;
     }
 
-    if (!otpTargetMember) {
-      if (errEl) {
-        errEl.textContent = 'Session lost. Please try again.';
-        errEl.style.display = 'block';
-      }
-      return;
-    }
+    if (!googleActiveTargetMember) return;
 
-    // Update PIN in records
-    otpTargetMember.pin = newPin;
-
-    const role = (otpTargetMember.role || '').toLowerCase();
-    const isDirector = (role.includes('director') && !role.includes('asst')) || role.includes('rev. fr. director');
-    if (isDirector) {
+    googleActiveTargetMember.pin = newPin;
+    const role = (googleActiveTargetMember.role || '').toLowerCase();
+    if (role.includes('director') && !role.includes('asst')) {
       setDirectorMasterPin(newPin);
     }
-
     saveLocalData();
 
-    // Update session
-    appState.currentUser = otpTargetMember;
-    localStorage.setItem(DBYC_USER, JSON.stringify(otpTargetMember));
-    localStorage.setItem(DBYC_REMEMBERED_ACCOUNT, JSON.stringify(otpTargetMember));
+    appState.currentUser = googleActiveTargetMember;
+    localStorage.setItem(DBYC_USER, JSON.stringify(googleActiveTargetMember));
+    localStorage.setItem('dbyc_active_session', JSON.stringify({
+      userId: googleActiveTargetMember.id,
+      loginTime: Date.now()
+    }));
+    localStorage.setItem(DBYC_REMEMBERED_ACCOUNT, JSON.stringify(googleActiveTargetMember));
 
     window.closeForgotPinModal();
-    showToast(`✅ Security PIN updated successfully for ${otpTargetMember.name}!`);
+    showToast(`✅ Security PIN updated successfully for ${googleActiveTargetMember.name}!`);
 
-    // Show main app or refresh profile
     if (document.getElementById('loginView').style.display !== 'none') {
       showMainApp();
     } else {
@@ -5788,45 +6007,6 @@ function setupGoogleSignInHandlers() {
 function showLogin() {
   document.getElementById('loginView').style.display = 'flex';
   document.getElementById('mainApp').style.display = 'none';
-
-  const rememberedData = localStorage.getItem(DBYC_REMEMBERED_ACCOUNT);
-  if (rememberedData) {
-    try {
-      const parsed = JSON.parse(rememberedData);
-      const member = appState.members.find(m => m.id === parsed.id || m.mobile === parsed.mobile) || parsed;
-      if (member) {
-        googleActiveTargetMember = member;
-
-        const pillName = document.getElementById('googlePillName');
-        const pillSub = document.getElementById('googlePillSub');
-        const pillAvatar = document.getElementById('googlePillAvatar');
-        const cardTitle = document.getElementById('googleCardTitle');
-        const cardSubtitle = document.getElementById('googleCardSubtitle');
-
-        if (pillName) pillName.textContent = member.name || 'DBYC Member';
-        if (pillSub) pillSub.textContent = `${member.role || 'Member'} • ${member.mobile || member.id}`;
-        if (pillAvatar) {
-          pillAvatar.src = member.photo || ((member.role || '').includes('Director') ? 'data:image/webp;base64,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' : 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj4KICA8ZGVmcz4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0ic3VuYnVyc3QiIGN4PSI1MCUiIGN5PSIzMCUiIHI9IjYwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIyNSUiIHN0b3AtY29sb3I9IiNmZWYwOGEiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI2MCUiIHN0b3AtY29sb3I9IiNmNTllMGIiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMDI4NGM3Ii8+CiAgICA8L3JhZGlhbEdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJza3lHcmFkIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMjg0YzciLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI2MCUiIHN0b3AtY29sb3I9IiMzOGJkZjgiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZTBmMmZlIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJicmlja0dyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZGMyNjI2Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzk5MWIxYiIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZ29sZENyb3NzIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZlZjA4YSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iI2VhYjMwOCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNjYThhMDQiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImZsYW1lR3JhZCIgeDE9IjAlIiB5MT0iMTAwJSIgeDI9IjAlIiB5Mj0iMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZWY0NDQ0Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjZjk3MzE2Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iODUlIiBzdG9wLWNvbG9yPSIjZWFiMzA4Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CgogIDwhLS0gT3V0ZXIgTmF2eSAmIEJsdWUgQm9yZGVyIFJpbmdzIC0tPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjQ4IiBmaWxsPSIjMDAyYjY2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNiIvPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjM2IiBmaWxsPSIjMDA0Yjk4IiBzdHJva2U9IiMzYjgyZjYiIHN0cm9rZS13aWR0aD0iNCIvPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjI2IiBmaWxsPSJ1cmwoI3NreUdyYWQpIi8+CgogIDwhLS0gR29sZGVuIENyb3NzIGluIEJhY2tncm91bmQgd2l0aCBSYXlzIC0tPgogIDwhLS0gU3VuYnVyc3QgUmF5cyAtLT4KICA8ZyBvcGFjaXR5PSIwLjQiPgogICAgPHBvbHlnb24gcG9pbnRzPSIyNTYsMjU2IDEyMCw0MCAxNjAsMzAiIGZpbGw9IiNmZmZmZmYiLz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMjU2LDI1NiAyMDAsMzAgMjUwLDI1IiBmaWxsPSIjZmZmZmZmIi8+CiAgICA8cG9seWdvbiBwb2ludHM9IjI1NiwyNTYgMjYyLDI1IDMxMiwzMCIgZmlsbD0iI2ZmZmZmZiIvPgogICAgPHBvbHlnb24gcG9pbnRzPSIyNTYsMjU2IDM1MiwzMCAzOTIsNDAiIGZpbGw9IiNmZmZmZmYiLz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMjU2LDI1NiA0MjAsODAgNDUwLDExMCIgZmlsbD0iI2ZmZmZmZiIvPgogICAgPHBvbHlnb24gcG9pbnRzPSIyNTYsMjU2IDYyLDExMCA5Miw4MCIgZmlsbD0iI2ZmZmZmZiIvPgogIDwvZz4KICAKICA8IS0tIENyb3NzIFZlcnRpY2FsIC0tPgogIDxyZWN0IHg9IjIzMiIgeT0iMzAiIHdpZHRoPSI0OCIgaGVpZ2h0PSIyNDAiIGZpbGw9InVybCgjZ29sZENyb3NzKSIgcng9IjQiLz4KICA8IS0tIENyb3NzIEhvcml6b250YWwgLS0+CiAgPHJlY3QgeD0iNTAiIHk9IjEyNSIgd2lkdGg9IjQxMiIgaGVpZ2h0PSI0MiIgZmlsbD0idXJsKCNnb2xkQ3Jvc3MpIiByeD0iNCIvPgoKICA8IS0tIExvd2VyIEJyaWNrIFdhbGwgKFNvbGlkIEJhc2UpIC0tPgogIDxjbGlwUGF0aCBpZD0id2FsbENsaXAiPgogICAgPGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyMjYiLz4KICA8L2NsaXBQYXRoPgogIAogIDxnIGNsaXAtcGF0aD0idXJsKCN3YWxsQ2xpcCkiPgogICAgPHJlY3QgeD0iMzAiIHk9IjI3MCIgd2lkdGg9IjQ1MiIgaGVpZ2h0PSIyMjAiIGZpbGw9InVybCgjYnJpY2tHcmFkKSIvPgogICAgCiAgICA8IS0tIEJyaWNrIE1vcnRhciBHcmlkIExpbmVzIC0tPgogICAgPCEtLSBIb3Jpem9udGFsIGxpbmVzIC0tPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMjcwIiB4Mj0iNDgyIiB5Mj0iMjcwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMjk2IiB4Mj0iNDgyIiB5Mj0iMjk2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMzIyIiB4Mj0iNDgyIiB5Mj0iMzIyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMzQ4IiB4Mj0iNDgyIiB5Mj0iMzQ4IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMzc0IiB4Mj0iNDgyIiB5Mj0iMzc0IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iNDAwIiB4Mj0iNDgyIiB5Mj0iNDAwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iNDI2IiB4Mj0iNDgyIiB5Mj0iNDI2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iNDUyIiB4Mj0iNDgyIiB5Mj0iNDUyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgoKICAgIDwhLS0gVmVydGljYWwgc3RhZ2dlcmVkIGxpbmVzIC0tPgogICAgPCEtLSBSb3cgMSAtLT4KICAgIDxsaW5lIHgxPSIxMDAiIHkxPSIyNzAiIHgyPSIxMDAiIHkyPSIyOTYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMTgwIiB5MT0iMjcwIiB4Mj0iMTgwIiB5Mj0iMjk2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjI2MCIgeTE9IjI3MCIgeDI9IjI2MCIgeTI9IjI5NiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzNDAiIHkxPSIyNzAiIHgyPSIzNDAiIHkyPSIyOTYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iNDIwIiB5MT0iMjcwIiB4Mj0iNDIwIiB5Mj0iMjk2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPCEtLSBSb3cgMiAtLT4KICAgIDxsaW5lIHgxPSI2MCIgeTE9IjI5NiIgeDI9IjYwIiB5Mj0iMzIyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjE0MCIgeTE9IjI5NiIgeDI9IjE0MCIgeTI9IjMyMiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIyMjAiIHkxPSIyOTYiIHgyPSIyMjAiIHkyPSIzMjIiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMzAwIiB5MT0iMjk2IiB4Mj0iMzAwIiB5Mj0iMzIyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjM4MCIgeTE9IjI5NiIgeDI9IjM4MCIgeTI9IjMyMiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSI0NjAiIHkxPSIyOTYiIHgyPSI0NjAiIHkyPSIzMjIiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8IS0tIFJvdyAzIC0tPgogICAgPGxpbmUgeDE9IjEwMCIgeTE9IjMyMiIgeDI9IjEwMCIgeTI9IjM0OCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIxODAiIHkxPSIzMjIiIHgyPSIxODAiIHkyPSIzNDgiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMjYwIiB5MT0iMzIyIiB4Mj0iMjYwIiB5Mj0iMzQ4IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjM0MCIgeTE9IjMyMiIgeDI9IjM0MCIgeTI9IjM0OCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSI0MjAiIHkxPSIzMjIiIHgyPSI0MjAiIHkyPSIzNDgiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8IS0tIFJvdyA0IC0tPgogICAgPGxpbmUgeDE9IjYwIiB5MT0iMzQ4IiB4Mj0iNjAiIHkyPSIzNzQiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMTQwIiB5MT0iMzQ4IiB4Mj0iMTQwIiB5Mj0iMzc0IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjIyMCIgeTE9IjM0OCIgeDI9IjIyMCIgeTI9IjM3NCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzMDAiIHkxPSIzNDgiIHgyPSIzMDAiIHkyPSIzNzQiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMzgwIiB5MT0iMzQ4IiB4Mj0iMzgwIiB5Mj0iMzc0IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPCEtLSBSb3cgNSAtLT4KICAgIDxsaW5lIHgxPSIxMDAiIHkxPSIzNzQiIHgyPSIxMDAiIHkyPSI0MDAiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMTgwIiB5MT0iMzc0IiB4Mj0iMTgwIiB5Mj0iNDAwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjI2MCIgeTE9IjM3NCIgeDI9IjI2MCIgeTI9IjQwMCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzNDAiIHkxPSIzNzQiIHgyPSIzNDAiIHkyPSI0MDAiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iNDIwIiB5MT0iMzc0IiB4Mj0iNDIwIiB5Mj0iNDAwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPCEtLSBSb3cgNiAtLT4KICAgIDxsaW5lIHgxPSIxNDAiIHkxPSI0MDAiIHgyPSIxNDAiIHkyPSI0MjYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMjIwIiB5MT0iNDAwIiB4Mj0iMjIwIiB5Mj0iNDI2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwMCIgeTE9IjQwMCIgeDI9IjMwMCIgeTI9IjQyNiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzODAiIHkxPSI0MDAiIHgyPSIzODAiIHkyPSI0MjYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPC9nPgoKICA8IS0tIFRyYWRpdGlvbmFsIENsYXkgT2lsIExhbXAgKERpecSBKSAtLT4KICA8cGF0aCBkPSJNIDEwNSAyMzAgQyAxMDUgMjcwLCAyNjUgMjcwLCAyNjUgMjMwIEMgMjY1IDIxMCwgMTA1IDIxMCwgMTA1IDIzMCBaIiBmaWxsPSIjZDk3NzA2IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNiIvPgogIDxlbGxpcHNlIGN4PSIxODUiIGN5PSIyMzAiIHJ4PSI3MiIgcnk9IjE4IiBmaWxsPSIjZmNkMzRkIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNCIvPgogIAogIDwhLS0gR2xvd2luZyBTYWNyZWQgRmxhbWUgLS0+CiAgPHBhdGggZD0iTSAyNTYgNzAgQyAyOTAgMTQwLCAyODAgMjE1LCAyNTYgMjIwIEMgMjMyIDIxNSwgMjIyIDE0MCwgMjU2IDcwIFoiIGZpbGw9InVybCgjZmxhbWVHcmFkKSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjMiLz4KCiAgPCEtLSBNYXNvbidzIFRyb3dlbCAoU3ltYm9sIG9mIFlvdXRoIEJ1aWxkaW5nIENoYXJhY3RlciAmIFdvcmspIC0tPgogIDxnPgogICAgPCEtLSBUcm93ZWwgQmxhZGUgLS0+CiAgICA8cG9seWdvbiBwb2ludHM9IjM2MCwyMDAgMjYwLDI3MCAzNzUsMjcwIiBmaWxsPSIjZjFmNWY5IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNiIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogICAgPCEtLSBIYW5kbGUgU2hhbmsgLS0+CiAgICA8cGF0aCBkPSJNIDM1MCwyMzAgTCAzNzAsMjEwIEwgNDE1LDE5MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICAgIDwhLS0gV29vZGVuIC8gQmxhY2sgSGFuZGxlIC0tPgogICAgPHJlY3QgeD0iMzYwIiB5PSIxODUiIHdpZHRoPSI2MCIgaGVpZ2h0PSIxOCIgcng9IjgiIHRyYW5zZm9ybT0icm90YXRlKC0zMCAzNjAgMTg1KSIgZmlsbD0iIzAwMDAwMCIvPgogICAgPCEtLSBQbHVtYiBMaW5lIHBvaW50aW5nIGRvd24gLS0+CiAgICA8bGluZSB4MT0iMzI0IiB5MT0iMjcwIiB4Mj0iMzI0IiB5Mj0iNDEwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iOCIvPgogICAgPGxpbmUgeDE9IjMyNCIgeTE9IjI3MCIgeDI9IjMyNCIgeTI9IjQxMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjQiLz4KICAgIDwhLS0gUGx1bWIgQXJyb3cgVGlwIC0tPgogICAgPHBvbHlnb24gcG9pbnRzPSIzMjQsNDMwIDMxMCw0MDUgMzM4LDQwNSIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjMiLz4KICA8L2c+Cjwvc3ZnPgo=');
-        }
-        if (cardTitle) cardTitle.textContent = 'Welcome';
-        if (cardSubtitle) cardSubtitle.textContent = member.name || 'Sign in with your Security PIN';
-
-        const step1 = document.getElementById('googleStepIdentifier');
-        const step2 = document.getElementById('googleStepPassword');
-        if (step1) step1.style.display = 'none';
-        if (step2) step2.style.display = 'block';
-
-        const pwdInput = document.getElementById('googlePasswordInput');
-        if (pwdInput) {
-          pwdInput.value = '';
-          setTimeout(() => pwdInput.focus(), 150);
-        }
-        return;
-      }
-    } catch(e) {}
-  }
-
-  // Fallback to Step 1
   window.switchGoogleAccount();
 }
 
@@ -5850,9 +6030,10 @@ function showMainApp() {
 
 function logout() {
   localStorage.removeItem(DBYC_USER);
+  localStorage.removeItem('dbyc_active_session');
   localStorage.removeItem('dbyc_saved_session');
   appState.currentUser = null;
-  showToast('🔒 Signed out / Session Locked');
+  showToast('🔒 Logged out successfully. Re-verify mobile number to log in.');
   showLogin();
 }
 

@@ -2281,51 +2281,60 @@ body {
     <!-- =======================================================
        1. SIMPLE DEFAULT PASSWORD LOGIN (Zero OTP / 1-Click Entry)
        ======================================================= -->
+    <!-- =======================================================
+       1. ENTRANCE PORTAL & ROLE-SPECIFIC PASSWORDS
+       ======================================================= -->
   <div id="loginView" style="min-height:100vh; background:linear-gradient(135deg, #002b66 0%, #004b98 50%, #0f172a 100%); display:flex; justify-content:center; align-items:center; padding:20px; box-sizing:border-box; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-    <div style="background:#ffffff; border-radius:20px; box-shadow:0 20px 50px rgba(0,0,0,0.3); padding:36px 28px; max-width:400px; width:100%; box-sizing:border-box; text-align:center;">
+    <div style="background:#ffffff; border-radius:24px; box-shadow:0 20px 50px rgba(0,0,0,0.3); padding:36px 30px; max-width:440px; width:100%; box-sizing:border-box; text-align:center;">
       
-      <!-- Crest & Title -->
-      <div style="margin-bottom:24px;">
-        <div style="width:64px; height:64px; border-radius:50%; background:#002b66; color:#fde047; font-size:1.4rem; font-weight:900; display:flex; justify-content:center; align-items:center; margin:0 auto 12px; border:3px solid #fde047; box-shadow:0 4px 14px rgba(0,43,102,0.3);">
-          DBYC
-        </div>
+      <!-- Authentic DBYC Holy Crest Logo -->
+      <div style="display:flex; flex-direction:column; align-items:center; margin-bottom:20px;">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj4KICA8ZGVmcz4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0ic3VuYnVyc3QiIGN4PSI1MCUiIGN5PSIzMCUiIHI9IjYwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIyNSUiIHN0b3AtY29sb3I9IiNmZWYwOGEiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI2MCUiIHN0b3AtY29sb3I9IiNmNTllMGIiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMDI4NGM3Ii8+CiAgICA8L3JhZGlhbEdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJza3lHcmFkIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMjg0YzciLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI2MCUiIHN0b3AtY29sb3I9IiMzOGJkZjgiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZTBmMmZlIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJicmlja0dyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZGMyNjI2Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzk5MWIxYiIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZ29sZENyb3NzIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZlZjA4YSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iI2VhYjMwOCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNjYThhMDQiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImZsYW1lR3JhZCIgeDE9IjAlIiB5MT0iMTAwJSIgeDI9IjAlIiB5Mj0iMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZWY0NDQ0Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjZjk3MzE2Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iODUlIiBzdG9wLWNvbG9yPSIjZWFiMzA4Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CgogIDwhLS0gT3V0ZXIgTmF2eSAmIEJsdWUgQm9yZGVyIFJpbmdzIC0tPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjQ4IiBmaWxsPSIjMDAyYjY2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNiIvPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjM2IiBmaWxsPSIjMDA0Yjk4IiBzdHJva2U9IiMzYjgyZjYiIHN0cm9rZS13aWR0aD0iNCIvPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjI2IiBmaWxsPSJ1cmwoI3NreUdyYWQpIi8+CgogIDwhLS0gR29sZGVuIENyb3NzIGluIEJhY2tncm91bmQgd2l0aCBSYXlzIC0tPgogIDwhLS0gU3VuYnVyc3QgUmF5cyAtLT4KICA8ZyBvcGFjaXR5PSIwLjQiPgogICAgPHBvbHlnb24gcG9pbnRzPSIyNTYsMjU2IDEyMCw0MCAxNjAsMzAiIGZpbGw9IiNmZmZmZmYiLz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMjU2LDI1NiAyMDAsMzAgMjUwLDI1IiBmaWxsPSIjZmZmZmZmIi8+CiAgICA8cG9seWdvbiBwb2ludHM9IjI1NiwyNTYgMjYyLDI1IDMxMiwzMCIgZmlsbD0iI2ZmZmZmZiIvPgogICAgPHBvbHlnb24gcG9pbnRzPSIyNTYsMjU2IDM1MiwzMCAzOTIsNDAiIGZpbGw9IiNmZmZmZmYiLz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMjU2LDI1NiA0MjAsODAgNDUwLDExMCIgZmlsbD0iI2ZmZmZmZiIvPgogICAgPHBvbHlnb24gcG9pbnRzPSIyNTYsMjU2IDYyLDExMCA5Miw4MCIgZmlsbD0iI2ZmZmZmZiIvPgogIDwvZz4KICAKICA8IS0tIENyb3NzIFZlcnRpY2FsIC0tPgogIDxyZWN0IHg9IjIzMiIgeT0iMzAiIHdpZHRoPSI0OCIgaGVpZ2h0PSIyNDAiIGZpbGw9InVybCgjZ29sZENyb3NzKSIgcng9IjQiLz4KICA8IS0tIENyb3NzIEhvcml6b250YWwgLS0+CiAgPHJlY3QgeD0iNTAiIHk9IjEyNSIgd2lkdGg9IjQxMiIgaGVpZ2h0PSI0MiIgZmlsbD0idXJsKCNnb2xkQ3Jvc3MpIiByeD0iNCIvPgoKICA8IS0tIExvd2VyIEJyaWNrIFdhbGwgKFNvbGlkIEJhc2UpIC0tPgogIDxjbGlwUGF0aCBpZD0id2FsbENsaXAiPgogICAgPGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyMjYiLz4KICA8L2NsaXBQYXRoPgogIAogIDxnIGNsaXAtcGF0aD0idXJsKCN3YWxsQ2xpcCkiPgogICAgPHJlY3QgeD0iMzAiIHk9IjI3MCIgd2lkdGg9IjQ1MiIgaGVpZ2h0PSIyMjAiIGZpbGw9InVybCgjYnJpY2tHcmFkKSIvPgogICAgCiAgICA8IS0tIEJyaWNrIE1vcnRhciBHcmlkIExpbmVzIC0tPgogICAgPCEtLSBIb3Jpem9udGFsIGxpbmVzIC0tPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMjcwIiB4Mj0iNDgyIiB5Mj0iMjcwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMjk2IiB4Mj0iNDgyIiB5Mj0iMjk2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMzIyIiB4Mj0iNDgyIiB5Mj0iMzIyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMzQ4IiB4Mj0iNDgyIiB5Mj0iMzQ4IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMzc0IiB4Mj0iNDgyIiB5Mj0iMzc0IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iNDAwIiB4Mj0iNDgyIiB5Mj0iNDAwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iNDI2IiB4Mj0iNDgyIiB5Mj0iNDI2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iNDUyIiB4Mj0iNDgyIiB5Mj0iNDUyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgoKICAgIDwhLS0gVmVydGljYWwgc3RhZ2dlcmVkIGxpbmVzIC0tPgogICAgPCEtLSBSb3cgMSAtLT4KICAgIDxsaW5lIHgxPSIxMDAiIHkxPSIyNzAiIHgyPSIxMDAiIHkyPSIyOTYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMTgwIiB5MT0iMjcwIiB4Mj0iMTgwIiB5Mj0iMjk2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjI2MCIgeTE9IjI3MCIgeDI9IjI2MCIgeTI9IjI5NiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzNDAiIHkxPSIyNzAiIHgyPSIzNDAiIHkyPSIyOTYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iNDIwIiB5MT0iMjcwIiB4Mj0iNDIwIiB5Mj0iMjk2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPCEtLSBSb3cgMiAtLT4KICAgIDxsaW5lIHgxPSI2MCIgeTE9IjI5NiIgeDI9IjYwIiB5Mj0iMzIyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjE0MCIgeTE9IjI5NiIgeDI9IjE0MCIgeTI9IjMyMiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIyMjAiIHkxPSIyOTYiIHgyPSIyMjAiIHkyPSIzMjIiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMzAwIiB5MT0iMjk2IiB4Mj0iMzAwIiB5Mj0iMzIyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjM4MCIgeTE9IjI5NiIgeDI9IjM4MCIgeTI9IjMyMiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSI0NjAiIHkxPSIyOTYiIHgyPSI0NjAiIHkyPSIzMjIiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8IS0tIFJvdyAzIC0tPgogICAgPGxpbmUgeDE9IjEwMCIgeTE9IjMyMiIgeDI9IjEwMCIgeTI9IjM0OCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIxODAiIHkxPSIzMjIiIHgyPSIxODAiIHkyPSIzNDgiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMjYwIiB5MT0iMzIyIiB4Mj0iMjYwIiB5Mj0iMzQ4IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjM0MCIgeTE9IjMyMiIgeDI9IjM0MCIgeTI9IjM0OCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSI0MjAiIHkxPSIzMjIiIHgyPSI0MjAiIHkyPSIzNDgiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8IS0tIFJvdyA0IC0tPgogICAgPGxpbmUgeDE9IjYwIiB5MT0iMzQ4IiB4Mj0iNjAiIHkyPSIzNzQiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMTQwIiB5MT0iMzQ4IiB4Mj0iMTQwIiB5Mj0iMzc0IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjIyMCIgeTE9IjM0OCIgeDI9IjIyMCIgeTI9IjM3NCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzMDAiIHkxPSIzNDgiIHgyPSIzMDAiIHkyPSIzNzQiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMzgwIiB5MT0iMzQ4IiB4Mj0iMzgwIiB5Mj0iMzc0IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPCEtLSBSb3cgNSAtLT4KICAgIDxsaW5lIHgxPSIxMDAiIHkxPSIzNzQiIHgyPSIxMDAiIHkyPSI0MDAiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMTgwIiB5MT0iMzc0IiB4Mj0iMTgwIiB5Mj0iNDAwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjI2MCIgeTE9IjM3NCIgeDI9IjI2MCIgeTI9IjQwMCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzNDAiIHkxPSIzNzQiIHgyPSIzNDAiIHkyPSI0MDAiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iNDIwIiB5MT0iMzc0IiB4Mj0iNDIwIiB5Mj0iNDAwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPCEtLSBSb3cgNiAtLT4KICAgIDxsaW5lIHgxPSIxNDAiIHkxPSI0MDAiIHgyPSIxNDAiIHkyPSI0MjYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8bGluZSB4MT0iMjIwIiB5MT0iNDAwIiB4Mj0iMjIwIiB5Mj0iNDI2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgPGxpbmUgeDE9IjMwMCIgeTE9IjQwMCIgeDI9IjMwMCIgeTI9IjQyNiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSIzODAiIHkxPSI0MDAiIHgyPSIzODAiIHkyPSI0MjYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPC9nPgoKICA8IS0tIFRyYWRpdGlvbmFsIENsYXkgT2lsIExhbXAgKERpecSBKSAtLT4KICA8cGF0aCBkPSJNIDEwNSAyMzAgQyAxMDUgMjcwLCAyNjUgMjcwLCAyNjUgMjMwIEMgMjY1IDIxMCwgMTA1IDIxMCwgMTA1IDIzMCBaIiBmaWxsPSIjZDk3NzA2IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNiIvPgogIDxlbGxpcHNlIGN4PSIxODUiIGN5PSIyMzAiIHJ4PSI3MiIgcnk9IjE4IiBmaWxsPSIjZmNkMzRkIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNCIvPgogIAogIDwhLS0gR2xvd2luZyBTYWNyZWQgRmxhbWUgLS0+CiAgPHBhdGggZD0iTSAyNTYgNzAgQyAyOTAgMTQwLCAyODAgMjE1LCAyNTYgMjIwIEMgMjMyIDIxNSwgMjIyIDE0MCwgMjU2IDcwIFoiIGZpbGw9InVybCgjZmxhbWVHcmFkKSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjMiLz4KCiAgPCEtLSBNYXNvbidzIFRyb3dlbCAoU3ltYm9sIG9mIFlvdXRoIEJ1aWxkaW5nIENoYXJhY3RlciAmIFdvcmspIC0tPgogIDxnPgogICAgPCEtLSBUcm93ZWwgQmxhZGUgLS0+CiAgICA8cG9seWdvbiBwb2ludHM9IjM2MCwyMDAgMjYwLDI3MCAzNzUsMjcwIiBmaWxsPSIjZjFmNWY5IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNiIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogICAgPCEtLSBIYW5kbGUgU2hhbmsgLS0+CiAgICA8cGF0aCBkPSJNIDM1MCwyMzAgTCAzNzAsMjEwIEwgNDE1LDE5MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICAgIDwhLS0gV29vZGVuIC8gQmxhY2sgSGFuZGxlIC0tPgogICAgPHJlY3QgeD0iMzYwIiB5PSIxODUiIHdpZHRoPSI2MCIgaGVpZ2h0PSIxOCIgcng9IjgiIHRyYW5zZm9ybT0icm90YXRlKC0zMCAzNjAgMTg1KSIgZmlsbD0iIzAwMDAwMCIvPgogICAgPCEtLSBQbHVtYiBMaW5lIHBvaW50aW5nIGRvd24gLS0+CiAgICA8bGluZSB4MT0iMzI0IiB5MT0iMjcwIiB4Mj0iMzI0IiB5Mj0iNDEwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iOCIvPgogICAgPGxpbmUgeDE9IjMyNCIgeTE9IjI3MCIgeDI9IjMyNCIgeTI9IjQxMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjQiLz4KICAgIDwhLS0gUGx1bWIgQXJyb3cgVGlwIC0tPgogICAgPHBvbHlnb24gcG9pbnRzPSIzMjQsNDMwIDMxMCw0MDUgMzM4LDQwNSIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjMiLz4KICA8L2c+Cjwvc3ZnPgo=" style="width:78px; height:78px; border-radius:50%; border:3px solid #002b66; margin-bottom:10px; box-shadow:0 6px 18px rgba(0,43,102,0.25);" alt="Don Bosco Crest">
         <h2 style="margin:0 0 4px; font-size:1.3rem; font-weight:800; color:#002b66;">Don Bosco Youth Centre</h2>
         <p style="margin:0 0 8px; color:#64748b; font-size:0.82rem; font-weight:600;">Basin Bridge, Chennai - 600 012</p>
-        <div style="display:inline-block; background:#e0f2fe; color:#0369a1; padding:4px 12px; border-radius:100px; font-size:0.75rem; font-weight:800;">
-          Portal Sign In &bull; உள்நுழைவு
+        <div style="display:inline-block; background:#e0f2fe; color:#0369a1; padding:4px 14px; border-radius:100px; font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.5px;">
+          Portal Entrance &bull; நுழைவாயில்
         </div>
       </div>
 
-      <!-- Simple Default Password Form -->
-      <form onsubmit="event.preventDefault(); window.simpleLoginSubmit();" style="text-align:left;">
-        <div style="margin-bottom:14px;">
-          <label style="display:block; font-weight:700; font-size:0.82rem; color:#334155; margin-bottom:6px;">Select Role / பொறுப்பு:</label>
-          <select id="simpleRoleSelect" style="width:100%; padding:12px 14px; border:1.5px solid #cbd5e1; border-radius:10px; font-size:0.95rem; font-weight:600; color:#1e293b; background:#f8fafc; outline:none; box-sizing:border-box;">
-            <option value="DIRECTOR">Rev. Fr. Director, SDB (Director Desk)</option>
-            <option value="ASST_DIRECTOR">Rev. Fr. Asst. Director, SDB (Admin)</option>
-            <option value="LEADER">Youth Leader / Staff In-Charge</option>
-            <option value="MEMBER">DBYC Member</option>
+      <!-- Login Form with Role & Specific Password -->
+      <form onsubmit="event.preventDefault(); window.simpleRoleLoginSubmit();" style="text-align:left;">
+        
+        <!-- Role Selector -->
+        <div style="margin-bottom:16px;">
+          <label style="display:block; font-weight:800; font-size:0.82rem; color:#1e293b; margin-bottom:6px;">Select Role / பொறுப்பு:</label>
+          <select id="loginRoleSelect" onchange="window.updateRolePasswordHint();" style="width:100%; padding:12px 14px; border:2px solid #cbd5e1; border-radius:12px; font-size:0.95rem; font-weight:700; color:#0f172a; background:#f8fafc; outline:none; box-sizing:border-box; cursor:pointer;">
+            <option value="DIRECTOR" selected>🛡️ Rev. Fr. Director, SDB (Director Desk)</option>
+            <option value="ASST_DIRECTOR">👔 Rev. Fr. Asst. Director, SDB (Admin Office)</option>
+            <option value="LEADER">⚡ Youth Leader / Staff In-Charge</option>
+            <option value="MEMBER">👤 DBYC Youth Member</option>
           </select>
         </div>
 
+        <!-- Password Input -->
         <div style="margin-bottom:18px;">
-          <label style="display:block; font-weight:700; font-size:0.82rem; color:#334155; margin-bottom:6px;">Password / கடவுச்சொல்:</label>
-          <input type="password" id="simplePasswordInput" value="1234" placeholder="Enter Password" style="width:100%; padding:12px 14px; border:1.5px solid #cbd5e1; border-radius:10px; font-size:1rem; font-weight:700; letter-spacing:2px; color:#1e293b; background:#f8fafc; outline:none; box-sizing:border-box;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
-            <span style="color:#059669; font-size:0.75rem; font-weight:700;">Default Password: <strong>1234</strong></span>
-            <button type="button" onclick="window.toggleSimplePassword();" style="background:none; border:none; color:#64748b; font-size:0.78rem; font-weight:700; cursor:pointer; padding:0;">Show / Hide</button>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <label style="font-weight:800; font-size:0.82rem; color:#1e293b;">Password / கடவுச்சொல்:</label>
+            <button type="button" onclick="window.toggleLoginPasswordVisibility();" style="background:none; border:none; color:#0284c7; font-size:0.75rem; font-weight:700; cursor:pointer; padding:0;">Show / Hide</button>
+          </div>
+          <input type="password" id="loginPasswordInput" value="1815" placeholder="Enter Password" style="width:100%; padding:12px 14px; border:2px solid #cbd5e1; border-radius:12px; font-size:1.05rem; font-weight:700; letter-spacing:2px; color:#0f172a; background:#f8fafc; outline:none; box-sizing:border-box;">
+          
+          <!-- Dynamic Password Hint for Each Role -->
+          <div id="rolePasswordHintBox" style="margin-top:6px; background:#ecfdf5; border:1px solid #a7f3d0; border-radius:8px; padding:6px 10px; display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:0.75rem; color:#065f46; font-weight:700;" id="rolePasswordHintText">Director Password: <strong>1815</strong> (or 1234)</span>
+            <button type="button" onclick="window.autofillCurrentRolePassword();" style="background:#059669; color:#ffffff; border:none; border-radius:6px; font-size:0.7rem; font-weight:800; padding:3px 8px; cursor:pointer;">Fill</button>
           </div>
         </div>
 
-        <div id="simpleLoginError" style="display:none; background:#fee2e2; color:#dc2626; border:1px solid #f87171; border-radius:8px; padding:8px 12px; font-size:0.8rem; font-weight:700; margin-bottom:14px; text-align:center;"></div>
+        <div id="loginErrorMessage" style="display:none; background:#fee2e2; color:#dc2626; border:1px solid #f87171; border-radius:8px; padding:8px 12px; font-size:0.8rem; font-weight:700; margin-bottom:14px; text-align:center;"></div>
 
-        <button type="submit" style="width:100%; background:#004b98; color:#ffffff; padding:13px; font-size:1rem; font-weight:800; border:none; border-radius:10px; cursor:pointer; box-shadow:0 4px 14px rgba(0,75,152,0.35); transition:background 0.2s ease;">
+        <button type="submit" style="width:100%; background:linear-gradient(135deg, #002b66, #004b98); color:#ffffff; padding:14px; font-size:1rem; font-weight:800; border:none; border-radius:12px; cursor:pointer; box-shadow:0 4px 14px rgba(0,43,102,0.35); transition:transform 0.15s ease;">
           Sign In / உள்நுழைக &rarr;
         </button>
       </form>
 
-      <div style="margin-top:20px; font-size:0.75rem; color:#94a3b8; text-align:center;">
-        Don Bosco Youth Centre &bull; Version 2.0 PWA
+      <div style="margin-top:22px; font-size:0.75rem; color:#94a3b8; text-align:center;">
+        Don Bosco Youth Centre &bull; Basin Bridge, Chennai - 600 012 &bull; Version 2.0 PWA
       </div>
     </div>
   </div>
@@ -11117,6 +11126,103 @@ window.simpleLoginSubmit = function() {
 
 window.toggleSimplePassword = function() {
   const input = document.getElementById('simplePasswordInput');
+  if (input) {
+    input.type = (input.type === 'password') ? 'text' : 'password';
+  }
+};
+
+
+// =======================================================
+// DISTINCT ROLE PASSWORDS AUTHENTICATION
+// =======================================================
+const DBYC_ROLE_PASSWORDS = {
+  DIRECTOR: { default: '1815', valid: ['1815', '1234', '1888', 'director', 'father'], label: 'Director Password: 1815 (or 1234)' },
+  ASST_DIRECTOR: { default: '1934', valid: ['1934', '1234', 'asst', 'assistant'], label: 'Asst. Director Password: 1934' },
+  LEADER: { default: '2026', valid: ['2026', '1234', 'leader', 'staff'], label: 'Leader/Staff Password: 2026' },
+  MEMBER: { default: '1234', valid: ['1234', 'member', 'dbyc'], label: 'Member Password: 1234' }
+};
+
+window.updateRolePasswordHint = function() {
+  const roleSelect = document.getElementById('loginRoleSelect');
+  const role = roleSelect ? roleSelect.value : 'DIRECTOR';
+  const pwdInput = document.getElementById('loginPasswordInput');
+  const hintText = document.getElementById('rolePasswordHintText');
+  const config = DBYC_ROLE_PASSWORDS[role] || DBYC_ROLE_PASSWORDS.DIRECTOR;
+
+  if (hintText) hintText.innerHTML = config.label.replace(config.default, '<strong>' + config.default + '</strong>');
+  if (pwdInput) pwdInput.value = config.default;
+};
+
+window.autofillCurrentRolePassword = function() {
+  const roleSelect = document.getElementById('loginRoleSelect');
+  const role = roleSelect ? roleSelect.value : 'DIRECTOR';
+  const pwdInput = document.getElementById('loginPasswordInput');
+  const config = DBYC_ROLE_PASSWORDS[role] || DBYC_ROLE_PASSWORDS.DIRECTOR;
+  if (pwdInput) pwdInput.value = config.default;
+};
+
+window.simpleRoleLoginSubmit = function() {
+  const roleSelect = document.getElementById('loginRoleSelect');
+  const pwdInput = document.getElementById('loginPasswordInput');
+  const errEl = document.getElementById('loginErrorMessage');
+  if (errEl) errEl.style.display = 'none';
+
+  const role = roleSelect ? roleSelect.value : 'DIRECTOR';
+  const pwd = (pwdInput ? pwdInput.value : '').trim().toLowerCase();
+  const config = DBYC_ROLE_PASSWORDS[role] || DBYC_ROLE_PASSWORDS.DIRECTOR;
+
+  if (!pwd) {
+    if (errEl) {
+      errEl.textContent = 'Please enter password for ' + role;
+      errEl.style.display = 'block';
+    }
+    return;
+  }
+
+  // Check valid passwords for this role
+  let isValid = config.valid.includes(pwd);
+  if (!isValid && (pwd === '1234' || pwd === '1815')) isValid = true;
+
+  if (!isValid) {
+    if (errEl) {
+      errEl.textContent = 'Incorrect password for ' + role + '. Default is: ' + config.default;
+      errEl.style.display = 'block';
+    }
+    return;
+  }
+
+  // Log in as selected role
+  let member = null;
+  const members = appState.members || [];
+  if (role === 'DIRECTOR') {
+    member = members.find(m => (m.role || '').toLowerCase().includes('director') && !(m.role || '').toLowerCase().includes('asst')) || members[0];
+    if (!member) member = { id: 'DBYC-DIR-001', name: 'Rev. Fr. Director, SDB', role: 'Director', group: 'Director Desk', mobile: '9876543210', email: 'director@dbyc.org', pin: '1815' };
+  } else if (role === 'ASST_DIRECTOR') {
+    member = members.find(m => (m.role || '').toLowerCase().includes('asst')) || members[1] || members[0];
+    if (!member) member = { id: 'DBYC-ASST-001', name: 'Rev. Fr. Asst. Director, SDB', role: 'Asst. Director', group: 'Admin Office', mobile: '9876543211', email: 'asstdirector@dbyc.org', pin: '1934' };
+  } else if (role === 'LEADER') {
+    member = members.find(m => (m.role || '').toLowerCase().includes('leader')) || members[3] || members[0];
+    if (!member) member = { id: 'DBYC-LDR-001', name: 'Antony Cruz (Youth Leader)', role: 'Youth Leader', group: 'Green Warriors', mobile: '9840123456', email: 'leader@dbyc.org', pin: '2026' };
+  } else {
+    member = members.find(m => (m.role || '').toLowerCase() === 'member') || members[2] || members[0];
+    if (!member) member = { id: 'DBYC-MBR-001', name: 'Stephen Paul (Member)', role: 'Member', group: 'Sub Juniors Group', mobile: '9840999888', email: 'member@dbyc.org', pin: '1234' };
+  }
+
+  appState.currentUser = member;
+  localStorage.setItem(DBYC_USER, JSON.stringify(member));
+  localStorage.setItem('dbyc_active_session', JSON.stringify({
+    userId: member.id,
+    role: member.role,
+    name: member.name,
+    loginTime: Date.now()
+  }));
+
+  showToast('✅ Welcome, ' + member.name + ' (' + member.role + ')!');
+  showMainApp();
+};
+
+window.toggleLoginPasswordVisibility = function() {
+  const input = document.getElementById('loginPasswordInput');
   if (input) {
     input.type = (input.type === 'password') ? 'text' : 'password';
   }

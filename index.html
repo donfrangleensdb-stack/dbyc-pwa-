@@ -2310,7 +2310,7 @@ body {
       <!-- Authentic DBYC Holy Crest Logo & Title Header -->
       <div style="display:flex; flex-direction:column; align-items:center; margin-bottom:14px;">
         <div style="position:relative; margin-bottom:10px;">
-          <img src=DBYC_OFFICIAL_LOGO alt="Don Bosco Youth Centre Official Crest" style="width:90px; height:90px; border-radius:50%; border:3.5px solid #f59e0b; box-shadow:0 0 22px rgba(245,158,11,0.45), 0 8px 24px rgba(0,43,102,0.3); object-fit:cover; background:#002b66; display:block;">
+          <img id="loginViewLogoImg" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAIAAgADASIAAhEBAxEB/" alt="Don Bosco Youth Centre Official Crest" style="width:88px; height:88px; border-radius:50%; border:3px solid #fde047; box-shadow:0 0 20px rgba(253,224,71,0.4), 0 6px 18px rgba(0,43,102,0.25); object-fit:cover; background:#002b66; display:block;">
           <div style="position:absolute; bottom:-2px; right:-2px; background:#059669; border:2px solid #ffffff; width:17px; height:17px; border-radius:50%;" title="System Online & PWA Ready"></div>
         </div>
 
@@ -2423,10 +2423,10 @@ body {
         <!-- Password Input Form -->
         <form onsubmit="event.preventDefault(); window.simpleRoleLoginSubmit();" style="text-align:left;">
           
-          <div style="margin-bottom:12px;">
+          <div style="margin-bottom:14px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
               <label style="font-weight:800; font-size:0.8rem; color:#1e293b; text-transform:uppercase; letter-spacing:0.4px;">
-                2. Enter Role Password / கடவுச்சொல்:
+                2. Enter Confidential Password / கடவுச்சொல்:
               </label>
               <button type="button" onclick="window.toggleLoginPasswordVisibility();" id="pwdToggleBtn" style="background:none; border:none; color:#0284c7; font-size:0.75rem; font-weight:800; cursor:pointer; padding:0; display:flex; align-items:center; gap:3px;">
                 👁️ <span id="pwdToggleText">Show</span>
@@ -2434,11 +2434,19 @@ body {
             </div>
 
             <div style="position:relative;">
-              <input type="password" id="loginPasswordInput" value="" placeholder="Enter confidential password" style="width:100%; padding:12px 14px; border:2px solid #0284c7; border-radius:12px; font-size:1.1rem; font-weight:700; letter-spacing:3px; color:#0f172a; background:#f8fafc; outline:none; box-sizing:border-box; transition:border-color 0.2s ease;">
+              <input type="password" id="loginPasswordInput" value="" placeholder="•••••••• [Enter Confidential Password]" autocomplete="current-password" style="width:100%; padding:12px 14px; border:2px solid #0284c7; border-radius:12px; font-size:1.1rem; font-weight:700; letter-spacing:3px; color:#0f172a; background:#f8fafc; outline:none; box-sizing:border-box; transition:border-color 0.2s ease;">
             </div>
-            
-            <!-- Dynamic Password Hint & 1-Click Quick Fill Button -->
-            </div></div>
+          </div>
+
+          <!-- Error & Success Messages -->
+          <div id="loginErrorMessage" style="display:none; background:#fef2f2; border:1px solid #fecaca; color:#b91c1c; border-radius:10px; padding:10px 12px; font-size:0.8rem; font-weight:700; margin-bottom:12px; line-height:1.35;"></div>
+          <div id="loginSuccessMessage" style="display:none; background:#ecfdf5; border:1px solid #a7f3d0; color:#065f46; border-radius:10px; padding:10px 12px; font-size:0.8rem; font-weight:700; margin-bottom:12px; line-height:1.35;"></div>
+
+          <!-- Submit Button -->
+          <button type="submit" id="simpleLoginSubmitBtn" class="btn-dbyc-primary" style="width:100%; padding:12px 16px; font-size:0.95rem; font-weight:800; background:linear-gradient(135deg, #002b66, #004b98); border-radius:12px; border:none; color:#fff; cursor:pointer; box-shadow:0 4px 14px rgba(0,43,102,0.25); transition:all 0.2s ease;">
+            🔑 Sign In (உள்நுழை)
+          </button>
+        </form>
       </div>
 
       <!-- ==========================================
@@ -2665,7 +2673,7 @@ body {
               <span>4 House Teams & Points <span style="background:#f59e0b; color:#0f172a; font-size:0.65rem; padding:2px 6px; border-radius:10px; font-weight:800; margin-left:4px;">LIVE</span></span>
             </a>
           </li>
-                    <li data-role-required="leader">
+          <li>
             <a href="#officebearers" class="sidebar-menu-item" data-view="officebearers">
               <span class="sidebar-menu-icon">🏛️</span>
               <span>Office Bearers (பொறுப்பாளர்கள்)</span>
@@ -2820,6 +2828,14 @@ body {
           <div class="app-tile" onclick="switchView('members')">
             <div class="app-tile-icon bg-pink">👥</div>
             <div class="app-tile-title">Members</div>
+          </div>
+
+          <div class="app-tile" id="tileOfficeBearers" onclick="switchView('officebearers')" style="cursor:pointer;">
+            <div class="app-tile-icon" style="background:linear-gradient(135deg, #0b57d0, #002b66); color:#fff; position:relative; box-shadow: 0 4px 14px rgba(11,87,208,0.25);">
+              🏛️
+              <span style="position:absolute; top:-4px; right:-4px; background:#fde047; color:#002b66; font-size:0.55rem; font-weight:900; padding:1px 5px; border-radius:6px; text-transform:uppercase; box-shadow:0 2px 4px rgba(0,0,0,0.2);">39</span>
+            </div>
+            <div class="app-tile-title">Office Bearers</div>
           </div>
 
           <div class="app-tile" data-role-required="leader" onclick="switchView('attendance')">
@@ -3055,9 +3071,32 @@ body {
     <section id="view_attendance" class="app-section" style="display:none;">
       <div class="main-content">
         <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
-        <div class="section-header">
-          <h2 class="section-title">📷 Live QR வருகைப் பதிவு (Attendance)</h2>
-          <span id="todayAttCountBadge" class="role-badge leader">0 Marked Today</span>
+        <div class="section-header" style="flex-wrap:wrap; gap:10px;">
+          <div>
+            <h2 class="section-title">📷 Live QR வருகைப் பதிவு (Attendance)</h2>
+            <small style="color:#64748b;">Daily Member QR Check-In & Assembly Desk</small>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            <span id="todayAttCountBadge" class="role-badge leader">0 Marked Today</span>
+            <button type="button" class="btn-dbyc-primary" style="background:#059669; padding:8px 14px; font-size:0.82rem; font-weight:800; border-radius:8px; display:inline-flex; align-items:center; gap:6px;" onclick="window.exportAttendanceCsv();" title="Export Attendance CSV Report">
+              📥 Export CSV (அறிக்கை)
+            </button>
+          </div>
+        </div>
+
+        <!-- Active Assembly / Session Selector -->
+        <div style="background:#f1f5f9; border:1px solid #cbd5e1; border-radius:12px; padding:10px 14px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+          <div>
+            <strong style="font-size:0.85rem; color:#002b66;">📅 Session / Assembly (அமர்வு):</strong>
+            <div style="font-size:0.75rem; color:#64748b;">Tagged automatically with each recorded check-in</div>
+          </div>
+          <select id="pwaAttendanceSessionSelect" class="form-control-dbyc" style="width:auto; min-width:240px; font-weight:700; font-size:0.85rem; border:2px solid #0284c7; background:#fff;">
+            <option value="Weekly DBYC Youth Assembly">Weekly DBYC Youth Assembly (ஞாயிறு இளைஞர் மன்றம்)</option>
+            <option value="Sunday Oratory">Sunday Oratory (தொன்போஸ்கோ பாசறை)</option>
+            <option value="Evening Oratory & Sports Practice">Evening Oratory & Sports Practice (விளையாட்டுப் பயிற்சி)</option>
+            <option value="Music & Choir Practice">Music & Choir Practice (இசைப் பயிற்சி)</option>
+            <option value="Leaders Council Assembly">Leaders Council Assembly (தலைவர்கள் மன்றம்)</option>
+          </select>
         </div>
 
         <div class="scanner-card">
@@ -5486,6 +5525,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initApp() {
+  const entLogo = document.getElementById('loginViewLogoImg');
+  if (entLogo && window.DBYC_OFFICIAL_LOGO) {
+    entLogo.src = window.DBYC_OFFICIAL_LOGO;
+  }
+
   try {
     const savedLang = localStorage.getItem(DBYC_LANG);
     if (savedLang) appState.currentLang = savedLang;
@@ -6112,7 +6156,7 @@ function applyRolePermissions() {
 
   // MEMBER LOGIN VIEW RESTRICTIONS:
   // "for member login only my profile, my qr code, members, birthdays, calander, 4 teams, live score, live and videos, dbyc news, dbyc rules can be available."
-  const allowedMemberViews = ['profile', 'passes', 'members', 'birthdays', 'calendar', 'teams', 'livescore', 'media', 'news', 'rules'];
+  const allowedMemberViews = ['profile', 'passes', 'members', 'officebearers', 'birthdays', 'calendar', 'teams', 'livescore', 'media', 'news', 'rules'];
 
   document.querySelectorAll('#sidebarDrawer .sidebar-menu-item').forEach(link => {
     const v = link.getAttribute('data-view');
@@ -7434,25 +7478,33 @@ function updateDashboardStats() {
 function renderTodayAttendance() {
   const container = document.getElementById('todayAttendanceList');
   const today = new Date().toISOString().split('T')[0];
-  const list = appState.attendance.filter(a => a.date === today);
+  const list = (appState.attendance || []).filter(a => a.date === today);
+  const total = (appState.members || []).length;
+  const rate = total > 0 ? ((list.length / total) * 100).toFixed(1) : 0;
 
-  document.getElementById('todayAttCountBadge').textContent = `${list.length} Marked Today`;
+  const countBadge = document.getElementById('todayAttCountBadge');
+  if (countBadge) countBadge.textContent = `${list.length} Marked Today (${rate}%)`;
 
   if (list.length === 0) {
-    container.innerHTML = `<div style="text-align:center; padding:20px; color:#64748b;">No attendance recorded today yet. Scan QR pass above.</div>`;
+    container.innerHTML = `<div style="text-align:center; padding:20px; color:#64748b;">No attendance recorded today yet. Scan QR pass or tap above.</div>`;
     return;
   }
 
   container.innerHTML = list.map(a => `
-    <div class="member-card" style="padding:10px 14px;">
-      <div class="member-card-left">
-        <div class="member-avatar" style="width:36px; height:36px; font-size:0.85rem; background:#10b981;">✓</div>
+    <div class="member-card" style="padding:10px 14px; display:flex; justify-content:space-between; align-items:center;">
+      <div class="member-card-left" style="display:flex; align-items:center; gap:10px;">
+        <div class="member-avatar" style="width:38px; height:38px; font-size:0.9rem; background:#10b981; color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900;">✓</div>
         <div>
-          <div class="member-name">${a.memberName}</div>
-          <div class="member-sub">${a.memberId} • ${a.group} • 🕒 ${new Date(a.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+          <div class="member-name" style="font-weight:800; color:#0f172a;">${a.memberName}</div>
+          <div class="member-sub" style="font-size:0.75rem; color:#64748b; margin-top:2px;">
+            ${a.memberCode || a.memberId} • ${a.group} • <span style="color:#0284c7; font-weight:700;">${a.session || 'Weekly Assembly'}</span> • 🕒 ${new Date(a.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          </div>
         </div>
       </div>
-      <span class="role-badge" style="background:#ecfdf5; color:#059669;">Present</span>
+      <div style="text-align:right;">
+        <span class="role-badge" style="background:#ecfdf5; color:#059669; font-weight:800; font-size:0.72rem; padding:3px 8px; border-radius:6px;">Present</span>
+        <div style="font-size:0.65rem; color:#94a3b8; margin-top:2px; font-weight:600;">${a.scanMethod || 'QR_CAMERA'}</div>
+      </div>
     </div>
   `).join('');
 }
@@ -7544,19 +7596,19 @@ window.manualCheckinSubmit = function() {
   if (input) input.value = '';
 };
 
-window.processAttendanceCheckin = function(query) {
+window.processAttendanceCheckin = function(query, scanMethod) {
   if (!query) return;
   const members = appState.members || [];
   let qClean = decodeURIComponent(query).trim().toUpperCase();
 
-  // Handle format DBYC:ID:Name:Group
+  // Handle format DBYC:ID:TOKEN or DBYC:ID:Name:Group
   if (qClean.includes('DBYC:')) {
     const parts = qClean.split(':');
     if (parts.length >= 2) qClean = parts[1].trim();
   }
 
-  // Try to match Member ID
-  let member = members.find(m => (m.id || '').toUpperCase() === qClean || (m.id || '').toUpperCase().includes(qClean));
+  // Try to match Member ID or member_code
+  let member = members.find(m => (m.id || '').toUpperCase() === qClean || (m.member_code || '').toUpperCase() === qClean || (m.id || '').toUpperCase().includes(qClean));
   
   // Try mobile match
   if (!member) {
@@ -7573,24 +7625,50 @@ window.processAttendanceCheckin = function(query) {
 
   if (!member) {
     showToast(`⚠️ Member not found in registry: "${query}"`);
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(220, ctx.currentTime);
+      osc.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.25);
+    } catch(e) {}
     return;
   }
 
   const today = new Date().toISOString().split('T')[0];
   if (!appState.attendance) appState.attendance = [];
 
-  const alreadyCheckedIn = appState.attendance.some(a => a.date === today && a.memberId === member.id);
+  const sessionEl = document.getElementById('pwaAttendanceSessionSelect');
+  const currentSession = sessionEl ? sessionEl.value : 'Weekly DBYC Youth Assembly';
+
+  const alreadyCheckedIn = appState.attendance.some(a => a.date === today && a.memberId === member.id && (!a.session || a.session === currentSession));
   if (alreadyCheckedIn) {
-    showToast(`ℹ️ ${member.name} (${member.id}) is ALREADY marked PRESENT today!`);
+    showToast(`ℹ️ ${member.name} (${member.id}) is ALREADY marked PRESENT for ${currentSession} today!`);
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(440, ctx.currentTime);
+      osc.frequency.setValueAtTime(349, ctx.currentTime + 0.1);
+      osc.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.35);
+    } catch(e) {}
     return;
   }
 
+  const methodUsed = scanMethod || 'QR_CAMERA';
   const record = {
     id: 'ATT-' + Date.now(),
     memberId: member.id,
+    memberCode: member.member_code || member.id,
     memberName: member.name,
     group: member.group || 'Oratory',
+    session: currentSession,
     status: 'PRESENT',
+    scanMethod: methodUsed,
     date: today,
     timestamp: new Date().toISOString(),
     recordedBy: (appState.currentUser && appState.currentUser.name) ? appState.currentUser.name : 'Leader'
@@ -7602,23 +7680,74 @@ window.processAttendanceCheckin = function(query) {
     window.DbycCloud.pushToCloud();
   }
 
+  // Optional background sync with Flask backend if active
+  try {
+    fetch('http://localhost:5000/api/check-in', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        qr_data: member.member_code || member.id,
+        session_id: 1,
+        method: methodUsed
+      })
+    }).catch(() => {});
+  } catch(e) {}
+
   renderTodayAttendance();
   updateDashboardStats();
   window.renderFastAttendanceDesk();
 
-  // Pleasant Audio Chime
+  // Pleasant 2-tone audio chime (D5 -> A5)
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
     const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(880, ctx.currentTime);
-    osc.connect(ctx.destination);
+    osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+    osc.frequency.setValueAtTime(880, ctx.currentTime + 0.08);
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.32);
     osc.start();
-    osc.stop(ctx.currentTime + 0.15);
+    osc.stop(ctx.currentTime + 0.32);
   } catch(e) {}
   try { if (navigator.vibrate) navigator.vibrate(200); } catch(e) {}
 
-  showToast(`✅ Checked In: ${member.name} (${member.group || 'Member'})!`);
+  showToast(`✅ Checked In: ${member.name} (${member.group || 'Member'}) for ${currentSession}!`);
+};
+
+window.exportAttendanceCsv = function() {
+  const list = appState.attendance || [];
+  if (list.length === 0) {
+    showToast('⚠️ No attendance records to export.');
+    return;
+  }
+  let csv = 'Record ID,Date,Timestamp,Method,Member ID,Full Name,Group,Session,Status,Recorded By\r\n';
+  list.forEach(r => {
+    const clean = (val) => '"' + String(val || '').replace(/"/g, '""') + '"';
+    csv += [
+      clean(r.id),
+      clean(r.date),
+      clean(r.timestamp),
+      clean(r.scanMethod || 'QR_CAMERA'),
+      clean(r.memberCode || r.memberId),
+      clean(r.memberName),
+      clean(r.group),
+      clean(r.session || 'Weekly Assembly'),
+      clean(r.status || 'PRESENT'),
+      clean(r.recordedBy)
+    ].join(',') + '\r\n';
+  });
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `DBYC_Attendance_${new Date().toISOString().split('T')[0].replace(/-/g, '')}.csv`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  showToast('📥 Attendance CSV exported successfully!');
 };
 
 window.toggleQrCamera = function() {
@@ -12502,9 +12631,10 @@ window.selectLoginPersona = function(role) {
   if (errEl) errEl.style.display = 'none';
   if (successEl) successEl.style.display = 'none';
   if (pwdInput) {
-    pwdInput.placeholder = 'Enter Password for ' + config.roleName;
-    pwdInput.value = config.default;
+    pwdInput.placeholder = '•••••••• [Password for ' + config.roleName + ']';
+    pwdInput.value = ''; // Confidential: do not auto-fill
     pwdInput.style.borderColor = '#0284c7';
+    pwdInput.focus();
   }
   if (hintText) {
     hintText.innerHTML = `🔑 ${config.roleName} Password: <strong style="letter-spacing:1px;">${config.default}</strong>`;

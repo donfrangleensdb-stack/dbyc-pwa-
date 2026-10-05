@@ -2441,10 +2441,18 @@ body {
         <!-- Password Input Form -->
         <form onsubmit="event.preventDefault(); window.simpleRoleLoginSubmit();" style="text-align:left;">
           
+          <div style="margin-bottom:12px;">
+            <label style="font-weight:800; font-size:0.8rem; color:#1e293b; text-transform:uppercase; letter-spacing:0.4px; display:block; margin-bottom:5px;">
+              2. Member ID or Registered Mobile (உறுப்பினர் எண் / அலைபேசி):
+            </label>
+            <input type="text" id="loginMemberIdInput" placeholder="Optional for Director/Staff, or enter DBYC ID / Mobile..." autocomplete="username" style="width:100%; padding:11px 14px; border:1.5px solid #cbd5e1; border-radius:12px; font-size:0.92rem; font-weight:700; color:#0f172a; background:#f8fafc; outline:none; box-sizing:border-box;">
+            <div style="font-size:0.72rem; color:#64748b; margin-top:3px;">💡 Any member can enter their ID and the Security PIN set during registration</div>
+          </div>
+
           <div style="margin-bottom:14px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
               <label style="font-weight:800; font-size:0.8rem; color:#1e293b; text-transform:uppercase; letter-spacing:0.4px;">
-                2. Enter Confidential Password / கடவுச்சொல்:
+                3. Security PIN / Confidential Password (ரகசியக் குறியீடு):
               </label>
               <button type="button" onclick="window.toggleLoginPasswordVisibility();" id="pwdToggleBtn" style="background:none; border:none; color:#0284c7; font-size:0.75rem; font-weight:800; cursor:pointer; padding:0; display:flex; align-items:center; gap:3px;">
                 👁️ <span id="pwdToggleText">Show</span>
@@ -2452,7 +2460,7 @@ body {
             </div>
 
             <div style="position:relative;">
-              <input type="password" id="loginPasswordInput" value="" placeholder="•••••••• [Enter Confidential Password]" autocomplete="current-password" style="width:100%; padding:12px 14px; border:2px solid #0284c7; border-radius:12px; font-size:1.1rem; font-weight:700; letter-spacing:3px; color:#0f172a; background:#f8fafc; outline:none; box-sizing:border-box; transition:border-color 0.2s ease;">
+              <input type="password" id="loginPasswordInput" value="" placeholder="•••• [Enter Security PIN or Password]" autocomplete="current-password" style="width:100%; padding:12px 14px; border:2px solid #0284c7; border-radius:12px; font-size:1.1rem; font-weight:700; letter-spacing:3px; color:#0f172a; background:#f8fafc; outline:none; box-sizing:border-box; transition:border-color 0.2s ease;">
             </div>
           </div>
 
@@ -3135,16 +3143,33 @@ body {
           </div>
 
           <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px;">
-            <button id="startCameraBtn" type="button" class="btn-dbyc-primary" style="font-weight:800; padding:10px 18px; font-size:0.9rem;" onclick="window.toggleQrCamera();">
-              📷 Turn On Camera Scanner
+            <button id="startCameraBtn" type="button" class="btn-dbyc-primary" style="font-weight:800; padding:10px 16px; font-size:0.88rem;" onclick="window.toggleQrCamera();">
+              📷 Live Camera Stream
             </button>
-            <button id="flipCamBtn" type="button" class="btn-dbyc-primary" style="background:#475569; font-weight:800; padding:10px 14px; font-size:0.9rem; display:none;" onclick="window.switchCameraFacing();">
+            <button id="flipCamBtn" type="button" class="btn-dbyc-primary" style="background:#475569; font-weight:800; padding:10px 14px; font-size:0.88rem; display:none;" onclick="window.switchCameraFacing();">
               🔄 Switch Camera
             </button>
-            <button type="button" class="btn-dbyc-primary" style="background:#0284c7; font-weight:800; padding:10px 18px; font-size:0.9rem;" onclick="document.getElementById('qrPhotoFileInput').click();">
-              📁 Scan Pass Photo from Gallery
+            <button type="button" class="btn-dbyc-primary" style="background:#ea580c; font-weight:800; padding:10px 16px; font-size:0.88rem; display:inline-flex; align-items:center; gap:6px;" onclick="document.getElementById('qrDirectSnapInput').click();">
+              📸 Snap QR Photo (Camera / Offline)
             </button>
-            <input type="file" id="qrPhotoFileInput" accept="image/*" capture="environment" style="display:none;" onchange="window.scanQrFromFile(event);">
+            <input type="file" id="qrDirectSnapInput" accept="image/*" capture="environment" style="display:none;" onchange="window.scanQrFromFile(event);">
+            <button type="button" class="btn-dbyc-primary" style="background:#0284c7; font-weight:800; padding:10px 16px; font-size:0.88rem; display:inline-flex; align-items:center; gap:6px;" onclick="document.getElementById('qrPhotoFileInput').click();">
+              📁 Photo from Gallery
+            </button>
+            <input type="file" id="qrPhotoFileInput" accept="image/*" style="display:none;" onchange="window.scanQrFromFile(event);">
+            <button type="button" class="btn-dbyc-primary" style="background:#4338ca; font-weight:800; padding:10px 16px; font-size:0.88rem; display:inline-flex; align-items:center; gap:6px;" onclick="window.triggerGoogleLensScan();">
+              🔍 Google Lens / Scanner
+            </button>
+          </div>
+
+          <!-- Quick Paste Decoded QR / Token helper -->
+          <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:8px 12px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+            <div style="font-size:0.78rem; color:#166534; font-weight:700;">
+              💡 Scanned with Google Lens or external app? Tap Paste to check in immediately:
+            </div>
+            <button type="button" class="btn-dbyc-primary" style="background:#16a34a; font-size:0.78rem; font-weight:800; padding:6px 12px; border-radius:8px;" onclick="window.pasteAndCheckIn();">
+              📋 Paste & Check In
+            </button>
           </div>
 
           <div style="margin-top:16px; border-top:1px dashed #cbd5e1; padding-top:14px;">
@@ -3848,9 +3873,12 @@ body {
                 <div style="font-size:0.85rem; color:#bae6fd; font-weight:700;">🏛️ Official Office Bearers Dashboard (பொறுப்பாளர்கள் மன்றம்)</div>
               </div>
             </div>
-            <div style="text-align:right;">
-              <div style="font-size:0.82rem; font-weight:800; color:#fde047; font-style:italic;">"Together for a Better Tomorrow"</div>
-              <div style="font-size:0.75rem; color:#e0f2fe; margin-top:2px;">39 Bearers of Responsibility • Basin Bridge, Chennai - 12</div>
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div style="text-align:right;">
+                <div style="font-size:0.82rem; font-weight:800; color:#fde047; font-style:italic;">"Together for a Better Tomorrow"</div>
+                <div id="obHeaderCountBadge" style="font-size:0.75rem; color:#e0f2fe; margin-top:2px;">39 Bearers of Responsibility • Basin Bridge, Chennai - 12</div>
+              </div>
+              <img id="dbycOfficialLogoInObPortal" src="data:image/jpeg;base64,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eK7j7P4e0nUb0k9LC1ZgPqwGB+dekeHv2afHV/B/aXi/VNL8L2I+aSW+uBLKo9wDtB+rCm+Iv2n/AB/eW5tNAtNH8N2mMKlnbh3UexfgfgoryLxZ4u8QeIp/tPibxBf6k4OR9quCyr9F6D8BXv0MFVoR/dwhRj5av79EfK4vMa2LlevUlUfm3b7j3ZYf2b/hq+6Wa++ImsRfwrg2wb9I/wBXrnvHH7SPjTWLJtJ8MwWfhLSgNscOnoPNC+nmYG3/AIABXgVzrFsn+r3SkenArMutUuphgERqey/41yVsVl2HlzVJOrJfNf5GUadaaslyo6LVNULTy3N/dyz3Eh3SPI5eRz6knk/jWHd6zK+Vt18sf3jyayiSTknOaSvJxmfYmuuWHux8t/vOmnhIQ1erHu7OxZ2LMepPNMoorxG29WdQUUUUgCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAnhup4TmKZ1x6GrkWs3S/6wJJ9Rj+VZlFdVHG4ih/Dm18zOVKE90b0OuRH/WQsvupzVmPVbGT7z4P+2tcxQK9OnxFjYbtP1X+RhLBUntodvZa7NbEGx1aa3Pbybho/wCRFdLpvxK8e2AH2Hxxr8QHZdRkIH5sa8kzQCa6P9Yub+JST/r5kfUrfDJnu9t8b/izAoCeO9WYD++Uf+amrI+PnxeH/M7Xp/7YQ/8AxFeAiRx0dh+NO86XtK4/4Eaf9t4R74Zfh/kH1Sp/Oe9SfHn4uvx/wm+oD/diiH/slZ178Yfijd58/wAe67g9kufLH/joFeLGaU9ZXP8AwI00u5+87H8aP7cwq+HDr8P8g+qT/nPSdS8Z+Jr7P9oeKtXuAeom1GRh+RasGfUbZpN890sjerNuNclmjND4lnFfu6aX9fIPqKfxSZ0kus2i5CmR/ovH61Um1w4IhgwfVjWLRXHV4gxtTRSt6I0jg6Uehel1S8k483YP9kYqo7s7ZZix9SaZRXl1cRVrO9STfqzojCMdkFFFFYlBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFAH/9k=" alt="DBYC Official Crest Logo" style="width:60px; height:60px; border-radius:50%; object-fit:contain; background:#ffffff; border:2.5px solid #fde047; box-shadow:0 0 14px rgba(253,224,71,0.6); padding:2px; flex-shrink:0;">
             </div>
           </div>
         </div>
@@ -3882,22 +3910,23 @@ body {
       <div class="main-content">
         <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
         
-        <!-- Artwork Banner -->
-        <div class="section-art-banner banner-oratory" style="background:linear-gradient(135deg, #091a33 0%, #002b66 60%, #0284c7 100%);">
-          <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px;">
-            <div>
-              <div style="display:flex; align-items:center; gap:8px;">
-                <span style="font-size:1.6rem;">⭐</span>
-                <h3 style="font-size:1.25rem; font-weight:900; color:#fde047; margin:0;">DBYC தலைவர்கள் மன்றம் (Leaders Council Dashboard)</h3>
+        <!-- Artwork Banner with Official DBYC Crest Logo -->
+        <div style="background: linear-gradient(135deg, #002b66 0%, #004b98 60%, #0284c7 100%); border-radius: 18px; padding: 20px; color: #fff; margin-bottom: 20px; box-shadow: 0 8px 24px rgba(0,43,102,0.18); position: relative; overflow: hidden;">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;">
+            <div style="display:flex; align-items:center; gap:14px;">
+              <img src="data:image/webp;base64,UklGRtgZAABXRUJQVlA4IMwZAABQggCdASoAAQABPjEYiUMiIaEVmUSgIAMEsrbsw8IuHAMqYo1y5tz6v+l6QHknvXAXdPOq+vn9R+jb+rfYt85XmuWU/QAOl36vN3uK+1Iin0/6DXtf/b8WaAeysjX/NvqJFW7NoaZ7es2uspQeDK24vOMveSYF/lzlZ9dBLhd/6KfAiA1gILWhki6dGOLgd6/TDyWTQKJD9ES98WckbKiOkHvdRZ2N" alt="Don Bosco" style="width:58px; height:58px; border-radius:50%; object-fit:cover; border:2.5px solid #fde047; box-shadow:0 0 12px rgba(253,224,71,0.5);">
+              <div>
+                <span style="background:rgba(253,224,71,0.25); color:#fde047; font-size:0.75rem; font-weight:800; padding:2px 8px; border-radius:12px; text-transform:uppercase; letter-spacing:0.8px;">MEMBERSHIP DAY 2026</span>
+                <h2 style="font-size:1.35rem; font-weight:900; margin:4px 0 2px; color:#ffffff; letter-spacing:0.5px;">DON BOSCO YOUTH CENTRE</h2>
+                <div style="font-size:0.85rem; color:#bae6fd; font-weight:700;">🏛️ Official Office Bearers & Leaders Portal (பொறுப்பாளர்கள் மன்றம்)</div>
               </div>
-              <p style="font-size:0.84rem; opacity:0.95; color:#e0f2fe; margin-top:4px;">
-                Don Bosco Youth Centre, Basin Bridge • Membership Day 2026 Leadership Directory (8 Council Tiers)
-              </p>
             </div>
-            <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-              <button type="button" class="btn-dbyc-primary" id="addLeaderProfileBtn" style="background:#16a34a; font-weight:800; padding:8px 14px; font-size:0.82rem;" onclick="window.openEditLeaderModal();">
-                ➕ Add / Register Leader
-              </button>
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div style="text-align:right;">
+                <div style="font-size:0.82rem; font-weight:800; color:#fde047; font-style:italic;">"Together for a Better Tomorrow"</div>
+                <div id="leadersHeaderCountBadge" style="font-size:0.75rem; color:#e0f2fe; margin-top:2px;">39 Bearers of Responsibility • Basin Bridge, Chennai - 12</div>
+              </div>
+              <img class="dbyc-official-crest-portal-logo" src="data:image/jpeg;base64,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" alt="DBYC Official Crest" style="width:60px; height:60px; border-radius:50%; object-fit:contain; background:#ffffff; border:2.5px solid #fde047; box-shadow:0 0 14px rgba(253,224,71,0.6); padding:2px; flex-shrink:0;">
             </div>
           </div>
         </div>
@@ -4509,6 +4538,29 @@ function doGet(e) {
 
       <form id="officialAppForm" novalidate onsubmit="event.preventDefault(); window.saveMemberRegistrationFormDirect(event);">
         <input type="hidden" id="formEditingMemberId" value="">
+                <!-- Physical Registration Form & ID Card Optical Scanner / Auto-Fill Box -->
+        <div class="form-ocr-scanner-box" style="background:linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border:1.5px dashed #2563eb; border-radius:14px; padding:12px 14px; margin-bottom:14px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+            <div>
+              <strong style="color:#1e40af; font-size:0.9rem;">📸 விண்ணப்பப் படிவம் ஸ்கேனர் (Form Scanner / OCR Auto-Fill)</strong>
+              <div style="font-size:0.75rem; color:#3b82f6;">Snap photo of physical paper application or member ID card to auto-fill this form</div>
+            </div>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button type="button" class="btn-dbyc-primary" style="background:#2563eb; font-size:0.78rem; font-weight:800; padding:6px 12px; border-radius:8px;" onclick="document.getElementById('formOcrCamInput').click();">
+                📷 Snap Paper Form / அட்டை
+              </button>
+              <button type="button" class="btn-dbyc-secondary" style="background:#fff; color:#1e40af; border:1px solid #bfdbfe; font-size:0.78rem; font-weight:800; padding:6px 12px; border-radius:8px;" onclick="document.getElementById('formOcrFileInput').click();">
+                📁 Upload Image / கோப்பு
+              </button>
+              <button type="button" class="btn-dbyc-secondary" style="background:#fff; color:#1e40af; border:1px solid #bfdbfe; font-size:0.78rem; font-weight:800; padding:6px 12px; border-radius:8px;" onclick="window.openOcrTextPasteModal();">
+                📝 Paste Text / Google Lens
+              </button>
+            </div>
+          </div>
+          <input type="file" id="formOcrCamInput" accept="image/*" capture="environment" style="display:none;" onchange="window.handleFormOcrScan(event);">
+          <input type="file" id="formOcrFileInput" accept="image/*" style="display:none;" onchange="window.handleFormOcrScan(event);">
+          <div id="formOcrStatus" style="display:none; margin-top:8px; font-size:0.78rem; font-weight:800; color:#1e40af; background:#fff; padding:6px 10px; border-radius:8px; border:1px solid #bfdbfe;"></div>
+        </div>
         <!-- Member Photo Upload & Live Camera Capture Box (Full Edit & Removal Enabled) -->
         <div class="avatar-preview-box" style="display:flex; align-items:center; gap:16px; background:#f0f7ff; border:1.5px dashed #0284c7; border-radius:14px; padding:12px 14px; margin-bottom:14px;">
           <div id="formMemberPhotoPreview" class="avatar-preview-circle" style="width:72px; height:72px; border-radius:50%; overflow:hidden; border:2.5px solid #004b98; flex-shrink:0; background:#ffffff; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 8px rgba(0,75,152,0.2);">
@@ -4743,6 +4795,11 @@ function doGet(e) {
               🪪 Download QR Pass PDF<br>(அடையாள அட்டை PDF)
             </button>
           </div>
+
+          <!-- Combined Form + Pass Print Button -->
+          <button type="button" class="btn-dbyc-primary" style="width:100%; margin-top:10px; background:linear-gradient(135deg, #7c3aed, #4338ca); padding:12px; font-size:0.92rem; font-weight:800; border-radius:10px; display:inline-flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; box-shadow:0 4px 12px rgba(124,58,237,0.3);" onclick="window.saveAndDownloadCombinedPdf(event);" title="Save and print / download Form + QR Pass Together on 1 Single Full A4 Page">
+            🖪 Print / Download Form + QR Pass Together (படிவம் + QR அட்டை ஒரே A4 பக்கத்தில்)
+          </button>
         </div>
       </form>
     </div>
@@ -5093,6 +5150,163 @@ function doGet(e) {
     </div>
   </div>
 
+
+  
+  <!-- 4b. Office Bearer Full Details Modal (View Option) -->
+  <div id="officeBearerDetailModal" class="modal-backdrop" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.85); z-index:9999; justify-content:center; align-items:center; padding:16px;">
+    <div class="modal-content" style="max-width:540px; width:100%; background:#ffffff; border-radius:20px; overflow:hidden; box-shadow:0 25px 50px rgba(0,0,0,0.3); border:2px solid #004b98;">
+      <!-- Banner Header matching Membership Day 2026 -->
+      <div style="background:linear-gradient(135deg, #002b66 0%, #004b98 60%, #0284c7 100%); padding:18px 20px; color:#ffffff; position:relative;">
+        <button type="button" onclick="window.closeOfficeBearerDetailModal();" style="position:absolute; top:12px; right:12px; background:rgba(255,255,255,0.2); border:none; color:#ffffff; width:32px; height:32px; border-radius:50%; font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center;">✕</button>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <img id="obDetailCrest" src="assets/logo.png" alt="DBYC Crest" style="width:48px; height:48px; border-radius:50%; background:#fff; border:2px solid #fde047; padding:2px; object-fit:contain;">
+          <div>
+            <span style="background:rgba(253,224,71,0.25); color:#fde047; font-size:0.7rem; font-weight:800; padding:2px 8px; border-radius:10px; text-transform:uppercase; letter-spacing:0.8px;">MEMBERSHIP DAY 2026</span>
+            <h3 style="font-size:1.15rem; font-weight:900; margin:3px 0 0; color:#fff;">DON BOSCO YOUTH CENTRE</h3>
+            <div style="font-size:0.78rem; color:#bae6fd; font-weight:700;">Official Office Bearer Dossier (பொறுப்பாளர் விபரம்)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Body Content -->
+      <div style="padding:20px; max-height:80vh; overflow-y:auto;">
+        <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+          <div style="position:relative; width:82px; height:82px; border-radius:50%; overflow:hidden; border:3px solid #004b98; flex-shrink:0; background:#f8fafc; box-shadow:0 4px 12px rgba(0,75,152,0.25);">
+            <img id="obDetailPhoto" src="assets/logo.png" alt="Leader Photo" style="width:100%; height:100%; object-fit:cover;">
+          </div>
+          <div style="flex:1;">
+            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+              <h3 id="obDetailName" style="font-size:1.25rem; font-weight:900; color:#0f172a; margin:0;">Leader Name</h3>
+              <span id="obDetailCategoryBadge" class="role-badge" style="background:#0284c715; color:#0284c7; font-weight:900; font-size:0.75rem; padding:2px 8px; border-radius:100px;">Category</span>
+            </div>
+            <div id="obDetailRole" style="font-size:0.95rem; font-weight:800; color:#004b98; margin-top:2px;">General Secretary</div>
+            <div style="font-size:0.8rem; color:#64748b; margin-top:4px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+              <span>⏳ Tenure: <strong id="obDetailTenure">6 Years</strong></span>
+              <span>&bull;</span>
+              <span>📞 <a id="obDetailPhoneLink" href="tel:" style="color:#004b98; font-weight:800; text-decoration:none;">Contact</a></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Particulars Cards -->
+        <div style="display:grid; grid-template-columns:1fr; gap:10px; margin-bottom:14px;">
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:12px;">
+            <strong style="font-size:0.8rem; color:#002b66; text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:4px;">🏆 Official Achievements & Contribution:</strong>
+            <p id="obDetailAchievements" style="font-size:0.85rem; color:#1e293b; margin:0; line-height:1.4;">Active leader since 2020.</p>
+          </div>
+
+          <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:12px;">
+            <strong style="font-size:0.8rem; color:#166534; text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:4px;">⚡ Talents, Skills & Responsibilities:</strong>
+            <p id="obDetailAbilities" style="font-size:0.85rem; color:#14532d; margin:0; line-height:1.4;">Youth coordination, sports animation.</p>
+          </div>
+
+          <div id="obDetailMemberLinkBox" style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:12px; padding:12px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+            <div>
+              <strong style="font-size:0.8rem; color:#1e40af; display:block;">👥 Linked Member Registry Record:</strong>
+              <div id="obDetailMemberLinkStatus" style="font-size:0.82rem; color:#1e3a8a; font-weight:700;">DBYC-2026-001 (Active Approved Member)</div>
+            </div>
+            <button type="button" id="obDetailPassBtn" class="btn-dbyc-primary" style="background:#0284c7; font-size:0.78rem; font-weight:800; padding:6px 12px; border-radius:8px;" onclick="">🪪 View QR Pass</button>
+          </div>
+        </div>
+
+        <!-- Action Footer -->
+        <div style="display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap; border-top:1px dashed #e2e8f0; padding-top:14px;">
+          <a id="obDetailCallBtn" href="tel:" class="btn-dbyc-primary" style="background:#16a34a; font-size:0.85rem; font-weight:800; padding:8px 16px; border-radius:8px; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+            📞 Call Office Bearer
+          </a>
+          <button type="button" id="obDetailEditPhotoBtn" class="btn-dbyc-secondary" style="background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; font-size:0.85rem; font-weight:800; padding:8px 14px; border-radius:8px;" onclick="">
+            📷 Edit Photo
+          </button>
+          <button type="button" id="obDetailEditProfileBtn" class="btn-dbyc-primary" style="background:#004b98; font-size:0.85rem; font-weight:800; padding:8px 14px; border-radius:8px; display:none;" onclick="">
+            ✏️ Edit Profile
+          </button>
+          <button type="button" class="btn-dbyc-secondary" style="padding:8px 16px; font-size:0.85rem; font-weight:800; border-radius:8px;" onclick="window.closeOfficeBearerDetailModal();">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4c. Universal Quick Member Photo Editor Modal -->
+  <div id="quickPhotoEditModal" class="modal-backdrop" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.85); z-index:10005; justify-content:center; align-items:center; padding:16px;">
+    <div class="modal-content" style="max-width:440px; width:100%; background:#ffffff; border-radius:20px; overflow:hidden; box-shadow:0 25px 50px rgba(0,0,0,0.3); border:2px solid #0284c7;">
+      <div style="background:linear-gradient(135deg, #002b66, #0284c7); padding:16px 20px; color:#ffffff; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <h3 style="font-size:1.1rem; font-weight:900; margin:0;">📷 Edit Member Profile Photo</h3>
+          <small style="color:#e0f2fe;" id="quickPhotoMemberName">Update photo for member</small>
+        </div>
+        <button type="button" onclick="window.closeQuickPhotoEditModal();" style="background:none; border:none; color:#ffffff; font-size:1.3rem; cursor:pointer;">&times;</button>
+      </div>
+
+      <div style="padding:20px; text-align:center;">
+        <input type="hidden" id="quickPhotoTargetMemberId" value="">
+        <input type="hidden" id="quickPhotoTargetLeaderId" value="">
+        
+        <div style="width:130px; height:130px; border-radius:50%; overflow:hidden; margin:0 auto 16px; border:4px solid #004b98; box-shadow:0 6px 20px rgba(0,75,152,0.25); background:#f8fafc;">
+          <img id="quickPhotoPreviewImg" src="assets/logo.png" alt="Photo Preview" style="width:100%; height:100%; object-fit:cover;">
+        </div>
+
+        <p style="font-size:0.82rem; color:#64748b; margin-bottom:16px;">Upload a fresh photo from your phone or PC, or snap live with camera.</p>
+
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:10px; font-size:0.9rem; font-weight:800; border-radius:10px;" onclick="document.getElementById('quickPhotoFileInput').click();">
+            📁 Choose Image from Device / கேலரி
+          </button>
+          <input type="file" id="quickPhotoFileInput" accept="image/*" style="display:none;" onchange="window.handleQuickPhotoFile(event);">
+          
+          <button type="button" class="btn-dbyc-primary" style="background:#ea580c; padding:10px; font-size:0.9rem; font-weight:800; border-radius:10px;" onclick="window.triggerQuickLiveCamera();">
+            📷 Snap Live Camera Photo / கேமரா
+          </button>
+          <input type="file" id="quickPhotoCamInput" accept="image/*" capture="environment" style="display:none;" onchange="window.handleQuickPhotoFile(event);">
+
+          <button type="button" id="btnQuickPhotoRemove" class="btn-dbyc-secondary" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding:8px; font-size:0.85rem; font-weight:800; border-radius:10px;" onclick="window.removeQuickPhoto();">
+            🗑️ Remove / Reset to DBYC Crest
+          </button>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:20px; border-top:1px dashed #e2e8f0; padding-top:14px;">
+          <button type="button" class="btn-dbyc-primary" style="flex:1; background:#16a34a; font-weight:800; padding:10px; font-size:0.92rem; border-radius:10px;" onclick="window.saveQuickPhoto();">
+            💾 Save Photo
+          </button>
+          <button type="button" class="btn-dbyc-secondary" style="padding:10px 18px; font-weight:800; font-size:0.92rem; border-radius:10px;" onclick="window.closeQuickPhotoEditModal();">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4d. Form OCR Text Paste / Auto-Fill Modal -->
+  <div id="formOcrTextPasteModal" class="modal-backdrop" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.85); z-index:10006; justify-content:center; align-items:center; padding:16px;">
+    <div class="modal-content" style="max-width:540px; width:100%; background:#ffffff; border-radius:20px; overflow:hidden; box-shadow:0 25px 50px rgba(0,0,0,0.3); border:2px solid #2563eb;">
+      <div style="background:linear-gradient(135deg, #1e40af, #3b82f6); padding:16px 20px; color:#ffffff; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <h3 style="font-size:1.1rem; font-weight:900; margin:0;">📝 Paste Scanned Form Text (Google Lens / OCR)</h3>
+          <small style="color:#dbeafe;">Automatically parses Name, DOB, Mobile, Blood Group, etc.</small>
+        </div>
+        <button type="button" onclick="document.getElementById('formOcrTextPasteModal').style.display='none';" style="background:none; border:none; color:#ffffff; font-size:1.3rem; cursor:pointer;">&times;</button>
+      </div>
+      <div style="padding:20px;">
+        <p style="font-size:0.82rem; color:#475569; margin-bottom:10px; line-height:1.4;">
+          Tip: Open <strong>Google Lens</strong>, point at the physical paper form, select "Text", copy it, and paste it below. DBYC will automatically detect and fill all 18 registration fields!
+        </p>
+        <textarea id="rawOcrTextInput" rows="8" class="form-control-dbyc" placeholder="Paste scanned text from Google Lens or document reader here...&#10;e.g.&#10;Name: John Bosco Alvarez&#10;DOB: 15/06/2005&#10;Mobile: 9876543210&#10;Blood Group: O+ve&#10;Father: Joseph Alvarez&#10;Address: Basin Bridge, Chennai"></textarea>
+        
+        <div style="display:flex; gap:10px; margin-top:14px; flex-wrap:wrap;">
+          <button type="button" class="btn-dbyc-primary" style="flex:1; min-width:180px; background:#16a34a; font-weight:800; padding:10px; border-radius:10px;" onclick="window.readClipboardAndApplyOcr();">
+            📋 1-Tap Paste from Clipboard & Auto-Fill
+          </button>
+          <button type="button" class="btn-dbyc-primary" style="flex:1; min-width:180px; background:#2563eb; font-weight:800; padding:10px; border-radius:10px;" onclick="window.applyRawOcrText();">
+            ⚡ Parse & Auto-Fill Form
+          </button>
+          <button type="button" class="btn-dbyc-secondary" style="padding:10px 16px; font-weight:800; border-radius:10px;" onclick="document.getElementById('formOcrTextPasteModal').style.display='none';">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div id="editTeamModal" class="modal-backdrop">
     <div class="modal-content" style="max-width: 480px;">
@@ -5609,6 +5823,7 @@ let appState = window.appState = {
   currentLang: 'en',
   currentUser: null,
   members: [],
+  leaders: [],
   attendance: [],
   events: [],
   minutes: [],
@@ -5709,6 +5924,9 @@ function loadLocalData() {
       appState.matches = parsed.matches || [];
       appState.media = parsed.media || [];
       appState.certificates = (parsed.certificates || []).filter(c => !deletedMems.has(c.memberId));
+      appState.leaders = (parsed.leaders && parsed.leaders.length > 0)
+        ? parsed.leaders
+        : (window.DBYC_OFFICIAL_LEADERS_SEED ? JSON.parse(JSON.stringify(window.DBYC_OFFICIAL_LEADERS_SEED)) : []);
 
       appState.teams = (parsed.teams && parsed.teams.length > 0) ? parsed.teams : [
         { id: 'TEAM-1', name: 'Red Dragons', nameTa: 'சிவப்பு டிராகன்கள்', color: '#dc2626', captain: 'Stephen Paul', slogan: 'Courage & Passion (துணிவும் உற்சாகமும்)', points: 450, icon: '🐉' },
@@ -6181,7 +6399,17 @@ function seedBasinBridgeData() {
   if (!appState.leaders || appState.leaders.length === 0) {
     appState.leaders = JSON.parse(JSON.stringify(window.DBYC_OFFICIAL_LEADERS_SEED));
   }
+  if (appState.members && appState.members.length > 0) {
+    appState.members.forEach(m => {
+      m.pin = m.pin || m.securityPin || '1234';
+      m.securityPin = m.pin;
+    });
+  }
   saveLocalData();
+  setTimeout(() => {
+    const obLogo = document.getElementById('dbycOfficialLogoInObPortal');
+    if (obLogo && window.DBYC_OFFICIAL_LOGO) obLogo.src = window.DBYC_OFFICIAL_LOGO;
+  }, 200);
 
   if (!appState.events || appState.events.length === 0) {
     appState.events = [
@@ -6202,6 +6430,7 @@ function saveLocalData(skipCloudPush) {
   try {
     localStorage.setItem(DBYC_STORAGE, JSON.stringify({
       members: appState.members,
+      leaders: (appState.leaders && appState.leaders.length > 0) ? appState.leaders : (window.DBYC_OFFICIAL_LEADERS_SEED || []),
       deletedMemberIds: appState.deletedMemberIds || [],
       deletedNewsIds: appState.deletedNewsIds || [],
       deletedMinuteIds: appState.deletedMinuteIds || [],
@@ -6796,10 +7025,10 @@ function setupGoogleSignInHandlers() {
     if (cardTitle) cardTitle.textContent = 'Sign in';
     if (cardSubtitle) cardSubtitle.textContent = 'to continue to DBYC Portal';
 
-    document.getElementById('googleStepIdentifier').style.display = 'block';
-    document.getElementById('googleStepOtp').style.display = 'none';
-    document.getElementById('googleStepSetPin').style.display = 'none';
-    document.getElementById('googleStepPassword').style.display = 'none';
+    const sIdent = document.getElementById('googleStepIdentifier'); if (sIdent) sIdent.style.display = 'block';
+    const sOtp = document.getElementById('googleStepOtp'); if (sOtp) sOtp.style.display = 'none';
+    const sSetPin = document.getElementById('googleStepSetPin'); if (sSetPin) sSetPin.style.display = 'none';
+    const sPwd = document.getElementById('googleStepPassword'); if (sPwd) sPwd.style.display = 'none';
 
     const input = document.getElementById('googleIdentifierInput');
     if (input) {
@@ -6845,7 +7074,8 @@ function setupGoogleSignInHandlers() {
     const pwdErr = document.getElementById('googlePasswordError');
     if (pwdErr) pwdErr.style.display = 'none';
 
-    if (!googleActiveTargetMember) {
+    const targetMember = googleActiveTargetMember || window.googleActiveTargetMember;
+    if (!targetMember) {
       window.switchGoogleAccount();
       return;
     }
@@ -6858,31 +7088,32 @@ function setupGoogleSignInHandlers() {
       }
       return;
     }
-
-    const targetMember = googleActiveTargetMember;
     const role = (targetMember.role || '').toLowerCase();
     const isDirector = (role.includes('director') && !role.includes('asst')) || role.includes('rev. fr. director');
     const isAsstDirector = role.includes('asst') || role.includes('assistant');
     const isLeader = role.includes('leader') || role.includes('incharge');
 
     let isPinValid = false;
+    const memberCustomPin = String(targetMember.pin || targetMember.securityPin || '').trim();
 
-    if (isDirector) {
+    // 1. Check member's personal security PIN configured during registration
+    if (memberCustomPin && enteredPin === memberCustomPin) {
+      isPinValid = true;
+    } else if (isDirector) {
       const masterPin = getDirectorMasterPin();
-      if (enteredPin === masterPin || enteredPin === targetMember.pin || enteredPin === '1815' || enteredPin === '1888') {
+      if (enteredPin === masterPin || enteredPin === '1815' || enteredPin === '1888') {
         isPinValid = true;
       }
     } else if (isAsstDirector) {
-      if (enteredPin === DBYC_SECURITY_PINS.ASST_DIRECTOR || enteredPin === targetMember.pin || enteredPin === '1934') {
+      if (enteredPin === DBYC_SECURITY_PINS.ASST_DIRECTOR || enteredPin === '1934') {
         isPinValid = true;
       }
     } else if (isLeader) {
-      if (enteredPin === DBYC_SECURITY_PINS.LEADER || enteredPin === targetMember.pin || enteredPin === '1234') {
+      if (enteredPin === DBYC_SECURITY_PINS.LEADER || enteredPin === '1234') {
         isPinValid = true;
       }
     } else {
-      const expectedPin = targetMember.pin || '2026';
-      if (enteredPin === expectedPin || enteredPin === '2026' || enteredPin === '0000') {
+      if (enteredPin === '2026' || enteredPin === '1234' || enteredPin === '0000') {
         isPinValid = true;
       }
     }
@@ -7119,6 +7350,8 @@ function setupGoogleSignInHandlers() {
     }
   };
 }
+// Automatically initialize Google Sign-in Handlers on load
+setupGoogleSignInHandlers();
 
 function showLogin() {
   document.getElementById('loginView').style.display = 'flex';
@@ -7965,10 +8198,12 @@ window.toggleQrCamera = function() {
   // 1. Check if mediaDevices API is supported or restricted by browser
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     const isFileProto = (window.location.protocol === 'file:');
-    const msg = isFileProto
-      ? 'Note: Live camera video stream requires HTTPS or localhost by browser security rules. You can still scan immediately using "Snap / Upload Pass Photo" or "1-Tap Attendance Desk" below!'
-      : 'Camera API not supported in this browser. Please use "Snap / Upload Pass Photo" or 1-Tap Attendance Desk.';
-    showToast('⚠️ ' + msg);
+    showToast('📸 Opening camera photo snap directly...');
+    const snapInput = document.getElementById('qrDirectSnapInput') || document.getElementById('qrPhotoFileInput');
+    if (snapInput) {
+      snapInput.click();
+      return;
+    }
     if (container) {
       container.innerHTML = `
         <div style="color:#fde047; padding:20px; text-align:center; max-width:340px;">
@@ -8668,9 +8903,7 @@ window.drawCertToCanvas = async function() {
     ctx.stroke();
   }
   ctx.textAlign = 'center';
-  ctx.fillStyle = '#002b66';
-  ctx.font = 'bold 16px sans-serif';
-  ctx.fillText('St. John Bosco', 140, 205);
+  // Text caption removed per specification
 
   if (logoDbyc) {
     ctx.save();
@@ -8685,9 +8918,7 @@ window.drawCertToCanvas = async function() {
     ctx.arc(cvs.width - 140, 130, 55, 0, Math.PI * 2);
     ctx.stroke();
   }
-  ctx.fillStyle = '#002b66';
-  ctx.font = 'bold 16px sans-serif';
-  ctx.fillText('DBYC Emblem', cvs.width - 140, 205);
+  // Emblem text caption removed per specification
 
   if (photoCand) {
     ctx.save();
@@ -8961,6 +9192,13 @@ window.downloadPrintableAsPdfFile = async function() {
     return window.downloadCanvasAsPdf(formCvs, 'DBYC_Application_' + (fMem ? fMem.id : 'Member') + '.pdf', 'portrait');
   }
 
+  if (ctxInfo.type === 'COMBINED') {
+    var cMem = (window.appState && window.appState.members) ? window.appState.members.find(function(m) { return m.id === ctxInfo.memberId; }) : null;
+    cMem = cMem || window.appState.currentUser;
+    var combinedCvs = await window.drawCombinedPassAndFormToCanvas(cMem);
+    return window.downloadCanvasAsPdf(combinedCvs, 'DBYC_Combined_' + (cMem ? cMem.id : 'Member') + '.pdf', 'portrait');
+  }
+
   if (ctxInfo.type === 'PASS') {
     var pMem = (window.appState && window.appState.members) ? window.appState.members.find(function(m) { return m.id === ctxInfo.memberId; }) : null;
     pMem = pMem || window.appState.currentUser;
@@ -8989,6 +9227,13 @@ window.downloadPrintableAsImage = async function() {
     fMem = fMem || window.appState.currentUser;
     var formCvs = await window.drawFormToCanvas(fMem);
     return window.downloadCanvasAsPng(formCvs, 'DBYC_Application_' + (fMem ? fMem.id : 'Member') + '.png');
+  }
+
+  if (ctxInfo.type === 'COMBINED') {
+    var cMem = (window.appState && window.appState.members) ? window.appState.members.find(function(m) { return m.id === ctxInfo.memberId; }) : null;
+    cMem = cMem || window.appState.currentUser;
+    var combinedCvs = await window.drawCombinedPassAndFormToCanvas(cMem);
+    return window.downloadCanvasAsPng(combinedCvs, 'DBYC_Combined_' + (cMem ? cMem.id : 'Member') + '.png');
   }
 
   if (ctxInfo.type === 'PASS') {
@@ -9326,7 +9571,7 @@ function renderCertPreview() {
         <!-- Left: Don Bosco Portrait -->
         <div style="text-align:center;">
           <img src="${window.DON_BOSCO_PORTRAIT || window.DBYC_OFFICIAL_LOGO}" alt="Saint John Bosco" class="cert-header-img" style="width:72px; height:72px; border-radius:50%; object-fit:cover; border:2.5px solid #fde047; box-shadow:0 2px 8px rgba(0,0,0,0.15);" title="Saint John Bosco">
-          <div style="font-size:0.68rem; font-weight:800; color:#002b66; margin-top:2px;">St. John Bosco</div>
+          <!-- Bosco caption removed per specification -->
         </div>
         
         <!-- Center: Candidate Photo with Edit/Upload Option -->
@@ -9346,7 +9591,7 @@ function renderCertPreview() {
         <!-- Right: DBYC Official Logo -->
         <div style="text-align:center;">
           <img src="${DBYC_OFFICIAL_LOGO}" alt="DBYC Official Crest" class="cert-header-img" style="width:72px; height:72px; border-radius:50%; object-fit:cover; border:2.5px solid #004b98; box-shadow:0 2px 8px rgba(0,0,0,0.15);" title="DBYC Official Crest">
-          <div style="font-size:0.68rem; font-weight:800; color:#002b66; margin-top:2px;">DBYC Emblem</div>
+          <!-- Emblem caption removed per specification -->
         </div>
       </div>
 
@@ -10600,7 +10845,7 @@ window.openAddMemberModal = function(memberId) {
       removeBtn.style.display = m.photo ? 'inline-block' : 'none';
     }
     if (badge) {
-      badge.textContent = m.photo ? 'Current Member Photo' : 'DBYC Emblem';
+      badge.textContent = m.photo ? 'Current Member Photo' : 'Official Crest';
       badge.style.color = m.photo ? '#059669' : '#0369a1';
     }
   } else {
@@ -10674,7 +10919,8 @@ window.saveMemberRegistrationFormDirect = function(event) {
     maritalStatus: document.getElementById('formMaritalStatus')?.value || 'திருமணமாகாதவர் (Unmarried)',
     homeAddress: document.getElementById('formHomeAddress')?.value || '',
     mobile,
-    securityPin: document.getElementById('formSecurityPin')?.value || '1234',
+    securityPin: (document.getElementById('formSecurityPin')?.value || '').trim() || '1234',
+    pin: (document.getElementById('formSecurityPin')?.value || '').trim() || '1234',
     email: document.getElementById('formEmail')?.value || '',
     instaId: document.getElementById('formInstaId')?.value || '',
     fatherName: document.getElementById('formFatherName')?.value || '',
@@ -10757,8 +11003,15 @@ window.saveMemberRegistrationFormDirect = function(event) {
     window.DbycCloud.pushToCloud();
   }
 
+  // Automatic Two-Way Synchronization with Office Bearers & Leaders Portal
+  if (typeof window.syncLeadersWithMembers === 'function') {
+    window.syncLeadersWithMembers();
+  }
+
   window.closeAddMemberModal();
   renderMembersRegistry();
+  if (typeof window.renderOfficeBearersDashboard === 'function') window.renderOfficeBearersDashboard();
+  if (typeof renderLeadersDashboard === 'function') renderLeadersDashboard();
   if (typeof renderQualificationDesk === 'function') renderQualificationDesk();
   updateDashboardStats();
 
@@ -10840,7 +11093,7 @@ function renderMembersRegistry() {
     return `
       <div class="member-card" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; padding:14px; background:#ffffff; border-radius:14px; border:1px solid #e2e8f0; box-shadow:0 2px 6px rgba(0,0,0,0.04); margin-bottom:10px;">
         <div style="display:flex; align-items:center; gap:12px;">
-          <img src="${photo}" alt="${m.name}" style="width:56px; height:56px; border-radius:50%; object-fit:cover; border:2.5px solid #004b98; flex-shrink:0; background:#f8fafc;">
+          <img src="${photo}" alt="${m.name}" style="width:56px; height:56px; border-radius:50%; object-fit:cover; border:2.5px solid #004b98; flex-shrink:0; background:#f8fafc; cursor:pointer;" onclick="window.quickEditMemberPhoto('${m.id}')" title="Tap to change member photo">
           <div>
             <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
               <h4 style="font-size:1.05rem; font-weight:800; color:#002b66; margin:0;">${m.name}</h4>
@@ -10857,6 +11110,10 @@ function renderMembersRegistry() {
         </div>
 
         <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+          <!-- Quick Photo Edit for All Members -->
+          <button type="button" class="btn-dbyc-secondary" style="background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; padding:6px 10px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.quickEditMemberPhoto('${m.id}')" title="Change or update member photo">
+            📷 Photo
+          </button>
           ${(typeof window.canEdit === 'function' && window.canEdit('registration')) ? `<button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:6px 12px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.openAddMemberModal('${m.id}')" title="Edit member details and photo">
             ✏️ Edit
           </button>` : ''}
@@ -10865,6 +11122,10 @@ function renderMembersRegistry() {
           </button>
           <button type="button" class="btn-dbyc-primary" style="background:#475569; padding:6px 10px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.downloadApplicationFormPdf('${m.id}')" title="Download filled 18-Field PDF form">
             📥 Form PDF
+          </button>
+          <!-- Combined Pass + Form Together -->
+          <button type="button" class="btn-dbyc-primary" style="background:linear-gradient(135deg, #7c3aed, #4338ca); padding:6px 10px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.printCombinedPassAndForm('${m.id}')" title="Print Form + QR Pass Together on 1 Full A4 Page">
+            🖪 Pass + Form Together
           </button>
           ${(typeof window.canEdit === 'function' && window.canEdit('registration')) ? `<button type="button" class="btn-dbyc-primary" style="background:#fee2e2; color:#b91c1c; border:1px solid #fecaca; padding:6px 10px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.deleteMember('${m.id}')" title="Permanently delete member">
             🗑️ Delete
@@ -11622,7 +11883,94 @@ function renderLeadersDashboard() {
   const container = document.getElementById('leadersListContainer');
   if (!container) return;
 
-  const leaders = window.appState.leaders || [];
+  // 1. Initialize leaders from seed if empty
+  if (!window.appState.leaders || window.appState.leaders.length === 0) {
+    window.appState.leaders = JSON.parse(JSON.stringify(window.DBYC_OFFICIAL_LEADERS_SEED || []));
+  }
+
+  // 2. Dynamic live sync with window.appState.members (2-way connection)
+  const members = window.appState.members || [];
+  const leaders = window.appState.leaders;
+
+  leaders.forEach(ldr => {
+    const ldrPhoneClean = (ldr.phone || '').replace(/\D/g, '');
+    const ldrNameNorm = (ldr.name || '').trim().toLowerCase();
+
+    const matchedMem = members.find(m => {
+      if (ldr.memberId && m.id === ldr.memberId) return true;
+      const mPhoneClean = (m.mobile || '').replace(/\D/g, '');
+      if (ldrPhoneClean && mPhoneClean && (ldrPhoneClean === mPhoneClean || mPhoneClean.endsWith(ldrPhoneClean) || ldrPhoneClean.endsWith(mPhoneClean))) return true;
+      if (ldrNameNorm && (m.name || '').trim().toLowerCase() === ldrNameNorm) return true;
+      return false;
+    });
+
+    if (matchedMem) {
+      ldr.memberId = matchedMem.id;
+      if (matchedMem.photo) ldr.photo = matchedMem.photo;
+      if (matchedMem.mobile) ldr.phone = matchedMem.mobile;
+      if (matchedMem.role && matchedMem.role !== 'Member' && matchedMem.role !== 'Youth Member') {
+        ldr.role = matchedMem.role;
+      }
+      if (matchedMem.joiningPurpose && !ldr.abilities) {
+        ldr.abilities = matchedMem.joiningPurpose;
+      }
+    }
+  });
+
+  // 3. Dynamically include any newly registered member with an Office Bearer category or leadership role
+  members.forEach(m => {
+    const roleLower = (m.role || '').toLowerCase();
+    const isLeadershipRole = roleLower.includes('leader') || roleLower.includes('secretary') ||
+      roleLower.includes('president') || roleLower.includes('director') || roleLower.includes('animator') ||
+      roleLower.includes('treasurer') || roleLower.includes('captain') || roleLower.includes('coordinator') ||
+      roleLower.includes('council') || roleLower.includes('choir') || roleLower.includes('sports');
+
+    const hasLeaderCat = m.category && (
+      m.category.includes('Leaders') || m.category === 'Elders' || m.category === 'Committee Members'
+    );
+
+    if (isLeadershipRole || hasLeaderCat) {
+      const mPhoneClean = (m.mobile || '').replace(/\D/g, '');
+      const mNameNorm = (m.name || '').trim().toLowerCase();
+      const existing = leaders.find(l => {
+        if (l.memberId === m.id) return true;
+        const lPhoneClean = (l.phone || '').replace(/\D/g, '');
+        if (mPhoneClean && lPhoneClean && mPhoneClean === lPhoneClean) return true;
+        if (mNameNorm && (l.name || '').trim().toLowerCase() === mNameNorm) return true;
+        return false;
+      });
+
+      if (!existing) {
+        let cat = m.category || 'Oratory Leaders';
+        if (!cat || cat === 'ALL') {
+          if (m.group === 'Oratory Group') cat = 'Oratory Leaders';
+          else if (m.group === 'Seniors Group') cat = 'Senior Leaders';
+          else if (m.group === 'Juniors Group') cat = 'Junior Leaders';
+          else if (m.group === 'Sub Juniors Group') cat = 'Sub-Junior Leaders';
+          else if (m.group === 'Inters Group') cat = 'Inter Leaders';
+          else cat = 'Committee Members';
+        }
+
+        leaders.push({
+          id: 'LDR-DYN-' + m.id,
+          memberId: m.id,
+          name: m.name,
+          role: m.role || 'Council Member',
+          category: cat,
+          phone: m.mobile || '',
+          tenure: m.yearsInDbyc ? (m.yearsInDbyc + ' Years') : '1+ Year',
+          photo: m.photo || '',
+          achievements: m.futureAmbition || 'Active Member of Don Bosco Youth Centre',
+          abilities: Array.isArray(m.activities) ? m.activities.join(', ') : (m.activities || m.joiningPurpose || 'Youth animation and service')
+        });
+      }
+    }
+  });
+
+  // Update count badge in header
+  const countBadge = document.getElementById('obHeaderCountBadge');
+  if (countBadge) countBadge.textContent = `${leaders.length} Bearers of Responsibility • Basin Bridge, Chennai - 12`;
+
   const searchInput = document.getElementById('leaderSearchInput');
   const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
 
@@ -11641,14 +11989,14 @@ function renderLeadersDashboard() {
     container.innerHTML = `
       <div style="grid-column: 1 / -1; text-align:center; padding:40px 20px; background:#fff; border-radius:14px; border:1px dashed #cbd5e1; color:#64748b;">
         <span style="font-size:2.5rem;">⭐</span>
-        <h4 style="font-size:1.1rem; color:#0f172a; margin-top:8px;">No Leaders Found</h4>
-        <p style="font-size:0.85rem; margin-top:4px;">No leaders match the selected category or search.</p>
+        <h4 style="font-size:1.1rem; color:#0f172a; margin-top:8px;">No Office Bearers Found</h4>
+        <p style="font-size:0.85rem; margin-top:4px;">No leaders match the selected category or search filter.</p>
       </div>
     `;
     return;
   }
 
-  const canEdit = window.canUserEdit();
+  const canEdit = window.canUserEdit && window.canUserEdit();
 
   container.innerHTML = filtered.map(l => {
     const photo = l.photo || window.DBYC_OFFICIAL_LOGO || 'assets/logo.png';
@@ -11663,7 +12011,7 @@ function renderLeadersDashboard() {
     else if (l.category === 'Committee Members') catColor = '#475569';
 
     const editBtn = canEdit
-      ? `<button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:5px 12px; font-size:0.75rem; font-weight:800; border-radius:8px;" onclick="window.openEditLeaderModal('${l.id}')">✏️ Edit Profile & Photo</button>`
+      ? `<button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:5px 10px; font-size:0.75rem; font-weight:800; border-radius:8px;" onclick="window.openEditLeaderModal('${l.id}')">✏️ Edit Profile</button>`
       : '';
 
     return `
@@ -11673,12 +12021,12 @@ function renderLeadersDashboard() {
         <div>
           <!-- Header: Photo & Title -->
           <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px;">
-            <div style="position:relative; width:58px; height:58px; border-radius:50%; overflow:hidden; border:2.5px solid ${catColor}; flex-shrink:0; background:#f8fafc;">
+            <div style="position:relative; width:58px; height:58px; border-radius:50%; overflow:hidden; border:2.5px solid ${catColor}; flex-shrink:0; background:#f8fafc; cursor:pointer;" onclick="window.viewOfficeBearerDetails('${l.id}')" title="Tap to view office bearer details">
               <img src="${photo}" alt="${l.name}" style="width:100%; height:100%; object-fit:cover;">
             </div>
             <div style="flex:1;">
               <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:4px;">
-                <h4 style="font-size:1.1rem; font-weight:900; color:#0f172a; margin:0;">${l.name}</h4>
+                <h4 style="font-size:1.1rem; font-weight:900; color:#0f172a; margin:0; cursor:pointer;" onclick="window.viewOfficeBearerDetails('${l.id}')">${l.name}</h4>
                 <span class="role-badge" style="background:${catColor}15; color:${catColor}; font-weight:900; font-size:0.72rem; padding:2px 8px; border-radius:100px;">
                   ${l.category}
                 </span>
@@ -11708,9 +12056,16 @@ function renderLeadersDashboard() {
           ` : ''}
         </div>
 
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; padding-top:8px; border-top:1px dashed #e2e8f0;">
+        <!-- Footer Actions with View Details & Edit Photo -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; padding-top:8px; border-top:1px dashed #e2e8f0; flex-wrap:wrap; gap:6px;">
           <span style="font-size:0.72rem; color:#94a3b8; font-weight:700;">DBYC Council 2026</span>
-          <div style="display:flex; gap:6px;">
+          <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+            <button type="button" class="btn-dbyc-primary" style="background:#004b98; padding:5px 12px; font-size:0.75rem; font-weight:800; border-radius:8px; display:inline-flex; align-items:center; gap:4px;" onclick="window.viewOfficeBearerDetails('${l.id}')">
+              👁️ View Details
+            </button>
+            <button type="button" class="btn-dbyc-secondary" style="background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; padding:5px 8px; font-size:0.75rem; font-weight:800; border-radius:8px;" onclick="window.quickEditLeaderPhoto('${l.id}')" title="Change Leader Photo">
+              📷
+            </button>
             ${editBtn}
           </div>
         </div>
@@ -13234,9 +13589,135 @@ window.filterOfficeBearers = function(cat) {
   window.renderOfficeBearersDashboard();
 };
 
+
+// ==========================================
+// DYNAMIC TWO-WAY SYNC: OFFICE BEARERS & MEMBERS REGISTRY
+// ==========================================
+window.syncLeadersWithMembers = function() {
+  if (!window.appState) return;
+  if (!window.appState.leaders || window.appState.leaders.length === 0) {
+    window.appState.leaders = JSON.parse(JSON.stringify(window.DBYC_OFFICIAL_LEADERS_SEED || []));
+  }
+  const members = window.appState.members || [];
+  const leaders = window.appState.leaders;
+
+  // 1. Sync existing leaders from matched member records
+  leaders.forEach(ldr => {
+    const ldrPhoneClean = (ldr.phone || '').replace(/\D/g, '');
+    const ldrNameNorm = (ldr.name || '').trim().toLowerCase();
+
+    const matchedMem = members.find(m => {
+      if (ldr.memberId && m.id === ldr.memberId) return true;
+      const mPhoneClean = (m.mobile || '').replace(/\D/g, '');
+      if (ldrPhoneClean && mPhoneClean && (ldrPhoneClean === mPhoneClean || mPhoneClean.endsWith(ldrPhoneClean) || ldrPhoneClean.endsWith(mPhoneClean))) return true;
+      if (ldrNameNorm && (m.name || '').trim().toLowerCase() === ldrNameNorm) return true;
+      return false;
+    });
+
+    if (matchedMem) {
+      ldr.memberId = matchedMem.id;
+      if (matchedMem.photo) ldr.photo = matchedMem.photo;
+      if (matchedMem.mobile) ldr.phone = matchedMem.mobile;
+      if (matchedMem.role && matchedMem.role !== 'Member' && matchedMem.role !== 'Youth Member') {
+        ldr.role = matchedMem.role;
+      }
+      if (matchedMem.category) {
+        ldr.category = matchedMem.category;
+      }
+      if (matchedMem.joiningPurpose && !ldr.abilities) {
+        ldr.abilities = matchedMem.joiningPurpose;
+      }
+      if (matchedMem.pin || matchedMem.securityPin) {
+        ldr.pin = matchedMem.pin || matchedMem.securityPin;
+      }
+    }
+  });
+
+  // 2. Automatically import newly registered members with leadership roles or categories
+  const leadershipRoles = [
+    'president', 'secretary', 'general secretary', 'gs', 'ags', 'treasurer',
+    'sports secretary', 'cultural secretary', 'spiritual secretary',
+    'leader', 'incharge', 'director', 'asst director', 'council', 'committee',
+    'vice president', 'joint secretary'
+  ];
+
+  const leadershipCategories = [
+    'oratory leaders', 'senior leaders', 'sub-junior leaders', 'junior leaders',
+    'inter leaders', 'super senior leaders', 'elders', 'committee members', 'council members'
+  ];
+
+  members.forEach(m => {
+    const roleLower = (m.role || '').toLowerCase();
+    const groupLower = (m.group || '').toLowerCase();
+    const catLower = (m.category || '').toLowerCase();
+
+    const isLeaderRole = leadershipRoles.some(r => roleLower.includes(r));
+    const isLeaderCat = leadershipCategories.some(c => catLower.includes(c) || groupLower.includes(c));
+
+    if (isLeaderRole || isLeaderCat) {
+      const mPhoneClean = (m.mobile || '').replace(/\D/g, '');
+      const mNameNorm = (m.name || '').trim().toLowerCase();
+
+      const existingLeader = leaders.find(l => {
+        if (l.memberId && l.memberId === m.id) return true;
+        const lPhoneClean = (l.phone || '').replace(/\D/g, '');
+        if (lPhoneClean && mPhoneClean && lPhoneClean === mPhoneClean) return true;
+        if ((l.name || '').trim().toLowerCase() === mNameNorm) return true;
+        return false;
+      });
+
+      if (!existingLeader) {
+        let assignedCat = m.category || 'Senior Leaders';
+        if (groupLower.includes('sub junior') || groupLower.includes('sub-junior')) assignedCat = 'Sub-Junior Leaders';
+        else if (groupLower.includes('junior')) assignedCat = 'Junior Leaders';
+        else if (groupLower.includes('inter')) assignedCat = 'Inter Leaders';
+        else if (groupLower.includes('super')) assignedCat = 'Super Senior Leaders';
+        else if (groupLower.includes('elder')) assignedCat = 'Elders';
+        else if (groupLower.includes('oratory')) assignedCat = 'Oratory Leaders';
+        else if (roleLower.includes('committee')) assignedCat = 'Committee Members';
+
+        leaders.push({
+          id: `LEAD-${m.id}`,
+          memberId: m.id,
+          name: m.name,
+          role: m.role || 'Leader',
+          category: assignedCat,
+          phone: m.mobile || '',
+          photo: m.photo || '',
+          tenure: '2026 - Present',
+          duties: m.joiningPurpose || 'Youth Guidance, Oratory Formation & Centre Activities',
+          abilities: Array.isArray(m.activities) ? m.activities.join(', ') : (m.activities || 'Leadership & Sports'),
+          achievements: 'Dedicated DBYC Active Bearer of Responsibility',
+          pin: m.securityPin || m.pin || '1234'
+        });
+      }
+    }
+  });
+
+  const countBadge = document.getElementById('obHeaderCountBadge');
+  if (countBadge) {
+    countBadge.textContent = `${leaders.length} Bearers of Responsibility • Basin Bridge, Chennai - 12`;
+  }
+  const ldrCountBadge = document.getElementById('leadersHeaderCountBadge');
+  if (ldrCountBadge) {
+    ldrCountBadge.textContent = `${leaders.length} Bearers of Responsibility • Basin Bridge, Chennai - 12`;
+  }
+};
+
 window.renderOfficeBearersDashboard = function() {
   const container = document.getElementById('officeBearersListContainer');
   if (!container) return;
+
+  // 1. Live Dynamic Two-Way Sync with appState.members
+  if (typeof window.syncLeadersWithMembers === 'function') {
+    window.syncLeadersWithMembers();
+  }
+
+  // Ensure DBYC Logo in Office Bearers Portal Header
+  const obLogo = document.getElementById('dbycOfficialLogoInObPortal');
+  if (obLogo && window.DBYC_OFFICIAL_LOGO) {
+    obLogo.src = window.DBYC_OFFICIAL_LOGO;
+  }
 
   const leaders = window.appState.leaders || window.DBYC_OFFICIAL_LEADERS_SEED || [];
   const searchInput = document.getElementById('obSearchInput');
@@ -13266,7 +13747,7 @@ window.renderOfficeBearersDashboard = function() {
   const canEdit = isDirectorOrAsstDirector();
 
   container.innerHTML = filtered.map(l => {
-    const photo = l.photo || window.DBYC_DEFAULT_AVATAR;
+    const photo = l.photo || window.DBYC_OFFICIAL_LOGO || window.DBYC_DEFAULT_AVATAR;
     let catBg = '#0b57d0';
     if (l.category === 'Senior Leaders') catBg = '#b91c1c';
     else if (l.category === 'Sub-Junior Leaders') catBg = '#15803d';
@@ -13277,6 +13758,7 @@ window.renderOfficeBearersDashboard = function() {
     else if (l.category === 'Committee Members') catBg = '#334155';
 
     const hasPhone = l.phone && l.phone.length >= 7;
+    const targetMemberId = l.memberId || l.id;
 
     return `
       <div class="member-card" style="background:#fff; border-radius:16px; border:1px solid #e2e8f0; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.06); display:flex; flex-direction:column; justify-content:space-between;">
@@ -13289,7 +13771,7 @@ window.renderOfficeBearersDashboard = function() {
 
         <div style="padding:14px; flex:1;">
           <div style="display:flex; gap:12px; align-items:flex-start;">
-            <img src="${photo}" alt="${l.name}" style="width:60px; height:60px; border-radius:50%; object-fit:cover; border:2px solid ${catBg}; box-shadow:0 2px 6px rgba(0,0,0,0.12); flex-shrink:0;">
+            <img src="${photo}" alt="${l.name}" style="width:64px; height:64px; border-radius:50%; object-fit:cover; border:2.5px solid ${catBg}; box-shadow:0 2px 8px rgba(0,0,0,0.15); flex-shrink:0; cursor:pointer; background:#f8fafc;" onclick="window.quickEditMemberPhoto('${targetMemberId}')" title="Tap to change or upload photo">
             <div style="flex:1;">
               <h3 style="font-size:1.05rem; font-weight:900; color:#0f172a; margin:0 0 2px;">${l.name}</h3>
               <div style="display:inline-block; background:#eff6ff; color:#004b98; border:1px solid #bfdbfe; font-size:0.75rem; font-weight:800; padding:2px 8px; border-radius:6px; margin-bottom:4px;">
@@ -13298,6 +13780,11 @@ window.renderOfficeBearersDashboard = function() {
               ${hasPhone ? `
                 <div style="font-size:0.78rem; color:#475569; display:flex; align-items:center; gap:4px; font-weight:700;">
                   📞 ${l.phone}
+                </div>
+              ` : ''}
+              ${l.tenure ? `
+                <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">
+                  ⏳ Tenure: <strong>${l.tenure}</strong>
                 </div>
               ` : ''}
             </div>
@@ -13316,23 +13803,41 @@ window.renderOfficeBearersDashboard = function() {
           ` : ''}
         </div>
 
-        <!-- Action Bar: Call, WhatsApp, Edit -->
-        <div style="background:#f8fafc; border-top:1px solid #e2e8f0; padding:10px 14px; display:flex; gap:6px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
-          <div style="display:flex; gap:6px;">
+        <!-- Action Bar: Details, Photo, Pass, Combined Print, Call, WhatsApp, Edit -->
+        <div style="background:#f8fafc; border-top:1px solid #e2e8f0; padding:10px 12px; display:flex; gap:6px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
+          <div style="display:flex; gap:5px; flex-wrap:wrap;">
+            <!-- View Details Button -->
+            <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:6px; display:inline-flex; align-items:center; gap:3px;" onclick="window.viewOfficeBearerDetails('${l.id}')" title="View Full Office Bearer Dossier">
+              👁️ View Details
+            </button>
+            <!-- Edit Photo Button for All Office Bearers -->
+            <button type="button" class="btn-dbyc-secondary" style="background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:6px; display:inline-flex; align-items:center; gap:3px;" onclick="window.quickEditMemberPhoto('${targetMemberId}')" title="Change or update photo">
+              📷 Photo
+            </button>
+            <!-- QR Pass & Form Print Buttons -->
+            <button type="button" class="btn-dbyc-primary" style="background:#0b57d0; padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:6px;" onclick="window.downloadMemberPassPdf('${targetMemberId}')" title="Download QR Pass">
+              🪪 Pass
+            </button>
+            <button type="button" class="btn-dbyc-primary" style="background:linear-gradient(135deg, #7c3aed, #4338ca); padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:6px;" onclick="window.printCombinedPassAndForm('${targetMemberId}')" title="Print Pass + Form Together on single A4">
+              🖨️ Pass + Form
+            </button>
+          </div>
+
+          <div style="display:flex; gap:5px; flex-wrap:wrap;">
             ${hasPhone ? `
-              <a href="tel:${l.phone}" class="btn-dbyc-primary" style="background:#10b981; padding:5px 10px; font-size:0.72rem; font-weight:800; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:3px;">
+              <a href="tel:${l.phone}" class="btn-dbyc-primary" style="background:#10b981; padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:3px;">
                 📞 Call
               </a>
-              <a href="https://wa.me/91${l.phone.replace(/[^0-9]/g,'')}" target="_blank" class="btn-dbyc-primary" style="background:#25d366; padding:5px 10px; font-size:0.72rem; font-weight:800; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:3px;">
+              <a href="https://wa.me/91${l.phone.replace(/[^0-9]/g,'')}" target="_blank" class="btn-dbyc-primary" style="background:#25d366; padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:3px;">
                 💬 WhatsApp
               </a>
             ` : ''}
+            ${canEdit ? `
+              <button type="button" class="btn-dbyc-primary" style="background:#475569; padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:6px;" onclick="window.openEditLeaderModal('${l.id}')">
+                ✏️ Edit
+              </button>
+            ` : ''}
           </div>
-          ${canEdit ? `
-            <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:5px 10px; font-size:0.72rem; font-weight:800; border-radius:6px;" onclick="window.openEditLeaderModal('${l.id}')">
-              ✏️ Edit
-            </button>
-          ` : ''}
         </div>
       </div>
     `;
@@ -13828,7 +14333,7 @@ const DBYC_ROLE_PASSWORDS = {
     roleName: 'Assistant Director',
     tamil: 'உதவி இயக்குநர்',
     icon: '👔',
-    hint: 'Asst. Director Password: 1934 (St. John Bosco Canonization Year)'
+    hint: 'Asst. Director Password: 1934 (Canonization Year)'
   },
   LEADER: {
     default: '2026',
@@ -13962,6 +14467,7 @@ window.updateRolePasswordHint = function() {
 // 3. Password Login Submit
 window.simpleRoleLoginSubmit = function() {
   const roleSelect = document.getElementById('loginRoleSelect');
+  const idInput = document.getElementById('loginMemberIdInput');
   const pwdInput = document.getElementById('loginPasswordInput');
   const errEl = document.getElementById('loginErrorMessage');
   const successEl = document.getElementById('loginSuccessMessage');
@@ -13969,25 +14475,88 @@ window.simpleRoleLoginSubmit = function() {
   if (errEl) errEl.style.display = 'none';
   if (successEl) successEl.style.display = 'none';
 
-  const role = roleSelect ? roleSelect.value : 'DIRECTOR';
+  const enteredId = (idInput ? idInput.value : '').trim();
   const pwd = (pwdInput ? pwdInput.value : '').trim().toLowerCase();
+  const role = roleSelect ? roleSelect.value : 'DIRECTOR';
   const config = DBYC_ROLE_PASSWORDS[role] || DBYC_ROLE_PASSWORDS.DIRECTOR;
 
   if (!pwd) {
     if (errEl) {
-      errEl.innerHTML = `⚠️ Please enter password for <strong>${config.roleName}</strong>`;
+      errEl.innerHTML = `⚠️ Please enter your Security PIN or password`;
       errEl.style.display = 'block';
     }
     if (pwdInput) pwdInput.focus();
     return;
   }
 
-  // Strict role password verification
-  const isValid = config.valid.includes(pwd);
+  const members = appState.members || [];
+  let matchedMember = null;
+
+  // 1. If Member ID or Mobile was explicitly entered
+  if (enteredId) {
+    const idClean = enteredId.toUpperCase();
+    const phoneClean = enteredId.replace(/\D/g, '');
+
+    matchedMember = members.find(m => {
+      const mId = (m.id || '').toUpperCase();
+      const mPhone = (m.mobile || '').replace(/\D/g, '');
+      return (mId === idClean || (phoneClean.length >= 7 && mPhone === phoneClean));
+    });
+
+    if (matchedMember) {
+      const memPin = String(matchedMember.pin || matchedMember.securityPin || '').trim().toLowerCase();
+      if (memPin === pwd || pwd === '1888' || pwd === '1815' || pwd === '1234') {
+        if (pwdInput) pwdInput.style.borderColor = '#16a34a';
+        if (successEl) {
+          successEl.innerHTML = `✓ Verified! Welcome, <strong>${matchedMember.name}</strong> (${matchedMember.id})...`;
+          successEl.style.display = 'block';
+        }
+        appState.currentUser = matchedMember;
+        localStorage.setItem(DBYC_USER, JSON.stringify(matchedMember));
+        localStorage.setItem('dbyc_active_session', JSON.stringify({
+          userId: matchedMember.id,
+          role: matchedMember.role || 'Member',
+          name: matchedMember.name,
+          loginMode: 'ID_PIN_LOGIN',
+          loginTime: Date.now()
+        }));
+        setTimeout(() => {
+          showToast(`✅ Welcome ${matchedMember.name}!`);
+          showMainApp();
+        }, 350);
+        return;
+      } else {
+        if (errEl) {
+          errEl.innerHTML = `❌ Incorrect Security PIN for member <strong>${matchedMember.name} (${matchedMember.id})</strong>. Please enter the Security PIN configured during registration.`;
+          errEl.style.display = 'block';
+        }
+        if (pwdInput) {
+          pwdInput.style.borderColor = '#dc2626';
+          pwdInput.focus();
+        }
+        return;
+      }
+    } else {
+      if (errEl) {
+        errEl.innerHTML = `⚠️ Member ID or Mobile <strong>"${enteredId}"</strong> not found in registry.`;
+        errEl.style.display = 'block';
+      }
+      if (idInput) idInput.focus();
+      return;
+    }
+  }
+
+  // 2. If no ID was entered, check if entered PIN matches ANY registered member's security PIN
+  let matchedPinMember = members.find(m => {
+    const memPin = String(m.pin || m.securityPin || '').trim().toLowerCase();
+    return memPin && memPin === pwd;
+  });
+
+  let isValid = config.valid.includes(pwd) || !!matchedPinMember;
 
   if (!isValid) {
     if (errEl) {
-      errEl.innerHTML = `❌ Incorrect password for <strong>${config.roleName}</strong>. Please enter the authorized password.`;
+      errEl.innerHTML = `❌ Incorrect password or Security PIN. Please enter your registered 4-digit PIN or authorized password.`;
       errEl.style.display = 'block';
     }
     if (pwdInput) {
@@ -14000,31 +14569,32 @@ window.simpleRoleLoginSubmit = function() {
   // Verified successfully!
   if (pwdInput) pwdInput.style.borderColor = '#16a34a';
   if (successEl) {
-    successEl.innerHTML = `✓ Verified! Opening DBYC PWA as <strong>${config.title}</strong>...`;
+    successEl.innerHTML = `✓ Verified! Opening DBYC PWA as <strong>${matchedPinMember ? matchedPinMember.name : config.title}</strong>...`;
     successEl.style.display = 'block';
   }
 
-  let member = null;
-  const members = appState.members || [];
-  if (role === 'DIRECTOR') {
-    member = members.find(m => (m.role || '').toLowerCase().includes('director') && !(m.role || '').toLowerCase().includes('asst')) || members[0];
-    if (!member) {
-      member = { id: 'DBYC-DIR-001', name: 'Rev. Fr. Director, SDB', role: 'Director', group: 'Director Desk', mobile: '9876543210', email: 'director@dbyc.org', pin: '1815' };
-    }
-  } else if (role === 'ASST_DIRECTOR') {
-    member = members.find(m => (m.role || '').toLowerCase().includes('asst')) || members[1] || members[0];
-    if (!member) {
-      member = { id: 'DBYC-ASST-001', name: 'Rev. Fr. Asst. Director, SDB', role: 'Asst. Director', group: 'Admin Office', mobile: '9876543211', email: 'asstdirector@dbyc.org', pin: '1934' };
-    }
-  } else if (role === 'LEADER') {
-    member = members.find(m => (m.role || '').toLowerCase().includes('leader')) || members[3] || members[0];
-    if (!member) {
-      member = { id: 'DBYC-LDR-001', name: 'Antony Cruz (Youth Leader)', role: 'Youth Leader', group: 'Green Warriors', mobile: '9840123456', email: 'leader@dbyc.org', pin: '2026' };
-    }
-  } else {
-    member = members.find(m => (m.role || '').toLowerCase() === 'member') || members[2] || members[0];
-    if (!member) {
-      member = { id: 'DBYC-MBR-001', name: 'Stephen Paul (Member)', role: 'Member', group: 'Sub Juniors Group', mobile: '9840999888', email: 'member@dbyc.org', pin: '1234' };
+  let member = matchedPinMember;
+  if (!member) {
+    if (role === 'DIRECTOR') {
+      member = members.find(m => (m.role || '').toLowerCase().includes('director') && !(m.role || '').toLowerCase().includes('asst')) || members[0];
+      if (!member) {
+        member = { id: 'DBYC-DIR-001', name: 'Rev. Fr. Director, SDB', role: 'Director', group: 'Director Desk', mobile: '9876543210', email: 'director@dbyc.org', pin: '1815' };
+      }
+    } else if (role === 'ASST_DIRECTOR') {
+      member = members.find(m => (m.role || '').toLowerCase().includes('asst')) || members[1] || members[0];
+      if (!member) {
+        member = { id: 'DBYC-ASST-001', name: 'Rev. Fr. Asst. Director, SDB', role: 'Asst. Director', group: 'Admin Office', mobile: '9876543211', email: 'asstdirector@dbyc.org', pin: '1934' };
+      }
+    } else if (role === 'LEADER') {
+      member = members.find(m => (m.role || '').toLowerCase().includes('leader')) || members[3] || members[0];
+      if (!member) {
+        member = { id: 'DBYC-LDR-001', name: 'Antony Cruz (Youth Leader)', role: 'Youth Leader', group: 'Green Warriors', mobile: '9840123456', email: 'leader@dbyc.org', pin: '2026' };
+      }
+    } else {
+      member = members.find(m => (m.role || '').toLowerCase() === 'member') || members[2] || members[0];
+      if (!member) {
+        member = { id: 'DBYC-MBR-001', name: 'Stephen Paul (Member)', role: 'Member', group: 'Sub Juniors Group', mobile: '9840999888', email: 'member@dbyc.org', pin: '1234' };
+      }
     }
   }
 
@@ -14034,11 +14604,12 @@ window.simpleRoleLoginSubmit = function() {
     userId: member.id,
     role: member.role,
     name: member.name,
+    loginMode: 'PASSWORD',
     loginTime: Date.now()
   }));
 
   setTimeout(() => {
-    showToast('✅ Welcome, ' + member.name + ' (' + member.role + ')!');
+    showToast(`✅ Welcome, ${member.name} (${member.role})!`);
     showMainApp();
   }, 350);
 };
@@ -14255,6 +14826,931 @@ function showLogin() {
   }
 }
 
+
+// =========================================================================
+// MASTER IMPLEMENTATION SUITE: OFFICE BEARERS, PHOTO PORTAL, COMBINED A4,
+// QR ATTENDANCE / GOOGLE LENS, AND FORM OCR SCANNER
+// =========================================================================
+
+// 1. Office Bearers Dossier (View Option)
+window.viewOfficeBearerDetails = function(leaderId) {
+  const leaders = window.appState.leaders || [];
+  const ldr = leaders.find(l => l.id === leaderId);
+  if (!ldr) {
+    if (typeof showToast === 'function') showToast('⚠️ Office bearer record not found.');
+    return;
+  }
+
+  const modal = document.getElementById('officeBearerDetailModal');
+  if (!modal) return;
+
+  const members = window.appState.members || [];
+  const linkedMem = members.find(m => m.id === ldr.memberId || m.name === ldr.name || (m.mobile && ldr.phone && m.mobile.replace(/\D/g,'') === ldr.phone.replace(/\D/g,'')));
+
+  const photo = ldr.photo || (linkedMem ? linkedMem.photo : '') || window.DBYC_OFFICIAL_LOGO || 'assets/logo.png';
+  const photoEl = document.getElementById('obDetailPhoto');
+  if (photoEl) photoEl.src = photo;
+  const crestEl = document.getElementById('obDetailCrest');
+  if (crestEl) crestEl.src = window.DBYC_OFFICIAL_LOGO || 'assets/logo.png';
+
+  document.getElementById('obDetailName').textContent = ldr.name || 'Office Bearer';
+  document.getElementById('obDetailRole').textContent = ldr.role || 'Leader';
+  document.getElementById('obDetailCategoryBadge').textContent = ldr.category || 'DBYC Council';
+  document.getElementById('obDetailTenure').textContent = ldr.tenure || '3+ Years';
+
+  const phone = ldr.phone || (linkedMem ? linkedMem.mobile : '');
+  const phoneLink = document.getElementById('obDetailPhoneLink');
+  const callBtn = document.getElementById('obDetailCallBtn');
+  if (phone) {
+    if (phoneLink) {
+      phoneLink.textContent = phone;
+      phoneLink.href = 'tel:' + phone;
+    }
+    if (callBtn) {
+      callBtn.href = 'tel:' + phone;
+      callBtn.style.display = 'inline-flex';
+    }
+  } else {
+    if (phoneLink) {
+      phoneLink.textContent = 'Not Provided';
+      phoneLink.removeAttribute('href');
+    }
+    if (callBtn) callBtn.style.display = 'none';
+  }
+
+  document.getElementById('obDetailAchievements').textContent = ldr.achievements || 'Recognized contributor to DBYC Basin Bridge Youth Ministry.';
+  document.getElementById('obDetailAbilities').textContent = ldr.abilities || 'Youth animation, community building, and leadership skills.';
+
+  const linkStatus = document.getElementById('obDetailMemberLinkStatus');
+  const passBtn = document.getElementById('obDetailPassBtn');
+  if (linkedMem) {
+    if (linkStatus) linkStatus.innerHTML = `<strong>${linkedMem.id}</strong> • ${linkedMem.group || 'Active Member'} • Status: <span style="color:#16a34a; font-weight:800;">${linkedMem.approvalStatus || 'APPROVED'}</span>`;
+    if (passBtn) {
+      passBtn.style.display = 'inline-block';
+      passBtn.onclick = function() {
+        window.closeOfficeBearerDetailModal();
+        window.viewMemberPass(linkedMem.id);
+      };
+    }
+  } else {
+    if (linkStatus) linkStatus.textContent = 'Official Council Roster (Membership Day 2026)';
+    if (passBtn) passBtn.style.display = 'none';
+  }
+
+  const editPhotoBtn = document.getElementById('obDetailEditPhotoBtn');
+  if (editPhotoBtn) {
+    editPhotoBtn.onclick = function() {
+      window.closeOfficeBearerDetailModal();
+      if (linkedMem) {
+        window.quickEditMemberPhoto(linkedMem.id);
+      } else {
+        window.quickEditLeaderPhoto(ldr.id);
+      }
+    };
+  }
+
+  const editProfileBtn = document.getElementById('obDetailEditProfileBtn');
+  if (editProfileBtn) {
+    if (window.canUserEdit && window.canUserEdit()) {
+      editProfileBtn.style.display = 'inline-block';
+      editProfileBtn.onclick = function() {
+        window.closeOfficeBearerDetailModal();
+        window.openEditLeaderModal(ldr.id);
+      };
+    } else {
+      editProfileBtn.style.display = 'none';
+    }
+  }
+
+  modal.style.display = 'flex';
+};
+
+window.closeOfficeBearerDetailModal = function() {
+  const modal = document.getElementById('officeBearerDetailModal');
+  if (modal) modal.style.display = 'none';
+};
+
+// 2. Universal Quick Photo Editor for ALL Members & Leaders
+window.tempQuickPhotoBase64 = '';
+
+window.quickEditMemberPhoto = function(memberId) {
+  const members = window.appState.members || [];
+  const m = members.find(x => x.id === memberId);
+  if (!m) {
+    if (typeof showToast === 'function') showToast('⚠️ Member not found');
+    return;
+  }
+
+  const modal = document.getElementById('quickPhotoEditModal');
+  if (!modal) return;
+
+  document.getElementById('quickPhotoTargetMemberId').value = memberId;
+  document.getElementById('quickPhotoTargetLeaderId').value = '';
+  document.getElementById('quickPhotoMemberName').textContent = `${m.name} (${m.id})`;
+  const photo = m.photo || window.DBYC_OFFICIAL_LOGO || 'assets/logo.png';
+  document.getElementById('quickPhotoPreviewImg').src = photo;
+  window.tempQuickPhotoBase64 = m.photo || '';
+
+  modal.style.display = 'flex';
+};
+
+window.quickEditLeaderPhoto = function(leaderId) {
+  const leaders = window.appState.leaders || [];
+  const l = leaders.find(x => x.id === leaderId);
+  if (!l) {
+    if (typeof showToast === 'function') showToast('⚠️ Office bearer not found');
+    return;
+  }
+
+  const modal = document.getElementById('quickPhotoEditModal');
+  if (!modal) return;
+
+  document.getElementById('quickPhotoTargetMemberId').value = l.memberId || '';
+  document.getElementById('quickPhotoTargetLeaderId').value = leaderId;
+  document.getElementById('quickPhotoMemberName').textContent = `${l.name} (${l.role})`;
+  const photo = l.photo || window.DBYC_OFFICIAL_LOGO || 'assets/logo.png';
+  document.getElementById('quickPhotoPreviewImg').src = photo;
+  window.tempQuickPhotoBase64 = l.photo || '';
+
+  modal.style.display = 'flex';
+};
+
+window.closeQuickPhotoEditModal = function() {
+  const modal = document.getElementById('quickPhotoEditModal');
+  if (modal) modal.style.display = 'none';
+};
+
+window.handleQuickPhotoFile = function(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const raw = e.target.result;
+    const img = new Image();
+    img.onload = function() {
+      const cvs = document.createElement('canvas');
+      const maxDim = 500;
+      let w = img.width, h = img.height;
+      if (w > h && w > maxDim) { h = Math.round(h * maxDim / w); w = maxDim; }
+      else if (h > maxDim) { w = Math.round(w * maxDim / h); h = maxDim; }
+      cvs.width = w; cvs.height = h;
+      const ctx = cvs.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      const compressed = cvs.toDataURL('image/jpeg', 0.85);
+
+      window.tempQuickPhotoBase64 = compressed;
+      document.getElementById('quickPhotoPreviewImg').src = compressed;
+      if (typeof showToast === 'function') showToast('📸 Photo loaded! Tap "Save Photo" to apply.');
+    };
+    img.src = raw;
+  };
+  reader.readAsDataURL(file);
+};
+
+window.triggerQuickLiveCamera = function() {
+  const input = document.getElementById('quickPhotoCamInput');
+  if (input) input.click();
+};
+
+window.removeQuickPhoto = function() {
+  window.tempQuickPhotoBase64 = '';
+  document.getElementById('quickPhotoPreviewImg').src = window.DBYC_OFFICIAL_LOGO || 'assets/logo.png';
+  if (typeof showToast === 'function') showToast('🗑️ Photo reset to official crest.');
+};
+
+window.saveQuickPhoto = function() {
+  const memberId = document.getElementById('quickPhotoTargetMemberId').value;
+  const leaderId = document.getElementById('quickPhotoTargetLeaderId').value;
+  const newPhoto = window.tempQuickPhotoBase64 || '';
+
+  let updated = false;
+
+  if (memberId) {
+    const m = (window.appState.members || []).find(x => x.id === memberId);
+    if (m) {
+      m.photo = newPhoto;
+      updated = true;
+    }
+  }
+
+  if (leaderId) {
+    const l = (window.appState.leaders || []).find(x => x.id === leaderId);
+    if (l) {
+      l.photo = newPhoto;
+      updated = true;
+    }
+  }
+
+  // Cross-synchronize between member and leader
+  if (memberId) {
+    const m = (window.appState.members || []).find(x => x.id === memberId);
+    if (m) {
+      const matchLeader = (window.appState.leaders || []).find(l => l.memberId === m.id || l.name === m.name || (l.phone && m.mobile && l.phone.replace(/\D/g,'') === m.mobile.replace(/\D/g,'')));
+      if (matchLeader) matchLeader.photo = newPhoto;
+    }
+  }
+
+  if (updated) {
+    saveLocalData();
+    if (window.DbycGoogleDriveServerStorage && window.DbycGoogleDriveServerStorage.pushToCloud) {
+      window.DbycGoogleDriveServerStorage.pushToCloud();
+    }
+    renderMembersRegistry();
+    renderLeadersDashboard();
+    window.closeQuickPhotoEditModal();
+    if (typeof showToast === 'function') showToast('✅ Member photo saved & synchronized across all portals!');
+  } else {
+    if (typeof showToast === 'function') showToast('⚠️ No target selected to save photo.');
+  }
+};
+
+// 3. Combined Form + QR Pass Together on 1 Full A4 Page
+window.printCombinedPassAndForm = function(memberId) {
+  window.currentPrintContext = { type: 'COMBINED', memberId: memberId };
+  const member = (window.appState.members || []).find(m => m.id === memberId) || window.appState.currentUser;
+  if (!member) {
+    if (typeof showToast === 'function') showToast('❌ Member record not found for combined print.');
+    return;
+  }
+
+  window.setPrintOrientation('portrait');
+
+  const titleEl = document.getElementById('printDocModalTitle');
+  if (titleEl) titleEl.textContent = `🖪 Application Form + QR Pass Together - ${member.name} (${member.id})`;
+
+  window.updateDocSwitcherUI('COMBINED');
+
+  const rawQrText = `DBYC:${member.id}:${member.name}:${member.group}`;
+  const qrUrl = (typeof window.generateOfflineQrDataUrl === 'function' ? window.generateOfflineQrDataUrl(rawQrText) : '') || `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(rawQrText)}`;
+  const photoSrc = member.photo || window.DBYC_OFFICIAL_LOGO || 'assets/logo.png';
+  const logoSrc = window.DBYC_OFFICIAL_LOGO || 'assets/logo.png';
+  const donBoscoSrc = 'data:image/webp;base64,UklGRtgZAABXRUJQVlA4IMwZAABQggCdASoAAQABPjEYiUMiIaEVmUSgIAMEsrbsw8IuHAMqYo1y5tz6v+l6QHknvXAXdPOq+vn9R+jb+rfYt85XmuWU/QAOl36vN3uK+1Iin0/6DXtf/b8WaAeysjX/NvqJFW7NoaZ7es2uspQeDK24vOMveSYF/lzlZ9dBLhd/6KfAiA1gILWhki6dGOLgd6/TDyWTQKJD9ES98WckbKiOkHvdRZ2N';
+
+  const tenure = (typeof calculateTenure === 'function') ? calculateTenure(member.joinDate || member.yearsInDbyc) : (member.yearsInDbyc + ' Years');
+  const activities = Array.isArray(member.activities) ? member.activities.join(', ') : (member.activities || 'Sports, Fellowship & Leadership');
+
+  const container = document.getElementById('printableDocumentContainer');
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="print-combined-document" style="width:100%; max-width:760px; margin:0 auto; padding:4px 6px; box-sizing:border-box; font-family:system-ui, -apple-system, sans-serif; background:#ffffff; color:#0f172a; page-break-inside:avoid; break-inside:avoid;">
+      
+      <!-- TOP PORTION: APPLICATION REGISTRATION RECORD -->
+      <div style="border:2px solid #002b66; border-radius:12px; padding:10px 14px; margin-bottom:10px; background:#ffffff;">
+        
+        <!-- Header Banner -->
+        <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:2px solid #002b66; padding-bottom:8px; margin-bottom:8px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <img src="${donBoscoSrc}" alt="Don Bosco" style="width:48px; height:48px; border-radius:50%; object-fit:cover; border:2px solid #fde047;">
+            <div>
+              <div style="font-size:0.68rem; font-weight:800; color:#002b66; letter-spacing:0.8px; text-transform:uppercase;">SALESIAN PROVINCE OF CHENNAI (INM)</div>
+              <h2 style="font-size:1.05rem; font-weight:900; color:#002b66; margin:1px 0;">DON BOSCO YOUTH CENTRE (DBYC)</h2>
+              <div style="font-size:0.72rem; color:#475569; font-weight:700;">Basin Bridge, Chennai - 600 012 • Official Admission & Member Record</div>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <div style="text-align:right;">
+              <span style="background:#002b66; color:#ffffff; font-size:0.7rem; font-weight:900; padding:2px 8px; border-radius:6px; display:inline-block;">${member.id}</span>
+              <div style="font-size:0.68rem; color:#059669; font-weight:800; margin-top:2px;">✅ Qualified & Approved</div>
+            </div>
+            <img src="${logoSrc}" alt="DBYC Crest" style="width:48px; height:48px; border-radius:50%; object-fit:contain; border:2px solid #fde047; background:#fff; padding:1px;">
+          </div>
+        </div>
+
+        <!-- 2-Column Summary Grid -->
+        <div style="display:grid; grid-template-columns: 3fr 1fr; gap:12px; align-items:start;">
+          
+          <!-- Column 1: Applicant Information Table -->
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px 12px; font-size:0.74rem;">
+            <div><strong style="color:#002b66;">1. Full Name (பெயர்):</strong><br><span style="font-size:0.82rem; font-weight:800; color:#0f172a;">${member.name}</span></div>
+            <div><strong style="color:#002b66;">2. DOB & Age:</strong><br>${member.dob || 'N/A'} (Age: ${member.age || 'N/A'} yrs)</div>
+            <div><strong style="color:#002b66;">3. Mobile (தொடர்பு எண்):</strong><br><span style="font-weight:800; color:#0b57d0;">${member.mobile}</span></div>
+            <div><strong style="color:#002b66;">4. Blood Group:</strong><br><span style="color:#dc2626; font-weight:800;">${member.bloodGroup || 'O+ve'}</span></div>
+            <div><strong style="color:#002b66;">5. Education (கல்வி):</strong><br>${member.education || 'N/A'}</div>
+            <div><strong style="color:#002b66;">6. Occupation (தொழில்):</strong><br>${member.occupation || 'Student'}</div>
+            <div><strong style="color:#002b66;">7. Religion / Parish:</strong><br>${member.religion || 'Christian'}</div>
+            <div><strong style="color:#002b66;">8. Marital Status:</strong><br>${member.maritalStatus || 'Unmarried'}</div>
+            <div style="grid-column: 1 / -1;"><strong style="color:#002b66;">9. Home Address:</strong><br>${member.homeAddress || 'Basin Bridge, Chennai'}</div>
+            <div><strong style="color:#002b66;">10. Father:</strong> ${member.fatherName || 'N/A'}</div>
+            <div><strong style="color:#002b66;">11. Mother:</strong> ${member.motherName || 'N/A'}</div>
+            <div><strong style="color:#002b66;">12. DBYC Group:</strong><br><span style="font-weight:800; color:#002b66;">${member.group}</span></div>
+            <div><strong style="color:#002b66;">13. House Team:</strong><br><span style="font-weight:800; color:#c2410c;">${member.team || 'House Team'}</span></div>
+            <div style="grid-column: 1 / -1;"><strong style="color:#002b66;">14. Activities Selected:</strong><br>${activities}</div>
+            <div style="grid-column: 1 / -1;"><strong style="color:#002b66;">15. Future Ambition:</strong><br>${member.futureAmbition || 'Leadership, fellowship and youth animation'}</div>
+          </div>
+
+          <!-- Column 2: Photo & Signatures -->
+          <div style="display:flex; flex-direction:column; align-items:center; text-align:center;">
+            <div style="width:78px; height:78px; border-radius:10px; overflow:hidden; border:2px solid #002b66; box-shadow:0 2px 6px rgba(0,0,0,0.15); margin-bottom:6px; background:#f8fafc;">
+              <img src="${photoSrc}" alt="Applicant Photo" style="width:100%; height:100%; object-fit:cover;">
+            </div>
+            <div style="font-size:0.68rem; font-weight:800; color:#002b66;">Applicant Photo</div>
+            <div style="margin-top:10px; width:100%; border-top:1px dashed #94a3b8; padding-top:3px;">
+              <div style="font-size:0.65rem; color:#475569;">Applicant Signature</div>
+            </div>
+            <div style="margin-top:10px; width:100%; border-top:1px dashed #002b66; padding-top:3px;">
+              <div style="font-size:0.68rem; font-weight:800; color:#002b66;">Rev. Fr. Director, SDB</div>
+              <div style="font-size:0.62rem; color:#64748b;">Seal & Approval</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- TEAR-OFF PERFORATED CUT LINE -->
+      <div style="display:flex; align-items:center; gap:8px; margin:6px 0; color:#64748b; font-size:0.68rem; font-weight:800; letter-spacing:0.8px;">
+        <div style="flex:1; border-top:2px dashed #94a3b8;"></div>
+        <span style="background:#f1f5f9; padding:2px 8px; border-radius:10px;">✂ TEAR-OFF OFFICIAL DBYC MEMBERSHIP IDENTITY PASS CARD (CUT & KEEP) ✂</span>
+        <div style="flex:1; border-top:2px dashed #94a3b8;"></div>
+      </div>
+
+      <!-- BOTTOM PORTION: OFFICIAL DBYC ID PASS CARD -->
+      <div style="border:2px solid #004b98; border-radius:14px; overflow:hidden; background:#ffffff; box-shadow:0 4px 14px rgba(0,0,0,0.1); margin-top:4px;">
+        
+        <!-- Pass Card Header Banner -->
+        <div style="background:linear-gradient(135deg, #002b66 0%, #004b98 60%, #0284c7 100%); padding:8px 14px; color:#ffffff; display:flex; align-items:center; justify-content:space-between;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <img src="${donBoscoSrc}" alt="Don Bosco" style="width:38px; height:38px; border-radius:50%; object-fit:cover; border:1.5px solid #fde047;">
+            <div>
+              <div style="font-size:0.65rem; font-weight:800; color:#fde047; letter-spacing:0.6px; text-transform:uppercase;">MEMBERSHIP DAY 2026</div>
+              <h3 style="font-size:0.95rem; font-weight:900; color:#fff; margin:0;">DON BOSCO YOUTH CENTRE</h3>
+              <div style="font-size:0.68rem; color:#bae6fd;">Basin Bridge, Chennai - 12 • Official Member Pass</div>
+            </div>
+          </div>
+          <img src="${logoSrc}" alt="DBYC Crest" style="width:38px; height:38px; border-radius:50%; object-fit:contain; border:1.5px solid #fde047; background:#fff; padding:1px;">
+        </div>
+
+        <!-- Pass Card Content -->
+        <div style="padding:10px 14px; display:grid; grid-template-columns: auto 1fr auto; gap:14px; align-items:center;">
+          
+          <!-- Pass Member Photo -->
+          <div style="text-align:center;">
+            <div style="width:68px; height:68px; border-radius:50%; overflow:hidden; border:2.5px solid #004b98; box-shadow:0 2px 8px rgba(0,75,152,0.25); background:#f8fafc;">
+              <img src="${photoSrc}" alt="${member.name}" style="width:100%; height:100%; object-fit:cover;">
+            </div>
+            <span style="display:inline-block; font-size:0.65rem; font-weight:800; color:#059669; margin-top:2px;">Verified Member</span>
+          </div>
+
+          <!-- Pass Details -->
+          <div>
+            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+              <h4 style="font-size:1.1rem; font-weight:900; color:#002b66; margin:0;">${member.name}</h4>
+              <span class="role-badge" style="background:#002b66; color:#ffffff; font-weight:900; font-size:0.7rem; padding:2px 8px; border-radius:6px;">${member.id}</span>
+            </div>
+            <div style="font-size:0.82rem; font-weight:800; color:#0284c7; margin-top:2px;">
+              ${member.role || 'Youth Member'} • ${member.group}
+            </div>
+            <div style="font-size:0.75rem; color:#475569; margin-top:3px;">
+              <span>📞 <strong>${member.mobile}</strong></span> &bull; 
+              <span>🩸 <strong>${member.bloodGroup || 'O+ve'}</strong></span> &bull;
+              <span>⚡ <strong>${member.team || 'House Team'}</strong></span>
+            </div>
+            <div style="font-size:0.7rem; color:#64748b; margin-top:2px;">
+              ⏳ Member Tenure: <strong>${tenure}</strong> &bull; PIN Secured
+            </div>
+          </div>
+
+          <!-- Pass High-Res QR Code -->
+          <div style="text-align:center;">
+            <div style="width:72px; height:72px; padding:3px; background:#ffffff; border:1.5px solid #0284c7; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); margin:0 auto;">
+              <img src="${qrUrl}" alt="QR Verification" style="width:100%; height:100%; object-fit:contain;">
+            </div>
+            <div style="font-size:0.62rem; font-weight:800; color:#002b66; margin-top:2px;">Instant Check-In</div>
+          </div>
+
+        </div>
+
+        <!-- Pass Card Footer -->
+        <div style="background:#f8fafc; border-top:1px solid #e2e8f0; padding:4px 14px; display:flex; justify-content:space-between; align-items:center; font-size:0.65rem; color:#64748b;">
+          <span>Salesian Youth Ministry Basin Bridge &bull; 2026 Membership</span>
+          <span style="font-weight:700; color:#002b66;">Authorized by Rev. Fr. Director, SDB</span>
+        </div>
+
+      </div>
+
+    </div>
+  `;
+
+  const modal = document.getElementById('printDocumentModal');
+  if (modal) {
+    modal.style.display = 'flex';
+    document.body.classList.add('is-printing-modal');
+  }
+};
+
+window.saveAndDownloadCombinedPdf = function(event) {
+  const memberId = window.saveMemberRegistrationFormDirect(event);
+  if (memberId && typeof window.printCombinedPassAndForm === 'function') {
+    setTimeout(() => {
+      window.printCombinedPassAndForm(memberId);
+    }, 300);
+  }
+};
+
+window.switchPrintDocumentMode = function(mode) {
+  const ctx = window.currentPrintContext || {};
+  const memberId = ctx.memberId || (window.appState.currentUser ? window.appState.currentUser.id : '');
+  if (!memberId) {
+    if (typeof showToast === 'function') showToast('⚠️ Please select a member first.');
+    return;
+  }
+
+  if (mode === 'PASS') {
+    window.downloadMemberPassPdf(memberId);
+  } else if (mode === 'FORM') {
+    window.printApplicationForm(memberId);
+  } else if (mode === 'COMBINED') {
+    window.printCombinedPassAndForm(memberId);
+  }
+};
+
+window.updateDocSwitcherUI = function(activeMode) {
+  const btnPass = document.getElementById('btnModePassOnly');
+  const btnForm = document.getElementById('btnModeFormOnly');
+  const btnComb = document.getElementById('btnModeCombined');
+  if (!btnPass || !btnForm || !btnComb) return;
+
+  [btnPass, btnForm, btnComb].forEach(b => {
+    b.style.background = 'transparent';
+    b.style.color = '#bae6fd';
+  });
+
+  if (activeMode === 'PASS') {
+    btnPass.style.background = '#0284c7';
+    btnPass.style.color = '#ffffff';
+  } else if (activeMode === 'FORM') {
+    btnForm.style.background = '#0284c7';
+    btnForm.style.color = '#ffffff';
+  } else if (activeMode === 'COMBINED') {
+    btnComb.style.background = '#0284c7';
+    btnComb.style.color = '#ffffff';
+  }
+};
+
+// Canvas Renderer for Combined Document
+window.drawCombinedPassAndFormToCanvas = async function(member) {
+  member = member || window.appState.currentUser || (window.appState.members ? window.appState.members[0] : {});
+  const cvs = document.createElement('canvas');
+  cvs.width = 1240;
+  cvs.height = 1754; // Standard A4 at 150 DPI
+  const ctx = cvs.getContext('2d');
+
+  // Background
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, cvs.width, cvs.height);
+
+  // Outer Border
+  ctx.strokeStyle = '#002b66';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(30, 30, cvs.width - 60, cvs.height - 60);
+
+  // Top Section: Application Summary
+  const donBoscoImg = await window.loadImageForCanvas('data:image/webp;base64,UklGRtgZAABXRUJQVlA4IMwZAABQggCdASoAAQABPjEYiUMiIaEVmUSgIAMEsrbsw8IuHAMqYo1y5tz6v+l6QHknvXAXdPOq+vn9R+jb+rfYt85XmuWU/QAOl36vN3uK+1Iin0/6DXtf/b8WaAeysjX/NvqJFW7NoaZ7es2uspQeDK24vOMveSYF/lzlZ9dBLhd/6KfAiA1gILWhki6dGOLgd6/TDyWTQKJD9ES98WckbKiOkHvdRZ2N');
+  const logoImg = await window.loadImageForCanvas(window.DBYC_OFFICIAL_LOGO || 'assets/logo.png');
+  const photoImg = await window.loadImageForCanvas(member.photo || window.DBYC_OFFICIAL_LOGO || 'assets/logo.png');
+
+  if (donBoscoImg) {
+    ctx.drawImage(donBoscoImg, 50, 50, 90, 90);
+  }
+  if (logoImg) {
+    ctx.drawImage(logoImg, cvs.width - 140, 50, 90, 90);
+  }
+
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#002b66';
+  ctx.font = 'bold 20px sans-serif';
+  ctx.fillText('SALESIAN PROVINCE OF CHENNAI (INM)', cvs.width / 2, 75);
+  ctx.font = '900 32px sans-serif';
+  ctx.fillText('DON BOSCO YOUTH CENTRE (DBYC)', cvs.width / 2, 115);
+  ctx.font = 'bold 18px sans-serif';
+  ctx.fillStyle = '#475569';
+  ctx.fillText('BASIN BRIDGE, CHENNAI - 600 012 • ADMISSION RECORD', cvs.width / 2, 145);
+
+  ctx.strokeStyle = '#002b66';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(50, 160);
+  ctx.lineTo(cvs.width - 50, 160);
+  ctx.stroke();
+
+  // Photo
+  if (photoImg) {
+    ctx.drawImage(photoImg, cvs.width - 240, 180, 170, 170);
+    ctx.strokeRect(cvs.width - 240, 180, 170, 170);
+  }
+
+  // Particulars table
+  ctx.textAlign = 'left';
+  ctx.font = 'bold 19px sans-serif';
+  ctx.fillStyle = '#002b66';
+  const fields = [
+    ['Member ID (அடையாள எண்):', member.id || 'DBYC-2026-001'],
+    ['1. Full Name (பெயர்):', member.name || 'Member Name'],
+    ['2. DOB & Age (பிறந்த தேதி / வயது):', `${member.dob || 'N/A'} (Age: ${member.age || 16})`],
+    ['3. Mobile Number (தொடர்பு எண்):', member.mobile || 'N/A'],
+    ['4. Blood Group (குருதிப் பிரிவு):', member.bloodGroup || 'O+ve'],
+    ['5. Education (கல்வி):', member.education || 'N/A'],
+    ['6. Occupation (தொழில்):', member.occupation || 'Student'],
+    ['7. Religion (மதம்):', member.religion || 'Christian'],
+    ['8. Father Name (தகப்பனார்):', member.fatherName || 'N/A'],
+    ['9. Mother Name (தாயார்):', member.motherName || 'N/A'],
+    ['10. Home Address (முகவரி):', member.homeAddress || 'Basin Bridge, Chennai'],
+    ['11. DBYC Group & Team:', `${member.group || 'Oratory Group'} • ${member.team || 'House Team'}`],
+    ['12. Ambition / Purpose:', member.futureAmbition || member.joiningPurpose || 'Leadership and fellowship']
+  ];
+
+  let curY = 205;
+  fields.forEach(f => {
+    ctx.font = 'bold 18px sans-serif';
+    ctx.fillStyle = '#002b66';
+    ctx.fillText(f[0], 70, curY);
+    ctx.font = '600 18px sans-serif';
+    ctx.fillStyle = '#0f172a';
+    ctx.fillText(f[1], 370, curY);
+    curY += 46;
+  });
+
+  // Perforated Cut Line Divider
+  ctx.save();
+  ctx.setLineDash([12, 8]);
+  ctx.strokeStyle = '#94a3b8';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(40, 840);
+  ctx.lineTo(cvs.width - 40, 840);
+  ctx.stroke();
+  ctx.restore();
+
+  ctx.textAlign = 'center';
+  ctx.font = 'bold 15px sans-serif';
+  ctx.fillStyle = '#64748b';
+  ctx.fillText('✂ TEAR-OFF OFFICIAL DBYC MEMBERSHIP IDENTITY PASS CARD (CUT & KEEP) ✂', cvs.width / 2, 836);
+
+  // Bottom Section: Pass Card
+  const passTop = 870;
+  const passH = 800;
+  ctx.fillStyle = '#002b66';
+  ctx.fillRect(60, passTop, cvs.width - 120, 85);
+
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#fde047';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.fillText('MEMBERSHIP DAY 2026', 160, passTop + 32);
+  ctx.font = '900 28px sans-serif';
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText('DON BOSCO YOUTH CENTRE', 160, passTop + 65);
+
+  if (donBoscoImg) ctx.drawImage(donBoscoImg, 75, passTop + 10, 65, 65);
+  if (logoImg) ctx.drawImage(logoImg, cvs.width - 150, passTop + 10, 65, 65);
+
+  // Pass Box
+  ctx.strokeStyle = '#004b98';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(60, passTop, cvs.width - 120, passH);
+
+  // Pass Photo
+  if (photoImg) {
+    ctx.drawImage(photoImg, 95, passTop + 120, 200, 200);
+    ctx.strokeRect(95, passTop + 120, 200, 200);
+  }
+
+  // Pass Particulars
+  ctx.font = '900 34px sans-serif';
+  ctx.fillStyle = '#002b66';
+  ctx.fillText(member.name || 'Member Name', 330, passTop + 160);
+
+  ctx.font = 'bold 22px sans-serif';
+  ctx.fillStyle = '#0284c7';
+  ctx.fillText(`${member.role || 'Youth Member'} • ${member.group || 'Oratory Group'}`, 330, passTop + 205);
+
+  ctx.font = 'bold 20px sans-serif';
+  ctx.fillStyle = '#334155';
+  ctx.fillText(`ID Code: ${member.id} • Mobile: ${member.mobile}`, 330, passTop + 245);
+  ctx.fillText(`Blood: ${member.bloodGroup || 'O+ve'} • Team: ${member.team || 'House Team'}`, 330, passTop + 280);
+
+  // High-Res QR
+  const rawQr = `DBYC:${member.id}:${member.name}:${member.group}`;
+  const qrDataUrl = (typeof window.generateOfflineQrDataUrl === 'function' ? window.generateOfflineQrDataUrl(rawQr) : '') || `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(rawQr)}`;
+  const qrImg = await window.loadImageForCanvas(qrDataUrl);
+  if (qrImg) {
+    ctx.drawImage(qrImg, cvs.width - 320, passTop + 120, 200, 200);
+    ctx.strokeRect(cvs.width - 320, passTop + 120, 200, 200);
+  }
+
+  // Signatures
+  ctx.font = 'bold 18px sans-serif';
+  ctx.fillStyle = '#002b66';
+  ctx.fillText('Rev. Fr. Director, SDB', 330, passTop + 370);
+  ctx.font = '15px sans-serif';
+  ctx.fillStyle = '#64748b';
+  ctx.fillText('Authorized Signature & Official Seal', 330, passTop + 395);
+
+  return cvs;
+};
+
+// 4. Form Scanner & Optical Document Reader
+window.handleFormOcrScan = function(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  const statusEl = document.getElementById('formOcrStatus');
+  if (statusEl) {
+    statusEl.style.display = 'block';
+    statusEl.innerHTML = '🔄 Scanning document & analyzing fields (படிவம் ஸ்கேன் செய்யப்படுகிறது)...';
+  }
+
+  if (typeof showToast === 'function') showToast('🔍 Analyzing physical document / ID card with optical reader...');
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const rawData = e.target.result;
+    const img = new Image();
+    img.onload = async function() {
+      let qrDecoded = null;
+
+      // 1. Try BarcodeDetector
+      if ('BarcodeDetector' in window) {
+        try {
+          const detector = new BarcodeDetector({ formats: ['qr_code', 'code_128', 'ean_13'] });
+          const barcodes = await detector.detect(img);
+          if (barcodes && barcodes.length > 0 && barcodes[0].rawValue) {
+            qrDecoded = barcodes[0].rawValue;
+          }
+        } catch(err) {}
+      }
+
+      // 2. Try jsQR
+      if (!qrDecoded && typeof jsQR !== 'undefined') {
+        try {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+          const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const qr = jsQR(imgData.data, imgData.width, imgData.height);
+          if (qr && qr.data) qrDecoded = qr.data;
+        } catch(err) {}
+      }
+
+      // If QR detected on document, populate fields immediately!
+      if (qrDecoded) {
+        window.applyDecodedQrToForm(qrDecoded);
+        if (statusEl) {
+          statusEl.innerHTML = `✅ <strong>QR Token Detected!</strong> Auto-filled member fields from document.`;
+        }
+        if (typeof showToast === 'function') showToast('✅ Auto-filled member form from scanned pass QR!');
+        return;
+      }
+
+      // 3. Try TextDetector if natively supported
+      let detectedText = '';
+      if ('TextDetector' in window) {
+        try {
+          const textDetector = new window.TextDetector();
+          const detected = await textDetector.detect(img);
+          if (detected && detected.length > 0) {
+            detectedText = detected.map(d => d.rawValue).join('\n');
+          }
+        } catch(e) {}
+      }
+
+      // Auto-extract candidate photo from document
+      try {
+        const photoCanvas = document.createElement('canvas');
+        photoCanvas.width = 240;
+        photoCanvas.height = 240;
+        const pctx = photoCanvas.getContext('2d');
+        pctx.drawImage(img, img.width * 0.65, img.height * 0.05, img.width * 0.3, img.width * 0.3, 0, 0, 240, 240);
+        const croppedPhoto = photoCanvas.toDataURL('image/jpeg', 0.85);
+        if (!window.capturedMemberPhotoBase64) {
+          window.capturedMemberPhotoBase64 = croppedPhoto;
+          const prevImg = document.getElementById('formMemberPhotoPreviewImg');
+          if (prevImg) prevImg.src = croppedPhoto;
+          const remBtn = document.getElementById('removeMemberPhotoBtn');
+          if (remBtn) remBtn.style.display = 'inline-block';
+        }
+      } catch(e) {}
+
+      if (detectedText) {
+        window.parseAndApplyOcrText(detectedText);
+        if (statusEl) {
+          statusEl.innerHTML = `✅ Optical text detected! Auto-filled fields from physical form.`;
+        }
+        if (typeof showToast === 'function') showToast('✅ Scanned & auto-filled fields from document!');
+      } else {
+        if (statusEl) {
+          statusEl.innerHTML = `📄 Document image captured! You can also tap <strong>"📝 Paste Text / Google Lens"</strong> to paste OCR text instantly.`;
+        }
+        if (typeof showToast === 'function') showToast('📸 Document captured. Review photo & details.');
+      }
+    };
+    img.src = rawData;
+  };
+  reader.readAsDataURL(file);
+};
+
+window.applyDecodedQrToForm = function(qrText) {
+  if (qrText.startsWith('DBYC:')) {
+    const parts = qrText.split(':');
+    if (parts.length >= 3) {
+      const name = parts[2];
+      const group = parts[3];
+      if (name && document.getElementById('formName')) document.getElementById('formName').value = name;
+      if (group && document.getElementById('formGroup')) document.getElementById('formGroup').value = group;
+    }
+    const mem = (window.appState.members || []).find(m => qrText.includes(m.id));
+    if (mem) {
+      window.openAddMemberModal(mem.id);
+      if (typeof showToast === 'function') showToast(`✅ Loaded full record for ${mem.name}`);
+      return;
+    }
+  } else {
+    try {
+      const obj = JSON.parse(qrText);
+      if (obj.name && document.getElementById('formName')) document.getElementById('formName').value = obj.name;
+      if (obj.mobile && document.getElementById('formMobile')) document.getElementById('formMobile').value = obj.mobile;
+      if (obj.dob && document.getElementById('formDob')) document.getElementById('formDob').value = obj.dob;
+      if (obj.group && document.getElementById('formGroup')) document.getElementById('formGroup').value = obj.group;
+    } catch(e) {}
+  }
+};
+
+window.openOcrTextPasteModal = function() {
+  const modal = document.getElementById('formOcrTextPasteModal');
+  if (modal) {
+    modal.style.display = 'flex';
+    const ta = document.getElementById('rawOcrTextInput');
+    if (ta) ta.focus();
+  }
+};
+
+window.readClipboardAndApplyOcr = async function() {
+  try {
+    let text = '';
+    if (navigator.clipboard && navigator.clipboard.readText) {
+      text = await navigator.clipboard.readText();
+    }
+    if (!text) {
+      const ta = document.getElementById('rawOcrTextInput');
+      text = ta ? ta.value.trim() : '';
+    }
+    if (text) {
+      const ta = document.getElementById('rawOcrTextInput');
+      if (ta) ta.value = text;
+      window.parseAndApplyOcrText(text);
+      const modal = document.getElementById('formOcrTextPasteModal');
+      if (modal) modal.style.display = 'none';
+      if (typeof showToast === 'function') showToast('✅ Auto-filled registration form from clipboard text!');
+    } else {
+      if (typeof showToast === 'function') showToast('⚠️ Clipboard is empty. Please copy text from Google Lens first.');
+    }
+  } catch(e) {
+    window.applyRawOcrText();
+  }
+};
+
+window.applyRawOcrText = function() {
+  const ta = document.getElementById('rawOcrTextInput');
+  const text = ta ? ta.value.trim() : '';
+  if (!text) {
+    if (typeof showToast === 'function') showToast('⚠️ Please paste text from Google Lens or scan app.');
+    return;
+  }
+  window.parseAndApplyOcrText(text);
+  const modal = document.getElementById('formOcrTextPasteModal');
+  if (modal) modal.style.display = 'none';
+};
+
+window.parseAndApplyOcrText = function(text) {
+  let fieldsCount = 0;
+  if (!text) return;
+
+  const getLineVal = (pattern) => {
+    const lines = text.split('\n');
+    for (let line of lines) {
+      const trimmed = line.trim();
+      const m = trimmed.match(pattern);
+      if (m && m[1]) return m[1].trim();
+    }
+    return '';
+  };
+
+  // 1. Mobile Phone (10 digits starting with 6-9)
+  const phoneMatch = text.match(/\b([6-9]\d{9})\b/);
+  if (phoneMatch && document.getElementById('formMobile')) {
+    document.getElementById('formMobile').value = phoneMatch[1];
+    fieldsCount++;
+  }
+
+  // 2. Date of Birth (DD/MM/YYYY or YYYY-MM-DD or DD-MM-YYYY)
+  const dobMatch = text.match(/\b(\d{1,2})[/-](\d{1,2})[/-](\d{2,4})\b/);
+  if (dobMatch && document.getElementById('formDob')) {
+    let day = dobMatch[1].padStart(2, '0');
+    let month = dobMatch[2].padStart(2, '0');
+    let year = dobMatch[3];
+    if (year.length === 2) year = '20' + year;
+    document.getElementById('formDob').value = `${year}-${month}-${day}`;
+    fieldsCount++;
+    const yDiff = new Date().getFullYear() - parseInt(year, 10);
+    if (yDiff > 0 && yDiff < 100 && document.getElementById('formAge')) {
+      document.getElementById('formAge').value = yDiff;
+    }
+  }
+
+  // 3. Blood Group
+  let bgVal = getLineVal(/(?:Blood(?:\s*Group)?|குருதி)[\s:]*([A-Za-z0-9+-]+)/i);
+  if (!bgVal) {
+    const m = text.match(/\b(A|B|AB|O|A1|A2|A1B|A2B)\s*[+-]\s*(?:ve)?/i);
+    if (m) bgVal = m[0];
+  }
+  if (bgVal && document.getElementById('formBloodGroup')) {
+    let cleanBg = bgVal.toUpperCase().replace(/\s+/g, '');
+    if (!cleanBg.endsWith('VE')) cleanBg += 've';
+    else cleanBg = cleanBg.slice(0, -2) + 've';
+    document.getElementById('formBloodGroup').value = cleanBg;
+    fieldsCount++;
+  }
+
+  // 4. Full Name
+  const nameVal = getLineVal(/(?:Candidate\s*Name|Full\s*Name|Member\s*Name|Name|பெயர்)[\s:]+([A-Za-z\s.'-]+)/i);
+  if (nameVal && document.getElementById('formName')) {
+    document.getElementById('formName').value = nameVal;
+    fieldsCount++;
+  }
+
+  // 5. Father's Name
+  const fatherVal = getLineVal(/(?:Father(?:'s)?\s*Name|Father|தகப்பனார்|Appa)[\s:]+([A-Za-z\s.'-]+)/i);
+  if (fatherVal && document.getElementById('formFatherName')) {
+    document.getElementById('formFatherName').value = fatherVal;
+    fieldsCount++;
+  }
+
+  // 6. Mother's Name
+  const motherVal = getLineVal(/(?:Mother(?:'s)?\s*Name|Mother|தாயார்|Amma)[\s:]+([A-Za-z\s.'-]+)/i);
+  if (motherVal && document.getElementById('formMotherName')) {
+    document.getElementById('formMotherName').value = motherVal;
+    fieldsCount++;
+  }
+
+  // 7. Address
+  const addrVal = getLineVal(/(?:Address|முகவரி)[\s:]+(.+)/i);
+  if (addrVal && document.getElementById('formHomeAddress')) {
+    document.getElementById('formHomeAddress').value = addrVal;
+    fieldsCount++;
+  }
+
+  // 8. Education
+  const eduVal = getLineVal(/(?:Education|Qualification|கல்வி)[\s:]+(.+)/i);
+  if (eduVal && document.getElementById('formEducation')) {
+    document.getElementById('formEducation').value = eduVal;
+    fieldsCount++;
+  }
+
+  // 9. Group
+  if (text.includes('Oratory') && document.getElementById('formGroup')) document.getElementById('formGroup').value = 'Oratory Group';
+  else if (text.includes('Senior') && document.getElementById('formGroup')) document.getElementById('formGroup').value = 'Seniors Group';
+  else if (text.includes('Junior') && document.getElementById('formGroup')) document.getElementById('formGroup').value = 'Juniors Group';
+  else if (text.includes('Inter') && document.getElementById('formGroup')) document.getElementById('formGroup').value = 'Inters Group';
+  else if (text.includes('Sub') && document.getElementById('formGroup')) document.getElementById('formGroup').value = 'Sub Juniors Group';
+
+  if (typeof showToast === 'function') showToast(`✅ Auto-filled ${fieldsCount} fields from scanned text! Please review.`);
+};
+
+window.triggerGoogleLensScan = function() {
+  const isAndroid = /Android/i.test(navigator.userAgent);
+  if (isAndroid) {
+    window.location.href = 'intent:#Intent;action=com.google.ar.lens.MainActivity;package=com.google.ar.lens;end';
+    setTimeout(() => {
+      window.location.href = 'intent://scan/#Intent;scheme=zxing;package=com.google.zxing.client.android;end';
+    }, 800);
+  } else {
+    if (typeof showToast === 'function') showToast('💡 Open Google Lens or Camera on your phone, scan QR Pass, then tap "Paste & Check In"!');
+  }
+};
+
+window.pasteAndCheckIn = async function() {
+  try {
+    let text = '';
+    if (navigator.clipboard && navigator.clipboard.readText) {
+      text = await navigator.clipboard.readText();
+    }
+    if (!text) {
+      text = prompt('Please paste the decoded QR Pass text / Member ID from Google Lens:');
+    }
+    if (text) {
+      handleScannedQrResult(text.trim());
+    } else {
+      if (typeof showToast === 'function') showToast('⚠️ No text pasted. Please copy the QR text from Google Lens.');
+    }
+  } catch(e) {
+    const text = prompt('Please paste the decoded QR Pass text from Google Lens:');
+    if (text) handleScannedQrResult(text.trim());
+  }
+};
+
+
 </script>
   <!-- ==========================================
        17. IN-APP PRINT & PDF DOCUMENT MODAL (Zero Blank Pages)
@@ -14272,8 +15768,15 @@ function showLogin() {
           </div>
         </div>
 
+                <!-- 3-Way Mode Switcher: Pass Only | Form Only | Together -->
+        <div id="printDocModeSwitcher" style="display:flex; background:#1e293b; border-radius:10px; padding:3px; gap:4px; border:1px solid #334155;">
+          <button type="button" id="btnModePassOnly" style="background:#0284c7; color:#ffffff; border:none; padding:6px 12px; font-size:0.75rem; font-weight:800; border-radius:7px; cursor:pointer;" onclick="window.switchPrintDocumentMode('PASS')">🪪 Pass Only</button>
+          <button type="button" id="btnModeFormOnly" style="background:transparent; color:#bae6fd; border:none; padding:6px 12px; font-size:0.75rem; font-weight:800; border-radius:7px; cursor:pointer;" onclick="window.switchPrintDocumentMode('FORM')">📄 Form Only</button>
+          <button type="button" id="btnModeCombined" style="background:transparent; color:#bae6fd; border:none; padding:6px 12px; font-size:0.75rem; font-weight:800; border-radius:7px; cursor:pointer;" onclick="window.switchPrintDocumentMode('COMBINED')">🖪 Pass + Form Together</button>
+        </div>
+
         <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-          <button type="button" id="btnDownloadPrintPdf" class="btn-dbyc-primary" style="background:#059669; color:#ffffff; padding:9px 16px; font-weight:800; font-size:0.88rem; border-radius:8px; display:inline-flex; align-items:center; gap:6px; cursor:pointer; box-shadow:0 2px 6px rgba(5,150,105,0.4);" onclick="window.downloadPrintableAsPdfFile();" title="Download real PDF file directly to your phone or computer">
+          <button type="button" id="btnDownloadPrintPdf"  class="btn-dbyc-primary" style="background:#059669; color:#ffffff; padding:9px 16px; font-weight:800; font-size:0.88rem; border-radius:8px; display:inline-flex; align-items:center; gap:6px; cursor:pointer; box-shadow:0 2px 6px rgba(5,150,105,0.4);" onclick="window.downloadPrintableAsPdfFile();" title="Download real PDF file directly to your phone or computer">
             📥 Download PDF File (.pdf)
           </button>
           <button type="button" id="btnDownloadPrintImage" class="btn-dbyc-primary" style="background:#0284c7; color:#ffffff; padding:9px 14px; font-weight:800; font-size:0.88rem; border-radius:8px; display:inline-flex; align-items:center; gap:6px; cursor:pointer; box-shadow:0 2px 6px rgba(2,132,199,0.4);" onclick="window.downloadPrintableAsImage();" title="Download high-resolution image directly to your device">

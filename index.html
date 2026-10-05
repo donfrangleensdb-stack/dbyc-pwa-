@@ -4048,6 +4048,59 @@ body {
           </form>
         </div>
 
+        <!-- 1.5. Director 4-Way Modular Edit Permissions Desk (Profile, Certificates, QR Passes, Registration) -->
+        <div class="master-security-card" style="border: 2px solid #0284c7; background:#ffffff;">
+          <div class="master-security-header">
+            <div>
+              <h3 style="font-size:1.05rem; font-weight:900; color:#004b98; margin:0;">🛡️ Modular Edit Permissions Desk (சுயாதீன மாற்றக் கட்டுப்பாடுகள்)</h3>
+              <small style="color:#64748b;">Turn editing ON or OFF for each specific module independently (Rev. Fr. Director & Assistant Director)</small>
+            </div>
+            <span class="role-badge director" style="background:#0284c7; color:#fff;">Independent Switches</span>
+          </div>
+
+          <p style="font-size:0.82rem; color:#475569; margin:8px 0 14px; line-height:1.4;">
+            As requested by Directorship: Instead of a single master lock, you can individually toggle editing permissions for Member Profiles, Certificates, QR Passes, and New Member Registrations.
+          </p>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <!-- 1. Profile Editing -->
+            <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px; padding:12px; display:flex; align-items:center; justify-content:space-between; gap:8px;">
+              <div>
+                <strong style="font-size:0.86rem; color:#0f172a; display:block;">👤 Member Profile Editing</strong>
+                <small style="font-size:0.75rem; color:#64748b;">Allow members to edit profile fields & photo</small>
+              </div>
+              <button type="button" id="settingsToggleEditProfileBtn" onclick="window.toggleEditPermission('profile')" class="btn-dbyc-primary" style="padding:6px 14px; font-size:0.8rem; font-weight:800; border-radius:8px; white-space:nowrap;"></button>
+            </div>
+
+            <!-- 2. Certificate Editing -->
+            <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px; padding:12px; display:flex; align-items:center; justify-content:space-between; gap:8px;">
+              <div>
+                <strong style="font-size:0.86rem; color:#0f172a; display:block;">📜 Certificate & Photo Editing</strong>
+                <small style="font-size:0.75rem; color:#64748b;">Allow editing title, candidate photo & text</small>
+              </div>
+              <button type="button" id="settingsToggleEditCertificatesBtn" onclick="window.toggleEditPermission('certificates')" class="btn-dbyc-primary" style="padding:6px 14px; font-size:0.8rem; font-weight:800; border-radius:8px; white-space:nowrap;"></button>
+            </div>
+
+            <!-- 3. QR Passes Editing -->
+            <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px; padding:12px; display:flex; align-items:center; justify-content:space-between; gap:8px;">
+              <div>
+                <strong style="font-size:0.86rem; color:#0f172a; display:block;">🪪 QR Pass & Photo Editing</strong>
+                <small style="font-size:0.75rem; color:#64748b;">Allow editing pass details and member photos</small>
+              </div>
+              <button type="button" id="settingsToggleEditPassesBtn" onclick="window.toggleEditPermission('passes')" class="btn-dbyc-primary" style="padding:6px 14px; font-size:0.8rem; font-weight:800; border-radius:8px; white-space:nowrap;"></button>
+            </div>
+
+            <!-- 4. Member New Registration -->
+            <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px; padding:12px; display:flex; align-items:center; justify-content:space-between; gap:8px;">
+              <div>
+                <strong style="font-size:0.86rem; color:#0f172a; display:block;">📝 New Member Registration</strong>
+                <small style="font-size:0.75rem; color:#64748b;">Allow new registrations and member editing</small>
+              </div>
+              <button type="button" id="settingsToggleEditRegistrationBtn" onclick="window.toggleEditPermission('registration')" class="btn-dbyc-primary" style="padding:6px 14px; font-size:0.8rem; font-weight:800; border-radius:8px; white-space:nowrap;"></button>
+            </div>
+          </div>
+        </div>
+
         <!-- 2. Single Central Google Drive Cloud Backend -->
         <div class="master-security-card" style="border: 2px solid #004b98;">
           <div class="master-security-header">
@@ -6199,6 +6252,12 @@ function isDirectorOrAsstDirector() {
   return role.includes('director');
 }
 
+function isLeaderOrDirector() {
+  if (!appState.currentUser) return false;
+  const role = (appState.currentUser.role || '').toLowerCase();
+  return role.includes('director') || role.includes('leader') || role.includes('in-charge') || role.includes('staff');
+}
+
 function requireDirectorMasterAuth(actionName, callback) {
   if (isDirectorOnly()) {
     callback();
@@ -7391,6 +7450,7 @@ window.saveAndDownloadPassPdf = function(event) {
 };
 
 window.printCertificate = function() {
+  window.currentPrintContext = { type: 'CERT' };
   const certEl = document.getElementById('dbycOfficialCertElement');
   if (!certEl) {
     if (typeof showToast === 'function') showToast('⚠️ Certificate preview not ready. Please select a candidate.');
@@ -7626,13 +7686,41 @@ function renderTodayAttendance() {
           </div>
         </div>
       </div>
-      <div style="text-align:right;">
+      <div style="text-align:right; display:flex; flex-direction:column; align-items:flex-end;">
         <span class="role-badge" style="background:#ecfdf5; color:#059669; font-weight:800; font-size:0.72rem; padding:3px 8px; border-radius:6px;">Present</span>
         <div style="font-size:0.65rem; color:#94a3b8; margin-top:2px; font-weight:600;">${a.scanMethod || 'QR_CAMERA'}</div>
+        ${isLeaderOrDirector() ? `
+        <button type="button" style="background:#fee2e2; color:#b91c1c; border:1px solid #fecaca; border-radius:6px; padding:2px 8px; font-size:0.68rem; font-weight:800; cursor:pointer; margin-top:4px;" onclick="window.deleteAttendanceRecord('${a.id}')" title="Cancel or remove this check-in entry">
+          🗑️ Undo
+        </button>` : ''}
       </div>
     </div>
   `).join('');
 }
+
+window.deleteAttendanceRecord = function(attId) {
+  if (!attId) return;
+  if (!isLeaderOrDirector()) {
+    showToast('🔒 Only leaders and directors can cancel attendance records.');
+    return;
+  }
+  const record = (appState.attendance || []).find(a => a.id === attId);
+  const memName = record ? record.memberName : 'this check-in';
+
+  if (!confirm(`Are you sure you want to cancel the attendance check-in for:\n\n• Member: ${memName}\n• ID: ${record ? (record.memberCode || record.memberId) : ''}?`)) {
+    return;
+  }
+
+  appState.attendance = (appState.attendance || []).filter(a => a.id !== attId);
+  saveLocalData();
+  if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+    window.DbycCloud.pushToCloud();
+  }
+  renderTodayAttendance();
+  updateDashboardStats();
+  if (typeof renderFastAttendanceDesk === 'function') renderFastAttendanceDesk();
+  showToast(`✅ Cancelled check-in for ${memName}.`);
+};
 
 let qrAttendanceStream = null;
 let qrScanInterval = null;
@@ -8300,133 +8388,622 @@ window.triggerPrintModal = function() {
   window.print();
 };
 
-// 2. High-Resolution Image Downloader (PNG) for Mobile & Desktop (Zero Print Issues)
-window.downloadPrintableAsImage = function() {
-  const container = document.getElementById('printableDocumentContainer');
-  if (!container) return;
+// 2. High-Resolution In-App PDF & Image Generator Engine (Zero 3rd-Party, Zero Blank Pages)
+window.currentPrintContext = window.currentPrintContext || { type: 'PASS' };
 
-  const certEl = container.querySelector('.certificate-preview-box') || container.querySelector('#dbycOfficialCertElement');
-  const passEl = container.querySelector('.print-pass-card') || container.querySelector('div[style*="border-radius:18px"]');
+window.loadImageForCanvas = function(src) {
+  return new Promise(function(resolve) {
+    if (!src) return resolve(null);
+    var img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = function() { resolve(img); };
+    img.onerror = function() { resolve(null); };
+    img.src = src;
+  });
+};
 
-  if (certEl) {
-    window.downloadCertificateAsPng();
-    return;
+window.buildPdfBlobFromCanvas = function(canvas, orientation) {
+  var isLand = orientation === 'landscape';
+  var pageW = isLand ? 841.89 : 595.28;
+  var pageH = isLand ? 595.28 : 841.89;
+  
+  var dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+  var rawB64 = dataUrl.split(',')[1];
+  var binStr = atob(rawB64);
+  var imgLen = binStr.length;
+
+  var margin = 16;
+  var maxW = pageW - margin * 2;
+  var maxH = pageH - margin * 2;
+  var scale = Math.min(maxW / canvas.width, maxH / canvas.height);
+  var drawW = canvas.width * scale;
+  var drawH = canvas.height * scale;
+  var drawX = (pageW - drawW) / 2;
+  var drawY = (pageH - drawH) / 2;
+
+  var enc = new TextEncoder();
+  var parts = [];
+  var offset = 0;
+  var offsets = [];
+
+  function addPart(str) {
+    var u = enc.encode(str);
+    parts.push(u);
+    offset += u.length;
   }
-  if (passEl) {
-    window.downloadPassAsPng();
-    return;
+
+  function addBinary(str) {
+    var u = new Uint8Array(str.length);
+    for (var i = 0; i < str.length; i++) u[i] = str.charCodeAt(i);
+    parts.push(u);
+    offset += u.length;
   }
 
-  if (typeof showToast === 'function') showToast('ℹ️ For multi-page forms, please select "Save as PDF" in the print dialog.');
+  addPart('%PDF-1.4\n');
+  
+  offsets.push(offset);
+  addPart('1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n');
+  
+  offsets.push(offset);
+  addPart('2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n');
+  
+  offsets.push(offset);
+  addPart('3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' + pageW.toFixed(2) + ' ' + pageH.toFixed(2) + '] /Resources << /XObject << /Im1 4 0 R >> >> /Contents 5 0 R >>\nendobj\n');
+  
+  offsets.push(offset);
+  addPart('4 0 obj\n<< /Type /XObject /Subtype /Image /Width ' + canvas.width + ' /Height ' + canvas.height + ' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ' + imgLen + ' >>\nstream\n');
+  addBinary(binStr);
+  addPart('\nendstream\nendobj\n');
+
+  var contentStream = 'q\n' + drawW.toFixed(2) + ' 0 0 ' + drawH.toFixed(2) + ' ' + drawX.toFixed(2) + ' ' + drawY.toFixed(2) + ' cm\n/Im1 Do\nQ\n';
+  offsets.push(offset);
+  addPart('5 0 obj\n<< /Length ' + contentStream.length + ' >>\nstream\n' + contentStream + 'endstream\nendobj\n');
+
+  var xrefOffset = offset;
+  addPart('xref\n0 6\n0000000000 65535 f \n');
+  for (var i = 0; i < offsets.length; i++) {
+    addPart(String(offsets[i]).padStart(10, '0') + ' 00000 n \n');
+  }
+  addPart('trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n' + xrefOffset + '\n%%EOF\n');
+
+  return new Blob(parts, { type: 'application/pdf' });
+};
+
+window.downloadCanvasAsPdf = function(canvas, filename, orientation) {
+  try {
+    var blob = window.buildPdfBlobFromCanvas(canvas, orientation);
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = filename || 'DBYC_Document.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function() { URL.revokeObjectURL(url); }, 5000);
+    if (typeof showToast === 'function') showToast('📥 PDF file downloaded: ' + a.download);
+    return true;
+  } catch (err) {
+    console.error('PDF Download Error:', err);
+    if (typeof showToast === 'function') showToast('⚠️ Direct PDF export notice: switching to browser print.');
+    window.triggerPrintModal();
+    return false;
+  }
+};
+
+window.downloadCanvasAsPng = function(canvas, filename) {
+  try {
+    var dataUrl = canvas.toDataURL('image/png');
+    var a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = filename || 'DBYC_Document.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    if (typeof showToast === 'function') showToast('📸 Image file downloaded: ' + a.download);
+    return true;
+  } catch (err) {
+    console.error('PNG Download Error:', err);
+    if (typeof showToast === 'function') showToast('⚠️ Image download error: switching to print preview.');
+    window.triggerPrintModal();
+    return false;
+  }
+};
+
+// 1. Pass Canvas Generator
+window.drawPassToCanvas = async function(m) {
+  var member = m || (appState.members || [])[0] || appState.currentUser;
+  var cvs = document.createElement('canvas');
+  cvs.width = 800;
+  cvs.height = 1200;
+  var ctx = cvs.getContext('2d');
+
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, cvs.width, cvs.height);
+
+  ctx.strokeStyle = '#004b98';
+  ctx.lineWidth = 10;
+  ctx.strokeRect(10, 10, cvs.width - 20, cvs.height - 20);
+
+  ctx.fillStyle = '#004b98';
+  ctx.fillRect(10, 10, cvs.width - 20, 140);
+  ctx.fillStyle = '#fde047';
+  ctx.fillRect(10, 146, cvs.width - 20, 8);
+
+  var logoDb = await window.loadImageForCanvas(window.DON_BOSCO_PORTRAIT || window.DBYC_OFFICIAL_LOGO);
+  var logoDbyc = await window.loadImageForCanvas(window.DBYC_OFFICIAL_LOGO);
+
+  if (logoDb) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(75, 80, 45, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.drawImage(logoDb, 30, 35, 90, 90);
+    ctx.restore();
+    ctx.strokeStyle = '#fde047';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(75, 80, 45, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  if (logoDbyc) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cvs.width - 75, 80, 45, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.drawImage(logoDbyc, cvs.width - 120, 35, 90, 90);
+    ctx.restore();
+    ctx.strokeStyle = '#fde047';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(cvs.width - 75, 80, 45, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 30px sans-serif';
+  ctx.fillText('DON BOSCO YOUTH CENTRE', cvs.width / 2, 70);
+
+  ctx.fillStyle = '#fde047';
+  ctx.font = 'bold 20px sans-serif';
+  ctx.fillText('Basin Bridge, Chennai - 600 012', cvs.width / 2, 110);
+
+  var photoImg = await window.loadImageForCanvas(member.photo || window.DBYC_DEFAULT_AVATAR);
+  if (photoImg) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cvs.width / 2, 240, 65, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.drawImage(photoImg, cvs.width / 2 - 65, 175, 130, 130);
+    ctx.restore();
+    ctx.strokeStyle = '#004b98';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(cvs.width / 2, 240, 65, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  ctx.fillStyle = '#004b98';
+  ctx.font = 'bold 36px sans-serif';
+  ctx.fillText(member.name, cvs.width / 2, 345);
+
+  ctx.fillStyle = '#e11d48';
+  ctx.font = 'bold 22px sans-serif';
+  ctx.fillText((member.role || 'Member') + ' • ' + (member.group || 'Youth'), cvs.width / 2, 385);
+
+  var rawQr = 'DBYC:' + member.id + ':' + member.name + ':' + (member.group || 'Youth');
+  var qrUrl = (typeof window.generateOfflineQrDataUrl === 'function' ? window.generateOfflineQrDataUrl(rawQr) : '') || ('https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(rawQr));
+  var qrImg = await window.loadImageForCanvas(qrUrl);
+  if (qrImg) {
+    ctx.drawImage(qrImg, cvs.width / 2 - 125, 420, 250, 250);
+  }
+
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#0f172a';
+  ctx.font = 'bold 24px sans-serif';
+
+  var details = [
+    ['DBYC ID:', member.id],
+    ['Mobile:', '📞 ' + (member.mobile || 'N/A')],
+    ['Blood Group:', '🩸 ' + (member.bloodGroup || 'O+ve')],
+    ['House Team:', '🚩 ' + (member.teamId || 'TEAM-1')]
+  ];
+
+  var curY = 720;
+  for (var i = 0; i < details.length; i++) {
+    var d = details[i];
+    ctx.fillStyle = '#64748b';
+    ctx.fillText(d[0], 160, curY);
+    ctx.fillStyle = '#0f172a';
+    ctx.fillText(d[1], 360, curY);
+    curY += 45;
+  }
+
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#f8fafc';
+  ctx.fillRect(15, cvs.height - 80, cvs.width - 30, 65);
+  ctx.fillStyle = '#64748b';
+  ctx.font = 'bold 18px sans-serif';
+  ctx.fillText('Official Pass • Don Bosco Youth Centre, Basin Bridge, Chennai - 12', cvs.width / 2, cvs.height - 40);
+
+  return cvs;
+};
+
+// 2. Certificate Canvas Generator (Landscape A4)
+window.drawCertToCanvas = async function() {
+  var cvs = document.createElement('canvas');
+  cvs.width = 1600;
+  cvs.height = 1130;
+  var ctx = cvs.getContext('2d');
+
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, cvs.width, cvs.height);
+
+  ctx.strokeStyle = '#004b98';
+  ctx.lineWidth = 18;
+  ctx.strokeRect(20, 20, cvs.width - 40, cvs.height - 40);
+
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 6;
+  ctx.strokeRect(36, 36, cvs.width - 72, cvs.height - 72);
+
+  var logoDb = await window.loadImageForCanvas(window.DON_BOSCO_PORTRAIT || window.DBYC_OFFICIAL_LOGO);
+  var logoDbyc = await window.loadImageForCanvas(window.DBYC_OFFICIAL_LOGO);
+  
+  var certMem = (window.appState && window.appState.members) ? window.appState.members.find(function(m) { return m.id === (window.certCustomState && window.certCustomState.memberId); }) : null;
+  var photoCand = await window.loadImageForCanvas((certMem && certMem.photo) || (window.certCustomState && window.certCustomState.photo) || window.DBYC_DEFAULT_AVATAR);
+
+  if (logoDb) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(140, 130, 55, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.drawImage(logoDb, 85, 75, 110, 110);
+    ctx.restore();
+    ctx.strokeStyle = '#fde047';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(140, 130, 55, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#002b66';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.fillText('St. John Bosco', 140, 205);
+
+  if (logoDbyc) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cvs.width - 140, 130, 55, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.drawImage(logoDbyc, cvs.width - 195, 75, 110, 110);
+    ctx.restore();
+    ctx.strokeStyle = '#004b98';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(cvs.width - 140, 130, 55, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+  ctx.fillStyle = '#002b66';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.fillText('DBYC Emblem', cvs.width - 140, 205);
+
+  if (photoCand) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cvs.width / 2, 130, 60, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.drawImage(photoCand, cvs.width / 2 - 60, 70, 120, 120);
+    ctx.restore();
+    ctx.strokeStyle = '#004b98';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(cvs.width / 2, 130, 60, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  ctx.fillStyle = '#004b98';
+  ctx.font = 'bold 40px sans-serif';
+  ctx.fillText('DON BOSCO YOUTH CENTRE (DBYC)', cvs.width / 2, 245);
+
+  ctx.fillStyle = '#475569';
+  ctx.font = 'bold 20px sans-serif';
+  ctx.fillText('BASIN BRIDGE, CHENNAI - 600 012 • SALESIAN PROVINCE OF CHENNAI (INM)', cvs.width / 2, 280);
+
+  var certTitle = (window.certCustomState && window.certCustomState.title) ? window.certCustomState.title : 'CERTIFICATE OF EXCELLENCE';
+  ctx.fillStyle = '#b91c1c';
+  ctx.font = 'bold 38px sans-serif';
+  ctx.fillText(certTitle, cvs.width / 2, 360);
+
+  var certName = (window.certCustomState && window.certCustomState.name) ? window.certCustomState.name : ((certMem && certMem.name) || 'Candidate Name');
+  ctx.fillStyle = '#002b66';
+  ctx.font = 'bold 48px sans-serif';
+  ctx.fillText(certName, cvs.width / 2, 460);
+
+  var bodyStr = (window.certCustomState && window.certCustomState.bodyText) ? window.certCustomState.bodyText.replace(/<[^>]*>?/gm, '') : 'In recognition of outstanding dedication, leadership, and exemplary character at DBYC.';
+  ctx.fillStyle = '#334155';
+  ctx.font = '24px sans-serif';
+
+  var words = bodyStr.split(' ');
+  var line = '';
+  var y = 550;
+  for (var i = 0; i < words.length; i++) {
+    var testLine = line + words[i] + ' ';
+    if (ctx.measureText(testLine).width > 1200 && i > 0) {
+      ctx.fillText(line, cvs.width / 2, y);
+      line = words[i] + ' ';
+      y += 38;
+    } else {
+      line = testLine;
+    }
+  }
+  ctx.fillText(line, cvs.width / 2, y);
+
+  ctx.fillStyle = '#64748b';
+  ctx.font = 'bold 20px sans-serif';
+  ctx.fillText('Issued on: ' + ((window.certCustomState && window.certCustomState.issueDate) || 'October 2026') + ' • Basin Bridge, Chennai', cvs.width / 2, y + 80);
+
+  ctx.fillStyle = '#004b98';
+  ctx.font = 'italic bold 32px cursive';
+  ctx.fillText((window.certCustomState && window.certCustomState.directorName) || 'Rev. Fr. Director, SDB', 380, cvs.height - 180);
+  ctx.fillText((window.certCustomState && window.certCustomState.asstDirectorName) || 'Rev. Fr. Asst. Director, SDB', cvs.width - 380, cvs.height - 180);
+
+  ctx.fillStyle = '#0f172a';
+  ctx.font = 'bold 20px sans-serif';
+  ctx.fillText('━━━━━━━━━━━━━━━━━━━━━', 380, cvs.height - 150);
+  ctx.fillText('━━━━━━━━━━━━━━━━━━━━━', cvs.width - 380, cvs.height - 150);
+  ctx.fillText('Rev. Fr. Director, SDB', 380, cvs.height - 120);
+  ctx.fillText('Rev. Fr. Assistant Director, SDB', cvs.width - 380, cvs.height - 120);
+
+  return cvs;
+};
+
+// 3. Application Form Canvas Generator (Portrait A4)
+window.drawFormToCanvas = async function(m) {
+  var member = m || (appState.members || [])[0] || appState.currentUser;
+  var cvs = document.createElement('canvas');
+  cvs.width = 1240;
+  cvs.height = 1754;
+  var ctx = cvs.getContext('2d');
+
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, cvs.width, cvs.height);
+
+  ctx.strokeStyle = '#0f172a';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(30, 30, cvs.width - 60, cvs.height - 60);
+
+  ctx.strokeStyle = '#cbd5e1';
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(38, 38, cvs.width - 76, cvs.height - 76);
+
+  var photoBoxX = cvs.width - 180;
+  var photoBoxY = 50;
+  var photoBoxW = 120;
+  var photoBoxH = 145;
+  ctx.fillStyle = '#f8fafc';
+  ctx.fillRect(photoBoxX, photoBoxY, photoBoxW, photoBoxH);
+  ctx.strokeStyle = '#0f172a';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(photoBoxX, photoBoxY, photoBoxW, photoBoxH);
+
+  var candPhoto = await window.loadImageForCanvas(member.photo);
+  if (candPhoto) {
+    ctx.drawImage(candPhoto, photoBoxX + 2, photoBoxY + 2, photoBoxW - 4, photoBoxH - 4);
+  } else {
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#64748b';
+    ctx.font = 'bold 14px sans-serif';
+    ctx.fillText('உறுப்பினர்', photoBoxX + photoBoxW / 2, photoBoxY + 60);
+    ctx.fillText('புகைப்படம்', photoBoxX + photoBoxW / 2, photoBoxY + 80);
+    ctx.fillText('(Photo)', photoBoxX + photoBoxW / 2, photoBoxY + 100);
+  }
+
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#000000';
+  ctx.font = 'bold 26px sans-serif';
+  ctx.fillText('தொன்போஸ்கோ இளைஞர் மன்றம்', cvs.width / 2 - 40, 85);
+
+  ctx.font = 'bold 22px sans-serif';
+  ctx.fillText('DON BOSCO YOUTH CENTRE (DBYC)', cvs.width / 2 - 40, 118);
+
+  ctx.fillStyle = '#475569';
+  ctx.font = '16px sans-serif';
+  ctx.fillText('பேசின் பாலம், சென்னை - 600 012 • Salesian Province of Chennai (INM)', cvs.width / 2 - 40, 145);
+
+  ctx.fillStyle = '#000000';
+  ctx.font = 'bold 19px sans-serif';
+  ctx.fillText('உறுப்பினர் சேர்க்கை விண்ணப்பப் படிவம் (Application Form)', cvs.width / 2 - 40, 185);
+
+  ctx.strokeStyle = '#000000';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(60, 210);
+  ctx.lineTo(cvs.width - 60, 210);
+  ctx.stroke();
+
+  ctx.textAlign = 'left';
+  ctx.font = '16px sans-serif';
+
+  var leftColX = 70;
+  var rightColX = 640;
+  var y = 250;
+  var rowH = 46;
+
+  function drawField(x, y, label, val, fullWidth) {
+    ctx.fillStyle = '#0f172a';
+    ctx.font = 'bold 15px sans-serif';
+    ctx.fillText(label, x, y);
+    var lblW = ctx.measureText(label).width;
+    ctx.fillStyle = '#1e293b';
+    ctx.font = '15px sans-serif';
+    var valX = x + lblW + 8;
+    var lineEndX = fullWidth ? (cvs.width - 70) : (x + 500);
+    ctx.fillText(val || 'N/A', valX, y);
+
+    ctx.save();
+    ctx.setLineDash([2, 4]);
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(valX - 4, y + 6);
+    ctx.lineTo(lineEndX, y + 6);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  drawField(leftColX, y, 'உறுப்பினர் எண் (Member ID):', member.id);
+  drawField(rightColX, y, 'சேர்க்கப்படும் குழு (Group):', member.group);
+  y += rowH;
+
+  drawField(leftColX, y, '1. பெயர் (Full Name):', member.name);
+  drawField(rightColX, y, '2. பிறந்த தேதி (DOB):', (member.dob || 'N/A') + ' (வயது: ' + (member.age || 'N/A') + ')');
+  y += rowH;
+
+  drawField(leftColX, y, '3. கல்வித் தகுதி (Education):', member.education);
+  drawField(rightColX, y, 'வேலை (Occupation):', member.occupation);
+  y += rowH;
+
+  drawField(leftColX, y, '4. பணிபுரியும் இடம் (Work Address):', member.workAddress, true);
+  y += rowH;
+
+  drawField(leftColX, y, '5. மதம் (Religion):', member.religion || 'Christian');
+  drawField(rightColX, y, '6. திருமண நிலை (Marital Status):', member.maritalStatus || 'Unmarried');
+  y += rowH;
+
+  drawField(leftColX, y, '7. வீட்டு முகவரி (Home Address):', member.homeAddress, true);
+  y += rowH;
+
+  drawField(leftColX, y, 'தொடர்பு எண் (Mobile):', '📞 ' + (member.mobile || 'N/A'));
+  drawField(rightColX, y, 'மின்னஞ்சல் (Email):', '📧 ' + (member.email || 'N/A'));
+  y += rowH;
+
+  drawField(leftColX, y, '8. தந்தை பெயர் (Father):', member.fatherName);
+  drawField(rightColX, y, '9. தாய் பெயர் (Mother):', member.motherName);
+  y += rowH;
+
+  drawField(leftColX, y, '10. மன்றத்தில் வருடங்கள் (Tenure):', (member.yearsInDbyc || '1') + ' வருடம்');
+  drawField(rightColX, y, '16. இரத்த பிரிவு (Blood Group):', '🩸 ' + (member.bloodGroup || 'O+ve'));
+  y += rowH;
+
+  drawField(leftColX, y, 'House Team (அணி):', '🚩 ' + (member.teamId || 'TEAM-1'));
+  drawField(rightColX, y, 'சேர்ந்த தேதி (Join Date):', '📅 ' + (member.joinDate || 'N/A'));
+  y += rowH;
+
+  drawField(leftColX, y, '13. மன்றத்தில் சேருவதன் நோக்கம் (Purpose):', member.joiningPurpose || 'Sports, fellowship and youth development', true);
+  y += rowH;
+
+  drawField(leftColX, y, '14. விளையாட்டுகள் (Activities):', member.activities || 'Football, Volleyball, Table Tennis, Carrom, Gym', true);
+  y += rowH;
+
+  drawField(leftColX, y, '15. எதிர்காலத் திட்டம் (Future Ambition):', member.futureAmbition || 'Excellence in sports and social responsibility', true);
+  y += rowH;
+
+  drawField(leftColX, y, '18. தனிப்பட்ட குறிப்புகள் (Special Notes):', member.notes || 'Active DBYC Member in good standing', true);
+  y += rowH + 20;
+
+  ctx.fillStyle = '#f8fafc';
+  ctx.fillRect(leftColX, y, cvs.width - 140, 75);
+  ctx.strokeStyle = '#334155';
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(leftColX, y, cvs.width - 140, 75);
+
+  ctx.fillStyle = '#0f172a';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.fillText('உறுதிமொழி (Declaration):', leftColX + 12, y + 25);
+  ctx.font = '13.5px sans-serif';
+  ctx.fillText('தொன்போஸ்கோ இளைஞர் மன்றத்தின் சட்டதிட்டங்கள் மற்றும் ஒழுங்குமுறைகளுக்கு உட்பட்டு நடப்பேன் என்றும், மன்றத்தின் வளர்ச்சிக்கும்', leftColX + 12, y + 46);
+  ctx.fillText('ஒற்றுமைக்கும் முழு ஒத்துழைப்பு தருவேன் என்றும் உளமார உறுதியளிக்கிறேன்.', leftColX + 12, y + 64);
+
+  y += 135;
+
+  var sigs = [
+    { label1: 'விண்ணப்பதாரர் கையொப்பம்', label2: "(Applicant's Signature)", x: 180 },
+    { label1: 'பெற்றோர் / பாதுகாவலர் கையொப்பம்', label2: "(Parent's Signature)", x: 620 },
+    { label1: 'அருட்தந்தை இயக்குனர் கையொப்பம்', label2: '(Rev. Fr. Director, SDB)', x: 1040 }
+  ];
+
+  for (var si = 0; si < sigs.length; si++) {
+    var s = sigs[si];
+    ctx.beginPath();
+    ctx.moveTo(s.x - 110, y);
+    ctx.lineTo(s.x + 110, y);
+    ctx.stroke();
+
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#0f172a';
+    ctx.font = 'bold 14px sans-serif';
+    ctx.fillText(s.label1, s.x, y + 22);
+    ctx.fillStyle = '#475569';
+    ctx.font = '13px sans-serif';
+    ctx.fillText(s.label2, s.x, y + 40);
+  }
+
+  return cvs;
+};
+
+// 4. Central Dispatcher for 1-Tap PDF Download File (.pdf)
+window.downloadPrintableAsPdfFile = async function() {
+  var ctxInfo = window.currentPrintContext || { type: 'PASS' };
+  if (typeof showToast === 'function') showToast('⏳ Generating Official PDF Document...');
+
+  if (ctxInfo.type === 'CERT') {
+    var certCvs = await window.drawCertToCanvas();
+    var cName = (window.certCustomState && window.certCustomState.name) ? window.certCustomState.name : 'Candidate';
+    return window.downloadCanvasAsPdf(certCvs, 'DBYC_Certificate_' + cName.replace(/\s+/g, '_') + '.pdf', 'landscape');
+  }
+
+  if (ctxInfo.type === 'FORM') {
+    var fMem = (window.appState && window.appState.members) ? window.appState.members.find(function(m) { return m.id === ctxInfo.memberId; }) : null;
+    fMem = fMem || window.appState.currentUser;
+    var formCvs = await window.drawFormToCanvas(fMem);
+    return window.downloadCanvasAsPdf(formCvs, 'DBYC_Application_' + (fMem ? fMem.id : 'Member') + '.pdf', 'portrait');
+  }
+
+  if (ctxInfo.type === 'PASS') {
+    var pMem = (window.appState && window.appState.members) ? window.appState.members.find(function(m) { return m.id === ctxInfo.memberId; }) : null;
+    pMem = pMem || window.appState.currentUser;
+    var passCvs = await window.drawPassToCanvas(pMem);
+    return window.downloadCanvasAsPdf(passCvs, 'DBYC_Pass_' + (pMem ? pMem.id : 'Member') + '.pdf', 'portrait');
+  }
+
+  // Fallback for batch pass / forms: trigger browser save as PDF
+  if (typeof showToast === 'function') showToast('💡 Multi-sheet batch: Select "Save as PDF" in destination.');
   window.triggerPrintModal();
 };
 
-window.downloadCertificateAsPng = function() {
-  if (typeof showToast === 'function') showToast('📸 Generating High-Resolution Certificate Image...');
+// 5. Central Dispatcher for 1-Tap Image Download (.png)
+window.downloadPrintableAsImage = async function() {
+  var ctxInfo = window.currentPrintContext || { type: 'PASS' };
+  if (typeof showToast === 'function') showToast('📸 Generating High-Resolution Image...');
 
-  try {
-    const canvas = document.createElement('canvas');
-    canvas.width = 1600;
-    canvas.height = 1130;
-    const ctx = canvas.getContext('2d');
-
-    // Background & Borders
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Outer Navy Border
-    ctx.strokeStyle = '#004b98';
-    ctx.lineWidth = 18;
-    ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
-
-    // Inner Gold Accent Border
-    ctx.strokeStyle = '#f59e0b';
-    ctx.lineWidth = 6;
-    ctx.strokeRect(36, 36, canvas.width - 72, canvas.height - 72);
-
-    // Header Title
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#004b98';
-    ctx.font = 'bold 44px sans-serif';
-    ctx.fillText('DON BOSCO YOUTH CENTRE (DBYC)', canvas.width / 2, 130);
-
-    ctx.fillStyle = '#475569';
-    ctx.font = 'bold 22px sans-serif';
-    ctx.fillText('BASIN BRIDGE, CHENNAI - 600 012 • SALESIAN PROVINCE OF CHENNAI (INM)', canvas.width / 2, 175);
-
-    // Certificate Title
-    const title = window.certCustomState ? window.certCustomState.title : 'CERTIFICATE OF EXCELLENCE';
-    ctx.fillStyle = '#b91c1c';
-    ctx.font = 'bold 40px sans-serif';
-    ctx.fillText(title, canvas.width / 2, 270);
-
-    // Candidate Name
-    const name = window.certCustomState ? window.certCustomState.name : 'Candidate Name';
-    ctx.fillStyle = '#002b66';
-    ctx.font = 'bold 50px sans-serif';
-    ctx.fillText(name, canvas.width / 2, 450);
-
-    // Description text
-    const desc = window.certCustomState ? (window.certCustomState.bodyText || '').replace(/<[^>]*>?/gm, '') : 'In recognition of outstanding active participation and dedication to DBYC.';
-    ctx.fillStyle = '#334155';
-    ctx.font = '26px sans-serif';
-    
-    const words = desc.split(' ');
-    let line = '';
-    let y = 540;
-    for (let i = 0; i < words.length; i++) {
-      const testLine = line + words[i] + ' ';
-      if (ctx.measureText(testLine).width > 1200 && i > 0) {
-        ctx.fillText(line, canvas.width / 2, y);
-        line = words[i] + ' ';
-        y += 42;
-      } else {
-        line = testLine;
-      }
-    }
-    ctx.fillText(line, canvas.width / 2, y);
-
-    // Issue Date
-    ctx.fillStyle = '#64748b';
-    ctx.font = 'bold 22px sans-serif';
-    ctx.fillText('Issued on: ' + (window.certCustomState ? window.certCustomState.issueDate : 'October 2026') + ' • Basin Bridge, Chennai', canvas.width / 2, y + 80);
-
-    // Signatures
-    ctx.fillStyle = '#004b98';
-    ctx.font = 'italic bold 32px cursive';
-    ctx.fillText(window.certCustomState ? window.certCustomState.directorName : 'Rev. Fr. Director, SDB', 380, canvas.height - 180);
-    ctx.fillText(window.certCustomState ? window.certCustomState.asstDirectorName : 'Rev. Fr. Asst. Director, SDB', canvas.width - 380, canvas.height - 180);
-
-    ctx.fillStyle = '#0f172a';
-    ctx.font = 'bold 20px sans-serif';
-    ctx.fillText('━━━━━━━━━━━━━━━━━━━━━', 380, canvas.height - 150);
-    ctx.fillText('━━━━━━━━━━━━━━━━━━━━━', canvas.width - 380, canvas.height - 150);
-    ctx.fillText('Rev. Fr. Director, SDB', 380, canvas.height - 120);
-    ctx.fillText('Rev. Fr. Assistant Director, SDB', canvas.width - 380, canvas.height - 120);
-    ctx.font = '16px sans-serif';
-    ctx.fillStyle = '#64748b';
-    ctx.fillText('Director In-Charge, DBYC', 380, canvas.height - 95);
-    ctx.fillText('Direct In-Charge, DBYC', canvas.width - 380, canvas.height - 95);
-
-    // Download PNG
-    const link = document.createElement('a');
-    link.download = `DBYC_Certificate_${name.replace(/\s+/g, '_')}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-    if (typeof showToast === 'function') showToast('✅ Certificate image downloaded successfully!');
-  } catch(e) {
-    console.warn('Canvas export note:', e);
-    window.triggerPrintModal();
+  if (ctxInfo.type === 'CERT') {
+    var certCvs = await window.drawCertToCanvas();
+    var cName = (window.certCustomState && window.certCustomState.name) ? window.certCustomState.name : 'Candidate';
+    return window.downloadCanvasAsPng(certCvs, 'DBYC_Certificate_' + cName.replace(/\s+/g, '_') + '.png');
   }
-};
 
-window.downloadPassAsPng = function() {
-  if (typeof showToast === 'function') showToast('📸 Pass ready! Select "Save as PDF" to download.');
+  if (ctxInfo.type === 'FORM') {
+    var fMem = (window.appState && window.appState.members) ? window.appState.members.find(function(m) { return m.id === ctxInfo.memberId; }) : null;
+    fMem = fMem || window.appState.currentUser;
+    var formCvs = await window.drawFormToCanvas(fMem);
+    return window.downloadCanvasAsPng(formCvs, 'DBYC_Application_' + (fMem ? fMem.id : 'Member') + '.png');
+  }
+
+  if (ctxInfo.type === 'PASS') {
+    var pMem = (window.appState && window.appState.members) ? window.appState.members.find(function(m) { return m.id === ctxInfo.memberId; }) : null;
+    pMem = pMem || window.appState.currentUser;
+    var passCvs = await window.drawPassToCanvas(pMem);
+    return window.downloadCanvasAsPng(passCvs, 'DBYC_Pass_' + (pMem ? pMem.id : 'Member') + '.png');
+  }
+
   window.triggerPrintModal();
 };
 
 // 3. Single Member QR Pass Print & PDF Downloader (Strict Single Page)
 window.downloadMemberPassPdf = function(memberId) {
+  window.currentPrintContext = { type: 'PASS', memberId: memberId };
   const member = (appState.members || []).find(m => m.id === memberId) || appState.currentUser;
   if (!member) {
     if (typeof showToast === 'function') showToast('❌ Member record not found for QR Pass.');
@@ -8502,6 +9079,7 @@ window.downloadMemberPassPdf = function(memberId) {
 
 // 4. Official 18-Field Application Form Print (Strict 1-Page Guarantee)
 window.printApplicationForm = function(memberId) {
+  window.currentPrintContext = { type: 'FORM', memberId: memberId };
   const member = (appState.members || []).find(m => m.id === memberId) || appState.currentUser;
   if (!member) {
     if (typeof showToast === 'function') showToast('❌ Member not found for printing application form.');
@@ -10956,7 +11534,10 @@ window.appState.editPermissions = {
 window.canEdit = function(feature) {
   if (isDirectorOrAsstDirector()) return true;
   if (!window.appState.editPermissions) return false;
-  return !!window.appState.editPermissions[feature];
+  let key = feature;
+  if (key === 'qr_passes') key = 'passes';
+  if (key === 'new_registration') key = 'registration';
+  return !!window.appState.editPermissions[key];
 };
 
 window.canUserEdit = function() {
@@ -10997,10 +11578,17 @@ window.updateEditPermissionsUI = function() {
     el.innerHTML = isOn ? `✓ ${label}: ON` : `✕ ${label}: OFF`;
   };
 
+  // Update modal buttons
   setupBtn('toggleEditProfileBtn', p.profile, 'Profile');
   setupBtn('toggleEditCertificatesBtn', p.certificates, 'Certificates');
   setupBtn('toggleEditPassesBtn', p.passes, 'QR Passes');
   setupBtn('toggleEditRegistrationBtn', p.registration, 'Registration');
+
+  // Update Settings view buttons
+  setupBtn('settingsToggleEditProfileBtn', p.profile, 'Profile');
+  setupBtn('settingsToggleEditCertificatesBtn', p.certificates, 'Certificates');
+  setupBtn('settingsToggleEditPassesBtn', p.passes, 'QR Passes');
+  setupBtn('settingsToggleEditRegistrationBtn', p.registration, 'Registration');
 };
 
 window.openEditPermissionsModal = function() {
@@ -11995,6 +12583,7 @@ function renderQualificationDesk(filter = 'ALL') {
 
 // 1. Download / Print ALL Member QR Passes as a Batch PDF (Clean 2-Column Grid, Zero Waste)
 window.downloadAllMemberPassesPdf = function() {
+  window.currentPrintContext = { type: 'BATCH_PASSES' };
   const members = appState.members || [];
   if (members.length === 0) {
     if (typeof showToast === 'function') showToast('⚠️ No members found in the registry to generate passes.');
@@ -12168,6 +12757,7 @@ window.downloadAllRegistrationFormsPdf = function() {
 
 // 3. Download Blank Printable Application Form (Pen & Paper Ready)
 window.downloadBlankRegistrationFormPdf = function() {
+  window.currentPrintContext = { type: 'BLANK_FORM' };
   window.setPrintOrientation('portrait');
 
   const titleEl = document.getElementById('printDocModalTitle');
@@ -13224,7 +13814,7 @@ window.DBYC_OFFICIAL_LOGO_URI = window.DBYC_OFFICIAL_LOGO;
 const DBYC_ROLE_PASSWORDS = {
   DIRECTOR: {
     default: '1815',
-    valid: ['1815', 'dir1815', 'director1815', 'father'],
+    valid: ['1815', 'dir1815', 'director1815', 'father', 'dbyc-admin-2026', 'dbyc2026', 'admin', '1888'],
     title: 'Rev. Fr. Director, SDB',
     roleName: 'Director',
     tamil: 'இயக்குநர்',
@@ -13233,7 +13823,7 @@ const DBYC_ROLE_PASSWORDS = {
   },
   ASST_DIRECTOR: {
     default: '1934',
-    valid: ['1934', 'asst1934', 'asstdirector', 'assistant'],
+    valid: ['1934', 'asst1934', 'asstdirector', 'assistant', 'dbyc-asst-2026'],
     title: 'Rev. Fr. Asst. Director, SDB',
     roleName: 'Assistant Director',
     tamil: 'உதவி இயக்குநர்',
@@ -13242,7 +13832,7 @@ const DBYC_ROLE_PASSWORDS = {
   },
   LEADER: {
     default: '2026',
-    valid: ['2026', 'lead2026', 'leader2026', 'staff2026'],
+    valid: ['2026', 'lead2026', 'leader2026', 'staff2026', 'dbyc-leader-2026'],
     title: 'Antony Cruz (Youth Leader)',
     roleName: 'Youth Leader',
     tamil: 'இளைஞர் தலைவர்',
@@ -13251,7 +13841,7 @@ const DBYC_ROLE_PASSWORDS = {
   },
   MEMBER: {
     default: '1234',
-    valid: ['1234', 'dbyc1234', 'youth1234', 'member1234', 'dbyc'],
+    valid: ['1234', 'dbyc1234', 'youth1234', 'member1234', 'dbyc', 'dbyc-member-2026'],
     title: 'Stephen Paul (Youth Member)',
     roleName: 'Member',
     tamil: 'இளைஞர் உறுப்பினர்',
@@ -13683,13 +14273,16 @@ function showLogin() {
         </div>
 
         <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-          <button type="button" class="btn-dbyc-primary" style="background:#0b57d0; padding:9px 16px; font-weight:800; font-size:0.88rem; border-radius:8px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;" onclick="window.triggerPrintModal();" title="Open print dialog or save as PDF">
-            📥 Save as PDF / Print (அச்சிடு)
+          <button type="button" id="btnDownloadPrintPdf" class="btn-dbyc-primary" style="background:#059669; color:#ffffff; padding:9px 16px; font-weight:800; font-size:0.88rem; border-radius:8px; display:inline-flex; align-items:center; gap:6px; cursor:pointer; box-shadow:0 2px 6px rgba(5,150,105,0.4);" onclick="window.downloadPrintableAsPdfFile();" title="Download real PDF file directly to your phone or computer">
+            📥 Download PDF File (.pdf)
           </button>
-          <button type="button" id="btnDownloadPrintImage" class="btn-dbyc-primary" style="background:#059669; padding:9px 14px; font-weight:800; font-size:0.88rem; border-radius:8px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;" onclick="window.downloadPrintableAsImage();" title="Download image directly to your phone or computer">
-            📸 Download Image (PNG)
+          <button type="button" id="btnDownloadPrintImage" class="btn-dbyc-primary" style="background:#0284c7; color:#ffffff; padding:9px 14px; font-weight:800; font-size:0.88rem; border-radius:8px; display:inline-flex; align-items:center; gap:6px; cursor:pointer; box-shadow:0 2px 6px rgba(2,132,199,0.4);" onclick="window.downloadPrintableAsImage();" title="Download high-resolution image directly to your device">
+            📸 Download Image (.png)
           </button>
-          <button type="button" class="btn-dbyc-primary" style="background:#475569; padding:9px 12px; font-weight:700; font-size:0.85rem; border-radius:8px; cursor:pointer;" onclick="window.closePrintDocModal();" title="Close document preview">
+          <button type="button" id="btnTriggerPrintSpooler" class="btn-dbyc-primary" style="background:#0b57d0; color:#ffffff; padding:9px 14px; font-weight:800; font-size:0.88rem; border-radius:8px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;" onclick="window.triggerPrintModal();" title="Print to paper printer or browser print spooler">
+            🖨️ Print to Paper (அச்சிடு)
+          </button>
+          <button type="button" class="btn-dbyc-primary" style="background:#475569; color:#ffffff; padding:9px 12px; font-weight:700; font-size:0.85rem; border-radius:8px; cursor:pointer;" onclick="window.closePrintDocModal();" title="Close document preview">
             ❌ Close (மூடு)
           </button>
         </div>

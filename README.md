@@ -1,112 +1,35 @@
-# DBYC - Don Bosco Youth Centre Progressive Web Application (PWA)
-### Salesian Province of Chennai (INM Province - Salesians of Don Bosco)
+# Don Bosco Youth Centre (DBYC) Basin Bridge — Management Portal (PWA)
 
-A responsive, zero-budget, multi-platform Progressive Web Application (PWA) designed for **Don Bosco Youth Centre (DBYC)**. Works seamlessly on **Android, iPhone, iPads/Tablets, and Desktop browsers**.
-
----
-
-## 🌟 Key Architecture & Highlights
-
-* **Frontend**: Pure HTML5, CSS3, JavaScript (zero external bulky build tools; 100% GitHub Pages ready).
-* **Backend**: **Google Apps Script (`Code.gs`)** (handles API dispatching, CRUD, QR Attendance logging).
-* **Database**: **Google Sheets** (structured with 6 dedicated tabs).
-* **Budget**: **\$0.00 / month forever** (uses free GitHub hosting + Google Workspace cloud infrastructure).
-* **Role Hierarchy & Organization Structure**:
-  * **Rev. Fr. Director** (Incharge)
-  * **Rev. Fr. Assistant Director** (Direct Incharge)
-  * **Group Leaders & Incharges** for all 6 DBYC Youth Categories:
-    1. 🏆 **Sub Juniors Group**
-    2. 🏆 **Junior Group**
-    3. 🏆 **Senior Group**
-    4. 🏆 **Inters Group**
-    5. 🏆 **Super Seniors Group**
-    6. 🏆 **Elders Group**
+Official Web Application and Progressive Web App (PWA) for **Don Bosco Youth Centre (DBYC), Basin Bridge, Chennai - 600 012**.
 
 ---
 
-## 📱 Modules Included
+## 🌟 Key Features
 
-1. **Login Portal**:
-   * Custom UI matching the Salesian Province of Chennai theme with Don Bosco silhouette artwork.
-   * Phone Number / Member ID authentication with role detection.
-2. **Operations Dashboard**:
-   * Don Bosco & Mary Help of Christians header crest with INM founding ribbon.
-   * Real-time scrolling Province News Marquee ticker.
-   * Quick-access colorful glossy 4-column application grid.
-   * Real-time metrics for total members, today's attendance count, and active events.
-3. **Members Registry**:
-   * Filterable by all 6 groups with search by Name, ID, or Mobile.
-   * Real-time tenure calculator showing exact years, months, and days in DBYC.
-   * Member profile modal with blood group, guardian details, and attendance count.
-4. **QR Attendance System**:
-   * Built-in live camera QR Scanner for scanning member QR passes.
-   * Manual Check-in fallback for instant check-in.
-   * Real-time check-in log with timestamps and attendance badges.
-5. **Member Digital QR Passes (ID Cards)**:
-   * Official DBYC ID Card with DBYC circular logo and Salesian header.
-   * Dynamic high-resolution QR verification code with member payload.
-   * One-click print or download pass.
-6. **Auto Certificate Studio**:
-   * **Official Certificate of Membership**: Auto-populated with member's name, DBYC ID, group, tenure, and Salesian leadership signatures.
-   * **Certificate of Attendance Excellence**: Awarded based on regularity records.
-   * Print-ready and downloadable directly from browser.
-7. **Birthday Celebrations**:
-   * Current month birthday feed with one-click **WhatsApp Birthday Greeting** direct link.
-8. **Event Calendar & Upcoming Events**:
-   * Schedule youth tournaments, retreats, meetings, and feast celebrations.
-9. **DBYC Minutes of Meeting**:
-   * Council meeting records with agendas, attendees, and action items presided by the Director & Assistant Director.
-10. **DBYC News & Updates**:
-    * Province bulletins and centre announcements.
+1. **Official Branding**: Authentic circular DBYC crest emblem with golden ring across banners, ID cards, and certificates.
+2. **Dynamic 2-Way Office Bearers Sync**: Registration form automatically links to and updates the 39 official Office Bearers in real time (`window.syncLeadersWithMembers`).
+3. **1-Tap Photo Editor**: Edit or snap photos with webcam directly on any member or leader card (`window.quickEditMemberPhoto`).
+4. **Office Bearers Dossier Modal**: Comprehensive view modal showing member contact, unit, and registration details.
+5. **Full A4 Printing Suite**:
+   - Single QR Pass (Official CR-80 ID Card dimensions: `85.6 mm × 54.0 mm`).
+   - Single Registration Form (Full A4 Page layout).
+   - Combined Form + QR Pass with tear-off scissor line on single A4 sheet.
+6. **Security PIN Authentication**: Member sign-in requires their personalized Security PIN configured during registration.
+7. **Multi-Engine QR Attendance**: Built-in camera scanner, Google Lens launcher, 1-tap clipboard paste, and 1-tap manual check-in.
+8. **Paper Form OCR Scanner**: Camera capture with auto-field extraction and 1-tap auto-fill.
+9. **Front Login Screen Registration**: Prominent `➕ New Member Registration` on the home page; returns to login with Member ID pre-filled for PIN entry.
+10. **Zero-Loss Data Persistence**: Local storage persistence + optional real-time Google Drive cloud backup.
 
 ---
 
-## 🚀 Step-by-Step Deployment Guide
+## 🚀 Live GitHub Pages Deployment (2 Steps)
 
-### Step 1: Google Sheets & Google Apps Script Setup
-1. Go to [sheets.new](https://sheets.new) to create a new Google Sheet. Name it `DBYC Database`.
-2. In the top menu, click **Extensions** > **Apps Script**.
-3. Replace the code in `Code.gs` with the code in [`gas/Code.gs`](file:///C:/Users/acer/.gemini/antigravity/scratch/dbyc-pwa/gas/Code.gs).
-4. Click **Deploy** (top right) > **New deployment**:
-   * Select type: ⚙️ **Web app**.
-   * Description: `DBYC API v2`.
-   * Execute as: `Me (your email)`.
-   * Who has access: `Anyone`.
-5. Click **Deploy**, authorize permissions, and **copy the Web App URL** (e.g., `https://script.google.com/macros/s/.../exec`).
+1. **Commit and Push** all files from this folder to the `main` branch of your GitHub repository.
+2. In your GitHub repository:
+   - Go to **Settings** -> **Pages**.
+   - Under **Build and deployment** -> **Branch**, select `main` -> `/ (root)`.
+   - Click **Save**.
+   - In 1 minute, your app will be live at `https://<YOUR_USERNAME>.github.io/<REPO_NAME>/`!
 
 ---
-
-### Step 2: Connect Frontend to Google Sheets
-1. Open [`index.html`](file:///C:/Users/acer/.gemini/antigravity/scratch/dbyc-pwa/index.html) in your browser.
-2. In the sidebar menu, open **Google Sheets Sync** (or Settings).
-3. Paste your copied Google Apps Script Web App URL and click **Save Endpoint** & **Sync with Google Sheets**.
-
----
-
-### Step 3: Publish on GitHub & Enable GitHub Pages (Free Hosting)
-1. Initialize git in this project folder:
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit of DBYC PWA"
-   ```
-2. Create a new repository on [github.com](https://github.com) named `dbyc-pwa`.
-3. Push your code:
-   ```bash
-   git remote add origin https://github.com/YOUR_USERNAME/dbyc-pwa.git
-   git branch -M main
-   git push -u origin main
-   ```
-4. Go to **Settings** > **Pages** in your GitHub repository:
-   * Source: `Deploy from a branch`.
-   * Branch: `main` / `/(root)`.
-   * Click **Save**.
-5. Your live app URL will be: `https://YOUR_USERNAME.github.io/dbyc-pwa/`
-
----
-
-## 📲 Installing as a PWA on Mobile Devices
-
-* **Android (Chrome)**: Open the URL > tap the three dots (⋮) > tap **Install App** or **Add to Home screen**.
-* **iPhone / iPad (Safari)**: Open the URL > tap the Share icon (⎙ / ⬆️) > tap **Add to Home Screen**.
-* **Desktop (Chrome / Edge)**: Click the **Install** icon in the address bar.
+© 2026 Don Bosco Youth Centre, Basin Bridge, Chennai. All rights reserved.

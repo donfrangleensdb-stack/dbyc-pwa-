@@ -1,18 +1,52 @@
 {
-  "name": "DBYC - Don Bosco Youth Centre",
-  "short_name": "DBYC PWA",
-  "description": "Salesian Province of Chennai (INM) - DBYC Youth Management, Attendance & Member Portal",
+  "name": "Don Bosco Youth Centre (DBYC) Portal",
+  "short_name": "DBYC Portal",
+  "description": "Zero-Budget QR Attendance, Member ID Generator, Office Bearers & Certificates Portal for Don Bosco Youth Centre, Basin Bridge, Chennai",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
-  "orientation": "portrait-primary",
-  "background_color": "#003b7a",
+  "orientation": "any",
+  "background_color": "#002b66",
   "theme_color": "#004b98",
+  "lang": "en",
+  "categories": ["education", "productivity", "utilities"],
   "icons": [
     {
-      "src": "assets/icon.svg",
-      "sizes": "192x192 512x512",
-      "type": "image/svg+xml",
+      "src": "assets/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
       "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "QR Attendance Scanner",
+      "short_name": "Attendance",
+      "url": "./index.html#attendance",
+      "icons": [{ "src": "assets/logo.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Member Registration",
+      "short_name": "Register",
+      "url": "./index.html#registration",
+      "icons": [{ "src": "assets/logo.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Office Bearers Portal",
+      "short_name": "Leaders",
+      "url": "./index.html#officebearers",
+      "icons": [{ "src": "assets/logo.png", "sizes": "192x192" }]
     }
   ]
 }

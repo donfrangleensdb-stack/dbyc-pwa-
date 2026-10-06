@@ -1,16 +1,19 @@
-const CACHE_NAME = 'dbyc-pwa-v2.0';
-const ASSETS_TO_CACHE = [
+const CACHE_NAME = 'dbyc-pwa-v3.2';
+
+const STATIC_ASSETS = [
   './',
   './index.html',
-  './css/style.css',
-  './js/app.js',
   './manifest.json',
-  './assets/icon.svg'
+  './assets/logo.png',
+  './assets/icon.png',
+  './assets/icon.jpg'
 ];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS_TO_CACHE))
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(STATIC_ASSETS).catch(() => {});
+    })
   );
   self.skipWaiting();
 });
@@ -19,29 +22,25 @@ self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches.keys().then((keys) => {
       return Promise.all(
-        keys.map((k) => {
-          if (k !== CACHE_NAME) return caches.delete(k);
-        })
+        keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))
       );
     })
   );
   self.clients.claim();
 });
 
+// Network-First with Cache Fallback for offline PWA
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
-  
   e.respondWith(
-    caches.match(e.request).then((cached) => {
-      if (cached) {
-        fetch(e.request).then((res) => {
-          if (res && res.status === 200) {
-            caches.open(CACHE_NAME).then((c) => c.put(e.request, res));
-          }
-        }).catch(() => {});
-        return cached;
-      }
-      return fetch(e.request).catch(() => caches.match('./index.html'));
-    })
+    fetch(e.request)
+      .then((response) => {
+        if (response && response.status === 200) {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(e.request, clone));
+        }
+        return response;
+      })
+      .catch(() => caches.match(e.request))
   );
 });

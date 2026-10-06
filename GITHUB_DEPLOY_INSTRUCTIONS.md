@@ -1,26 +1,20 @@
-# GitHub Deployment & Update Guide (Step-by-Step)
+# 🚀 How to Update GitHub Repository (DBYC Basin Bridge)
 
-Follow these steps to update your GitHub repository:
+To update your live web application on GitHub Pages:
 
-### Method 1: Using GitHub Web Interface (Simplest, Zero Tools)
-1. Go to your GitHub repository in your web browser (e.g. `https://github.com/your-username/dbyc-portal`).
-2. Click the **Add file** button (top right) -> choose **Upload files**.
-3. Drag and drop all the files from this folder (`GITHUB_UPDATE_FILES`):
-   - `index.html`
-   - `sw.js`
-   - `manifest.json`
-   - `.nojekyll`
-   - `README.md`
-   - The entire `assets/` folder (`logo.png`, `icon.png`, `icon.jpg`)
-4. At the bottom under "Commit changes", type:
-   `Update DBYC portal with 12 master corrections and PIN login`
-5. Click the green **Commit changes** button.
-6. Done! GitHub Pages will automatically update within 60 seconds.
+### Step 1: Open your GitHub Repository
+Go to your DBYC repository on [GitHub](https://github.com).
 
-### Method 2: Using Git CLI / Terminal
-If you use Git on your computer, run these commands in your repository folder:
-```bash
-git add .
-git commit -m "Update DBYC portal: 12 master corrections, PIN login, A4 printing, Google Lens attendance"
-git push origin main
-```
+### Step 2: Upload Files
+1. Click **Add file** > **Upload files**.
+2. Drag and drop all the files from this folder:
+   - `index.html` (Latest update with Left Don Bosco & Right DBYC Emblem, OCR Scanner, Daily Attendance & Secure OTP)
+   - `assets/` folder (`don_bosco.webp`, `logo.png`, `icon.png`, `icon.jpg`)
+   - `sw.js` (Updated Service Worker cache v3.3)
+   - `manifest.json` (PWA manifest)
+   - `.nojekyll` (Ensures assets load directly)
+3. Enter commit message: `Update DBYC PWA - Dual Emblems, Hard Copy Form Scanner, Secure Daily Attendance & OTP Delivery`
+4. Click **Commit changes**.
+
+### Step 3: Verified!
+GitHub Pages will automatically deploy your updated application in ~60 seconds.

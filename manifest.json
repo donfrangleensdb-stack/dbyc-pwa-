@@ -1,19 +1,22 @@
 {
-  "name": "Don Bosco Youth Centre (DBYC) Portal",
-  "short_name": "DBYC Portal",
-  "description": "Zero-Budget QR Attendance, Member ID Generator, Office Bearers & Certificates Portal for Don Bosco Youth Centre, Basin Bridge, Chennai",
+  "name": "Don Bosco Youth Centre - Basin Bridge",
+  "short_name": "DBYC Basin Bridge",
+  "description": "Don Bosco Youth Centre, Basin Bridge, Chennai - 600 012 official portal.",
   "start_url": "./index.html",
-  "scope": "./",
   "display": "standalone",
-  "orientation": "any",
   "background_color": "#002b66",
-  "theme_color": "#004b98",
-  "lang": "en",
-  "categories": ["education", "productivity", "utilities"],
+  "theme_color": "#002b66",
+  "orientation": "any",
   "icons": [
     {
+      "src": "assets/don_bosco.webp",
+      "sizes": "350x400",
+      "type": "image/webp",
+      "purpose": "any"
+    },
+    {
       "src": "assets/logo.png",
-      "sizes": "192x192",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     },
@@ -26,27 +29,8 @@
     {
       "src": "assets/icon.jpg",
       "sizes": "512x512",
-      "type": "image/jpeg"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "QR Attendance Scanner",
-      "short_name": "Attendance",
-      "url": "./index.html#attendance",
-      "icons": [{ "src": "assets/logo.png", "sizes": "192x192" }]
-    },
-    {
-      "name": "Member Registration",
-      "short_name": "Register",
-      "url": "./index.html#registration",
-      "icons": [{ "src": "assets/logo.png", "sizes": "192x192" }]
-    },
-    {
-      "name": "Office Bearers Portal",
-      "short_name": "Leaders",
-      "url": "./index.html#officebearers",
-      "icons": [{ "src": "assets/logo.png", "sizes": "192x192" }]
+      "type": "image/jpeg",
+      "purpose": "any maskable"
     }
   ]
 }

@@ -1,10 +1,11 @@
-const CACHE_NAME = 'dbyc-pwa-v3.2';
+const CACHE_NAME = 'dbyc-pwa-v3.3';
 
 const STATIC_ASSETS = [
   './',
   './index.html',
   './manifest.json',
   './assets/logo.png',
+  './assets/don_bosco.webp',
   './assets/icon.png',
   './assets/icon.jpg'
 ];
@@ -29,17 +30,15 @@ self.addEventListener('activate', (e) => {
   self.clients.claim();
 });
 
-// Network-First with Cache Fallback for offline PWA
+// Network-First with Cache Fallback
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
   e.respondWith(
     fetch(e.request)
-      .then((response) => {
-        if (response && response.status === 200) {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(e.request, clone));
-        }
-        return response;
+      .then((res) => {
+        const copy = res.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(e.request, copy));
+        return res;
       })
       .catch(() => caches.match(e.request))
   );

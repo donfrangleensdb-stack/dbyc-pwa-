@@ -2333,6 +2333,40 @@ body {
     margin: 0 auto !important;
   }
 }
+
+/* DBYC Event Telecast Responsive Showcase for Laptops & Desktops */
+.telecast-slide-stage {
+  position: relative;
+  width: 100%;
+  height: 340px;
+  min-height: 280px;
+  background: #091a33;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .telecast-slide-stage {
+    height: 460px !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .telecast-slide-stage {
+    height: 520px !important;
+  }
+}
+
+.telecast-slide-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  image-rendering: high-quality;
+  transition: opacity 0.4s ease-in-out;
+}
 </style>
   <!-- ==============================================================================
        100% GOOGLE DRIVE & INSTITUTIONAL SERVER STORAGE ARCHITECTURE
@@ -2908,10 +2942,10 @@ body {
             </div>
           </div>
 
-          <!-- Carousel Slide Stage -->
-          <div id="telecastSlideStage" style="position: relative; width: 100%; height: 280px; max-height: 48vh; background: #091a33; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-            <!-- Slide Image -->
-            <img id="telecastSlideImg" src="assets/don_bosco.webp" alt="DBYC Event Showcase" style="width: 100%; height: 100%; object-fit: cover; transition: opacity 0.5s ease-in-out;" onerror="this.onerror=null; this.src='assets/logo.png';">
+          <!-- Carousel Slide Stage (Responsive Height for Laptops & Desktop Monitors) -->
+          <div id="telecastSlideStage" class="telecast-slide-stage">
+            <!-- Slide Image (High Quality Crisp Rendering) -->
+            <img id="telecastSlideImg" class="telecast-slide-img" src="assets/don_bosco.webp" alt="DBYC Event Showcase" onerror="this.onerror=null; this.src='assets/logo.png';">
 
             <!-- Slide Navigation Buttons -->
             <button type="button" onclick="window.prevTelecastSlide()" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.55); color: #fff; border: 1px solid rgba(255,255,255,0.3); width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; z-index: 5; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px);">‹</button>
@@ -2996,8 +3030,9 @@ body {
           </div>
 
           <div class="app-tile" id="tileMasterAnalytics" onclick="window.openMasterAnalyticsModal()" style="cursor:pointer;">
-            <div class="app-tile-icon" style="background:linear-gradient(135deg, #004b98, #00264d); color:#fff; position:relative; box-shadow: 0 4px 14px rgba(0,75,152,0.3);">
-              <img src="assets/logo.png" alt="DBYC Emblem" style="width:36px; height:36px; object-fit:contain; border-radius:50%;" onerror="this.onerror=null; this.src='assets/icon.png';">
+            <div class="app-tile-icon" style="background:linear-gradient(135deg, #004b98, #00264d); color:#fff; position:relative; box-shadow: 0 4px 14px rgba(0,75,152,0.35); display:flex; align-items:center; justify-content:center;">
+              <span style="font-size:1.8rem; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3));">📊</span>
+              <img src="assets/logo.png" alt="DBYC" style="position:absolute; bottom:-3px; right:-3px; width:22px; height:22px; border-radius:50%; border:1.5px solid #fff; background:#fff; object-fit:contain; box-shadow:0 1px 4px rgba(0,0,0,0.2);" onerror="if(window.DBYC_OFFICIAL_LOGO)this.src=window.DBYC_OFFICIAL_LOGO; else this.style.display='none';">
               <span style="position:absolute; top:-4px; right:-4px; background:#10b981; color:#fff; font-size:0.55rem; font-weight:900; padding:1px 5px; border-radius:6px; box-shadow:0 2px 4px rgba(0,0,0,0.2);">LIVE</span>
             </div>
             <div class="app-tile-title">DBYC Analytics & Stats</div>
@@ -5797,16 +5832,27 @@ body {
   <!-- 2. DBYC MASTER CENTER ANALYTICS & STATISTICS MODAL                             -->
   <!-- ============================================================================== -->
   <div id="masterAnalyticsModal" class="modal-backdrop" style="display:none; z-index:9990;">
-    <div class="modal-content" style="max-width: 680px; border-radius: 20px; max-height:90vh; overflow-y:auto;">
-      <div class="modal-header">
-        <div style="display:flex; align-items:center; gap:12px;">
-          <img src="assets/logo.png" alt="DBYC Emblem" style="width:42px; height:42px; object-fit:contain; border-radius:50%; border:2px solid #004b98; background:#fff;" onerror="this.onerror=null; this.src='assets/icon.png';">
-          <div>
-            <h3 class="modal-title" style="color:#004b98; font-size:1.15rem;">DBYC Analytics & Center Statistics</h3>
-            <small style="color:#64748b;">தொன்போஸ்கோ இளைஞர் மன்றம் • நேரடி புள்ளிவிவரங்கள்</small>
+    <div class="modal-content" style="max-width: 720px; border-radius: 20px; max-height:90vh; overflow-y:auto;">
+      <!-- Stats Portal Header (Proper DBYC Logo on the RIGHT) -->
+      <div class="modal-header" style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1.5px solid #e2e8f0; background:linear-gradient(135deg, #f8fafc, #edf2f7);">
+        <!-- Left: Title & Subtitle with Analytics Icon -->
+        <div style="flex:1;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="background:linear-gradient(135deg, #004b98, #00264d); width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.5rem; box-shadow:0 3px 10px rgba(0,75,152,0.3); flex-shrink:0;">
+              📊
+            </div>
+            <div>
+              <h3 class="modal-title" style="color:#004b98; font-size:1.25rem; font-weight:900; margin:0;">DBYC Analytics & Center Statistics</h3>
+              <small style="color:#64748b; font-size:0.8rem; font-weight:700;">தொன்போஸ்கோ இளைஞர் மன்றம் • நேரடி புள்ளிவிவரங்கள் & பகுப்பாய்வு</small>
+            </div>
           </div>
         </div>
-        <button style="background:none; border:none; font-size:1.4rem; cursor:pointer;" onclick="document.getElementById('masterAnalyticsModal').style.display='none'">&times;</button>
+
+        <!-- Right: Proper Official DBYC Logo & Close Button -->
+        <div style="display:flex; align-items:center; gap:12px; margin-left:14px;">
+          <img id="statsPortalDbycLogo" src="assets/logo.png" alt="DBYC Official Crest" style="width:54px; height:54px; object-fit:contain; border-radius:50%; border:2.5px solid #004b98; background:#ffffff; box-shadow:0 4px 14px rgba(0,75,152,0.25); flex-shrink:0;" onerror="if(window.DBYC_OFFICIAL_LOGO)this.src=window.DBYC_OFFICIAL_LOGO;">
+          <button style="background:#fee2e2; color:#b91c1c; border:1px solid #fecaca; width:34px; height:34px; border-radius:50%; font-size:1.2rem; font-weight:900; cursor:pointer; display:flex; align-items:center; justify-content:center; line-height:1;" onclick="document.getElementById('masterAnalyticsModal').style.display='none'">&times;</button>
+        </div>
       </div>
 
       <div style="display:flex; flex-direction:column; gap:16px; margin-top:14px;">
@@ -9118,30 +9164,14 @@ window.toggleQrCamera = function() {
     return;
   }
 
-  // 1. Check if mediaDevices API is supported or restricted by browser
+  // Check mediaDevices support
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    const isFileProto = (window.location.protocol === 'file:');
-    showToast('📸 Opening camera photo snap directly...');
+    showToast('📸 Camera stream unavailable. Opening direct camera photo snap...');
     const snapInput = document.getElementById('qrDirectSnapInput') || document.getElementById('qrPhotoFileInput');
     if (snapInput) {
       snapInput.click();
       return;
     }
-    if (container) {
-      container.innerHTML = `
-        <div style="color:#fde047; padding:20px; text-align:center; max-width:340px;">
-          <div style="font-size:2.2rem; margin-bottom:8px;">📷</div>
-          <strong style="color:#ffffff; font-size:0.92rem; display:block; margin-bottom:6px;">Camera Access Restricted</strong>
-          <p style="font-size:0.78rem; color:#cbd5e1; line-height:1.4; margin:0 0 12px;">Camera stream is restricted in this context. Tap below to snap or select pass photo directly with camera:</p>
-          <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:8px 16px; font-size:0.84rem; font-weight:800; border-radius:8px;" onclick="document.getElementById('qrPhotoFileInput').click();">
-            📸 Snap / Select Pass Photo with Camera
-          </button>
-        </div>
-      `;
-    }
-    const fileInp = document.getElementById('qrPhotoFileInput');
-    if (fileInp) fileInp.click();
-    return;
   }
 
   isQrScanningActive = true;
@@ -9154,38 +9184,58 @@ window.toggleQrCamera = function() {
   if (container) {
     container.setAttribute('data-active', 'true');
     container.innerHTML = `
-      <div style="position:relative; width:100%; height:100%; min-height:250px; display:flex; align-items:center; justify-content:center; background:#000;">
-        <video id="qrVideo" playsinline autoplay muted style="width:100%; height:100%; max-height:280px; object-fit:cover; border-radius:8px;"></video>
-        <div style="position:absolute; width:190px; height:190px; border:3px solid #10b981; border-radius:16px; box-shadow:0 0 0 4000px rgba(0,0,0,0.5); pointer-events:none; display:flex; align-items:center; justify-content:center;">
-          <div style="width:100%; height:2px; background:#10b981; box-shadow:0 0 8px #10b981; animation:scanPulse 1.5s infinite ease-in-out;"></div>
+      <div style="position:relative; width:100%; height:100%; min-height:280px; max-height:360px; display:flex; align-items:center; justify-content:center; background:#000; overflow:hidden; border-radius:12px;">
+        <video id="qrVideo" playsinline autoplay muted style="width:100%; height:100%; object-fit:cover; border-radius:12px;"></video>
+        
+        <!-- Animated QR Target Focus Box -->
+        <div id="qrScannerTargetBox" style="position:absolute; width:220px; height:220px; border:3px solid #10b981; border-radius:18px; box-shadow:0 0 0 4000px rgba(0,0,0,0.5); pointer-events:none; display:flex; align-items:center; justify-content:center; transition:border-color 0.2s;">
+          <div style="width:100%; height:2px; background:#10b981; box-shadow:0 0 10px #10b981; animation:scanPulse 1.4s infinite ease-in-out;"></div>
         </div>
+
         <canvas id="qrScanCanvas" style="display:none;"></canvas>
+
+        <!-- Live Scan Status Pill -->
+        <div id="qrScanStatusPill" style="position:absolute; bottom:12px; background:rgba(0,0,0,0.75); color:#10b981; font-weight:800; font-size:0.75rem; padding:4px 12px; border-radius:100px; border:1px solid #10b981; backdrop-filter:blur(4px);">
+          🟢 Camera Live — Point at Member QR Pass
+        </div>
       </div>
-      <div style="font-size:0.75rem; color:#10b981; font-weight:700; margin-top:6px; text-align:center;">🔴 Camera Scanner Live (jsQR Powered) — Point at Member Pass QR</div>
+
+      <!-- Quick Action Buttons Below Camera Window -->
+      <div style="display:flex; justify-content:center; gap:8px; margin-top:8px; flex-wrap:wrap;">
+        <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:6px 14px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="document.getElementById('qrDirectSnapInput').click();">
+          📷 Snap Photo of Pass
+        </button>
+        <button type="button" class="btn-dbyc-secondary" style="background:#f1f5f9; color:#334155; padding:6px 14px; font-size:0.78rem; font-weight:800; border-radius:8px; border:1px solid #cbd5e1;" onclick="document.getElementById('qrPhotoFileInput').click();">
+          📁 Choose Pass from Gallery
+        </button>
+      </div>
     `;
   }
 
-  const tryStream = (constraints) => {
-    return navigator.mediaDevices.getUserMedia(constraints)
-      .then(stream => {
-        qrAttendanceStream = stream;
-        const video = document.getElementById('qrVideo');
-        if (video) {
-          video.srcObject = stream;
-          video.setAttribute('playsinline', 'true');
-          video.play().catch(e => console.warn('Video play note:', e));
-        }
-        showToast('📷 Camera scanner active. Point at Member Pass.');
-        startScanningLoop();
-        return true;
-      });
+  const startStreamWithVideo = (stream) => {
+    qrAttendanceStream = stream;
+    const video = document.getElementById('qrVideo');
+    if (video) {
+      video.srcObject = stream;
+      video.setAttribute('playsinline', 'true');
+      video.setAttribute('muted', 'true');
+      video.muted = true;
+      video.play().catch(e => console.warn('Video play caught:', e));
+    }
+    showToast('📷 Live camera active. Align QR code inside target box.');
+    startScanningLoop();
   };
 
-  tryStream({ video: { facingMode: { ideal: currentFacingMode }, width: { ideal: 640 }, height: { ideal: 480 } } })
-    .catch(() => tryStream({ video: { facingMode: currentFacingMode } }))
-    .catch(() => tryStream({ video: true }))
-    .catch(err => {
-      console.warn('Camera access error:', err);
+  // Progressive fallback constraints (environment -> user -> any video)
+  const constraintsList = [
+    { video: { facingMode: { ideal: currentFacingMode }, width: { ideal: 1280 }, height: { ideal: 720 } } },
+    { video: { facingMode: currentFacingMode } },
+    { video: { facingMode: 'user' } },
+    { video: true }
+  ];
+
+  const tryNextConstraint = (idx) => {
+    if (idx >= constraintsList.length) {
       isQrScanningActive = false;
       if (btn) {
         btn.textContent = '📷 Turn On Camera Scanner';
@@ -9194,47 +9244,63 @@ window.toggleQrCamera = function() {
       if (flipBtn) flipBtn.style.display = 'none';
       if (container) {
         container.innerHTML = `
-          <div style="color:#ef4444; padding:18px; text-align:center; max-width:320px;">
-            <div style="font-size:2rem; margin-bottom:6px;">⚠️</div>
-            <strong style="display:block; margin-bottom:4px; font-size:0.88rem;">Camera Permission or Access Issue</strong>
-            <p style="font-size:0.76rem; color:#94a3b8; margin:0 0 10px; line-height:1.4;">
-              Ensure camera permissions are allowed in site settings, or tap below to snap a photo with your device camera:
+          <div style="color:#ef4444; padding:20px; text-align:center; max-width:340px;">
+            <div style="font-size:2rem; margin-bottom:6px;">📷</div>
+            <strong style="display:block; margin-bottom:4px; font-size:0.92rem; color:#fff;">Camera Access Restricted</strong>
+            <p style="font-size:0.76rem; color:#cbd5e1; margin:0 0 12px; line-height:1.4;">
+              Camera stream could not start directly in this browser context. You can snap a photo with your device camera:
             </p>
-            <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:7px 14px; font-size:0.8rem; font-weight:800; border-radius:8px;" onclick="document.getElementById('qrPhotoFileInput').click();">
-              📸 Take / Select Photo of Pass
+            <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:8px 16px; font-size:0.84rem; font-weight:800; border-radius:8px;" onclick="document.getElementById('qrDirectSnapInput').click();">
+              📸 Take / Snap Photo of Pass
             </button>
           </div>`;
       }
-      showToast('⚠️ Camera permission denied or in use. Use gallery photo or 1-tap check-in.');
-    });
+      showToast('ℹ️ Camera stream restricted. Use Photo Snap or 1-tap fast attendance desk.');
+      return;
+    }
+
+    navigator.mediaDevices.getUserMedia(constraintsList[idx])
+      .then(stream => {
+        startStreamWithVideo(stream);
+      })
+      .catch(err => {
+        console.warn(`Constraint attempt ${idx} failed:`, err);
+        tryNextConstraint(idx + 1);
+      });
+  };
+
+  tryNextConstraint(0);
 };
 
 window.stopQrCamera = function() {
   isQrScanningActive = false;
-  if (qrAttendanceStream) {
-    try { qrAttendanceStream.getTracks().forEach(t => t.stop()); } catch(e) {}
-    qrAttendanceStream = null;
-  }
   if (qrScanInterval) {
     clearInterval(qrScanInterval);
     qrScanInterval = null;
   }
-  const container = document.getElementById('qrVideoContainer');
+  if (qrAttendanceStream) {
+    try {
+      qrAttendanceStream.getTracks().forEach(track => track.stop());
+    } catch(e) {}
+    qrAttendanceStream = null;
+  }
   const btn = document.getElementById('startCameraBtn');
   const flipBtn = document.getElementById('flipCamBtn');
-  if (container) {
-    container.setAttribute('data-active', 'false');
-    container.innerHTML = `
-      <div style="color:#94a3b8; font-size:0.88rem; text-align: center; padding: 24px;">
-        <span style="font-size:2.4rem; display:block; margin-bottom:8px;">📷</span>
-        Live Camera Scanner is inactive.<br>Tap below to scan member QR pass with auto-detect.
-      </div>`;
-  }
   if (btn) {
     btn.textContent = '📷 Turn On Camera Scanner';
     btn.style.background = '#004b98';
   }
   if (flipBtn) flipBtn.style.display = 'none';
+  const container = document.getElementById('qrVideoContainer');
+  if (container) {
+    container.setAttribute('data-active', 'false');
+    container.innerHTML = `
+      <div style="color: #64748b; font-size: 0.85rem; text-align: center; padding: 20px;">
+        <span style="font-size: 2.2rem; display: block; margin-bottom: 6px;">📷</span>
+        Camera is turned off. Tap "Turn On Camera Scanner" above or snap a photo.
+      </div>
+    `;
+  }
 };
 
 function startScanningLoop() {
@@ -9246,50 +9312,104 @@ function startScanningLoop() {
   }
 
   const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  let isScanningFrame = false;
 
   qrScanInterval = setInterval(async () => {
-    if (!isQrScanningActive) return;
+    if (!isQrScanningActive || isScanningFrame) return;
     const video = document.getElementById('qrVideo');
-    if (!video || video.readyState < video.HAVE_CURRENT_DATA) return;
+    if (!video || video.readyState < 2 || !video.videoWidth) return;
 
-    // 1. Try native BarcodeDetector if supported
-    if (barcodeDetector) {
-      try {
-        const barcodes = await barcodeDetector.detect(video);
-        if (barcodes && barcodes.length > 0 && barcodes[0].rawValue) {
-          handleScannedQrResult(barcodes[0].rawValue);
-          return;
-        }
-      } catch(e) {}
-    }
+    isScanningFrame = true;
 
-    // 2. Universal pure JS jsQR canvas fallback (works on iOS Safari, Chrome, Edge, etc.)
-    if (typeof jsQR !== 'undefined') {
-      try {
-        if (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight) {
-          canvas.width = video.videoWidth || 640;
-          canvas.height = video.videoHeight || 480;
+    try {
+      // 1. Try native BarcodeDetector if available and functional
+      if (barcodeDetector) {
+        try {
+          const barcodes = await barcodeDetector.detect(video);
+          if (barcodes && barcodes.length > 0 && barcodes[0].rawValue) {
+            handleScannedQrResult(barcodes[0].rawValue);
+            isScanningFrame = false;
+            return;
+          }
+        } catch(e) {
+          barcodeDetector = null;
         }
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const qr = jsQR(imgData.data, imgData.width, imgData.height, { inversionAttempts: 'attemptBoth' });
+      }
+
+      // 2. Superfast downscaled jsQR Canvas Decoder (max 480px width)
+      if (typeof jsQR !== 'undefined') {
+        const vw = video.videoWidth;
+        const vh = video.videoHeight;
+        const maxDim = 480;
+        let scanW = vw;
+        let scanH = vh;
+        if (scanW > maxDim) {
+          scanH = Math.round((scanH * maxDim) / scanW);
+          scanW = maxDim;
+        }
+
+        if (canvas.width !== scanW || canvas.height !== scanH) {
+          canvas.width = scanW;
+          canvas.height = scanH;
+        }
+
+        ctx.drawImage(video, 0, 0, scanW, scanH);
+        const imgData = ctx.getImageData(0, 0, scanW, scanH);
+
+        let qr = jsQR(imgData.data, scanW, scanH, { inversionAttempts: 'dontInvert' });
+        if (!qr || !qr.data) {
+          qr = jsQR(imgData.data, scanW, scanH, { inversionAttempts: 'attemptBoth' });
+        }
+
         if (qr && qr.data) {
           handleScannedQrResult(qr.data);
+          isScanningFrame = false;
           return;
         }
-      } catch(e) {}
+      }
+    } catch(err) {
+      console.warn('Scanning frame error:', err);
     }
-  }, 250);
+
+    isScanningFrame = false;
+  }, 120);
 }
 
 function handleScannedQrResult(rawVal) {
+  if (!rawVal) return;
   const now = Date.now();
   if (rawVal === lastScannedCode && (now - lastScannedTime < 3000)) {
     return;
   }
   lastScannedCode = rawVal;
   lastScannedTime = now;
+
+  const targetBox = document.getElementById('qrScannerTargetBox');
+  const pill = document.getElementById('qrScanStatusPill');
+  if (targetBox) {
+    targetBox.style.borderColor = '#fbbf24';
+    targetBox.style.boxShadow = '0 0 20px #fbbf24, 0 0 0 4000px rgba(0,0,0,0.5)';
+    setTimeout(() => {
+      if (targetBox) {
+        targetBox.style.borderColor = '#10b981';
+        targetBox.style.boxShadow = '0 0 0 4000px rgba(0,0,0,0.5)';
+      }
+    }, 1200);
+  }
+  if (pill) {
+    pill.textContent = `⚡ Scanned: ${rawVal}`;
+    pill.style.color = '#fbbf24';
+    pill.style.borderColor = '#fbbf24';
+    setTimeout(() => {
+      if (pill) {
+        pill.textContent = '🟢 Camera Live — Point at Member QR Pass';
+        pill.style.color = '#10b981';
+        pill.style.borderColor = '#10b981';
+      }
+    }, 2000);
+  }
+
   window.processAttendanceCheckin(rawVal);
 }
 
@@ -11936,24 +12056,40 @@ window.saveMemberRegistrationFormDirect = function(event) {
     appState.members.unshift(memberData);
   }
 
-  saveLocalData();
-
-  // Multi-device Cloud Sync Push
-  if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
-    window.DbycCloud.pushToCloud();
-  }
-
-  // Automatic Two-Way Synchronization with Office Bearers & Leaders Portal
-  if (typeof window.syncLeadersWithMembers === 'function') {
-    window.syncLeadersWithMembers();
-  }
-
+  // 1. Instantaneous UI Feedback (Zero Main-Thread Blocking)
   window.closeAddMemberModal();
-  renderMembersRegistry();
-  if (typeof window.renderOfficeBearersDashboard === 'function') window.renderOfficeBearersDashboard();
-  if (typeof renderLeadersDashboard === 'function') renderLeadersDashboard();
-  if (typeof renderQualificationDesk === 'function') renderQualificationDesk();
-  updateDashboardStats();
+  showToast(editId ? '⚡ Member details updated instantly!' : '⚡ New member registered instantly!');
+
+  // 2. Render primary members registry immediately
+  if (typeof renderMembersRegistry === 'function') {
+    renderMembersRegistry();
+  }
+  if (typeof updateDashboardStats === 'function') {
+    updateDashboardStats();
+  }
+
+  // 3. Asynchronously persist to localStorage and sync cloud/other views in the background
+  setTimeout(() => {
+    saveLocalData();
+
+    if (typeof window.syncLeadersWithMembers === 'function') {
+      window.syncLeadersWithMembers();
+    }
+    if (typeof window.renderOfficeBearersDashboard === 'function') {
+      window.renderOfficeBearersDashboard();
+    }
+    if (typeof renderLeadersDashboard === 'function') {
+      renderLeadersDashboard();
+    }
+    if (typeof renderQualificationDesk === 'function') {
+      renderQualificationDesk();
+    }
+
+    // Debounced asynchronous cloud push (zero UI freezing)
+    if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+      window.DbycCloud.pushToCloud(false);
+    }
+  }, 25);
 
   // If newly registering from the front home / login page
   if (window.isRegisteringFromLogin) {
@@ -17866,7 +18002,7 @@ window.handleEventPhotoFileSelect = function(event) {
   const file = (event && event.target && event.target.files) ? event.target.files[0] : event;
   if (!file) return;
 
-  window.compressImageFile(file, 1280, 0.85, function(dataUrl) {
+  window.compressImageFile(file, 1920, 0.90, function(dataUrl) {
     window.stagedEventPhotoBase64 = dataUrl;
     const preview = document.getElementById('eventPhotoPreviewImg');
     if (preview) preview.src = dataUrl;
@@ -18030,6 +18166,11 @@ window.openMasterAnalyticsModal = function() {
   const elNews = document.getElementById('analyticsNewsCount'); if (elNews) elNews.textContent = (window.appState.news || []).length;
   const elPhotos = document.getElementById('analyticsTelecastCount'); if (elPhotos) elPhotos.textContent = (window.telecastPhotos || []).length;
   const elCloud = document.getElementById('analyticsCloudStatus'); if (elCloud) elCloud.textContent = (window.DbycCloud && window.DbycCloud.isConnected) ? 'Connected' : 'Local Ready';
+
+  const logoEl = document.getElementById('statsPortalDbycLogo');
+  if (logoEl && window.DBYC_OFFICIAL_LOGO) {
+    logoEl.src = window.DBYC_OFFICIAL_LOGO;
+  }
 
   modal.style.display = 'flex';
 };

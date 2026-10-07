@@ -673,7 +673,12 @@ body {
 
 .marquee-text {
   display: inline-block;
-  animation: marqueeScroll 18s linear infinite;
+  animation: marqueeScroll 42s linear infinite;
+}
+
+.marquee-text-container:hover .marquee-text,
+.marquee-text-container:active .marquee-text {
+  animation-play-state: paused;
   font-size: 0.84rem;
   font-weight: 600;
 }
@@ -2692,8 +2697,8 @@ body {
           <span id="cloudStatusDot" style="width:8px; height:8px; border-radius:50%; background:#10b981; display:inline-block; box-shadow:0 0 8px #10b981;"></span>
           <span id="cloudStatusText">Google Drive / Server</span>
         </button>
-        <button class="pill-tool-btn" title="Voice Assistant">🎙️ Voice</button>
-        <button id="langToggleBtn" class="pill-tool-btn gold" title="Switch Language">தமிழ்</button>
+        <button id="voiceAssistantNavBtn" class="pill-tool-btn" title="Voice Assistant" onclick="window.toggleVoiceAssistant()">🎙️ Voice</button>
+        <button id="langToggleBtn" class="pill-tool-btn gold" title="Switch Language" onclick="window.toggleAppLanguage()">தமிழ் / ENG</button>
       </div>
     </header>
 
@@ -2868,6 +2873,63 @@ body {
             </span>
           </div>
         </div>
+
+        <!-- ============================================================== -->
+        <!-- DBYC EVENT TELECAST & LIVE GALLERY CAROUSEL (BELOW NEWS)        -->
+        <!-- ============================================================== -->
+        <div id="eventTelecastContainer" class="event-telecast-card" style="margin-top: 14px; background: #ffffff; border-radius: 18px; border: 1.5px solid #cbd5e1; box-shadow: 0 6px 20px rgba(0,43,102,0.1); overflow: hidden; position: relative;">
+          <!-- Telecast Bar Header -->
+          <div style="background: linear-gradient(135deg, #002b66, #004b98); padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; flex-wrap: wrap; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 1.3rem;">📸</span>
+              <div>
+                <strong id="telecastHeaderTitle" style="font-size: 0.95rem; letter-spacing: 0.3px; display: block;">DBYC Event Showcase & Live Telecast</strong>
+                <small id="telecastHeaderSub" style="font-size: 0.72rem; color: #fde047;">நிகழ்வுகள் & புகைப்படக் காட்சி • Auto Running Slide</small>
+              </div>
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <!-- Duration Selector Dropdown -->
+              <div style="display: flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.18); padding: 4px 10px; border-radius: 100px; border: 1px solid rgba(255,255,255,0.3);">
+                <span style="font-size: 0.75rem;">⏱️</span>
+                <select id="telecastDurationSelect" onchange="window.setTelecastSlideDuration(this.value)" style="background: transparent; color: #ffffff; border: none; font-size: 0.75rem; font-weight: 800; cursor: pointer; outline: none;">
+                  <option value="2000" style="color: #0f172a;">2s (Fast)</option>
+                  <option value="4000" selected style="color: #0f172a;">4s (Default)</option>
+                  <option value="6000" style="color: #0f172a;">6s (Relaxed)</option>
+                  <option value="8000" style="color: #0f172a;">8s (Slow)</option>
+                  <option value="12000" style="color: #0f172a;">12s (Cinematic)</option>
+                </select>
+              </div>
+
+              <!-- Upload Event Photos Button -->
+              <button type="button" class="btn-dbyc-primary" style="background: #f59e0b; color: #0f172a; border: none; font-size: 0.75rem; font-weight: 800; padding: 5px 12px; border-radius: 100px; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.15);" onclick="window.openEventPhotoUploadModal()">
+                ➕ Upload Photos
+              </button>
+            </div>
+          </div>
+
+          <!-- Carousel Slide Stage -->
+          <div id="telecastSlideStage" style="position: relative; width: 100%; height: 280px; max-height: 48vh; background: #091a33; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+            <!-- Slide Image -->
+            <img id="telecastSlideImg" src="assets/don_bosco.webp" alt="DBYC Event Showcase" style="width: 100%; height: 100%; object-fit: cover; transition: opacity 0.5s ease-in-out;" onerror="this.onerror=null; this.src='assets/logo.png';">
+
+            <!-- Slide Navigation Buttons -->
+            <button type="button" onclick="window.prevTelecastSlide()" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.55); color: #fff; border: 1px solid rgba(255,255,255,0.3); width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; z-index: 5; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px);">‹</button>
+            <button type="button" onclick="window.nextTelecastSlide()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.55); color: #fff; border: 1px solid rgba(255,255,255,0.3); width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; z-index: 5; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px);">›</button>
+
+            <!-- Bottom Caption & Dots Overlay -->
+            <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.85)); padding: 24px 16px 10px; color: #ffffff; z-index: 4; display: flex; flex-direction: column; gap: 4px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                <div>
+                  <div id="telecastCaptionTitle" style="font-size: 1rem; font-weight: 800; text-shadow: 0 1px 3px rgba(0,0,0,0.8);">DBYC Youth Centre, Basin Bridge</div>
+                  <div id="telecastCaptionSub" style="font-size: 0.78rem; color: #fde047; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">St. John Bosco • Faith, Sportsmanship, Brotherhood & Leadership</div>
+                </div>
+                <span id="telecastSlideIndexBadge" style="background: rgba(255,255,255,0.25); font-size: 0.7rem; font-weight: 800; padding: 2px 8px; border-radius: 10px; backdrop-filter: blur(4px);">1 / 1</span>
+              </div>
+              <div id="telecastDotsContainer" style="display: flex; justify-content: center; gap: 6px; margin-top: 6px;"></div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="main-content">
@@ -2931,6 +2993,14 @@ body {
           <div class="app-tile" onclick="switchView('members')">
             <div class="app-tile-icon bg-pink">👥</div>
             <div class="app-tile-title">Members</div>
+          </div>
+
+          <div class="app-tile" id="tileMasterAnalytics" onclick="window.openMasterAnalyticsModal()" style="cursor:pointer;">
+            <div class="app-tile-icon" style="background:linear-gradient(135deg, #004b98, #00264d); color:#fff; position:relative; box-shadow: 0 4px 14px rgba(0,75,152,0.3);">
+              <img src="assets/logo.png" alt="DBYC Emblem" style="width:36px; height:36px; object-fit:contain; border-radius:50%;" onerror="this.onerror=null; this.src='assets/icon.png';">
+              <span style="position:absolute; top:-4px; right:-4px; background:#10b981; color:#fff; font-size:0.55rem; font-weight:900; padding:1px 5px; border-radius:6px; box-shadow:0 2px 4px rgba(0,0,0,0.2);">LIVE</span>
+            </div>
+            <div class="app-tile-title">DBYC Analytics & Stats</div>
           </div>
 
           <div class="app-tile" id="tileOfficeBearers" onclick="switchView('officebearers')" style="cursor:pointer;">
@@ -3035,7 +3105,7 @@ body {
           <div class="profile-avatar-wrapper">
             <img id="myProfAvatarImg" src="data:image/svg+xml;utf8,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox='0%200%20100%20100'%3E%3Ccircle%20cx='50'%20cy='50'%20r='46'%20fill='%23002b66'%20stroke='%23fde047'%20stroke-width='4'/%3E%3Cpath%20d='M50%2015%20L50%2085%20M25%2038%20L75%2038'%20stroke='%23fde047'%20stroke-width='6'%20stroke-linecap='round'/%3E%3Ccircle%20cx='50'%20cy='50'%20r='16'%20fill='%230284c7'/%3E%3Ctext%20x='50'%20y='55'%20font-size='14'%20font-weight='bold'%20text-anchor='middle'%20fill='%23ffffff'%20font-family='sans-serif'%3EDBYC%3C/text%3E%3C/svg%3E" alt="Profile Photo" class="profile-avatar-img">
             <button class="avatar-upload-btn" title="Upload Profile Photo" onclick="document.getElementById('profilePhotoFileInput').click()">📷</button>
-            <input type="file" id="profilePhotoFileInput" accept="image/*" style="display:none;">
+            <input type="file" id="profilePhotoFileInput" accept="image/*" style="display:none;" onchange="window.handleProfilePhotoUpload(event);">
           </div>
 
           <h3 id="myProfName" style="font-size:1.3rem; font-weight:900; color:#004b98;">Member Name</h3>
@@ -3280,6 +3350,22 @@ body {
             <button type="button" class="filter-chip att-group-chip" data-group="Seniors Group" onclick="window.filterAttendanceByGroup('Seniors Group');">Seniors</button>
             <button type="button" class="filter-chip att-group-chip" data-group="Super Seniors Group" onclick="window.filterAttendanceByGroup('Super Seniors Group');">Super Seniors</button>
             <button type="button" class="filter-chip att-group-chip" data-group="Youth & Leaders" onclick="window.filterAttendanceByGroup('Youth & Leaders');">Youth / Leaders</button>
+          </div>
+        </div>
+
+        <!-- Entry & Exit Attendance Mode Selector -->
+        <div style="background:#ffffff; border:1.5px solid #0284c7; border-radius:14px; padding:12px 16px; margin-bottom:14px; box-shadow:0 3px 12px rgba(2,132,199,0.08); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+          <div>
+            <strong style="font-size:0.9rem; color:#002b66; display:flex; align-items:center; gap:8px;">
+              <span>⚡ Attendance Tracking Mode:</span>
+              <span id="currentAttModeLabel" style="background:#ecfdf5; color:#059669; font-size:0.75rem; font-weight:900; padding:2px 8px; border-radius:6px; border:1px solid #a7f3d0;">🔄 Smart Auto (Entry ➔ Exit)</span>
+            </strong>
+            <small id="currentAttModeDesc" style="color:#64748b; font-size:0.73rem;">Auto logs Entry (வருகை) on 1st scan and Exit (புறப்பாடு) with total time duration on 2nd scan.</small>
+          </div>
+          <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+            <button type="button" id="btnModeAuto" class="filter-chip active" onclick="window.setAttendanceMode('SMART_AUTO')" style="font-size:0.78rem; font-weight:800; padding:5px 12px; border-radius:8px;">🔄 Auto (Entry ➔ Exit)</button>
+            <button type="button" id="btnModeEntry" class="filter-chip" onclick="window.setAttendanceMode('ENTRY_ONLY')" style="font-size:0.78rem; font-weight:800; padding:5px 12px; border-radius:8px; background:#f0fdf4; color:#15803d; border-color:#86efac;">🟢 Entry Only (வருகை)</button>
+            <button type="button" id="btnModeExit" class="filter-chip" onclick="window.setAttendanceMode('EXIT_ONLY')" style="font-size:0.78rem; font-weight:800; padding:5px 12px; border-radius:8px; background:#fef2f2; color:#b91c1c; border-color:#fca5a5;">🔴 Exit Only (புறப்பாடு)</button>
           </div>
         </div>
 
@@ -5575,7 +5661,11 @@ body {
           <label>Theme Color</label>
           <input type="color" id="editTeamColor" class="form-control-dbyc" style="height:44px; padding:2px;">
         </div>
-        <button type="submit" class="btn-dbyc-primary" style="width:100%; font-weight:800;">💾 Save Team Details</button>
+        <div class="form-group-dbyc">
+          <label>Total Team Points (மொத்த புள்ளிகள்) 🏆 *</label>
+          <input type="number" id="editTeamPoints" class="form-control-dbyc" placeholder="e.g. 350" required>
+        </div>
+        <button type="submit" class="btn-dbyc-primary" style="width:100%; font-weight:800;">💾 Save Team Details & Points</button>
       </form>
     </div>
   </div>
@@ -5636,6 +5726,179 @@ body {
           Done (முடிந்தது)
         </button>
       </div>
+    </div>
+  </div>
+
+  <!-- ============================================================================== -->
+  <!-- 1. EVENT PHOTOS TELECAST UPLOAD & MANAGEMENT MODAL                             -->
+  <!-- ============================================================================== -->
+  <div id="eventPhotoUploadModal" class="modal-backdrop" style="display:none; z-index:9990;">
+    <div class="modal-content" style="max-width: 560px; border-radius: 20px; max-height:90vh; overflow-y:auto;">
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-size:1.5rem;">📸</span>
+          <div>
+            <h3 class="modal-title" style="color:#004b98;">DBYC Event Telecast Manager</h3>
+            <small style="color:#64748b;">Upload & telecast event photos on Home Portal carousel</small>
+          </div>
+        </div>
+        <button style="background:none; border:none; font-size:1.4rem; cursor:pointer;" onclick="document.getElementById('eventPhotoUploadModal').style.display='none'">&times;</button>
+      </div>
+
+      <!-- Upload Form -->
+      <form id="eventPhotoUploadForm" onsubmit="window.handleEventPhotoUploadSubmit(event)">
+        <!-- Photo Preview Box -->
+        <div style="display:flex; align-items:center; gap:14px; background:#f0f7ff; border:1.5px dashed #0284c7; border-radius:14px; padding:12px 14px; margin-bottom:14px;">
+          <img id="eventPhotoPreviewImg" src="assets/don_bosco.webp" style="width:84px; height:64px; border-radius:8px; object-fit:cover; border:2px solid #004b98; background:#091a33; flex-shrink:0;" onerror="this.onerror=null; this.src='assets/logo.png';">
+          <div style="flex:1;">
+            <strong style="font-size:0.88rem; color:#002b66;">Event Photo (புகைப்படம்)</strong>
+            <p style="font-size:0.73rem; color:#64748b; margin:2px 0 6px;">Choose photo file or snap with live camera</p>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:5px 12px; font-size:0.75rem;" onclick="document.getElementById('eventShowcaseFileInput').click()">📁 Choose File</button>
+              <input type="file" id="eventShowcaseFileInput" accept="image/*" style="display:none;" onchange="window.handleEventPhotoFileSelect(event)">
+              <button type="button" class="btn-dbyc-primary" style="background:#ea580c; padding:5px 12px; font-size:0.75rem;" onclick="document.getElementById('eventShowcaseCamInput').click()">📷 Camera</button>
+              <input type="file" id="eventShowcaseCamInput" accept="image/*" capture="environment" style="display:none;" onchange="window.handleEventPhotoFileSelect(event)">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group-dbyc">
+          <label>Event Title (நிகழ்வின் பெயர்) *</label>
+          <input type="text" id="eventPhotoTitle" class="form-control-dbyc" placeholder="e.g. Annual Sports Meet 2026 / Don Bosco Feast" required>
+        </div>
+
+        <div class="form-group-dbyc">
+          <label>Caption / Description (விளக்கம்)</label>
+          <input type="text" id="eventPhotoCaption" class="form-control-dbyc" placeholder="e.g. Celebrating youth brotherhood, sports and joy">
+        </div>
+
+        <div class="form-group-dbyc">
+          <label>Event Date (தேதி)</label>
+          <input type="date" id="eventPhotoDate" class="form-control-dbyc">
+        </div>
+
+        <button type="submit" class="btn-dbyc-primary" style="width:100%; font-weight:800; background:#004b98; padding:10px; border-radius:8px;">
+          ➕ Add Photo to Home Telecast Carousel
+        </button>
+      </form>
+
+      <!-- Existing Photos List -->
+      <div style="margin-top:20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <strong style="font-size:0.88rem; color:#0f172a;">Active Telecast Photos (<span id="eventPhotoCountSpan">0</span>)</strong>
+          <small style="color:#64748b; font-size:0.72rem;">Click delete to remove from slide show</small>
+        </div>
+        <div id="eventPhotosListContainer" style="max-height:180px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================================== -->
+  <!-- 2. DBYC MASTER CENTER ANALYTICS & STATISTICS MODAL                             -->
+  <!-- ============================================================================== -->
+  <div id="masterAnalyticsModal" class="modal-backdrop" style="display:none; z-index:9990;">
+    <div class="modal-content" style="max-width: 680px; border-radius: 20px; max-height:90vh; overflow-y:auto;">
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <img src="assets/logo.png" alt="DBYC Emblem" style="width:42px; height:42px; object-fit:contain; border-radius:50%; border:2px solid #004b98; background:#fff;" onerror="this.onerror=null; this.src='assets/icon.png';">
+          <div>
+            <h3 class="modal-title" style="color:#004b98; font-size:1.15rem;">DBYC Analytics & Center Statistics</h3>
+            <small style="color:#64748b;">தொன்போஸ்கோ இளைஞர் மன்றம் • நேரடி புள்ளிவிவரங்கள்</small>
+          </div>
+        </div>
+        <button style="background:none; border:none; font-size:1.4rem; cursor:pointer;" onclick="document.getElementById('masterAnalyticsModal').style.display='none'">&times;</button>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:16px; margin-top:14px;">
+        <!-- Card 1: Today's Live Attendance Metrics -->
+        <div style="background:#f8fafc; border:1.5px solid #0284c7; border-radius:14px; padding:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <strong style="font-size:0.95rem; color:#002b66; display:flex; align-items:center; gap:6px;">
+              <span>🕒 Daily Attendance Metrics (இன்றைய வருகை)</span>
+            </strong>
+            <span id="analyticsTodayDateBadge" style="background:#0284c7; color:#fff; font-size:0.72rem; font-weight:800; padding:2px 8px; border-radius:6px;">--</span>
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:10px;">
+            <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; padding:10px; text-align:center;">
+              <div style="font-size:0.72rem; color:#64748b; font-weight:700;">🟢 Total Entered</div>
+              <strong id="analyticsAttEntered" style="font-size:1.4rem; color:#10b981; font-weight:900;">0</strong>
+            </div>
+            <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; padding:10px; text-align:center;">
+              <div style="font-size:0.72rem; color:#64748b; font-weight:700;">🏢 In Center Now</div>
+              <strong id="analyticsAttActiveInside" style="font-size:1.4rem; color:#0284c7; font-weight:900;">0</strong>
+            </div>
+            <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; padding:10px; text-align:center;">
+              <div style="font-size:0.72rem; color:#64748b; font-weight:700;">🚪 Exited (Day Done)</div>
+              <strong id="analyticsAttExited" style="font-size:1.4rem; color:#f59e0b; font-weight:900;">0</strong>
+            </div>
+            <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; padding:10px; text-align:center;">
+              <div style="font-size:0.72rem; color:#64748b; font-weight:700;">📊 Attendance Rate</div>
+              <strong id="analyticsAttRate" style="font-size:1.4rem; color:#8b5cf6; font-weight:900;">0%</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Youth Center Group Breakdown -->
+        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:14px; padding:14px; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+          <strong style="font-size:0.92rem; color:#0f172a; display:block; margin-bottom:10px;">👥 Member Registration by Group (உறுப்பினர் பிரிவுகள்)</strong>
+          <div id="analyticsGroupBreakdownContainer" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:10px;"></div>
+        </div>
+
+        <!-- Card 3: 4 House Teams Standings -->
+        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:14px; padding:14px; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <strong style="font-size:0.92rem; color:#0f172a;">🏆 4 House Teams Live Standings (இல்ல அணிகள்)</strong>
+            <button type="button" class="btn-dbyc-primary" style="background:#f59e0b; color:#0f172a; font-size:0.72rem; font-weight:800; padding:3px 8px; border-radius:6px;" onclick="document.getElementById('masterAnalyticsModal').style.display='none'; switchView('teams');">View Full Roster ➔</button>
+          </div>
+          <div id="analyticsTeamsBreakdownContainer" style="display:flex; flex-direction:column; gap:8px;"></div>
+        </div>
+
+        <!-- Card 4: News, Telecast & System Health -->
+        <div style="background:#f1f5f9; border:1px solid #cbd5e1; border-radius:14px; padding:14px;">
+          <strong style="font-size:0.92rem; color:#0f172a; display:block; margin-bottom:10px;">📰 Content & Backend Cloud Status (அமைப்புகள்)</strong>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:10px;">
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:10px; text-align:center;">
+              <div style="font-size:0.72rem; color:#64748b; font-weight:700;">📢 News Bulletins</div>
+              <strong id="analyticsNewsCount" style="font-size:1.2rem; color:#004b98;">0</strong>
+            </div>
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:10px; text-align:center;">
+              <div style="font-size:0.72rem; color:#64748b; font-weight:700;">📸 Event Photos</div>
+              <strong id="analyticsTelecastCount" style="font-size:1.2rem; color:#0284c7;">0</strong>
+            </div>
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:10px; text-align:center;">
+              <div style="font-size:0.72rem; color:#64748b; font-weight:700;">⚡ Cloud Backup</div>
+              <strong id="analyticsCloudStatus" style="font-size:0.85rem; color:#10b981; font-weight:800;">Connected</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-top:4px;">
+          <button type="button" class="btn-dbyc-primary" style="background:#004b98; padding:8px 16px; font-weight:800; border-radius:8px;" onclick="window.printAnalyticsReport()">
+            🖨️ Print Analytics Report
+          </button>
+          <button type="button" class="btn-dbyc-primary" style="background:#64748b; padding:8px 16px; font-weight:800; border-radius:8px;" onclick="document.getElementById('masterAnalyticsModal').style.display='none'">
+            Close (மூடு)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================================== -->
+  <!-- 3. FLOATING VOICE ASSISTANT OVERLAY & VISUALIZER                               -->
+  <!-- ============================================================================== -->
+  <div id="voiceAssistantOverlay" style="display:none; position:fixed; bottom:24px; right:24px; z-index:9999; background:#002b66; color:#ffffff; padding:16px 20px; border-radius:20px; box-shadow:0 12px 30px rgba(0,0,0,0.35); border:2px solid #fde047; max-width:340px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="font-size:1.3rem;">🎙️</span>
+        <strong id="voiceStatusTitle" style="font-size:0.95rem; color:#fde047;">DBYC Voice Assistant</strong>
+      </div>
+      <button onclick="window.stopVoiceAssistant()" style="background:none; border:none; color:#fff; font-size:1.3rem; cursor:pointer; line-height:1;">&times;</button>
+    </div>
+    <p id="voiceLiveTranscript" style="font-size:0.85rem; color:#e2e8f0; font-style:italic; margin:6px 0; min-height:22px;">Listening... Speak command in Tamil or English</p>
+    <div style="font-size:0.72rem; color:#94a3b8; border-top:1px solid rgba(255,255,255,0.15); padding-top:6px; margin-top:6px;">
+      Voice Commands: "Attendance", "Members", "Teams", "News", "வருகை", "அணிகள்"
     </div>
   </div>
 
@@ -8145,42 +8408,115 @@ function updateDashboardStats() {
   if (qualCountMin) qualCountMin.textContent = pendingMinutes;
 }
 
+// ==============================================================================
+// DBYC MASTER ATTENDANCE ENGINE - ENTRY & EXIT TRACKING + AUTO DURATION
+// ==============================================================================
+window.currentAttendanceMode = 'SMART_AUTO'; // 'SMART_AUTO' | 'ENTRY_ONLY' | 'EXIT_ONLY'
+
+window.setAttendanceMode = function(mode) {
+  window.currentAttendanceMode = mode;
+  
+  const btnAuto = document.getElementById('btnModeAuto');
+  const btnEntry = document.getElementById('btnModeEntry');
+  const btnExit = document.getElementById('btnModeExit');
+  const label = document.getElementById('currentAttModeLabel');
+  const desc = document.getElementById('currentAttModeDesc');
+
+  [btnAuto, btnEntry, btnExit].forEach(b => { if (b) b.classList.remove('active'); });
+
+  if (mode === 'ENTRY_ONLY') {
+    if (btnEntry) btnEntry.classList.add('active');
+    if (label) {
+      label.textContent = '🟢 Entry Only (வருகை மட்டும்)';
+      label.style.background = '#f0fdf4';
+      label.style.color = '#15803d';
+      label.style.borderColor = '#86efac';
+    }
+    if (desc) desc.textContent = 'Logs arrival/entry timestamp for all checked-in members.';
+    showToast('🟢 Mode set to: ENTRY ONLY (வருகை மட்டும்)');
+  } else if (mode === 'EXIT_ONLY') {
+    if (btnExit) btnExit.classList.add('active');
+    if (label) {
+      label.textContent = '🔴 Exit Only (புறப்பாடு மட்டும்)';
+      label.style.background = '#fef2f2';
+      label.style.color = '#b91c1c';
+      label.style.borderColor = '#fca5a5';
+    }
+    if (desc) desc.textContent = 'Logs departure/exit timestamp and computes total center stay duration.';
+    showToast('🔴 Mode set to: EXIT ONLY (புறப்பாடு மட்டும்)');
+  } else {
+    window.currentAttendanceMode = 'SMART_AUTO';
+    if (btnAuto) btnAuto.classList.add('active');
+    if (label) {
+      label.textContent = '🔄 Smart Auto (Entry ➔ Exit)';
+      label.style.background = '#ecfdf5';
+      label.style.color = '#059669';
+      label.style.borderColor = '#a7f3d0';
+    }
+    if (desc) desc.textContent = 'Auto logs Entry on 1st scan and Exit with total duration on 2nd scan.';
+    showToast('🔄 Mode set to: SMART AUTO (Entry ➔ Exit)');
+  }
+
+  if (typeof renderFastAttendanceDesk === 'function') renderFastAttendanceDesk();
+};
+
 function renderTodayAttendance() {
   const container = document.getElementById('todayAttendanceList');
-  const today = new Date().toISOString().split('T')[0];
-  const list = (appState.attendance || []).filter(a => a.date === today);
-  const total = (appState.members || []).length;
+  if (!container) return;
+  const activeDate = window.getActiveAttendanceDate ? window.getActiveAttendanceDate() : new Date().toISOString().split('T')[0];
+  const list = (window.appState.attendance || []).filter(a => a.date === activeDate);
+  const total = (window.appState.members || []).length;
   const rate = total > 0 ? ((list.length / total) * 100).toFixed(1) : 0;
 
   const countBadge = document.getElementById('todayAttCountBadge');
-  if (countBadge) countBadge.textContent = `${list.length} Marked Today (${rate}%)`;
+  if (countBadge) countBadge.textContent = `${list.length} Checked In (${rate}%) [${activeDate}]`;
 
   if (list.length === 0) {
-    container.innerHTML = `<div style="text-align:center; padding:20px; color:#64748b;">No attendance recorded today yet. Scan QR pass or tap above.</div>`;
+    container.innerHTML = `<div style="text-align:center; padding:24px; color:#64748b;">No attendance recorded for ${activeDate} yet. Scan QR pass or tap above.</div>`;
     return;
   }
 
-  container.innerHTML = list.map(a => `
-    <div class="member-card" style="padding:10px 14px; display:flex; justify-content:space-between; align-items:center;">
-      <div class="member-card-left" style="display:flex; align-items:center; gap:10px;">
-        <div class="member-avatar" style="width:38px; height:38px; font-size:0.9rem; background:#10b981; color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900;">✓</div>
-        <div>
-          <div class="member-name" style="font-weight:800; color:#0f172a;">${a.memberName}</div>
-          <div class="member-sub" style="font-size:0.75rem; color:#64748b; margin-top:2px;">
-            ${a.memberCode || a.memberId} • ${a.group} • <span style="color:#0284c7; font-weight:700;">${a.session || 'Weekly Assembly'}</span> • 🕒 ${new Date(a.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+  container.innerHTML = list.map(a => {
+    const isCompleted = a.exitTime || a.status === 'COMPLETED';
+    const durationStr = a.duration ? ` • ⏱️ Stay: ${a.duration}` : '';
+    const statusChip = isCompleted
+      ? `<span class="role-badge" style="background:#eff6ff; color:#1d4ed8; font-weight:800; font-size:0.72rem; padding:3px 8px; border-radius:6px; border:1px solid #bfdbfe;">✓ Exited (${a.exitTime})</span>`
+      : `<span class="role-badge" style="background:#ecfdf5; color:#059669; font-weight:800; font-size:0.72rem; padding:3px 8px; border-radius:6px; border:1px solid #a7f3d0;">🟢 In Center (${a.entryTime || 'Present'})</span>`;
+
+    const exitActionBtn = !isCompleted
+      ? `<button type="button" style="background:#fef3c7; color:#92400e; border:1px solid #fde68a; border-radius:6px; padding:3px 8px; font-size:0.7rem; font-weight:800; cursor:pointer; margin-top:4px;" onclick="window.logMemberExitDirect('${a.memberId}')" title="Log member exit & calculate duration">
+           🚪 Log Exit
+         </button>`
+      : '';
+
+    return `
+      <div class="member-card" style="padding:10px 14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+        <div class="member-card-left" style="display:flex; align-items:center; gap:10px;">
+          <div class="member-avatar" style="width:38px; height:38px; font-size:0.9rem; background:${isCompleted ? '#0284c7' : '#10b981'}; color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900;">
+            ${isCompleted ? '✓' : '●'}
+          </div>
+          <div>
+            <div class="member-name" style="font-weight:800; color:#0f172a;">${a.memberName}</div>
+            <div class="member-sub" style="font-size:0.75rem; color:#64748b; margin-top:2px;">
+              ${a.memberCode || a.memberId} • ${a.group} • <span style="color:#0284c7; font-weight:700;">${a.session || 'Weekly Assembly'}</span>
+            </div>
+            <div style="font-size:0.72rem; color:#475569; margin-top:2px;">
+              🟢 In: <strong>${a.entryTime || 'N/A'}</strong> ${a.exitTime ? `• 🔴 Out: <strong>${a.exitTime}</strong>` : ''}${durationStr}
+            </div>
           </div>
         </div>
+        <div style="text-align:right; display:flex; flex-direction:column; align-items:flex-end; gap:3px;">
+          ${statusChip}
+          <div style="font-size:0.65rem; color:#94a3b8; font-weight:600;">${a.scanMethod || 'QR_CAMERA'}</div>
+          ${exitActionBtn}
+          ${isLeaderOrDirector() ? `
+          <button type="button" style="background:#fee2e2; color:#b91c1c; border:1px solid #fecaca; border-radius:6px; padding:2px 8px; font-size:0.68rem; font-weight:800; cursor:pointer; margin-top:3px;" onclick="window.deleteAttendanceRecord('${a.id}')" title="Cancel or remove this record">
+            🗑️ Undo
+          </button>` : ''}
+        </div>
       </div>
-      <div style="text-align:right; display:flex; flex-direction:column; align-items:flex-end;">
-        <span class="role-badge" style="background:#ecfdf5; color:#059669; font-weight:800; font-size:0.72rem; padding:3px 8px; border-radius:6px;">Present</span>
-        <div style="font-size:0.65rem; color:#94a3b8; margin-top:2px; font-weight:600;">${a.scanMethod || 'QR_CAMERA'}</div>
-        ${isLeaderOrDirector() ? `
-        <button type="button" style="background:#fee2e2; color:#b91c1c; border:1px solid #fecaca; border-radius:6px; padding:2px 8px; font-size:0.68rem; font-weight:800; cursor:pointer; margin-top:4px;" onclick="window.deleteAttendanceRecord('${a.id}')" title="Cancel or remove this check-in entry">
-          🗑️ Undo
-        </button>` : ''}
-      </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 window.deleteAttendanceRecord = function(attId) {
@@ -8189,14 +8525,14 @@ window.deleteAttendanceRecord = function(attId) {
     showToast('🔒 Only leaders and directors can cancel attendance records.');
     return;
   }
-  const record = (appState.attendance || []).find(a => a.id === attId);
+  const record = (window.appState.attendance || []).find(a => a.id === attId);
   const memName = record ? record.memberName : 'this check-in';
 
-  if (!confirm(`Are you sure you want to cancel the attendance check-in for:\n\n• Member: ${memName}\n• ID: ${record ? (record.memberCode || record.memberId) : ''}?`)) {
+  if (!confirm(`Are you sure you want to cancel attendance record for:\n\n• Member: ${memName}\n• Date: ${record ? record.date : ''}?`)) {
     return;
   }
 
-  appState.attendance = (appState.attendance || []).filter(a => a.id !== attId);
+  window.appState.attendance = (window.appState.attendance || []).filter(a => a.id !== attId);
   saveLocalData();
   if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
     window.DbycCloud.pushToCloud();
@@ -8204,7 +8540,61 @@ window.deleteAttendanceRecord = function(attId) {
   renderTodayAttendance();
   updateDashboardStats();
   if (typeof renderFastAttendanceDesk === 'function') renderFastAttendanceDesk();
-  showToast(`✅ Cancelled check-in for ${memName}.`);
+  showToast(`✅ Removed attendance record for ${memName}.`);
+};
+
+window.logMemberExitDirect = function(memberId) {
+  const activeDate = window.getActiveAttendanceDate();
+  const sessionEl = document.getElementById('pwaAttendanceSessionSelect');
+  const session = sessionEl ? sessionEl.value : 'Weekly DBYC Youth Assembly';
+  const record = (window.appState.attendance || []).find(a => a.date === activeDate && a.memberId === memberId && (!a.session || a.session === session));
+
+  if (!record) {
+    showToast('⚠️ No active check-in record found for this member today.');
+    return;
+  }
+
+  const now = new Date();
+  record.exitTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  record.exitTimestamp = now.toISOString();
+
+  // Compute stay duration
+  if (record.entryTimestamp) {
+    const diffMs = Math.max(0, now.getTime() - new Date(record.entryTimestamp).getTime());
+    const diffMins = Math.round(diffMs / 60000);
+    const hrs = Math.floor(diffMins / 60);
+    const mins = diffMins % 60;
+    record.duration = (hrs > 0 ? `${hrs}h ` : '') + `${mins}m`;
+  } else {
+    record.duration = '1h 00m';
+  }
+  record.status = 'COMPLETED';
+
+  saveLocalData();
+  if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+    window.DbycCloud.pushToCloud();
+  }
+
+  // Audio descending chime
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, ctx.currentTime);
+    osc.frequency.setValueAtTime(587.33, ctx.currentTime + 0.1);
+    gain.gain.setValueAtTime(0.25, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.35);
+  } catch(e) {}
+
+  renderTodayAttendance();
+  updateDashboardStats();
+  if (typeof renderFastAttendanceDesk === 'function') renderFastAttendanceDesk();
+  showToast(`🚪 EXIT Logged: ${record.memberName} left at ${record.exitTime} (Stay: ${record.duration})`);
 };
 
 let qrAttendanceStream = null;
@@ -8280,7 +8670,6 @@ window.renderFastAttendanceDesk = function() {
 
   // Filter members by query and active group
   const filtered = members.filter(m => {
-    // Group filter
     if (currentAttendanceActiveGroup !== 'ALL') {
       const mGroup = (m.group || '').toLowerCase();
       const targetGroup = currentAttendanceActiveGroup.toLowerCase();
@@ -8288,7 +8677,6 @@ window.renderFastAttendanceDesk = function() {
         return false;
       }
     }
-    // Search query
     if (!query) return true;
     return (m.name && m.name.toLowerCase().includes(query)) ||
            (m.id && m.id.toLowerCase().includes(query)) ||
@@ -8339,29 +8727,44 @@ window.renderFastAttendanceDesk = function() {
   }
 
   container.innerHTML = filtered.map(m => {
-    const isPresent = attLog.some(a => a.date === activeDate && a.memberId === m.id);
-    const photo = m.photo || window.DBYC_DEFAULT_AVATAR;
+    const record = attLog.find(a => a.date === activeDate && a.memberId === m.id);
+    const photo = m.photo || window.DBYC_DEFAULT_AVATAR || 'assets/logo.png';
+    const isPresent = !!record;
+    const isExited = record && (record.exitTime || record.status === 'COMPLETED');
+
+    let actionButtonsHtml = '';
+    if (!isPresent) {
+      actionButtonsHtml = `<button type="button" class="btn-dbyc-primary" style="background:#16a34a; font-size:0.75rem; font-weight:800; padding:5px 12px; border-radius:6px; cursor:pointer;" onclick="window.toggleAttendanceRecord('${m.id}', 'ENTRY_ONLY')" title="Mark member entry for ${activeDate}">🟢 Entry (வருகை)</button>`;
+    } else if (!isExited) {
+      actionButtonsHtml = `
+        <span style="font-size:0.72rem; color:#059669; font-weight:800; background:#ecfdf5; padding:3px 8px; border-radius:6px; border:1px solid #a7f3d0;">In Center (${record.entryTime || '✓'})</span>
+        <button type="button" class="btn-dbyc-primary" style="background:#ea580c; font-size:0.75rem; font-weight:800; padding:5px 12px; border-radius:6px; cursor:pointer;" onclick="window.logMemberExitDirect('${m.id}')" title="Log member exit (புறப்பாடு)">🚪 Exit (புறப்பாடு)</button>
+      `;
+    } else {
+      actionButtonsHtml = `
+        <span style="font-size:0.72rem; color:#1d4ed8; font-weight:800; background:#eff6ff; padding:3px 8px; border-radius:6px; border:1px solid #bfdbfe;">✓ Exited (${record.exitTime})</span>
+        <button type="button" class="btn-dbyc-secondary" style="background:#f1f5f9; color:#475569; font-size:0.72rem; font-weight:800; padding:4px 8px; border-radius:6px; border:1px solid #cbd5e1; cursor:pointer;" onclick="window.toggleAttendanceRecord('${m.id}')" title="Reset or toggle status">🔄 Reset</button>
+      `;
+    }
+
     return `
-      <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 12px; border-bottom:1px solid #f1f5f9; gap:8px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 12px; border-bottom:1px solid #f1f5f9; gap:8px; flex-wrap:wrap;">
         <div style="display:flex; align-items:center; gap:10px;">
-          <img src="${photo}" style="width:36px; height:36px; border-radius:50%; object-fit:cover; border:1px solid #cbd5e1;">
+          <img src="${photo}" style="width:36px; height:36px; border-radius:50%; object-fit:cover; border:1px solid #cbd5e1;" onerror="this.onerror=null; this.src='assets/logo.png';">
           <div>
             <strong style="font-size:0.86rem; color:#0f172a; display:block;">${m.name}</strong>
             <small style="color:#64748b; font-size:0.73rem;">${m.id} • ${m.group || 'Member'}</small>
           </div>
         </div>
         <div style="display:flex; align-items:center; gap:6px;">
-          ${isPresent 
-            ? `<button type="button" class="btn-dbyc-primary" style="background:#15803d; font-size:0.75rem; font-weight:800; padding:5px 12px; border-radius:6px;" onclick="window.toggleAttendanceRecord('${m.id}')" title="Marked Present. Click to remove or toggle.">✅ Present</button>`
-            : `<button type="button" class="btn-dbyc-primary" style="background:#0284c7; font-size:0.75rem; font-weight:800; padding:5px 12px; border-radius:6px;" onclick="window.toggleAttendanceRecord('${m.id}')" title="Click to mark present for ${activeDate}">⚡ Mark Present</button>`
-          }
+          ${actionButtonsHtml}
         </div>
       </div>
     `;
   }).join('');
 };
 
-window.toggleAttendanceRecord = function(memberId) {
+window.toggleAttendanceRecord = function(memberId, forcedMode) {
   const activeDate = window.getActiveAttendanceDate();
   const sessionEl = document.getElementById('pwaAttendanceSessionSelect');
   const session = sessionEl ? sessionEl.value : 'Weekly DBYC Youth Assembly';
@@ -8370,30 +8773,55 @@ window.toggleAttendanceRecord = function(memberId) {
   if (!member) return;
 
   if (!window.appState.attendance) window.appState.attendance = [];
-  const idx = window.appState.attendance.findIndex(a => a.date === activeDate && a.memberId === memberId && (!a.session || a.session === session));
+  const existingIdx = window.appState.attendance.findIndex(a => a.date === activeDate && a.memberId === memberId && (!a.session || a.session === session));
 
-  if (idx !== -1) {
-    // Already present: toggle to absent
-    window.appState.attendance.splice(idx, 1);
-    saveLocalData();
-    showToast(`ℹ️ Removed attendance for ${member.name} (${activeDate})`);
+  const mode = forcedMode || window.currentAttendanceMode || 'SMART_AUTO';
+
+  if (existingIdx !== -1) {
+    const record = window.appState.attendance[existingIdx];
+    if (mode === 'SMART_AUTO' && !record.exitTime) {
+      // Auto transition from Entry to Exit
+      window.logMemberExitDirect(memberId);
+      return;
+    } else {
+      // Toggle to absent / remove
+      window.appState.attendance.splice(existingIdx, 1);
+      saveLocalData();
+      if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+        window.DbycCloud.pushToCloud();
+      }
+      showToast(`ℹ️ Removed attendance for ${member.name} (${activeDate})`);
+    }
   } else {
-    // Mark Present
-    window.appState.attendance.unshift({
+    // Record Entry
+    const now = new Date();
+    const entryTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const record = {
       id: 'ATT-' + Date.now(),
       memberId: member.id,
       memberCode: member.member_code || member.id,
       memberName: member.name,
       group: member.group || 'Oratory',
       session: session,
-      status: 'PRESENT',
+      status: 'IN_CENTER',
+      entryTime: entryTime,
+      entryTimestamp: now.toISOString(),
+      exitTime: null,
+      exitTimestamp: null,
+      duration: null,
       scanMethod: 'FAST_TAP_DESK',
       date: activeDate,
-      timestamp: new Date().toISOString(),
+      timestamp: now.toISOString(),
       recordedBy: (window.appState.currentUser && window.appState.currentUser.name) ? window.appState.currentUser.name : 'Director Desk'
-    });
+    };
+
+    window.appState.attendance.unshift(record);
     saveLocalData();
-    showToast(`⚡ Marked PRESENT: ${member.name}`);
+    if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+      window.DbycCloud.pushToCloud();
+    }
+    showToast(`🟢 ENTRY Logged: ${member.name} (${entryTime})`);
+
     // Audio chime
     try {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -8404,10 +8832,10 @@ window.toggleAttendanceRecord = function(memberId) {
       osc.type = 'sine';
       osc.frequency.setValueAtTime(587.33, ctx.currentTime);
       osc.frequency.setValueAtTime(880, ctx.currentTime + 0.08);
-      gain.gain.setValueAtTime(0.2, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
+      gain.gain.setValueAtTime(0.25, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
       osc.start();
-      osc.stop(ctx.currentTime + 0.25);
+      osc.stop(ctx.currentTime + 0.3);
     } catch(e) {}
   }
 
@@ -8431,6 +8859,9 @@ window.markAllInActiveGroupPresent = function() {
   });
 
   let markedCount = 0;
+  const now = new Date();
+  const entryTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
   targetMembers.forEach(m => {
     const exists = window.appState.attendance.some(a => a.date === activeDate && a.memberId === m.id);
     if (!exists) {
@@ -8441,10 +8872,15 @@ window.markAllInActiveGroupPresent = function() {
         memberName: m.name,
         group: m.group || 'Oratory',
         session: session,
-        status: 'PRESENT',
+        status: 'IN_CENTER',
+        entryTime: entryTime,
+        entryTimestamp: now.toISOString(),
+        exitTime: null,
+        exitTimestamp: null,
+        duration: null,
         scanMethod: 'GROUP_MASS_CHECKIN',
         date: activeDate,
-        timestamp: new Date().toISOString(),
+        timestamp: now.toISOString(),
         recordedBy: (window.appState.currentUser && window.appState.currentUser.name) ? window.appState.currentUser.name : 'Director Desk'
       });
       markedCount++;
@@ -8452,7 +8888,10 @@ window.markAllInActiveGroupPresent = function() {
   });
 
   saveLocalData();
-  showToast(`✅ Marked ${markedCount} members PRESENT in ${currentAttendanceActiveGroup} for ${activeDate}!`);
+  if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+    window.DbycCloud.pushToCloud();
+  }
+  showToast(`✅ Marked ${markedCount} members ENTRY in ${currentAttendanceActiveGroup} for ${activeDate}!`);
   window.renderFastAttendanceDesk();
   if (typeof renderTodayAttendance === 'function') renderTodayAttendance();
   if (typeof updateDashboardStats === 'function') updateDashboardStats();
@@ -8469,9 +8908,9 @@ window.manualCheckinSubmit = function() {
   if (input) input.value = '';
 };
 
-window.processAttendanceCheckin = function(query, scanMethod) {
+window.processAttendanceCheckin = function(query, scanMethod, forcedMode) {
   if (!query) return;
-  const members = appState.members || [];
+  const members = window.appState.members || [];
   let qClean = decodeURIComponent(query).trim().toUpperCase();
 
   // Handle format DBYC:ID:TOKEN or DBYC:ID:Name:Group
@@ -8510,29 +8949,81 @@ window.processAttendanceCheckin = function(query, scanMethod) {
     return;
   }
 
-  const today = new Date().toISOString().split('T')[0];
-  if (!appState.attendance) appState.attendance = [];
+  const activeDate = window.getActiveAttendanceDate();
+  if (!window.appState.attendance) window.appState.attendance = [];
 
   const sessionEl = document.getElementById('pwaAttendanceSessionSelect');
   const currentSession = sessionEl ? sessionEl.value : 'Weekly DBYC Youth Assembly';
 
-  const alreadyCheckedIn = appState.attendance.some(a => a.date === today && a.memberId === member.id && (!a.session || a.session === currentSession));
-  if (alreadyCheckedIn) {
-    showToast(`ℹ️ ${member.name} (${member.id}) is ALREADY marked PRESENT for ${currentSession} today!`);
+  const mode = forcedMode || window.currentAttendanceMode || 'SMART_AUTO';
+  const existingRecord = window.appState.attendance.find(a => a.date === activeDate && a.memberId === member.id && (!a.session || a.session === currentSession));
+
+  const methodUsed = scanMethod || 'QR_CAMERA';
+  const now = new Date();
+  const timeFormatted = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+  if (mode === 'EXIT_ONLY' || (mode === 'SMART_AUTO' && existingRecord && !existingRecord.exitTime)) {
+    // Record Exit
+    if (!existingRecord) {
+      showToast(`⚠️ No entry found for ${member.name} today. Please log Entry first or switch to Auto.`);
+      return;
+    }
+    existingRecord.exitTime = timeFormatted;
+    existingRecord.exitTimestamp = now.toISOString();
+    if (existingRecord.entryTimestamp) {
+      const diffMs = Math.max(0, now.getTime() - new Date(existingRecord.entryTimestamp).getTime());
+      const diffMins = Math.round(diffMs / 60000);
+      const hrs = Math.floor(diffMins / 60);
+      const mins = diffMins % 60;
+      existingRecord.duration = (hrs > 0 ? `${hrs}h ` : '') + `${mins}m`;
+    } else {
+      existingRecord.duration = '1h 00m';
+    }
+    existingRecord.status = 'COMPLETED';
+
+    saveLocalData();
+    if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+      window.DbycCloud.pushToCloud();
+    }
+
+    renderTodayAttendance();
+    updateDashboardStats();
+    window.renderFastAttendanceDesk();
+
+    // Descending Exit Chime (A5 -> D5)
     try {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
       const osc = ctx.createOscillator();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(440, ctx.currentTime);
-      osc.frequency.setValueAtTime(349, ctx.currentTime + 0.1);
-      osc.connect(ctx.destination);
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      osc.frequency.setValueAtTime(587.33, ctx.currentTime + 0.1);
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
       osc.start();
       osc.stop(ctx.currentTime + 0.35);
     } catch(e) {}
+    try { if (navigator.vibrate) navigator.vibrate([100, 50, 100]); } catch(e) {}
+
+    showToast(`🚪 EXIT Recorded (புறப்பாடு): ${member.name} exited at ${existingRecord.exitTime} (Total Stay: ${existingRecord.duration})!`);
     return;
   }
 
-  const methodUsed = scanMethod || 'QR_CAMERA';
+  // Already completed both Entry and Exit
+  if (existingRecord && existingRecord.exitTime) {
+    showToast(`ℹ️ ${member.name} has already completed attendance today! (In: ${existingRecord.entryTime} | Out: ${existingRecord.exitTime} • ${existingRecord.duration})`);
+    return;
+  }
+
+  // Already logged Entry (when in ENTRY_ONLY mode)
+  if (existingRecord && mode === 'ENTRY_ONLY') {
+    showToast(`ℹ️ ${member.name} is ALREADY marked Entry for today (${existingRecord.entryTime})!`);
+    return;
+  }
+
+  // Record Fresh Entry
   const record = {
     id: 'ATT-' + Date.now(),
     memberId: member.id,
@@ -8540,26 +9031,29 @@ window.processAttendanceCheckin = function(query, scanMethod) {
     memberName: member.name,
     group: member.group || 'Oratory',
     session: currentSession,
-    status: 'PRESENT',
+    status: 'IN_CENTER',
+    entryTime: timeFormatted,
+    entryTimestamp: now.toISOString(),
+    exitTime: null,
+    exitTimestamp: null,
+    duration: null,
     scanMethod: methodUsed,
-    date: today,
-    timestamp: new Date().toISOString(),
-    recordedBy: (appState.currentUser && appState.currentUser.name) ? appState.currentUser.name : 'Leader'
+    date: activeDate,
+    timestamp: now.toISOString(),
+    recordedBy: (window.appState.currentUser && window.appState.currentUser.name) ? window.appState.currentUser.name : 'Director Desk'
   };
 
-  appState.attendance.unshift(record);
+  window.appState.attendance.unshift(record);
   saveLocalData();
   if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
     window.DbycCloud.pushToCloud();
   }
 
-  // PWA Attendance saved locally & synced automatically to Google Drive Cloud
-
   renderTodayAttendance();
   updateDashboardStats();
   window.renderFastAttendanceDesk();
 
-  // Pleasant 2-tone audio chime (D5 -> A5)
+  // Ascending Entry Chime (D5 -> A5)
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
     const osc = ctx.createOscillator();
@@ -8576,28 +9070,30 @@ window.processAttendanceCheckin = function(query, scanMethod) {
   } catch(e) {}
   try { if (navigator.vibrate) navigator.vibrate(200); } catch(e) {}
 
-  showToast(`✅ Checked In: ${member.name} (${member.group || 'Member'}) for ${currentSession}!`);
+  showToast(`🟢 ENTRY Logged (வருகை): ${member.name} entered at ${timeFormatted} (${member.group || 'Member'})!`);
 };
 
 window.exportAttendanceCsv = function() {
-  const list = appState.attendance || [];
+  const list = window.appState.attendance || [];
   if (list.length === 0) {
     showToast('⚠️ No attendance records to export.');
     return;
   }
-  let csv = 'Record ID,Date,Timestamp,Method,Member ID,Full Name,Group,Session,Status,Recorded By\r\n';
+  let csv = 'Record ID,Date,Method,Member ID,Full Name,Group,Session,Status,Entry Time,Exit Time,Total Duration,Recorded By\r\n';
   list.forEach(r => {
     const clean = (val) => '"' + String(val || '').replace(/"/g, '""') + '"';
     csv += [
       clean(r.id),
       clean(r.date),
-      clean(r.timestamp),
       clean(r.scanMethod || 'QR_CAMERA'),
       clean(r.memberCode || r.memberId),
       clean(r.memberName),
       clean(r.group),
       clean(r.session || 'Weekly Assembly'),
       clean(r.status || 'PRESENT'),
+      clean(r.entryTime || 'N/A'),
+      clean(r.exitTime || 'In Center'),
+      clean(r.duration || 'N/A'),
       clean(r.recordedBy)
     ].join(',') + '\r\n';
   });
@@ -8605,11 +9101,11 @@ window.exportAttendanceCsv = function() {
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = `DBYC_Attendance_${new Date().toISOString().split('T')[0].replace(/-/g, '')}.csv`;
+  link.download = `DBYC_Attendance_Entry_Exit_${new Date().toISOString().split('T')[0].replace(/-/g, '')}.csv`;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-  showToast('📥 Attendance CSV exported successfully!');
+  showToast('📥 Comprehensive Attendance CSV exported successfully!');
 };
 
 window.toggleQrCamera = function() {
@@ -12276,8 +12772,34 @@ window.canEdit = function(feature) {
   return !!window.appState.editPermissions[key];
 };
 
-window.canUserEdit = function() {
-  return isDirectorOrAsstDirector();
+window.isMasterEditActive = false;
+
+window.toggleMasterEditing = function() {
+  window.isMasterEditActive = !window.isMasterEditActive;
+  const icon = document.getElementById('masterEditIcon');
+  const txt = document.getElementById('masterEditText');
+  if (window.isMasterEditActive) {
+    if (icon) icon.textContent = '🔓';
+    if (txt) txt.textContent = 'Edit Mode: ON';
+    showToast('🔓 Master Edit Mode ACTIVATED for this session.');
+  } else {
+    if (icon) icon.textContent = '🛡️';
+    if (txt) txt.textContent = 'Edit Controls';
+    showToast('🔒 Master Edit Mode DEACTIVATED.');
+  }
+  if (typeof renderCurrentActiveView === 'function') renderCurrentActiveView();
+};
+
+window.canUserEdit = function(feature) {
+  if (isDirectorOrAsstDirector()) return true;
+  if (window.isMasterEditActive) return true;
+  if (typeof isLeaderOrDirector === 'function' && isLeaderOrDirector()) return true;
+  const role = (window.appState && window.appState.currentUser && window.appState.currentUser.role) ? window.appState.currentUser.role.toLowerCase() : '';
+  if (role.includes('director') || role.includes('leader') || role.includes('admin') || role.includes('secretary') || role.includes('president') || role.includes('captain')) return true;
+  if (feature && window.appState && window.appState.editPermissions && window.appState.editPermissions[feature] !== undefined) {
+    return !!window.appState.editPermissions[feature];
+  }
+  return false;
 };
 
 window.toggleEditPermission = function(feature) {
@@ -12758,6 +13280,8 @@ window.openEditTeamModal = function(teamId) {
   document.getElementById('editTeamCaptain').value = team.captain || '';
   document.getElementById('editTeamSlogan').value = team.slogan || '';
   document.getElementById('editTeamColor').value = team.color || '#004b98';
+  const ptsEl = document.getElementById('editTeamPoints');
+  if (ptsEl) ptsEl.value = (team.points !== undefined) ? team.points : 0;
 
   window.capturedTeamLogoBase64 = team.logo || '';
   const previewImg = document.getElementById('teamEmblemPreviewImg');
@@ -12837,6 +13361,20 @@ function setupEditTeamFormSubmit() {
     if (window.capturedTeamLogoBase64 !== undefined) {
       team.logo = window.capturedTeamLogoBase64;
     }
+    const newPtsVal = parseInt(document.getElementById('editTeamPoints')?.value, 10);
+    if (!isNaN(newPtsVal)) {
+      const oldPts = team.points || 0;
+      team.points = newPtsVal;
+      if (!window.appState.teamPointsLog) window.appState.teamPointsLog = [];
+      window.appState.teamPointsLog.unshift({
+        id: 'LOG-' + Date.now(),
+        team: team.name,
+        points: newPtsVal - oldPts,
+        reason: `Points Update: (${oldPts} -> ${newPtsVal} PTS)`,
+        awardedBy: (window.appState.currentUser && window.appState.currentUser.name) ? window.appState.currentUser.name : 'Leader / Director',
+        date: new Date().toISOString().split('T')[0]
+      });
+    }
 
     saveLocalData();
     if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
@@ -12869,7 +13407,10 @@ function renderTeamsView() {
       const count = (window.appState.members || []).filter(m => m.team === t.id).length;
       const teamLogo = t.logo || window.DBYC_OFFICIAL_LOGO || 'assets/logo.png';
       const editTeamBtn = canEdit
-        ? `<button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:5px 12px; font-size:0.75rem; font-weight:800; border-radius:8px; margin-top:8px;" onclick="window.openEditTeamModal('${t.id}')">✏️ Edit Emblem & Info</button>`
+        ? `<div style="display:flex; justify-content:center; gap:6px; margin-top:10px; flex-wrap:wrap;">
+             <button type="button" class="btn-dbyc-primary" style="background:#f59e0b; color:#0f172a; padding:5px 10px; font-size:0.75rem; font-weight:800; border-radius:8px; cursor:pointer;" onclick="window.openAwardPointsModal('${t.id}')" title="Award or deduct points">⚡ Award (+/-)</button>
+             <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:5px 10px; font-size:0.75rem; font-weight:800; border-radius:8px; cursor:pointer;" onclick="window.openEditTeamModal('${t.id}')" title="Edit team total points, name & emblem">✏️ Edit Points</button>
+           </div>`
         : '';
 
       return `
@@ -17136,6 +17677,574 @@ function doGet(e) {
 }`;
   }
 };
+
+// ==============================================================================
+// 1. UNIFIED IMAGE COMPRESSION & PROFILE PHOTO UPLOAD HANDLER
+// ==============================================================================
+window.compressImageFile = function(file, maxWidth, quality, callback) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      let w = img.width;
+      let h = img.height;
+      if (w > maxWidth) {
+        h = Math.round((h * maxWidth) / w);
+        w = maxWidth;
+      }
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', quality || 0.82);
+      callback(dataUrl);
+    };
+    img.onerror = function() {
+      callback(e.target.result);
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+};
+
+window.handleProfilePhotoUpload = function(event) {
+  const file = (event && event.target && event.target.files) ? event.target.files[0] : event;
+  if (!file) return;
+
+  window.compressImageFile(file, 800, 0.85, function(dataUrl) {
+    if (!window.appState.currentUser) window.appState.currentUser = {};
+    window.appState.currentUser.photo = dataUrl;
+
+    // Update in members registry
+    if (window.appState.members && window.appState.currentUser.id) {
+      const mem = window.appState.members.find(m => m.id === window.appState.currentUser.id);
+      if (mem) mem.photo = dataUrl;
+    }
+
+    // Update DOM images
+    const profImg = document.getElementById('myProfAvatarImg');
+    if (profImg) profImg.src = dataUrl;
+    const sideImg = document.getElementById('sidebarAvatarImg');
+    if (sideImg) sideImg.src = dataUrl;
+
+    saveLocalData();
+    if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+      window.DbycCloud.pushToCloud();
+    }
+    showToast('✅ Profile photo updated successfully!');
+  });
+};
+
+// ==============================================================================
+// 2. EVENT IMAGE TELECAST CAROUSEL ENGINE (BELOW RUNNING NEWS)
+// ==============================================================================
+window.telecastPhotos = [];
+window.currentTelecastIndex = 0;
+window.telecastSlideDuration = 4000;
+window.telecastTimer = null;
+window.stagedEventPhotoBase64 = '';
+
+window.initTelecastCarousel = function() {
+  try {
+    const saved = localStorage.getItem('dbyc_telecast_photos');
+    if (saved) {
+      window.telecastPhotos = JSON.parse(saved);
+    }
+  } catch(e) {}
+
+  if (!window.telecastPhotos || window.telecastPhotos.length === 0) {
+    window.telecastPhotos = [
+      {
+        id: 'TELECAST-001',
+        title: 'Don Bosco Youth Centre, Basin Bridge',
+        titleTa: 'தொன்போஸ்கோ இளைஞர் மன்றம், பேசின் பாலம்',
+        caption: 'Empowering youth with faith, sportsmanship, fraternity and leadership since 1950.',
+        date: '2026-10-01',
+        photo: 'assets/don_bosco.webp'
+      },
+      {
+        id: 'TELECAST-002',
+        title: 'St. John Bosco - Father & Friend of Youth',
+        titleTa: 'புனித தொன்போஸ்கோ - இளைஞர்களின் தந்தை',
+        caption: '"Run, jump, shout, but do not sin" - Don Bosco Oratory Spirit.',
+        date: '2026-10-02',
+        photo: window.DON_BOSCO_PORTRAIT || 'assets/don_bosco.webp'
+      },
+      {
+        id: 'TELECAST-003',
+        title: 'DBYC Official Crest & Oratory Activities',
+        titleTa: 'மன்றத்தின் அதிகாரப்பூர்வ சின்னம் & பாசறைப் பணிகள்',
+        caption: 'Excellence in Football, Carrom, Chess, Cultural events & Academic mentoring.',
+        date: '2026-10-03',
+        photo: window.DBYC_OFFICIAL_LOGO || 'assets/logo.png'
+      }
+    ];
+    try { localStorage.setItem('dbyc_telecast_photos', JSON.stringify(window.telecastPhotos)); } catch(e) {}
+  }
+
+  window.renderTelecastPhotosList();
+  window.showTelecastSlide(0);
+  window.startTelecastTimer();
+};
+
+window.showTelecastSlide = function(index) {
+  if (!window.telecastPhotos || window.telecastPhotos.length === 0) return;
+  if (index >= window.telecastPhotos.length) index = 0;
+  if (index < 0) index = window.telecastPhotos.length - 1;
+  window.currentTelecastIndex = index;
+
+  const item = window.telecastPhotos[index];
+  const imgEl = document.getElementById('telecastSlideImg');
+  const titleEl = document.getElementById('telecastCaptionTitle');
+  const subEl = document.getElementById('telecastCaptionSub');
+  const badgeEl = document.getElementById('telecastSlideIndexBadge');
+  const dotsContainer = document.getElementById('telecastDotsContainer');
+
+  if (imgEl && item) {
+    imgEl.style.opacity = '0.3';
+    setTimeout(() => {
+      imgEl.src = item.photo || 'assets/don_bosco.webp';
+      imgEl.style.opacity = '1';
+    }, 200);
+  }
+
+  if (titleEl && item) {
+    titleEl.textContent = (window.appCurrentLang === 'ta' && item.titleTa) ? item.titleTa : (item.title || 'DBYC Event Showcase');
+  }
+  if (subEl && item) {
+    subEl.textContent = item.caption || item.date || 'Don Bosco Youth Centre, Basin Bridge';
+  }
+  if (badgeEl) {
+    badgeEl.textContent = `${index + 1} / ${window.telecastPhotos.length}`;
+  }
+
+  if (dotsContainer) {
+    dotsContainer.innerHTML = window.telecastPhotos.map((_, i) => `
+      <span onclick="window.showTelecastSlide(${i})" style="width:8px; height:8px; border-radius:50%; background:${i === index ? '#fde047' : 'rgba(255,255,255,0.4)'}; display:inline-block; cursor:pointer; transition:all 0.2s; box-shadow:0 1px 3px rgba(0,0,0,0.4);"></span>
+    `).join('');
+  }
+};
+
+window.nextTelecastSlide = function() {
+  window.showTelecastSlide(window.currentTelecastIndex + 1);
+  window.resetTelecastTimer();
+};
+
+window.prevTelecastSlide = function() {
+  window.showTelecastSlide(window.currentTelecastIndex - 1);
+  window.resetTelecastTimer();
+};
+
+window.startTelecastTimer = function() {
+  if (window.telecastTimer) clearInterval(window.telecastTimer);
+  window.telecastTimer = setInterval(() => {
+    window.showTelecastSlide(window.currentTelecastIndex + 1);
+  }, window.telecastSlideDuration || 4000);
+};
+
+window.resetTelecastTimer = function() {
+  window.startTelecastTimer();
+};
+
+window.setTelecastSlideDuration = function(val) {
+  const ms = parseInt(val, 10) || 4000;
+  window.telecastSlideDuration = ms;
+  window.resetTelecastTimer();
+  showToast(`⏱️ Telecast slide duration set to ${ms/1000} seconds.`);
+};
+
+window.openEventPhotoUploadModal = function() {
+  const modal = document.getElementById('eventPhotoUploadModal');
+  if (!modal) return;
+  window.renderTelecastPhotosList();
+  modal.style.display = 'flex';
+};
+
+window.handleEventPhotoFileSelect = function(event) {
+  const file = (event && event.target && event.target.files) ? event.target.files[0] : event;
+  if (!file) return;
+
+  window.compressImageFile(file, 1280, 0.85, function(dataUrl) {
+    window.stagedEventPhotoBase64 = dataUrl;
+    const preview = document.getElementById('eventPhotoPreviewImg');
+    if (preview) preview.src = dataUrl;
+    showToast('📸 Event photo selected and compressed!');
+  });
+};
+
+window.handleEventPhotoUploadSubmit = function(e) {
+  e.preventDefault();
+  const title = document.getElementById('eventPhotoTitle')?.value.trim();
+  const caption = document.getElementById('eventPhotoCaption')?.value.trim();
+  const dateVal = document.getElementById('eventPhotoDate')?.value || new Date().toISOString().split('T')[0];
+
+  if (!title) {
+    showToast('⚠️ Please enter an event title.');
+    return;
+  }
+  if (!window.stagedEventPhotoBase64) {
+    showToast('⚠️ Please choose an image file or capture photo.');
+    return;
+  }
+
+  const newPhoto = {
+    id: 'TELECAST-' + Date.now(),
+    title: title,
+    caption: caption || 'DBYC Event Gathering',
+    date: dateVal,
+    photo: window.stagedEventPhotoBase64
+  };
+
+  if (!window.telecastPhotos) window.telecastPhotos = [];
+  window.telecastPhotos.unshift(newPhoto);
+
+  try {
+    localStorage.setItem('dbyc_telecast_photos', JSON.stringify(window.telecastPhotos));
+  } catch(err) {
+    console.warn('Storage quota limit, keeping in memory:', err);
+  }
+
+  window.stagedEventPhotoBase64 = '';
+  document.getElementById('eventPhotoUploadForm')?.reset();
+  const preview = document.getElementById('eventPhotoPreviewImg');
+  if (preview) preview.src = 'assets/don_bosco.webp';
+
+  window.renderTelecastPhotosList();
+  window.showTelecastSlide(0);
+  window.resetTelecastTimer();
+  showToast('✅ Photo added to Home Event Telecast Carousel!');
+};
+
+window.renderTelecastPhotosList = function() {
+  const container = document.getElementById('eventPhotosListContainer');
+  const countSpan = document.getElementById('eventPhotoCountSpan');
+  if (countSpan) countSpan.textContent = (window.telecastPhotos || []).length;
+  if (!container) return;
+
+  if (!window.telecastPhotos || window.telecastPhotos.length === 0) {
+    container.innerHTML = '<div style="color:#64748b; font-size:0.8rem; text-align:center; padding:10px;">No custom photos uploaded yet.</div>';
+    return;
+  }
+
+  container.innerHTML = window.telecastPhotos.map((item, idx) => `
+    <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:6px 10px;">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <img src="${item.photo || 'assets/logo.png'}" style="width:40px; height:30px; object-fit:cover; border-radius:4px; border:1px solid #cbd5e1;">
+        <div>
+          <strong style="font-size:0.82rem; color:#0f172a; display:block;">${item.title}</strong>
+          <small style="color:#64748b; font-size:0.7rem;">${item.date || ''}</small>
+        </div>
+      </div>
+      <button type="button" style="background:#fee2e2; color:#b91c1c; border:1px solid #fecaca; border-radius:6px; padding:2px 8px; font-size:0.7rem; font-weight:800; cursor:pointer;" onclick="window.deleteTelecastPhoto(${idx})" title="Delete photo">
+        🗑️
+      </button>
+    </div>
+  `).join('');
+};
+
+window.deleteTelecastPhoto = function(index) {
+  if (index < 0 || index >= window.telecastPhotos.length) return;
+  const item = window.telecastPhotos[index];
+  if (!confirm(`Remove photo "${item.title}" from Home Telecast?`)) return;
+
+  window.telecastPhotos.splice(index, 1);
+  try {
+    localStorage.setItem('dbyc_telecast_photos', JSON.stringify(window.telecastPhotos));
+  } catch(e) {}
+
+  window.renderTelecastPhotosList();
+  window.showTelecastSlide(0);
+  showToast('✅ Photo removed from telecast.');
+};
+
+// ==============================================================================
+// 3. MASTER CENTER ANALYTICS & STATISTICS MODAL
+// ==============================================================================
+window.openMasterAnalyticsModal = function() {
+  const modal = document.getElementById('masterAnalyticsModal');
+  if (!modal) return;
+
+  const today = window.getActiveAttendanceDate ? window.getActiveAttendanceDate() : new Date().toISOString().split('T')[0];
+  const members = window.appState.members || [];
+  const att = (window.appState.attendance || []).filter(a => a.date === today);
+
+  const totalMems = members.length;
+  const totalEntered = att.length;
+  const inCenter = att.filter(a => !a.exitTime && a.status === 'IN_CENTER').length;
+  const exited = att.filter(a => a.exitTime || a.status === 'COMPLETED').length;
+  const rate = totalMems > 0 ? Math.round((totalEntered / totalMems) * 100) : 0;
+
+  const bDate = document.getElementById('analyticsTodayDateBadge'); if (bDate) bDate.textContent = `📅 ${today}`;
+  const elEnt = document.getElementById('analyticsAttEntered'); if (elEnt) elEnt.textContent = totalEntered;
+  const elAct = document.getElementById('analyticsAttActiveInside'); if (elAct) elAct.textContent = inCenter;
+  const elExt = document.getElementById('analyticsAttExited'); if (elExt) elExt.textContent = exited;
+  const elRt = document.getElementById('analyticsAttRate'); if (elRt) elRt.textContent = `${rate}%`;
+
+  // Group Breakdown
+  const grpContainer = document.getElementById('analyticsGroupBreakdownContainer');
+  if (grpContainer) {
+    const groups = [
+      'Sub Juniors Group', 'Juniors Group', 'Intermediates Group',
+      'Seniors Group', 'Super Seniors Group', 'Youth & Leaders'
+    ];
+    grpContainer.innerHTML = groups.map(g => {
+      const gMems = members.filter(m => (m.group || '').toLowerCase().includes(g.toLowerCase()));
+      const gAtt = att.filter(a => (a.group || '').toLowerCase().includes(g.toLowerCase())).length;
+      const gRate = gMems.length > 0 ? Math.round((gAtt / gMems.length) * 100) : 0;
+      return `
+        <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:10px; padding:10px;">
+          <strong style="font-size:0.82rem; color:#002b66; display:block;">${g}</strong>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+            <span style="font-size:0.75rem; color:#64748b;">${gAtt} / ${gMems.length} Present</span>
+            <span style="font-size:0.75rem; font-weight:800; color:#0284c7;">${gRate}%</span>
+          </div>
+          <div style="width:100%; height:6px; background:#e2e8f0; border-radius:10px; margin-top:6px; overflow:hidden;">
+            <div style="width:${gRate}%; height:100%; background:#10b981; border-radius:10px;"></div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // 4 House Teams Breakdown
+  const teamsContainer = document.getElementById('analyticsTeamsBreakdownContainer');
+  if (teamsContainer) {
+    const teams = window.appState.teams || [];
+    teamsContainer.innerHTML = teams.map((t, idx) => `
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 12px; background:#f8fafc; border-radius:10px; border-left:4px solid ${t.color};">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.1rem;">${t.badge || '🏆'}</span>
+          <div>
+            <strong style="font-size:0.88rem; color:#0f172a;">${t.name} ${t.nameTa ? `(${t.nameTa})` : ''}</strong>
+            <small style="color:#64748b; display:block;">Rank #${t.rank || (idx+1)} • Captain: ${t.captain || 'Assigned'}</small>
+          </div>
+        </div>
+        <strong style="font-size:1.15rem; color:${t.color};">${t.points || 0} PTS</strong>
+      </div>
+    `).join('');
+  }
+
+  // News, Photos & Cloud
+  const elNews = document.getElementById('analyticsNewsCount'); if (elNews) elNews.textContent = (window.appState.news || []).length;
+  const elPhotos = document.getElementById('analyticsTelecastCount'); if (elPhotos) elPhotos.textContent = (window.telecastPhotos || []).length;
+  const elCloud = document.getElementById('analyticsCloudStatus'); if (elCloud) elCloud.textContent = (window.DbycCloud && window.DbycCloud.isConnected) ? 'Connected' : 'Local Ready';
+
+  modal.style.display = 'flex';
+};
+
+window.printAnalyticsReport = function() {
+  window.print();
+};
+
+// ==============================================================================
+// 4. BILINGUAL LANGUAGE SWITCHER (TAMIL / ENGLISH)
+// ==============================================================================
+window.appCurrentLang = localStorage.getItem('dbyc_language') || 'ta';
+
+window.toggleAppLanguage = function() {
+  window.appCurrentLang = (window.appCurrentLang === 'ta') ? 'en' : 'ta';
+  localStorage.setItem('dbyc_language', window.appCurrentLang);
+  window.applyAppLanguage(window.appCurrentLang);
+  showToast(window.appCurrentLang === 'ta' ? '🌐 மொழி தமிழாக மாற்றப்பட்டது' : '🌐 Language switched to English');
+};
+
+window.applyAppLanguage = function(lang) {
+  document.documentElement.lang = lang;
+  const btn = document.getElementById('langToggleBtn');
+  if (btn) {
+    btn.textContent = (lang === 'ta') ? 'ENG' : 'தமிழ்';
+    btn.title = (lang === 'ta') ? 'Switch to English' : 'தமிழுக்கு மாறவும்';
+  }
+
+  // Common UI labels
+  const translations = {
+    ta: {
+      totalMembers: 'மொத்த உறுப்பினர்கள்',
+      todayAttendance: 'இன்றைய வருகை',
+      activeGroups: 'செயல்படும் பிரிவுகள்',
+      upcomingEvents: 'வரவிருக்கும் நிகழ்வுகள்',
+      news: '📢 செய்திகள்'
+    },
+    en: {
+      totalMembers: 'Total Members',
+      todayAttendance: "Today's Attendance",
+      activeGroups: 'Active Groups',
+      upcomingEvents: 'Upcoming Events',
+      news: '📢 News'
+    }
+  };
+
+  const t = translations[lang] || translations.en;
+  const statLabels = document.querySelectorAll('.org-stat-label');
+  if (statLabels && statLabels.length >= 4) {
+    statLabels[0].textContent = t.totalMembers;
+    statLabels[1].textContent = t.todayAttendance;
+    statLabels[2].textContent = t.activeGroups;
+    statLabels[3].textContent = t.upcomingEvents;
+  }
+
+  // Update Telecast Carousel Titles
+  if (window.showTelecastSlide) {
+    window.showTelecastSlide(window.currentTelecastIndex || 0);
+  }
+};
+
+// ==============================================================================
+// 5. VOICE ASSISTANT (WEB SPEECH API RECOGNITION + SYNTHESIS)
+// ==============================================================================
+window.activeVoiceRecognition = null;
+
+window.toggleVoiceAssistant = function() {
+  const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const overlay = document.getElementById('voiceAssistantOverlay');
+  const transcriptEl = document.getElementById('voiceLiveTranscript');
+  const titleEl = document.getElementById('voiceStatusTitle');
+
+  if (!SpeechRec) {
+    if (overlay) overlay.style.display = 'block';
+    if (transcriptEl) transcriptEl.textContent = 'Voice recognition is not supported in this browser. Please use button controls.';
+    showToast('⚠️ Voice Assistant not supported on this browser version.');
+    setTimeout(() => { if (overlay) overlay.style.display = 'none'; }, 3000);
+    return;
+  }
+
+  if (window.activeVoiceRecognition) {
+    window.stopVoiceAssistant();
+    return;
+  }
+
+  try {
+    const recognition = new SpeechRec();
+    recognition.lang = (window.appCurrentLang === 'ta') ? 'ta-IN' : 'en-IN';
+    recognition.continuous = false;
+    recognition.interimResults = true;
+
+    if (overlay) overlay.style.display = 'block';
+    if (titleEl) titleEl.textContent = '🎙️ Listening... (பேசுங்கள்)';
+    if (transcriptEl) transcriptEl.textContent = (window.appCurrentLang === 'ta') ? 'கேட்கிறது... கட்டளையை கூறுங்கள் (எ.கா: வருகை, அணிகள், உறுப்பினர்கள்)...' : 'Listening... Say command (e.g. Attendance, Teams, Members, Dashboard)...';
+
+    recognition.onstart = function() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        osc.frequency.setValueAtTime(659.25, ctx.currentTime);
+        osc.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.15);
+      } catch(e) {}
+    };
+
+    recognition.onresult = function(event) {
+      let finalTranscript = '';
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        finalTranscript += event.results[i][0].transcript;
+      }
+      if (transcriptEl) transcriptEl.textContent = `"${finalTranscript}"`;
+
+      if (event.results[0].isFinal) {
+        window.handleVoiceCommand(finalTranscript.toLowerCase());
+      }
+    };
+
+    recognition.onerror = function(err) {
+      if (transcriptEl) transcriptEl.textContent = 'Voice recognition: ' + (err.error || 'Check microphone permission.');
+      setTimeout(() => { if (overlay) overlay.style.display = 'none'; }, 2500);
+      window.activeVoiceRecognition = null;
+    };
+
+    recognition.onend = function() {
+      window.activeVoiceRecognition = null;
+      setTimeout(() => { if (overlay) overlay.style.display = 'none'; }, 2500);
+    };
+
+    recognition.start();
+    window.activeVoiceRecognition = recognition;
+  } catch(err) {
+    console.error('Voice Assistant start error:', err);
+    showToast('⚠️ Unable to start microphone: ' + err.message);
+  }
+};
+
+window.stopVoiceAssistant = function() {
+  if (window.activeVoiceRecognition) {
+    try { window.activeVoiceRecognition.stop(); } catch(e) {}
+    window.activeVoiceRecognition = null;
+  }
+  const overlay = document.getElementById('voiceAssistantOverlay');
+  if (overlay) overlay.style.display = 'none';
+};
+
+window.speakFeedback = function(text, lang) {
+  if (!window.speechSynthesis) return;
+  try {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = lang || ((window.appCurrentLang === 'ta') ? 'ta-IN' : 'en-US');
+    u.rate = 1.0;
+    window.speechSynthesis.speak(u);
+  } catch(e) {}
+};
+
+window.handleVoiceCommand = function(cmd) {
+  cmd = cmd.toLowerCase().trim();
+
+  if (cmd.includes('attend') || cmd.includes('வருகை') || cmd.includes('scan') || cmd.includes('qr')) {
+    switchView('attendance');
+    window.speakFeedback(window.appCurrentLang === 'ta' ? 'வருகைப் பதிவு பக்கம் திறக்கப்படுகிறது' : 'Opening QR Attendance');
+  } else if (cmd.includes('member') || cmd.includes('உறுப்பினர்')) {
+    switchView('members');
+    window.speakFeedback(window.appCurrentLang === 'ta' ? 'உறுப்பினர்கள் பக்கம் திறக்கப்படுகிறது' : 'Opening Members Registry');
+  } else if (cmd.includes('team') || cmd.includes('அணி') || cmd.includes('house')) {
+    switchView('teams');
+    window.speakFeedback(window.appCurrentLang === 'ta' ? 'இல்ல அணிகள் பக்கம் திறக்கப்படுகிறது' : 'Opening House Teams');
+  } else if (cmd.includes('news') || cmd.includes('செய்தி')) {
+    switchView('news');
+    window.speakFeedback(window.appCurrentLang === 'ta' ? 'செய்தி பலகை திறக்கப்படுகிறது' : 'Opening News');
+  } else if (cmd.includes('stat') || cmd.includes('analytic') || cmd.includes('புள்ளிவிவரம்')) {
+    window.openMasterAnalyticsModal();
+    window.speakFeedback(window.appCurrentLang === 'ta' ? 'மைய புள்ளிவிவரங்கள் திறக்கப்படுகிறது' : 'Opening Center Analytics');
+  } else if (cmd.includes('profile') || cmd.includes('சுயவிவரம்')) {
+    switchView('profile');
+    window.speakFeedback(window.appCurrentLang === 'ta' ? 'சுயவிவரம் பக்கம் திறக்கப்படுகிறது' : 'Opening Profile');
+  } else if (cmd.includes('rule') || cmd.includes('விதி')) {
+    switchView('rules');
+    window.speakFeedback(window.appCurrentLang === 'ta' ? 'மன்ற விதிகள் திறக்கப்படுகிறது' : 'Opening Rules');
+  } else if (cmd.includes('home') || cmd.includes('dash') || cmd.includes('முகப்பு')) {
+    switchView('dashboard');
+    window.speakFeedback(window.appCurrentLang === 'ta' ? 'முகப்பு பக்கம் திறக்கப்படுகிறது' : 'Opening Dashboard');
+  } else if (cmd.includes('tamil') || cmd.includes('தமிழ்')) {
+    window.appCurrentLang = 'ta';
+    localStorage.setItem('dbyc_language', 'ta');
+    window.applyAppLanguage('ta');
+    window.speakFeedback('மொழி தமிழாக மாற்றப்பட்டது', 'ta-IN');
+  } else if (cmd.includes('english')) {
+    window.appCurrentLang = 'en';
+    localStorage.setItem('dbyc_language', 'en');
+    window.applyAppLanguage('en');
+    window.speakFeedback('Language switched to English', 'en-US');
+  } else {
+    showToast(`🎙️ Voice heard: "${cmd}"`);
+  }
+};
+
+// ==============================================================================
+// 6. AUTO INITIALIZATION HOOK
+// ==============================================================================
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    try { window.initTelecastCarousel(); } catch(e) {}
+    try { window.applyAppLanguage(window.appCurrentLang || 'ta'); } catch(e) {}
+  }, 300);
+});
+
+// Also trigger on load for safety
+window.addEventListener('load', () => {
+  try {
+    if (!window.telecastTimer) window.initTelecastCarousel();
+  } catch(e) {}
+});
 
 </script>
   <!-- ==========================================

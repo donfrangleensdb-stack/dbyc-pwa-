@@ -1066,78 +1066,127 @@ body {
 }
 
 /* ==========================================
-   7. MEMBER DIGITAL QR PASS
+   7. MEMBER DIGITAL QR PASS (Official 56mm x 86mm CR-80 Portrait Standard)
    ========================================== */
-.id-pass-card {
+.id-pass-card,
+.id-pass-card-56x86 {
   background: #ffffff;
-  border-radius: 20px;
+  border-radius: 18px;
   overflow: hidden;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 10px 30px rgba(0, 43, 102, 0.18);
   border: 2px solid #004b98;
-  max-width: 380px;
+  width: 320px;
+  max-width: 340px;
+  min-height: 492px;
   margin: 0 auto;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
 }
 
 .id-pass-header {
-  background: linear-gradient(135deg, var(--dbyc-dark-blue), var(--dbyc-blue));
+  background: linear-gradient(135deg, #00264d 0%, #004b98 100%);
   color: #ffffff;
-  padding: 14px;
+  padding: 10px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
+  border-bottom: 2.5px solid #fde047;
 }
 
 .id-pass-header-logo {
   width: 42px;
   height: 42px;
   border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fde047;
+  background: #ffffff;
+  flex-shrink: 0;
+  box-shadow: 0 0 8px rgba(253, 224, 71, 0.5);
 }
 
 .id-pass-body {
-  padding: 16px;
+  padding: 10px 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
+  flex: 1;
 }
 
 .id-pass-candidate-photo {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
+  width: 88px;
+  height: 92px;
+  border-radius: 12px;
   object-fit: cover;
-  border: 3px solid var(--dbyc-blue);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  border: 2.5px solid #004b98;
+  outline: 1.5px solid #fde047;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  margin-top: 2px;
 }
 
 .id-pass-qr-box {
-  background: #f8fafc;
-  padding: 10px;
-  border-radius: 12px;
-  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  padding: 8px;
+  border-radius: 10px;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
 .id-pass-details-table {
   width: 100%;
-  font-size: 0.82rem;
+  font-size: 0.84rem;
   border-collapse: collapse;
+  margin-top: 4px;
 }
 
 .id-pass-details-table td {
-  padding: 5px 4px;
+  padding: 4px 6px;
   border-bottom: 1px dashed #e2e8f0;
 }
 
 .id-pass-details-table td.label {
-  font-weight: 700;
-  color: var(--text-muted);
-  width: 42%;
+  font-weight: 800;
+  color: #475569;
+  width: 38%;
+  font-size: 0.82rem;
 }
 
 .id-pass-details-table td.val {
-  font-weight: 800;
+  font-weight: 900;
   color: #0f172a;
+  font-size: 0.86rem;
+}
+
+.id-pass-footer-ribbon {
+  background: #0f172a;
+  color: #ffffff;
+  padding: 6px 10px;
+  font-size: 0.72rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 2px solid #fde047;
+  font-weight: 800;
+}
+
+@media print {
+  .id-pass-card-56x86 {
+    width: 56mm !important;
+    height: 86mm !important;
+    max-width: 56mm !important;
+    max-height: 86mm !important;
+    border: 1.5px solid #004b98 !important;
+    border-radius: 3mm !important;
+    box-shadow: none !important;
+    margin: 0 auto !important;
+    overflow: hidden !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
 }
 
 /* ==========================================
@@ -4884,7 +4933,33 @@ body {
 
       <form id="officialAppForm" novalidate onsubmit="event.preventDefault(); window.saveMemberRegistrationFormDirect(event);">
         <input type="hidden" id="formEditingMemberId" value="">
-                <!-- Physical Registration Form & ID Card Optical Scanner / Auto-Fill Box -->
+        <input type="hidden" id="formRegistrationMode" value="NEW">
+
+        <!-- 1-Year Registration & Annual Renewal Mode Switcher -->
+        <div style="background:#f1f5f9; border-radius:12px; padding:4px; display:flex; gap:6px; margin-bottom:14px; border:1px solid #cbd5e1;">
+          <button type="button" id="regModeNewBtn" class="tab-btn active" style="flex:1; padding:9px 12px; font-weight:800; font-size:0.86rem; border-radius:8px; border:none; cursor:pointer;" onclick="window.switchRegistrationMode('NEW')">
+            🆕 புதிய சேர்க்கை (New Registration)
+          </button>
+          <button type="button" id="regModeRenewBtn" class="tab-btn" style="flex:1; padding:9px 12px; font-weight:800; font-size:0.86rem; border-radius:8px; border:none; cursor:pointer; background:transparent; color:#0f172a;" onclick="window.switchRegistrationMode('RENEW')">
+            🔄 ஆண்டு புதுப்பித்தல் (Annual Renewal - 1 Year)
+          </button>
+        </div>
+
+        <!-- Annual Renewal Member Selector Dropdown Box -->
+        <div id="renewalMemberPickerBox" style="display:none; background:#ecfdf5; border:1.5px solid #10b981; border-radius:14px; padding:12px 14px; margin-bottom:14px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+            <strong style="color:#047857; font-size:0.88rem;">🔄 புதுப்பிக்க வேண்டிய உறுப்பினரைத் தேர்ந்தெடுக்கவும்:</strong>
+            <span style="background:#10b981; color:#fff; font-size:0.72rem; font-weight:800; padding:2px 8px; border-radius:6px;">1-Year Renewal</span>
+          </div>
+          <select id="renewalMemberSelect" class="form-control-dbyc" onchange="window.selectMemberForRenewal(this.value)" style="background:#fff; font-weight:700; border-color:#10b981;">
+            <option value="">-- தேர்ந்தெடுக்கவும் (Choose Member from Registry) --</option>
+          </select>
+          <div id="renewalExtensionBadge" style="margin-top:8px; font-size:0.82rem; font-weight:800; color:#065f46; display:none; background:#dcfce7; padding:6px 10px; border-radius:8px;">
+            🎉 1-Year Extension: <span id="renewalPrevExpiry">...</span> ➜ <span id="renewalNewExpiry" style="color:#047857; text-decoration:underline;">...</span>
+          </div>
+        </div>
+
+        <!-- Physical Registration Form & ID Card Optical Scanner / Auto-Fill Box -->
         <div class="form-ocr-scanner-box" style="background:linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border:1.5px dashed #2563eb; border-radius:14px; padding:12px 14px; margin-bottom:14px;">
           <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
             <div>
@@ -5102,10 +5177,31 @@ body {
               <option value="Director (Incharge)">Director</option>
             </select>
           </div>
-          <div class="form-group-dbyc">
-            <label>Join Date</label>
-            <input type="date" id="formJoinDate" class="form-control-dbyc">
+        </div>
+
+        <!-- 1-Year Registration Validity & Annual Renewal Block -->
+        <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:14px; padding:12px 14px; margin-bottom:14px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; flex-wrap:wrap; gap:4px;">
+            <strong style="font-size:0.88rem; color:#004b98;">📅 உறுப்பினர் செல்லுபடியாகும் காலம் (1-Year Registration Validity)</strong>
+            <span style="background:#dcfce7; color:#15803d; font-size:0.75rem; font-weight:800; padding:2px 8px; border-radius:6px; border:1px solid #86efac;">1 Year Valid Only</span>
           </div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px;">
+            <div class="form-group-dbyc" style="margin-bottom:0;">
+              <label style="font-size:0.76rem; font-weight:800;">சேர்ந்த தேதி (Join Date) *</label>
+              <input type="date" id="formJoinDate" class="form-control-dbyc" onchange="window.updateFormValidityDates();">
+            </div>
+            <div class="form-group-dbyc" style="margin-bottom:0;">
+              <label style="font-size:0.76rem; font-weight:800;">புதுப்பித்த தேதி (Renewal)</label>
+              <input type="date" id="formRenewalDate" class="form-control-dbyc" onchange="window.updateFormValidityDates();">
+            </div>
+            <div class="form-group-dbyc" style="margin-bottom:0;">
+              <label style="font-size:0.76rem; font-weight:800;">முடிவடையும் நாள் (Valid Until)</label>
+              <input type="date" id="formExpiryDate" class="form-control-dbyc" readonly style="background:#f0fdf4; font-weight:900; color:#15803d;">
+            </div>
+          </div>
+          <small style="color:#64748b; font-size:0.74rem; display:block; margin-top:6px; line-height:1.35;">
+            💡 <strong>ஆண்டு புதுப்பித்தல் கொள்கை:</strong> மன்ற பதிவு 1 வருடத்திற்கு மட்டுமே செல்லுபடியாகும். 1 வருடம் முடிந்தவுடன் 'ஆண்டு புதுப்பித்தல்' (Renewal) செய்து புதிய அட்டை பெற வேண்டும்.
+          </small>
         </div>
 
                 <div class="form-group-dbyc">
@@ -10264,74 +10360,127 @@ function generateIdPass(memberId) {
 
   currentViewingPassMemberId = memberId;
   const card = document.getElementById('idPassCardContainer');
-  const tenure = calculateTenure(member.joinDate || member.yearsInDbyc);
-  const attCount = appState.attendance.filter(a => a.memberId === member.id).length;
+  const tenure = (typeof calculateTenure === 'function') 
+    ? calculateTenure(member.joinDate || member.yearsInDbyc) 
+    : (member.yearsInDbyc ? member.yearsInDbyc + ' Years' : '1 Year');
+
+  let cardDob = 'N/A';
+  if (member.dob) {
+    const dp = String(member.dob).trim().split('-');
+    if (dp.length === 3) cardDob = `${dp[2]}/${dp[1]}/${dp[0]}`;
+    else cardDob = member.dob;
+  }
+
+  const cardAddress = member.homeAddress || member.address || 'Basin Bridge, Chennai - 600 012';
+  const cardActivities = Array.isArray(member.activities) 
+    ? member.activities.join(', ') 
+    : (member.activities || member.specialActivities || 'Sports, Cultural & Oratory');
 
   const rawQrText = `DBYC:${member.id}:${member.name}:${member.group}`;
-  const qrUrl = (typeof window.generateOfflineQrDataUrl === 'function' ? window.generateOfflineQrDataUrl(rawQrText) : '') || `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(rawQrText)}`;
+  const qrUrl = (typeof window.generateOfflineQrDataUrl === 'function' ? window.generateOfflineQrDataUrl(rawQrText) : '') || `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(rawQrText)}`;
 
   const photoSrc = member.photo || DBYC_DEFAULT_AVATAR;
 
   card.innerHTML = `
-        <div class="id-pass-card" id="printableIdCard">
-      <div class="id-pass-header" style="background:linear-gradient(135deg, #00264d, #004b98); padding:12px; display:flex; align-items:center; justify-content:space-between; gap:8px;">
-        <!-- Left: Don Bosco Logo / Portrait -->
-        <img src="${window.DON_BOSCO_PORTRAIT || DBYC_OFFICIAL_LOGO}" alt="Don Bosco Youth Centre" class="id-pass-header-logo" style="width:44px; height:44px; border-radius:50%; object-fit:cover; border:1.5px solid #fde047; box-shadow:0 0 6px rgba(253,224,71,0.5);" title="Don Bosco Youth Centre">
-        <div style="text-align:center; flex:1;">
-          <h3 style="font-size:0.95rem; font-weight:900; letter-spacing:0.5px; color:#ffffff; margin:0;">DON BOSCO YOUTH CENTRE</h3>
-          <p style="font-size:0.72rem; color:#fde047; font-weight:700; margin:2px 0 0;">Basin Bridge, Chennai - 600 012</p>
+    <!-- Official 56mm x 86mm CR-80 Portrait ID Card -->
+    <div class="id-pass-card id-pass-card-56x86" id="printableIdCard" style="width:320px; min-height:492px; background:#fff; border:2.5px solid #004b98; border-radius:18px; overflow:hidden; box-shadow:0 12px 35px rgba(0,43,102,0.18); font-family:system-ui,-apple-system,sans-serif; margin:0 auto; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box;">
+      
+      <!-- Top Header Band: Header SAME (Don Bosco left, DBYC crest right) -->
+      <div class="id-pass-header" style="background:linear-gradient(135deg, #00264d 0%, #004b98 100%); padding:9px 12px; display:flex; align-items:center; justify-content:space-between; gap:8px; border-bottom:2.5px solid #fde047; flex-shrink:0;">
+        <img src="${window.DON_BOSCO_PORTRAIT || DBYC_OFFICIAL_LOGO}" alt="Don Bosco" class="id-pass-header-logo" style="width:38px; height:38px; border-radius:50%; object-fit:cover; border:2px solid #fde047; box-shadow:0 0 6px rgba(253,224,71,0.6);" title="Don Bosco Youth Centre">
+        <div style="text-align:center; flex:1; line-height:1.2;">
+          <h3 style="font-size:0.92rem; font-weight:900; letter-spacing:0.3px; color:#ffffff; margin:0; text-transform:uppercase;">DON BOSCO YOUTH CENTRE</h3>
+          <p style="font-size:0.72rem; color:#fde047; font-weight:800; margin:2px 0 0;">Basin Bridge, Chennai - 600 012</p>
         </div>
-        <!-- Right: DBYC Official Logo -->
-        <img src="${DBYC_OFFICIAL_LOGO}" alt="Don Bosco Youth Centre Crest" class="id-pass-header-logo" style="width:44px; height:44px; border-radius:50%; object-fit:cover; border:1.5px solid #fde047;" title="Don Bosco Youth Centre Crest">
+        <img src="${DBYC_OFFICIAL_LOGO}" alt="DBYC Crest" class="id-pass-header-logo" style="width:38px; height:38px; border-radius:50%; object-fit:cover; border:2px solid #fde047; background:#ffffff;" title="Don Bosco Youth Centre Crest">
       </div>
-      <div class="id-pass-body">
+
+      <!-- Card Body: Image of Person, Bold Name, Member Group, QR, ONLY Requested Details -->
+      <div class="id-pass-body" style="padding:10px 12px; display:flex; flex-direction:column; align-items:center; gap:4px; flex:1;">
         <div style="position:relative;">
-          <img src="${photoSrc}" alt="${member.name}" class="id-pass-candidate-photo">
-          ${(typeof window.canEdit === 'function' && window.canEdit('passes')) ? `<button class="avatar-upload-btn" title="Change Photo" onclick="document.getElementById('passPhotoFileInput').click()">📷</button>` : ''}
+          <img src="${photoSrc}" alt="${member.name}" class="id-pass-candidate-photo" style="width:78px; height:82px; border-radius:12px; object-fit:cover; border:2.5px solid #004b98; outline:1.5px solid #fde047; box-shadow:0 3px 10px rgba(0,0,0,0.15);">
+          ${(typeof window.canEdit === 'function' && window.canEdit('passes')) ? `<button class="avatar-upload-btn" title="Change Photo" onclick="document.getElementById('passPhotoFileInput').click()" style="position:absolute; bottom:-4px; right:-4px; background:#004b98; color:#fff; border:1.5px solid #fff; border-radius:50%; width:24px; height:24px; font-size:0.7rem; cursor:pointer;">📷</button>` : ''}
         </div>
 
-        <h4 style="font-size:1.15rem; font-weight:800; color:#004b98;">${member.name}</h4>
-        <p style="font-size:0.8rem; font-weight:700; color:#e11d48;">${member.role} • ${member.group}</p>
+        <h4 style="font-size:1.1rem; font-weight:900; color:#00264d; margin:2px 0 0; text-transform:uppercase; letter-spacing:0.3px; text-align:center;">${member.name}</h4>
         
-        <span class="role-badge" style="background:#fef3c7; color:#b45309;">⏳ Member for ${tenure} • ${attCount} Sessions</span>
+        <span style="background:#fee2e2; color:#b91c1c; font-weight:900; font-size:0.72rem; padding:2px 10px; border-radius:100px; border:1px solid #fca5a5; display:inline-block; margin-bottom:2px;">
+          ★ ${(member.group || 'Youth').toUpperCase()} ★
+        </span>
 
-        <div class="id-pass-qr-box">
-          <img src="${qrUrl}" alt="Member QR Pass" width="150" height="150" style="display:block; border-radius:6px;">
+        <!-- High-Contrast QR Code -->
+        <div class="id-pass-qr-box" style="background:#ffffff; padding:5px; border-radius:8px; border:1.5px solid #cbd5e1; box-shadow:0 2px 6px rgba(0,0,0,0.06); margin:2px 0;">
+          <img src="${qrUrl}" alt="Member QR Pass" width="115" height="115" style="display:block; border-radius:4px;">
         </div>
 
-        <table class="id-pass-details-table">
-          <tr><td class="label">DBYC ID:</td><td class="val">${member.id}</td></tr>
-          <tr><td class="label">Contact No:</td><td class="val">📞 ${member.mobile}</td></tr>
-          <tr><td class="label">Email:</td><td class="val">📧 ${member.email || 'N/A'}</td></tr>
-          <tr><td class="label">Blood Group:</td><td class="val">🩸 ${member.bloodGroup || 'N/A'}</td></tr>
-          <tr><td class="label">Group Category:</td><td class="val">🏆 ${member.group}</td></tr>
-          <tr><td class="label">House Team:</td><td class="val">🚩 ${member.teamId || 'TEAM-1'}</td></tr>
-          <tr><td class="label">Special Activities:</td><td class="val">⚽ ${member.activities || 'All-round Sports'}</td></tr>
+        <!-- All-Bold Details Table: ONLY requested fields -->
+        <table class="id-pass-details-table" style="width:100%; border-collapse:collapse; margin-top:2px; font-size:0.78rem;">
+          <tr>
+            <td class="label" style="font-weight:900; color:#475569; padding:2.5px 5px; border-bottom:1px dashed #e2e8f0; width:40%;">DBYC ID:</td>
+            <td class="val" style="font-weight:900; color:#004b98; font-size:0.86rem; padding:2.5px 5px; border-bottom:1px dashed #e2e8f0;">${member.id}</td>
+          </tr>
+          <tr>
+            <td class="label" style="font-weight:900; color:#475569; padding:2.5px 5px; border-bottom:1px dashed #e2e8f0;">Member Group:</td>
+            <td class="val" style="font-weight:900; color:#0f172a; padding:2.5px 5px; border-bottom:1px dashed #e2e8f0;">👥 ${member.group || 'Youth'}</td>
+          </tr>
+          <tr>
+            <td class="label" style="font-weight:900; color:#475569; padding:2.5px 5px; border-bottom:1px dashed #e2e8f0;">Duration in DBYC:</td>
+            <td class="val" style="font-weight:900; color:#b45309; padding:2.5px 5px; border-bottom:1px dashed #e2e8f0;">⏳ ${tenure}</td>
+          </tr>
+          <tr>
+            <td class="label" style="font-weight:900; color:#475569; padding:2.5px 5px; border-bottom:1px dashed #e2e8f0;">Mobile Number:</td>
+            <td class="val" style="font-weight:800; color:#0f172a; padding:2.5px 5px; border-bottom:1px dashed #e2e8f0;">📞 ${member.mobile || 'N/A'}</td>
+          </tr>
+          <tr>
+            <td class="label" style="font-weight:900; color:#475569; padding:2.5px 5px; border-bottom:1px dashed #e2e8f0;">Blood Group:</td>
+            <td class="val" style="font-weight:900; color:#dc2626; padding:2.5px 5px; border-bottom:1px dashed #e2e8f0;">🩸 ${member.bloodGroup || 'N/A'}</td>
+          </tr>
+          <tr>
+            <td class="label" style="font-weight:900; color:#475569; padding:2.5px 5px; border-bottom:1px dashed #e2e8f0;">Date of Birth:</td>
+            <td class="val" style="font-weight:800; color:#0f172a; padding:2.5px 5px; border-bottom:1px dashed #e2e8f0;">🎂 ${cardDob}</td>
+          </tr>
+          <tr>
+            <td class="label" style="font-weight:900; color:#475569; padding:2.5px 5px; border-bottom:1px dashed #e2e8f0; vertical-align:top;">Address:</td>
+            <td class="val" style="font-weight:800; color:#334155; padding:2.5px 5px; border-bottom:1px dashed #e2e8f0; font-size:0.73rem; line-height:1.2;">📍 ${cardAddress}</td>
+          </tr>
+          <tr>
+            <td class="label" style="font-weight:900; color:#475569; padding:2.5px 5px; vertical-align:top;">Special Activities:</td>
+            <td class="val" style="font-weight:800; color:#004b98; padding:2.5px 5px; font-size:0.73rem; line-height:1.2;">⚽ ${cardActivities}</td>
+          </tr>
         </table>
+      </div>
 
-        <!-- Action Buttons for PDF Download, Print & Edit -->
-        <div style="display:flex; flex-direction:column; gap:8px; width:100%; margin-top:12px;">
-          <button type="button" class="btn-dbyc-primary" style="background:#0b57d0; font-size:0.92rem; font-weight:800; padding:10px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 3px 8px rgba(11,87,208,0.3);" onclick="window.downloadMemberPassPdf('${member.id}')">
-            📥 Download QR Pass (PDF ஆக பதிவிறக்கு)
-          </button>
-          
-          <div style="display:flex; gap:8px; width:100%;">
-            <button type="button" class="btn-dbyc-primary" style="flex:1; background:#059669; font-size:0.85rem; padding:8px; font-weight:700;" onclick="window.downloadMemberPassPdf('${member.id}')">
-              🖨️ Print Pass Card
-            </button>
-            ${(typeof window.canEdit === 'function' && window.canEdit('passes')) ? `<button type="button" class="btn-dbyc-primary" style="flex:1; background:#ea580c; font-size:0.85rem; padding:8px; font-weight:700;" onclick="openEditPassModal('${member.id}')">
-              ✏️ Edit Pass
-            </button>` : ''}
-          </div>
-        </div>
+      <!-- Footer Ribbon: Footer SAME (Rev. Fr. Director left, DBYC right) -->
+      <div class="id-pass-footer-ribbon" style="background:#0f172a; color:#ffffff; padding:7px 12px; font-size:0.72rem; display:flex; justify-content:space-between; align-items:center; border-top:2px solid #fde047; font-weight:800; flex-shrink:0;">
+        <span>Rev. Fr. Director, SDB</span>
+        <span style="color:#fde047;">DBYC Basin Bridge, Ch-12</span>
+      </div>
+    </div>
+
+    <!-- 3 Distinct HD Action Buttons (PDF, PNG, Print) -->
+    <div style="display:flex; flex-direction:column; gap:8px; width:100%; max-width:320px; margin:16px auto 0;">
+      <button type="button" class="btn-dbyc-primary" style="background:#059669; font-size:0.92rem; font-weight:800; padding:11px; border-radius:10px; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 3px 8px rgba(5,150,105,0.3); cursor:pointer;" onclick="window.downloadMemberPassPdf('${member.id}')">
+        📄 Download HD PDF (PDF பதிவிறக்கம்)
+      </button>
+
+      <button type="button" class="btn-dbyc-primary" style="background:#0284c7; font-size:0.92rem; font-weight:800; padding:11px; border-radius:10px; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 3px 8px rgba(2,132,199,0.3); cursor:pointer;" onclick="window.downloadMemberPassPngHd('${member.id}')">
+        🖼️ Download HD PNG (உயர் தர PNG படம்)
+      </button>
+
+      <div style="display:flex; gap:8px; width:100%;">
+        <button type="button" class="btn-dbyc-primary" style="flex:1; background:#004b98; font-size:0.86rem; padding:9px; font-weight:800; border-radius:8px; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;" onclick="window.printMemberPassDirect('${member.id}')">
+          🖨️ Direct Card Print (அட்டை அச்சிடு)
+        </button>
+        ${(typeof window.canEdit === 'function' && window.canEdit('passes')) ? `<button type="button" class="btn-dbyc-primary" style="flex:1; background:#ea580c; font-size:0.86rem; padding:9px; font-weight:800; border-radius:8px; cursor:pointer;" onclick="openEditPassModal('${member.id}')">
+          ✏️ Edit Pass
+        </button>` : ''}
       </div>
     </div>
   `;
 }
 
-// Dedicated PDF Download & Print Controllers (Zero Blank Pages & 100% Reliable Print)
 
-// 1. Dynamic Print Orientation Controller (Switches between Portrait & Landscape)
+// Dedicated PDF Download & Print Controllers
 window.setPrintOrientation = function(orientation) {
   let styleEl = document.getElementById('dbycDynamicPrintOrientationStyle');
   if (!styleEl) {
@@ -10375,17 +10524,17 @@ window.loadImageForCanvas = function(src) {
   });
 };
 
-window.buildPdfBlobFromCanvas = function(canvas, orientation) {
+window.buildPdfBlobFromCanvas = function(canvas, orientation, customPageW, customPageH) {
   var isLand = orientation === 'landscape';
-  var pageW = isLand ? 841.89 : 595.28;
-  var pageH = isLand ? 595.28 : 841.89;
+  var pageW = customPageW || (isLand ? 841.89 : 595.28);
+  var pageH = customPageH || (isLand ? 595.28 : 841.89);
   
   var dataUrl = canvas.toDataURL('image/jpeg', 0.95);
   var rawB64 = dataUrl.split(',')[1];
   var binStr = atob(rawB64);
   var imgLen = binStr.length;
 
-  var margin = 16;
+  var margin = customPageW ? 0 : 16;
   var maxW = pageW - margin * 2;
   var maxH = pageH - margin * 2;
   var scale = Math.min(maxW / canvas.width, maxH / canvas.height);
@@ -10442,9 +10591,9 @@ window.buildPdfBlobFromCanvas = function(canvas, orientation) {
   return new Blob(parts, { type: 'application/pdf' });
 };
 
-window.downloadCanvasAsPdf = function(canvas, filename, orientation) {
+window.downloadCanvasAsPdf = function(canvas, filename, orientation, customPageW, customPageH) {
   try {
-    var blob = window.buildPdfBlobFromCanvas(canvas, orientation);
+    var blob = window.buildPdfBlobFromCanvas(canvas, orientation, customPageW, customPageH);
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
     a.href = url;
@@ -10482,125 +10631,533 @@ window.downloadCanvasAsPng = function(canvas, filename) {
   }
 };
 
-// 1. Pass Canvas Generator
-window.drawPassToCanvas = async function(m) {
-  var member = m || (appState.members || [])[0] || appState.currentUser;
+// ==============================================================================
+// 1-YEAR REGISTRATION VALIDITY & ANNUAL RENEWAL ENGINE
+// ==============================================================================
+
+window.calculateMembershipValidity = function(member) {
+  if (!member) member = {};
+  var today = new Date();
+  var baseDateStr = member.renewalDate || member.joinDate || today.toISOString().split('T')[0];
+  var baseDate = new Date(baseDateStr);
+  if (isNaN(baseDate.getTime())) baseDate = new Date();
+
+  var expiryDate = null;
+  if (member.expiryDate) {
+    expiryDate = new Date(member.expiryDate);
+  }
+  if (!expiryDate || isNaN(expiryDate.getTime())) {
+    expiryDate = new Date(baseDate);
+    expiryDate.setFullYear(expiryDate.getFullYear() + 1);
+  }
+
+  var isActive = today <= expiryDate;
+  var daysRemaining = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
+  var baseYear = baseDate.getFullYear();
+  var expiryYear = expiryDate.getFullYear();
+  var yearStr = baseYear + ' - ' + expiryYear;
+  var expiryFormatted = expiryDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+  return {
+    isActive: isActive,
+    baseDateStr: baseDateStr,
+    expiryDateStr: expiryDate.toISOString().split('T')[0],
+    expiryFormatted: expiryFormatted,
+    yearStr: yearStr,
+    daysRemaining: daysRemaining
+  };
+};
+
+window.switchRegistrationMode = function(mode) {
+  var newBtn = document.getElementById('regModeNewBtn');
+  var renewBtn = document.getElementById('regModeRenewBtn');
+  var pickerBox = document.getElementById('renewalMemberPickerBox');
+  var modeInput = document.getElementById('formRegistrationMode');
+  var titleEl = document.getElementById('memberFormModalTitle');
+
+  if (mode === 'RENEW') {
+    if (modeInput) modeInput.value = 'RENEW';
+    if (newBtn) { newBtn.classList.remove('active'); newBtn.style.background = 'transparent'; newBtn.style.color = '#0f172a'; }
+    if (renewBtn) { renewBtn.classList.add('active'); renewBtn.style.background = '#10b981'; renewBtn.style.color = '#ffffff'; }
+    if (pickerBox) pickerBox.style.display = 'block';
+    if (titleEl) titleEl.textContent = '🔄 உறுப்பினர் ஆண்டு புதுப்பித்தல் (Annual Membership Renewal - 1 Year)';
+
+    var select = document.getElementById('renewalMemberSelect');
+    if (select) {
+      var members = (window.appState && window.appState.members) ? window.appState.members : [];
+      select.innerHTML = '<option value="">-- தேர்ந்தெடுக்கவும் (Choose Member from Registry) --</option>' +
+        members.map(function(m) {
+          var v = window.calculateMembershipValidity(m);
+          var statusTag = v.isActive ? '🟢 Active' : '🔴 Expired';
+          return '<option value="' + m.id + '">' + m.name + ' (' + m.id + ' • ' + (m.group || '') + ' - ' + statusTag + ')</option>';
+        }).join('');
+    }
+  } else {
+    if (modeInput) modeInput.value = 'NEW';
+    if (newBtn) { newBtn.classList.add('active'); newBtn.style.background = '#004b98'; newBtn.style.color = '#ffffff'; }
+    if (renewBtn) { renewBtn.classList.remove('active'); renewBtn.style.background = 'transparent'; renewBtn.style.color = '#0f172a'; }
+    if (pickerBox) pickerBox.style.display = 'none';
+    if (titleEl) titleEl.textContent = 'உறுப்பினர் விண்ணப்பப் படிவம் (New Member Registration)';
+    var editIdInput = document.getElementById('formEditingMemberId');
+    if (editIdInput) editIdInput.value = '';
+    document.getElementById('officialAppForm')?.reset();
+    window.updateFormValidityDates();
+  }
+};
+
+window.selectMemberForRenewal = function(memberId) {
+  if (!memberId) return;
+  var members = (window.appState && window.appState.members) ? window.appState.members : [];
+  var m = members.find(function(x) { return x.id === memberId; });
+  if (!m) return;
+
+  var editIdInput = document.getElementById('formEditingMemberId');
+  if (editIdInput) editIdInput.value = m.id;
+  document.getElementById('formName').value = m.name || '';
+  document.getElementById('formDob').value = m.dob || '';
+  document.getElementById('formAge').value = m.age || '';
+  document.getElementById('formEducation').value = m.education || '';
+  document.getElementById('formOccupation').value = m.occupation || '';
+  document.getElementById('formWorkAddress').value = m.workAddress || '';
+  document.getElementById('formReligion').value = m.religion || 'Christian';
+  document.getElementById('formMaritalStatus').value = m.maritalStatus || 'திருமணமாகாதவர் (Unmarried)';
+  document.getElementById('formHomeAddress').value = m.homeAddress || '';
+  document.getElementById('formMobile').value = m.mobile || '';
+  document.getElementById('formSecurityPin').value = m.securityPin || '1234';
+  document.getElementById('formEmail').value = m.email || '';
+  document.getElementById('formInstaId').value = m.instaId || '';
+  document.getElementById('formFatherName').value = m.fatherName || '';
+  document.getElementById('formMotherName').value = m.motherName || '';
+  document.getElementById('formYearsInDbyc').value = (parseInt(m.yearsInDbyc, 10) || 1) + 1;
+  document.getElementById('formBloodGroup').value = m.bloodGroup || 'O+ve';
+  document.getElementById('formGroup').value = m.group || 'Sub Juniors Group';
+  document.getElementById('formRole').value = m.role || 'Member';
+  document.getElementById('formTeam').value = m.team || 'TEAM-1';
+  document.getElementById('formNotes').value = m.notes || '';
+
+  var today = new Date();
+  var todayStr = today.toISOString().split('T')[0];
+  var nextYear = new Date(today);
+  nextYear.setFullYear(nextYear.getFullYear() + 1);
+  var nextYearStr = nextYear.toISOString().split('T')[0];
+
+  document.getElementById('formJoinDate').value = m.joinDate || todayStr;
+  document.getElementById('formRenewalDate').value = todayStr;
+  document.getElementById('formExpiryDate').value = nextYearStr;
+
+  var badge = document.getElementById('renewalExtensionBadge');
+  var prevEl = document.getElementById('renewalPrevExpiry');
+  var newEl = document.getElementById('renewalNewExpiry');
+  if (badge && prevEl && newEl) {
+    var prevVal = window.calculateMembershipValidity(m);
+    prevEl.textContent = prevVal.expiryFormatted;
+    newEl.textContent = nextYear.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    badge.style.display = 'block';
+  }
+
+  window.capturedMemberPhotoBase64 = m.photo || '';
+  var previewImg = document.getElementById('formMemberPhotoPreviewImg');
+  if (previewImg) previewImg.src = m.photo || window.DBYC_OFFICIAL_LOGO || 'assets/logo.png';
+
+  showToast('🔄 ' + m.name + ' விவரங்கள் ஏற்றப்பட்டன. 1 ஆண்டு நீட்டிப்பு: ' + todayStr + ' முதல் ' + nextYearStr);
+};
+
+window.updateFormValidityDates = function() {
+  var joinInput = document.getElementById('formJoinDate');
+  var renewInput = document.getElementById('formRenewalDate');
+  var expiryInput = document.getElementById('formExpiryDate');
+  if (!expiryInput) return;
+
+  var today = new Date();
+  var todayStr = today.toISOString().split('T')[0];
+
+  if (joinInput && !joinInput.value) joinInput.value = todayStr;
+  var baseDateStr = (renewInput && renewInput.value) ? renewInput.value : (joinInput ? joinInput.value : todayStr);
+  var base = new Date(baseDateStr);
+  if (isNaN(base.getTime())) base = today;
+
+  var expiry = new Date(base);
+  expiry.setFullYear(expiry.getFullYear() + 1);
+  expiryInput.value = expiry.toISOString().split('T')[0];
+};
+
+window.quickRenewMember = function(memberId) {
+  if (!memberId) return;
+  var members = (window.appState && window.appState.members) ? window.appState.members : [];
+  var m = members.find(function(x) { return x.id === memberId; });
+  if (!m) return;
+
+  var today = new Date();
+  var todayStr = today.toISOString().split('T')[0];
+  var nextYear = new Date(today);
+  nextYear.setFullYear(nextYear.getFullYear() + 1);
+  var nextYearStr = nextYear.toISOString().split('T')[0];
+
+  m.renewalDate = todayStr;
+  m.expiryDate = nextYearStr;
+  m.membershipStatus = 'ACTIVE';
+  m.approvalStatus = 'APPROVED';
+  m.status = 'APPROVED';
+  m.yearsInDbyc = (parseInt(m.yearsInDbyc, 10) || 1) + 1;
+  m.updatedAt = new Date().toISOString();
+
+  saveLocalData();
+
+  if (typeof renderMembersRegistry === 'function') renderMembersRegistry();
+  if (typeof generateIdPass === 'function' && currentViewingPassMemberId === memberId) {
+    generateIdPass(memberId);
+  }
+
+  if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+    window.DbycCloud.pushToCloud(false);
+  }
+
+  var formattedExp = nextYear.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  showToast('🎉 ' + m.name + ' உறுப்பினர் பதிவு ' + formattedExp + ' வரை (+1 வருடம்) வெற்றிகரமாக புதுப்பிக்கப்பட்டது!');
+};
+
+// ==============================================================================
+// OFFICIAL 56mm x 86mm CR-80 PORTRAIT ID PASS GENERATOR & HD EXPORTERS
+// ==============================================================================
+
+window.drawOfficial56x86PassToCanvas = async function(m, scale) {
+  var member = m || (window.appState && window.appState.members ? window.appState.members[0] : null) || window.appState.currentUser || {};
+  scale = scale || 20; // 56 * 20 = 1120px width, 86 * 20 = 1720px height (~508 DPI Ultra HD)
+
   var cvs = document.createElement('canvas');
-  cvs.width = 800;
-  cvs.height = 1200;
+  cvs.width = 56 * scale;  // 1120
+  cvs.height = 86 * scale; // 1720
   var ctx = cvs.getContext('2d');
 
+  var tenure = (typeof calculateTenure === 'function') 
+    ? calculateTenure(member.joinDate || member.yearsInDbyc) 
+    : (member.yearsInDbyc ? member.yearsInDbyc + ' Years' : '1 Year');
+
+  var cardDob = 'N/A';
+  if (member.dob) {
+    var dp = String(member.dob).trim().split('-');
+    if (dp.length === 3) {
+      cardDob = dp[2] + '/' + dp[1] + '/' + dp[0];
+    } else {
+      cardDob = member.dob;
+    }
+  }
+
+  var cardAddress = member.homeAddress || member.address || 'Basin Bridge, Chennai - 600 012';
+  var cardActivities = Array.isArray(member.activities) 
+    ? member.activities.join(', ') 
+    : (member.activities || member.specialActivities || 'Sports, Cultural & Oratory');
+
+  // Background
   ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, cvs.width, cvs.height);
 
+  // Outer Border & Golden Accent Ring
   ctx.strokeStyle = '#004b98';
-  ctx.lineWidth = 10;
-  ctx.strokeRect(10, 10, cvs.width - 20, cvs.height - 20);
+  ctx.lineWidth = 14;
+  ctx.strokeRect(7, 7, cvs.width - 14, cvs.height - 14);
 
-  ctx.fillStyle = '#004b98';
-  ctx.fillRect(10, 10, cvs.width - 20, 140);
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(18, 18, cvs.width - 36, cvs.height - 36);
+
+  // Top Header Banner (Header SAME: Don Bosco left, DBYC crest right)
+  var headerH = 175;
+  var grad = ctx.createLinearGradient(0, 0, cvs.width, headerH);
+  grad.addColorStop(0, '#00264d');
+  grad.addColorStop(1, '#004b98');
+  ctx.fillStyle = grad;
+  ctx.fillRect(20, 20, cvs.width - 40, headerH);
+
+  // Header bottom gold stripe
   ctx.fillStyle = '#fde047';
-  ctx.fillRect(10, 146, cvs.width - 20, 8);
+  ctx.fillRect(20, 195, cvs.width - 40, 8);
 
+  // Logos in Gold Rings
   var logoDb = await window.loadImageForCanvas(window.DON_BOSCO_PORTRAIT || window.DBYC_OFFICIAL_LOGO);
   var logoDbyc = await window.loadImageForCanvas(window.DBYC_OFFICIAL_LOGO);
 
   if (logoDb) {
     ctx.save();
     ctx.beginPath();
-    ctx.arc(75, 80, 45, 0, Math.PI * 2);
+    ctx.arc(88, 108, 54, 0, Math.PI * 2);
     ctx.clip();
-    ctx.drawImage(logoDb, 30, 35, 90, 90);
+    ctx.drawImage(logoDb, 34, 54, 108, 108);
     ctx.restore();
     ctx.strokeStyle = '#fde047';
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 4;
     ctx.beginPath();
-    ctx.arc(75, 80, 45, 0, Math.PI * 2);
+    ctx.arc(88, 108, 54, 0, Math.PI * 2);
     ctx.stroke();
   }
 
   if (logoDbyc) {
     ctx.save();
     ctx.beginPath();
-    ctx.arc(cvs.width - 75, 80, 45, 0, Math.PI * 2);
+    ctx.arc(cvs.width - 88, 108, 54, 0, Math.PI * 2);
     ctx.clip();
-    ctx.drawImage(logoDbyc, cvs.width - 120, 35, 90, 90);
+    ctx.drawImage(logoDbyc, cvs.width - 142, 54, 108, 108);
     ctx.restore();
     ctx.strokeStyle = '#fde047';
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.arc(cvs.width - 75, 80, 45, 0, Math.PI * 2);
-    ctx.stroke();
-  }
-
-  ctx.textAlign = 'center';
-  ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 30px sans-serif';
-  ctx.fillText('DON BOSCO YOUTH CENTRE', cvs.width / 2, 70);
-
-  ctx.fillStyle = '#fde047';
-  ctx.font = 'bold 20px sans-serif';
-  ctx.fillText('Basin Bridge, Chennai - 600 012', cvs.width / 2, 110);
-
-  var photoImg = await window.loadImageForCanvas(member.photo || window.DBYC_DEFAULT_AVATAR);
-  if (photoImg) {
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cvs.width / 2, 240, 65, 0, Math.PI * 2);
-    ctx.clip();
-    ctx.drawImage(photoImg, cvs.width / 2 - 65, 175, 130, 130);
-    ctx.restore();
-    ctx.strokeStyle = '#004b98';
     ctx.lineWidth = 4;
     ctx.beginPath();
-    ctx.arc(cvs.width / 2, 240, 65, 0, Math.PI * 2);
+    ctx.arc(cvs.width - 88, 108, 54, 0, Math.PI * 2);
     ctx.stroke();
   }
 
-  ctx.fillStyle = '#004b98';
-  ctx.font = 'bold 36px sans-serif';
-  ctx.fillText(member.name, cvs.width / 2, 345);
+  // Header Typography
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 34px sans-serif';
+  ctx.fillText('DON BOSCO YOUTH CENTRE', cvs.width / 2, 88);
 
-  ctx.fillStyle = '#e11d48';
-  ctx.font = 'bold 22px sans-serif';
-  ctx.fillText((member.role || 'Member') + ' • ' + (member.group || 'Youth'), cvs.width / 2, 385);
+  ctx.fillStyle = '#fde047';
+  ctx.font = 'bold 23px sans-serif';
+  ctx.fillText('Basin Bridge, Chennai - 600 012', cvs.width / 2, 136);
 
-  var rawQr = 'DBYC:' + member.id + ':' + member.name + ':' + (member.group || 'Youth');
-  var qrUrl = (typeof window.generateOfflineQrDataUrl === 'function' ? window.generateOfflineQrDataUrl(rawQr) : '') || ('https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(rawQr));
-  var qrImg = await window.loadImageForCanvas(qrUrl);
-  if (qrImg) {
-    ctx.drawImage(qrImg, cvs.width / 2 - 125, 420, 250, 250);
+  // Member Photo (Bigger & Sharp!)
+  var photoW = 180;
+  var photoH = 195;
+  var photoX = cvs.width / 2 - photoW / 2;
+  var photoY = 215;
+
+  ctx.fillStyle = '#f8fafc';
+  ctx.fillRect(photoX, photoY, photoW, photoH);
+  ctx.strokeStyle = '#004b98';
+  ctx.lineWidth = 6;
+  ctx.strokeRect(photoX, photoY, photoW, photoH);
+  ctx.strokeStyle = '#fde047';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(photoX + 4, photoY + 4, photoW - 8, photoH - 8);
+
+  var candPhoto = await window.loadImageForCanvas(member.photo || window.DBYC_DEFAULT_AVATAR);
+  if (candPhoto) {
+    ctx.drawImage(candPhoto, photoX + 6, photoY + 6, photoW - 12, photoH - 12);
   }
 
-  ctx.textAlign = 'left';
-  ctx.fillStyle = '#0f172a';
-  ctx.font = 'bold 24px sans-serif';
+  // Member Name (Bold!)
+  ctx.fillStyle = '#00264d';
+  ctx.font = 'bold 38px sans-serif';
+  var upperName = (member.name || 'MEMBER').toUpperCase();
+  ctx.fillText(upperName, cvs.width / 2, 448);
 
-  var details = [
-    ['DBYC ID:', member.id],
-    ['Mobile:', '📞 ' + (member.mobile || 'N/A')],
-    ['Blood Group:', '🩸 ' + (member.bloodGroup || 'O+ve')],
-    ['House Team:', '🚩 ' + (member.teamId || 'TEAM-1')]
+  // Member Group Pill
+  var groupName = (member.group || 'Youth').toUpperCase();
+  var groupText = '★ ' + groupName + ' ★';
+  ctx.font = 'bold 22px sans-serif';
+  var groupW = ctx.measureText(groupText).width + 36;
+  ctx.fillStyle = '#fee2e2';
+  ctx.fillRect(cvs.width / 2 - groupW / 2, 466, groupW, 36);
+  ctx.strokeStyle = '#fca5a5';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(cvs.width / 2 - groupW / 2, 466, groupW, 36);
+  ctx.fillStyle = '#b91c1c';
+  ctx.fillText(groupText, cvs.width / 2, 491);
+
+  // High-Contrast QR Code (Bigger & Crisp!)
+  var rawQr = 'DBYC:' + member.id + ':' + member.name + ':' + (member.group || 'Youth');
+  var qrUrl = (typeof window.generateOfflineQrDataUrl === 'function' ? window.generateOfflineQrDataUrl(rawQr) : '') || ('https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=' + encodeURIComponent(rawQr));
+  var qrImg = await window.loadImageForCanvas(qrUrl);
+
+  var qrSize = 250;
+  var qrBoxX = cvs.width / 2 - qrSize / 2;
+  var qrBoxY = 518;
+
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(qrBoxX - 8, qrBoxY - 8, qrSize + 16, qrSize + 16);
+  ctx.strokeStyle = '#cbd5e1';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(qrBoxX - 8, qrBoxY - 8, qrSize + 16, qrSize + 16);
+
+  if (qrImg) {
+    ctx.drawImage(qrImg, qrBoxX, qrBoxY, qrSize, qrSize);
+  }
+
+  // Details Table: ONLY requested fields
+  var tblX = 45;
+  var tblY = 792;
+  var tblW = cvs.width - 90;
+  var tblH = 825;
+
+  ctx.fillStyle = '#f8fafc';
+  ctx.fillRect(tblX, tblY, tblW, tblH);
+  ctx.strokeStyle = '#cbd5e1';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(tblX, tblY, tblW, tblH);
+
+  var rows = [
+    { label: 'DBYC ID:', val: member.id || 'N/A', color: '#004b98', boldVal: true },
+    { label: 'Member Group:', val: member.group || 'Youth', color: '#0f172a', boldVal: true },
+    { label: 'Duration in DBYC:', val: tenure, color: '#b45309', boldVal: true },
+    { label: 'Mobile Number:', val: member.mobile || 'N/A', color: '#0f172a', boldVal: false },
+    { label: 'Blood Group:', val: member.bloodGroup || 'N/A', color: '#dc2626', boldVal: true },
+    { label: 'Date of Birth:', val: cardDob, color: '#0f172a', boldVal: false },
+    { label: 'Address:', val: cardAddress, color: '#334155', boldVal: false, multiline: true },
+    { label: 'Special Activities:', val: cardActivities, color: '#004b98', boldVal: true, multiline: true }
   ];
 
-  var curY = 720;
-  for (var i = 0; i < details.length; i++) {
-    var d = details[i];
-    ctx.fillStyle = '#64748b';
-    ctx.fillText(d[0], 160, curY);
-    ctx.fillStyle = '#0f172a';
-    ctx.fillText(d[1], 360, curY);
-    curY += 45;
+  var curY = tblY + 54;
+  for (var i = 0; i < rows.length; i++) {
+    var r = rows[i];
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#475569';
+    ctx.font = 'bold 27px sans-serif';
+    ctx.fillText(r.label, tblX + 20, curY);
+
+    ctx.fillStyle = r.color;
+    ctx.font = r.boldVal ? 'bold 30px sans-serif' : 'bold 27px sans-serif';
+
+    if (r.multiline) {
+      var words = String(r.val || '').split(' ');
+      var line = '';
+      var lineY = curY;
+      var maxValW = tblW - 370;
+      for (var w = 0; w < words.length; w++) {
+        var testLine = line + (line ? ' ' : '') + words[w];
+        if (ctx.measureText(testLine).width > maxValW && line) {
+          ctx.fillText(line, tblX + 340, lineY);
+          line = words[w];
+          lineY += 34;
+        } else {
+          line = testLine;
+        }
+      }
+      if (line) {
+        ctx.fillText(line, tblX + 340, lineY);
+      }
+      var consumed = Math.max(88, (lineY - curY) + 55);
+      if (i < rows.length - 1) {
+        ctx.strokeStyle = '#e2e8f0';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(tblX + 16, curY + consumed - 32);
+        ctx.lineTo(tblX + tblW - 16, curY + consumed - 32);
+        ctx.stroke();
+      }
+      curY += consumed;
+    } else {
+      ctx.fillText(r.val, tblX + 340, curY);
+      if (i < rows.length - 1) {
+        ctx.strokeStyle = '#e2e8f0';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(tblX + 16, curY + 36);
+        ctx.lineTo(tblX + tblW - 16, curY + 36);
+        ctx.stroke();
+      }
+      curY += 88;
+    }
   }
 
-  ctx.textAlign = 'center';
-  ctx.fillStyle = '#f8fafc';
-  ctx.fillRect(15, cvs.height - 80, cvs.width - 30, 65);
-  ctx.fillStyle = '#64748b';
-  ctx.font = 'bold 18px sans-serif';
-  ctx.fillText('Official Pass • Don Bosco Youth Centre, Basin Bridge, Chennai - 12', cvs.width / 2, cvs.height - 40);
+  // Footer Ribbon: Footer SAME (Rev. Fr. Director left, DBYC right)
+  var footerY = 1630;
+  ctx.fillStyle = '#0f172a';
+  ctx.fillRect(20, footerY, cvs.width - 40, cvs.height - footerY - 20);
+
+  ctx.fillStyle = '#fde047';
+  ctx.fillRect(20, footerY, cvs.width - 40, 6);
+
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 24px sans-serif';
+  ctx.fillText('Rev. Fr. Director, SDB', 50, footerY + 45);
+
+  ctx.textAlign = 'right';
+  ctx.fillStyle = '#fde047';
+  ctx.font = 'bold 24px sans-serif';
+  ctx.fillText('DBYC Basin Bridge, Ch-12', cvs.width - 50, footerY + 45);
 
   return cvs;
+};
+
+// 1. Dedicated HD PDF Downloader (Direct PDF File, Official 56mm x 86mm Size)
+window.downloadMemberPassPdf = async function(memberId) {
+  var member = (window.appState && window.appState.members) 
+    ? window.appState.members.find(function(m) { return m.id === memberId; }) 
+    : null;
+  member = member || window.appState.currentUser;
+  if (!member) {
+    if (typeof showToast === 'function') showToast('⚠️ Member record not found for PDF pass.');
+    return;
+  }
+
+  if (typeof showToast === 'function') showToast('⏳ Generating Official 56mm x 86mm HD PDF Pass...');
+  var cvs = await window.drawOfficial56x86PassToCanvas(member, 20);
+  
+  // 56mm x 86mm in standard 72 pt/inch PDF coordinates:
+  // 56 * 2.834645 = 158.74 pt; 86 * 2.834645 = 243.78 pt
+  var pdfFilename = 'DBYC_Official_Pass_' + (member.id || 'Member') + '.pdf';
+  var success = window.downloadCanvasAsPdf(cvs, pdfFilename, 'portrait', 158.74, 243.78);
+  if (success && typeof showToast === 'function') {
+    showToast('✅ Official 56mm x 86mm HD PDF Pass downloaded!');
+  }
+};
+
+// 2. Dedicated Ultra HD PNG Downloader (Direct Image File @ 500+ DPI)
+window.downloadMemberPassPngHd = async function(memberId) {
+  var member = (window.appState && window.appState.members) 
+    ? window.appState.members.find(function(m) { return m.id === memberId; }) 
+    : null;
+  member = member || window.appState.currentUser;
+  if (!member) {
+    if (typeof showToast === 'function') showToast('⚠️ Member record not found for PNG pass.');
+    return;
+  }
+
+  if (typeof showToast === 'function') showToast('📸 Generating Ultra HD PNG Pass (56mm x 86mm @ 500 DPI)...');
+  var cvs = await window.drawOfficial56x86PassToCanvas(member, 20);
+  var pngFilename = 'DBYC_ID_Pass_' + (member.id || 'Member') + '_HD.png';
+  var success = window.downloadCanvasAsPng(cvs, pngFilename);
+  if (success && typeof showToast === 'function') {
+    showToast('✅ Ultra HD PNG Pass (56mm x 86mm) downloaded!');
+  }
+};
+
+// 3. Dedicated Direct Print Handler (Direct Thermal / Card / Paper Printer)
+window.printMemberPassDirect = function(memberId) {
+  var member = (window.appState && window.appState.members) 
+    ? window.appState.members.find(function(m) { return m.id === memberId; }) 
+    : null;
+  member = member || window.appState.currentUser;
+  if (!member) {
+    if (typeof showToast === 'function') showToast('⚠️ Member record not found for printing.');
+    return;
+  }
+
+  // Ensure card is rendered
+  if (typeof generateIdPass === 'function') {
+    generateIdPass(member.id);
+  }
+
+  // Inject exact 56mm x 86mm CSS for direct card printer
+  var styleEl = document.getElementById('dbycDynamicPrintOrientationStyle');
+  if (!styleEl) {
+    styleEl = document.createElement('style');
+    styleEl.id = 'dbycDynamicPrintOrientationStyle';
+    document.head.appendChild(styleEl);
+  }
+  styleEl.innerHTML = '@media print { ' +
+    '@page { size: 56mm 86mm portrait !important; margin: 0 !important; } ' +
+    'html, body { margin: 0 !important; padding: 0 !important; background: #ffffff !important; } ' +
+    'body * { visibility: hidden !important; } ' +
+    '#printableIdCard, #printableIdCard * { visibility: visible !important; } ' +
+    '#printableIdCard { ' +
+    '  position: fixed !important; left: 0 !important; top: 0 !important; ' +
+    '  width: 56mm !important; height: 86mm !important; max-width: 56mm !important; max-height: 86mm !important; ' +
+    '  margin: 0 !important; border: 1.5px solid #004b98 !important; border-radius: 3mm !important; ' +
+    '  box-shadow: none !important; overflow: hidden !important; ' +
+    '  page-break-inside: avoid !important; break-inside: avoid !important; ' +
+    '} ' +
+  '}';
+
+  setTimeout(function() {
+    window.print();
+  }, 100);
+};
+
+// 1. Pass Canvas Generator (Delegates to Official 56mm x 86mm Canvas)
+window.drawPassToCanvas = async function(m) {
+  return await window.drawOfficial56x86PassToCanvas(m, 20);
 };
 
 // 2. Certificate Canvas Generator (Landscape A4)
@@ -10984,8 +11541,8 @@ window.downloadPrintableAsImage = async function() {
   window.triggerPrintModal();
 };
 
-// 3. Single Member QR Pass Print & PDF Downloader (Strict Single Page)
-window.downloadMemberPassPdf = function(memberId) {
+// 3. Single Member QR Pass Modal Preview
+window.previewSingleMemberPass = function(memberId) {
   window.currentPrintContext = { type: 'PASS', memberId: memberId };
   const member = (appState.members || []).find(m => m.id === memberId) || appState.currentUser;
   if (!member) {
@@ -12582,6 +13139,9 @@ window.openAddMemberModal = function(memberId) {
     document.getElementById('formGroup').value = m.group || 'Sub Juniors Group';
     document.getElementById('formRole').value = m.role || 'Member';
     document.getElementById('formJoinDate').value = m.joinDate || '';
+    document.getElementById('formRenewalDate').value = m.renewalDate || m.joinDate || '';
+    document.getElementById('formExpiryDate').value = m.expiryDate || '';
+    window.updateFormValidityDates();
     document.getElementById('formTeam').value = m.team || 'TEAM-1';
     document.getElementById('formNotes').value = m.notes || '';
 
@@ -12609,9 +13169,14 @@ window.openAddMemberModal = function(memberId) {
     if (titleEl) titleEl.textContent = 'உறுப்பினர் விண்ணப்பப் படிவம் (New Member Registration)';
     document.getElementById('officialAppForm')?.reset();
 
-    // Default join date to today
+    // Default join and renewal dates to today
+    const todayStr = new Date().toISOString().split('T')[0];
     const joinDateInput = document.getElementById('formJoinDate');
-    if (joinDateInput) joinDateInput.value = new Date().toISOString().split('T')[0];
+    if (joinDateInput) joinDateInput.value = todayStr;
+    const renewInput = document.getElementById('formRenewalDate');
+    if (renewInput) renewInput.value = todayStr;
+    window.updateFormValidityDates();
+    window.switchRegistrationMode('NEW');
 
     // Reset photo
     window.capturedMemberPhotoBase64 = '';
@@ -12691,10 +13256,23 @@ window.saveMemberRegistrationFormDirect = function(event) {
     group,
     role: document.getElementById('formRole')?.value || 'Member',
     joinDate: document.getElementById('formJoinDate')?.value || new Date().toISOString().split('T')[0],
+    renewalDate: document.getElementById('formRenewalDate')?.value || document.getElementById('formJoinDate')?.value || new Date().toISOString().split('T')[0],
+    expiryDate: document.getElementById('formExpiryDate')?.value || '',
     team: document.getElementById('formTeam')?.value || 'TEAM-1',
     notes: document.getElementById('formNotes')?.value || '',
     photo: window.capturedMemberPhotoBase64 || ''
   };
+
+  if (!memberData.expiryDate) {
+    var baseDate = new Date(memberData.renewalDate || memberData.joinDate);
+    var exp = new Date(baseDate);
+    exp.setFullYear(exp.getFullYear() + 1);
+    memberData.expiryDate = exp.toISOString().split('T')[0];
+  }
+  var baseD = new Date(memberData.renewalDate || memberData.joinDate);
+  var expD = new Date(memberData.expiryDate);
+  memberData.membershipYear = baseD.getFullYear() + ' - ' + expD.getFullYear();
+  memberData.membershipStatus = 'ACTIVE';
 
   if (!appState.members) appState.members = [];
 
@@ -12879,6 +13457,14 @@ function renderMembersRegistry() {
       ? `<span class="role-badge" style="background:#ecfdf5; color:#059669; font-weight:800;">✅ Qualified & Approved</span>`
       : `<span class="role-badge" style="background:#ffedd5; color:#c2410c; font-weight:800;">⏳ Pending Approval</span>`;
 
+    const validity = (typeof window.calculateMembershipValidity === 'function')
+      ? window.calculateMembershipValidity(m)
+      : { isActive: true, yearStr: '2026 - 2027', expiryFormatted: 'N/A' };
+    
+    const validityBadge = validity.isActive
+      ? `<span class="role-badge" style="background:#dcfce7; color:#15803d; font-weight:800;" title="1-Year Registration Valid">🟢 ${validity.yearStr} (Valid: ${validity.expiryFormatted})</span>`
+      : `<span class="role-badge" style="background:#fee2e2; color:#b91c1c; font-weight:900;" title="Registration Expired. Tap Renew!">🔴 Expired: ${validity.expiryFormatted} (Renew Now)</span>`;
+
     // Team badge info
     let teamName = 'House Team';
     let teamColor = '#004b98';
@@ -12905,13 +13491,17 @@ function renderMembersRegistry() {
             <div style="font-size:0.8rem; color:#475569; margin-top:3px;">
               <span>${m.role || 'Member'}</span> • <span>${m.group}</span> • <span style="font-weight:700; color:${teamColor};">${teamName}</span>
             </div>
-            <div style="font-size:0.75rem; color:#64748b; margin-top:2px;">
-              📞 <strong>${m.mobile}</strong> • 🎂 DOB: <strong>${m.dob || 'N/A'}</strong> (Age: ${m.age || 'N/A'})
+            <div style="font-size:0.75rem; color:#64748b; margin-top:2px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+              <span>📞 <strong>${m.mobile}</strong></span> • <span>🎂 DOB: <strong>${m.dob || 'N/A'}</strong> (Age: ${m.age || 'N/A'})</span> • ${validityBadge}
             </div>
           </div>
         </div>
 
         <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+          <!-- 1-Year Renewal Action Button -->
+          <button type="button" class="btn-dbyc-primary" style="background:#16a34a; padding:6px 12px; font-size:0.78rem; font-weight:800; border-radius:8px; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 6px rgba(22,163,74,0.3);" onclick="window.quickRenewMember('${m.id}')" title="Renew member registration for 1 full year (+1 Year Extension)">
+            🔄 Renew (+1 Yr)
+          </button>
           <!-- Quick Photo Edit for All Members -->
           <button type="button" class="btn-dbyc-secondary" style="background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; padding:6px 10px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.quickEditMemberPhoto('${m.id}')" title="Change or update member photo">
             📷 Photo
@@ -14829,11 +15419,15 @@ window.downloadAllMemberPassesPdf = function() {
             <img src="${qrUrl}" alt="QR Pass" style="width:100px; height:100px; display:block;">
           </div>
 
-          <table style="width:100%; border-collapse:collapse; font-size:7.5pt; text-align:left;">
-            <tr><td style="padding:2px 3px; font-weight:800; color:#64748b; width:38%; border-bottom:1px solid #f1f5f9;">ID:</td><td style="padding:2px 3px; font-weight:800; color:#0f172a; border-bottom:1px solid #f1f5f9;">${m.id}</td></tr>
-            <tr><td style="padding:2px 3px; font-weight:800; color:#64748b; border-bottom:1px solid #f1f5f9;">Mobile:</td><td style="padding:2px 3px; font-weight:800; color:#0f172a; border-bottom:1px solid #f1f5f9;">📞 ${m.mobile}</td></tr>
-            <tr><td style="padding:2px 3px; font-weight:800; color:#64748b; border-bottom:1px solid #f1f5f9;">Blood:</td><td style="padding:2px 3px; font-weight:800; color:#0f172a; border-bottom:1px solid #f1f5f9;">🩸 ${m.bloodGroup || 'N/A'}</td></tr>
-            <tr><td style="padding:2px 3px; font-weight:800; color:#64748b;">House Team:</td><td style="padding:2px 3px; font-weight:800; color:#0f172a;">🚩 ${m.teamId || 'TEAM-1'}</td></tr>
+          <table style="width:100%; border-collapse:collapse; font-size:7.2pt; text-align:left;">
+            <tr><td style="padding:2px 3px; font-weight:800; color:#64748b; width:40%; border-bottom:1px solid #f1f5f9;">ID:</td><td style="padding:2px 3px; font-weight:800; color:#004b98; border-bottom:1px solid #f1f5f9;">${m.id}</td></tr>
+            <tr><td style="padding:2px 3px; font-weight:800; color:#64748b; border-bottom:1px solid #f1f5f9;">Group:</td><td style="padding:2px 3px; font-weight:800; color:#0f172a; border-bottom:1px solid #f1f5f9;">👥 ${m.group || 'Youth'}</td></tr>
+            <tr><td style="padding:2px 3px; font-weight:800; color:#64748b; border-bottom:1px solid #f1f5f9;">Duration in DBYC:</td><td style="padding:2px 3px; font-weight:800; color:#b45309; border-bottom:1px solid #f1f5f9;">⏳ ${tenure}</td></tr>
+            <tr><td style="padding:2px 3px; font-weight:800; color:#64748b; border-bottom:1px solid #f1f5f9;">Mobile:</td><td style="padding:2px 3px; font-weight:800; color:#0f172a; border-bottom:1px solid #f1f5f9;">📞 ${m.mobile || 'N/A'}</td></tr>
+            <tr><td style="padding:2px 3px; font-weight:800; color:#64748b; border-bottom:1px solid #f1f5f9;">Blood Group:</td><td style="padding:2px 3px; font-weight:800; color:#dc2626; border-bottom:1px solid #f1f5f9;">🩸 ${m.bloodGroup || 'N/A'}</td></tr>
+            <tr><td style="padding:2px 3px; font-weight:800; color:#64748b; border-bottom:1px solid #f1f5f9;">Date of Birth:</td><td style="padding:2px 3px; font-weight:800; color:#0f172a; border-bottom:1px solid #f1f5f9;">🎂 ${m.dob || 'N/A'}</td></tr>
+            <tr><td style="padding:2px 3px; font-weight:800; color:#64748b; border-bottom:1px solid #f1f5f9;">Address:</td><td style="padding:2px 3px; font-weight:800; color:#334155; border-bottom:1px solid #f1f5f9; font-size:6.8pt;">📍 ${m.homeAddress || m.address || 'Chennai'}</td></tr>
+            <tr><td style="padding:2px 3px; font-weight:800; color:#64748b;">Special Activities:</td><td style="padding:2px 3px; font-weight:800; color:#004b98; font-size:6.8pt;">⚽ ${Array.isArray(m.activities) ? m.activities.join(', ') : (m.activities || 'Sports')}</td></tr>
           </table>
         </div>
 
@@ -17868,58 +18462,116 @@ window.printCombinedFormAndPass = function(memberId) {
   window.printCombinedPassAndForm(memberId);
 };
 
-// Render Official ID Card in exact standard CR80 physical dimensions (85.6mm x 54mm)
+// Render Official ID Card in exact standard CR80 Portrait physical dimensions (56mm x 86mm)
 window.renderOfficialIdCardHtml = function(member) {
+  if (!member) member = window.appState.currentUser || {};
   const photoSrc = member.photo || window.DBYC_OFFICIAL_LOGO || 'assets/logo.png';
-  const logoSrc = window.DBYC_OFFICIAL_LOGO || 'assets/logo.png';
+  const logoDb = window.DON_BOSCO_PORTRAIT || window.DBYC_OFFICIAL_LOGO || 'assets/logo.png';
+  const logoDbyc = window.DBYC_OFFICIAL_LOGO || 'assets/logo.png';
+
   const rawQrText = `DBYC:${member.id}:${member.name}:${member.group}`;
-  const qrUrl = (typeof window.generateOfflineQrDataUrl === 'function' ? window.generateOfflineQrDataUrl(rawQrText) : '') || `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(rawQrText)}`;
+  const qrUrl = (typeof window.generateOfflineQrDataUrl === 'function' ? window.generateOfflineQrDataUrl(rawQrText) : '') || `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(rawQrText)}`;
+
+  const tenure = (typeof calculateTenure === 'function') 
+    ? calculateTenure(member.joinDate || member.yearsInDbyc) 
+    : (member.yearsInDbyc ? member.yearsInDbyc + ' Years' : '1 Year');
+
+  let cardDob = 'N/A';
+  if (member.dob) {
+    const dp = String(member.dob).trim().split('-');
+    if (dp.length === 3) cardDob = `${dp[2]}/${dp[1]}/${dp[0]}`;
+    else cardDob = member.dob;
+  }
+
+  const cardAddress = member.homeAddress || member.address || 'Basin Bridge, Chennai - 600 012';
+  const cardActivities = Array.isArray(member.activities) 
+    ? member.activities.join(', ') 
+    : (member.activities || member.specialActivities || 'Sports, Cultural & Oratory');
 
   return `
-    <div class="official-id-card-frame" style="width:85.6mm; height:54mm; max-width:85.6mm; max-height:54mm; margin:16px auto; border:1.8px solid #004b98; border-radius:3.5mm; overflow:hidden; background:#ffffff; box-shadow:0 4px 14px rgba(0,0,0,0.12); font-family:system-ui, -apple-system, sans-serif; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; position:relative;">
-      <!-- Header Band -->
-      <div style="background:linear-gradient(135deg, #002b66 0%, #004b98 100%); padding:3.5mm 4mm; display:flex; align-items:center; justify-content:space-between; color:#ffffff;">
-        <div style="display:flex; align-items:center; gap:2.5mm;">
-          <img src="${logoSrc}" alt="Crest" style="width:7mm; height:7mm; border-radius:50%; object-fit:contain; border:1px solid #fde047; background:#ffffff;">
-          <div>
-            <div style="font-size:2.8mm; font-weight:900; letter-spacing:0.2mm; line-height:1.1; color:#ffffff;">DON BOSCO YOUTH CENTRE</div>
-            <div style="font-size:2mm; color:#bae6fd; font-weight:700;">Basin Bridge, Chennai - 600 012</div>
-          </div>
+    <div class="official-id-card-frame id-pass-card-56x86" style="width:56mm; height:86mm; max-width:56mm; max-height:86mm; min-height:86mm; margin:10px auto; border:1.8px solid #004b98; border-radius:3.5mm; overflow:hidden; background:#ffffff; box-shadow:0 8px 24px rgba(0,43,102,0.18); font-family:system-ui, -apple-system, sans-serif; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; position:relative; text-align:center;">
+      
+      <!-- Top Header Band (Header SAME) -->
+      <div style="background:linear-gradient(135deg, #00264d 0%, #004b98 100%); padding:2.5mm 2mm 2mm; display:flex; align-items:center; justify-content:space-between; color:#ffffff; border-bottom:1.5px solid #fde047; flex-shrink:0;">
+        <img src="${logoDb}" alt="Don Bosco" style="width:7.5mm; height:7.5mm; border-radius:50%; object-fit:cover; border:1px solid #fde047; box-shadow:0 0 4px rgba(253,224,71,0.6); flex-shrink:0;">
+        <div style="flex:1; text-align:center; padding:0 1.5mm; line-height:1.2;">
+          <div style="font-size:2.8mm; font-weight:900; letter-spacing:0.2px; color:#ffffff; text-transform:uppercase;">DON BOSCO YOUTH CENTRE</div>
+          <div style="font-size:2.0mm; color:#fde047; font-weight:800; margin-top:0.4mm;">Basin Bridge, Chennai - 600 012</div>
         </div>
-        <span style="background:#fde047; color:#002b66; font-size:2.2mm; font-weight:900; padding:0.8mm 2mm; border-radius:2mm;">2026 PASS</span>
+        <img src="${logoDbyc}" alt="DBYC Crest" style="width:7.5mm; height:7.5mm; border-radius:50%; object-fit:contain; border:1px solid #fde047; background:#ffffff; flex-shrink:0;">
       </div>
 
-      <!-- Core Details Grid -->
-      <div style="padding:2mm 4mm; display:grid; grid-template-columns: 14mm 1fr 15mm; gap:3mm; align-items:center; flex:1;">
-        <!-- Photo -->
-        <div style="width:13.5mm; height:15mm; border-radius:2mm; overflow:hidden; border:1.2px solid #004b98; background:#f8fafc;">
+      <!-- Core Content: Image of Person, Bold Name, Member Group, QR, ONLY Requested Details -->
+      <div style="padding:1.5mm 2mm; display:flex; flex-direction:column; align-items:center; justify-content:space-between; flex:1; box-sizing:border-box; overflow:hidden;">
+        
+        <!-- Member Photo (Bigger!) -->
+        <div style="width:14mm; height:15mm; border-radius:2mm; overflow:hidden; border:1.5px solid #004b98; outline:1px solid #fde047; background:#f8fafc; box-shadow:0 2px 6px rgba(0,0,0,0.15); flex-shrink:0;">
           <img src="${photoSrc}" alt="${member.name}" style="width:100%; height:100%; object-fit:cover;">
         </div>
-        <!-- Info -->
-        <div style="line-height:1.2;">
-          <div style="font-size:3.2mm; font-weight:900; color:#002b66; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${member.name}</div>
-          <div style="font-size:2.2mm; font-weight:800; color:#0284c7; margin-top:0.4mm;">ID: <strong>${member.id}</strong> • ${member.role || 'Member'}</div>
-          <div style="font-size:1.9mm; color:#475569; margin-top:0.4mm;">Group: ${member.group}</div>
-          <div style="font-size:1.8mm; color:#64748b; margin-top:0.4mm;">📞 ${member.mobile} • 🩸 ${member.bloodGroup || 'O+ve'}</div>
+
+        <!-- Member Name & Group Badge (Bold!) -->
+        <div style="margin-top:0.6mm; line-height:1.15; width:100%;">
+          <div style="font-size:3.2mm; font-weight:900; color:#00264d; text-transform:uppercase; letter-spacing:0.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+            ${member.name}
+          </div>
+          <div style="display:inline-block; background:#fee2e2; color:#b91c1c; font-size:1.8mm; font-weight:900; padding:0.3mm 2.2mm; border-radius:2mm; border:0.6px solid #fca5a5; margin-top:0.3mm; max-width:94%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+            ★ ${(member.group || 'Youth').toUpperCase()} ★
+          </div>
         </div>
-        <!-- High-Res QR Code -->
-        <div style="width:14mm; height:14mm; border:1px solid #0284c7; border-radius:1.5mm; padding:0.5mm; background:#fff; text-align:center;">
-          <img src="${qrUrl}" alt="QR" style="width:100%; height:100%; object-fit:contain;">
+
+        <!-- High-Contrast QR Code (Bigger!) -->
+        <div style="width:19mm; height:19mm; border:1px solid #cbd5e1; border-radius:1.5mm; padding:0.6mm; background:#ffffff; box-shadow:0 1px 4px rgba(0,0,0,0.06); margin:0.8mm auto; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <img src="${qrUrl}" alt="QR Pass" style="width:100%; height:100%; object-fit:contain;">
         </div>
+
+        <!-- Details Grid: ONLY requested fields (All Bold!) -->
+        <table style="width:100%; border-collapse:collapse; font-size:1.85mm; line-height:1.2; text-align:left; background:#f8fafc; border-radius:1.5mm; padding:0.6mm; border:0.6px solid #e2e8f0; margin-top:0.3mm;">
+          <tr>
+            <td style="padding:0.4mm 0.8mm; font-weight:900; color:#475569; width:38%; white-space:nowrap;">DBYC ID:</td>
+            <td style="padding:0.4mm 0.8mm; font-weight:900; color:#004b98; font-size:2.0mm;">${member.id}</td>
+          </tr>
+          <tr>
+            <td style="padding:0.4mm 0.8mm; font-weight:900; color:#475569; white-space:nowrap;">Member Group:</td>
+            <td style="padding:0.4mm 0.8mm; font-weight:900; color:#0f172a;">${member.group || 'Youth'}</td>
+          </tr>
+          <tr>
+            <td style="padding:0.4mm 0.8mm; font-weight:900; color:#475569; white-space:nowrap;">Duration in DBYC:</td>
+            <td style="padding:0.4mm 0.8mm; font-weight:900; color:#b45309;">${tenure}</td>
+          </tr>
+          <tr>
+            <td style="padding:0.4mm 0.8mm; font-weight:900; color:#475569; white-space:nowrap;">Mobile Number:</td>
+            <td style="padding:0.4mm 0.8mm; font-weight:800; color:#0f172a;">${member.mobile || 'N/A'}</td>
+          </tr>
+          <tr>
+            <td style="padding:0.4mm 0.8mm; font-weight:900; color:#475569; white-space:nowrap;">Blood Group:</td>
+            <td style="padding:0.4mm 0.8mm; font-weight:900; color:#dc2626;">${member.bloodGroup || 'N/A'}</td>
+          </tr>
+          <tr>
+            <td style="padding:0.4mm 0.8mm; font-weight:900; color:#475569; white-space:nowrap;">Date of Birth:</td>
+            <td style="padding:0.4mm 0.8mm; font-weight:800; color:#0f172a;">${cardDob}</td>
+          </tr>
+          <tr>
+            <td style="padding:0.4mm 0.8mm; font-weight:900; color:#475569; white-space:nowrap; vertical-align:top;">Address:</td>
+            <td style="padding:0.4mm 0.8mm; font-weight:800; color:#334155; font-size:1.65mm; line-height:1.15;">${cardAddress}</td>
+          </tr>
+          <tr>
+            <td style="padding:0.4mm 0.8mm; font-weight:900; color:#475569; white-space:nowrap; vertical-align:top;">Special Activities:</td>
+            <td style="padding:0.4mm 0.8mm; font-weight:800; color:#004b98; font-size:1.65mm; line-height:1.15;">${cardActivities}</td>
+          </tr>
+        </table>
       </div>
 
-      <!-- Footer Bar -->
-      <div style="background:#f1f5f9; border-top:1px solid #cbd5e1; padding:1.2mm 4mm; display:flex; justify-content:space-between; align-items:center; font-size:1.8mm; color:#475569;">
+      <!-- Footer Ribbon (Footer SAME) -->
+      <div style="background:#0f172a; border-top:1.2px solid #fde047; padding:1mm 2mm; display:flex; justify-content:space-between; align-items:center; font-size:1.7mm; color:#ffffff; font-weight:800; flex-shrink:0;">
         <span>Rev. Fr. Director, SDB</span>
-        <span style="font-weight:800; color:#059669;">● PIN Secured Official Pass</span>
+        <span style="color:#fde047;">DBYC Chennai - 12</span>
       </div>
     </div>
   `;
 };
 
-// Update downloadMemberPassPdf to use official ID card dimensions
-const originalDownloadMemberPassPdf = window.downloadMemberPassPdf;
-window.downloadMemberPassPdf = function(memberId) {
+
+window.previewMemberPassInModal = function(memberId) {
   window.currentPrintContext = { type: 'PASS', memberId: memberId };
   const member = (window.appState.members || []).find(m => m.id === memberId) || window.appState.currentUser;
   if (!member) {
@@ -17931,15 +18583,15 @@ window.downloadMemberPassPdf = function(memberId) {
   window.updateDocSwitcherUI('PASS');
 
   const titleEl = document.getElementById('printDocModalTitle');
-  if (titleEl) titleEl.textContent = `🪪 Official ID Card Pass (CR-80 Standard) - ${member.name} (${member.id})`;
+  if (titleEl) titleEl.textContent = `🪪 Official ID Card Pass (56mm × 86mm CR-80) - ${member.name} (${member.id})`;
 
   const container = document.getElementById('printableDocumentContainer');
   if (!container) return;
 
   container.innerHTML = `
     <div class="print-pass-card" style="text-align:center; padding:10px 0;">
-      <div style="margin-bottom:12px; font-size:0.8rem; color:#64748b;">
-        Official ID Card Dimensions: <strong>85.6 mm × 54.0 mm</strong> (CR-80 Standard). Ready for direct ID Card printer or A4 cut-out.
+      <div style="margin-bottom:12px; font-size:0.82rem; color:#475569; font-weight:700;">
+        Official ID Card Dimensions: <strong>56 mm × 86 mm</strong> (CR-80 Portrait Standard). Ready for direct card printer or A4 sheet.
       </div>
       ${window.renderOfficialIdCardHtml(member)}
     </div>
@@ -17949,6 +18601,9 @@ window.downloadMemberPassPdf = function(memberId) {
   if (modal) modal.style.display = 'flex';
 };
 
+window.printPassOnly = function(memberId) {
+  window.previewMemberPassInModal(memberId);
+};
 
 // 5. QR ATTENDANCE: MULTI-SCALE CAMERA DECODE & GOOGLE LENS / GOOGLE SCANNER SUPPORT
 window.triggerGoogleLensScan = function() {

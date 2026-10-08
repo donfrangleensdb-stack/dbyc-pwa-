@@ -8250,6 +8250,11 @@ function startAwardPointsScanningLoop() {
         try {
           const codes = await detector.detect(video);
           if (codes && codes.length > 0 && codes[0].rawValue) {
+            if (awardPointsScanInterval) {
+              clearInterval(awardPointsScanInterval);
+              awardPointsScanInterval = null;
+            }
+            window.stopAwardPointsCamera();
             window.handleScannedAwardPointsQr(codes[0].rawValue);
             isScanning = false;
             return;
@@ -8288,6 +8293,11 @@ function startAwardPointsScanningLoop() {
         }
 
         if (qr && qr.data) {
+          if (awardPointsScanInterval) {
+            clearInterval(awardPointsScanInterval);
+            awardPointsScanInterval = null;
+          }
+          window.stopAwardPointsCamera();
           window.handleScannedAwardPointsQr(qr.data);
           isScanning = false;
           return;
@@ -8302,6 +8312,9 @@ function startAwardPointsScanningLoop() {
 
 window.handleScannedAwardPointsQr = function(rawVal) {
   if (!rawVal) return;
+  // Automatically shut off camera scanner upon detection
+  window.stopAwardPointsCamera();
+
   const members = window.appState.members || [];
   let qClean = decodeURIComponent(rawVal).trim().toUpperCase();
   if (qClean.includes('DBYC:')) {
@@ -8324,9 +8337,6 @@ window.handleScannedAwardPointsQr = function(rawVal) {
     showToast(`⚠️ Member not found for scanned code: "${rawVal}"`);
     return;
   }
-
-  // Stop camera stream once detected
-  window.stopAwardPointsCamera();
 
   // Find their team
   const targetTeamId = member.teamId || member.team || 'TEAM-1';
@@ -9925,7 +9935,7 @@ window.startQrCamera = function() {
   tryNextConstraint(0);
 };
 
-window.stopQrCamera = function(forced) {
+window.stopQrCamera = function(forced, isSuccessAutoOff) {
   if (isCameraStarting && !forced) return;
   const now = Date.now();
   if (!forced && (now - lastCameraActionTime < 800)) return; // Prevent instant kill on mobile
@@ -9947,19 +9957,34 @@ window.stopQrCamera = function(forced) {
   const btn = document.getElementById('startCameraBtn');
   const flipBtn = document.getElementById('flipCamBtn');
   if (btn) {
-    btn.textContent = '📷 Turn On Camera Scanner';
+    btn.textContent = isSuccessAutoOff ? '📷 Turn On Camera Scanner (Next Member)' : '📷 Turn On Camera Scanner';
     btn.style.background = '#004b98';
   }
   if (flipBtn) flipBtn.style.display = 'none';
   const container = document.getElementById('qrVideoContainer');
   if (container) {
     container.setAttribute('data-active', 'false');
-    container.innerHTML = `
-      <div style="color: #64748b; font-size: 0.85rem; text-align: center; padding: 20px;">
-        <span style="font-size: 2.2rem; display: block; margin-bottom: 6px;">📷</span>
-        Live Camera Scanner is inactive.<br>Tap "Turn On Camera Scanner" above or snap a photo.
-      </div>
-    `;
+    if (isSuccessAutoOff) {
+      container.innerHTML = `
+        <div style="background:#f0fdf4; border:2px dashed #10b981; border-radius:14px; padding:22px 16px; text-align:center; color:#166534; width:100%; box-shadow:0 4px 12px rgba(16,185,129,0.12);">
+          <div style="font-size:2.8rem; margin-bottom:6px;">✅</div>
+          <strong style="font-size:1.05rem; display:block; margin-bottom:4px; color:#15803d;">Pass Scanned Successfully!</strong>
+          <p style="font-size:0.8rem; color:#166534; margin:0 0 14px; line-height:1.4;">
+            Camera automatically turned off after single scan.<br>Tap below when ready to scan the next member pass.
+          </p>
+          <button type="button" class="btn-dbyc-primary" style="background:#16a34a; font-weight:800; font-size:0.88rem; padding:9px 20px; border-radius:8px; box-shadow:0 3px 8px rgba(22,163,74,0.3); display:inline-flex; align-items:center; gap:8px;" onclick="window.startQrCamera();">
+            📷 Scan Next Member Pass
+          </button>
+        </div>
+      `;
+    } else {
+      container.innerHTML = `
+        <div style="color: #64748b; font-size: 0.85rem; text-align: center; padding: 20px;">
+          <span style="font-size: 2.2rem; display: block; margin-bottom: 6px;">📷</span>
+          Live Camera Scanner is inactive.<br>Tap "Turn On Camera Scanner" above or snap a photo.
+        </div>
+      `;
+    }
   }
 };
 
@@ -9997,8 +10022,12 @@ function startScanningLoop() {
         try {
           const barcodes = await barcodeDetector.detect(video);
           if (barcodes && barcodes.length > 0 && barcodes[0].rawValue) {
-            handleScannedQrResult(barcodes[0].rawValue);
+            if (qrScanInterval) {
+              clearInterval(qrScanInterval);
+              qrScanInterval = null;
+            }
             isScanningFrame = false;
+            handleScannedQrResult(barcodes[0].rawValue);
             return;
           }
         } catch(e) {
@@ -10043,8 +10072,12 @@ function startScanningLoop() {
         }
 
         if (qr && qr.data) {
-          handleScannedQrResult(qr.data);
+          if (qrScanInterval) {
+            clearInterval(qrScanInterval);
+            qrScanInterval = null;
+          }
           isScanningFrame = false;
+          handleScannedQrResult(qr.data);
           return;
         }
       }
@@ -10059,35 +10092,17 @@ function startScanningLoop() {
 function handleScannedQrResult(rawVal) {
   if (!rawVal) return;
   const now = Date.now();
-  if (rawVal === lastScannedCode && (now - lastScannedTime < 3000)) {
+  if (rawVal === lastScannedCode && (now - lastScannedTime < 2500)) {
     return;
   }
   lastScannedCode = rawVal;
   lastScannedTime = now;
 
-  const targetBox = document.getElementById('qrScannerTargetBox');
-  const pill = document.getElementById('qrScanStatusPill');
-  if (targetBox) {
-    targetBox.style.borderColor = '#fbbf24';
-    targetBox.style.boxShadow = '0 0 20px #fbbf24, 0 0 0 4000px rgba(0,0,0,0.5)';
-    setTimeout(() => {
-      if (targetBox) {
-        targetBox.style.borderColor = '#10b981';
-        targetBox.style.boxShadow = '0 0 0 4000px rgba(0,0,0,0.5)';
-      }
-    }, 1200);
-  }
-  if (pill) {
-    pill.textContent = `⚡ Scanned: ${rawVal}`;
-    pill.style.color = '#fbbf24';
-    pill.style.borderColor = '#fbbf24';
-    setTimeout(() => {
-      if (pill) {
-        pill.textContent = '🟢 Camera Live — Point at Member QR Pass';
-        pill.style.color = '#10b981';
-        pill.style.borderColor = '#10b981';
-      }
-    }, 2000);
+  // Single-pass scan: Auto off the camera scanner immediately on detection
+  window.stopQrCamera(true, true);
+
+  if (navigator.vibrate) {
+    try { navigator.vibrate([70, 40, 70]); } catch(e) {}
   }
 
   window.processAttendanceCheckin(rawVal);

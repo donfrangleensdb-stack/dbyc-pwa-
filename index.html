@@ -3401,6 +3401,40 @@ body {
             <button type="button" id="btnModeAuto" class="filter-chip active" onclick="window.setAttendanceMode('SMART_AUTO')" style="font-size:0.78rem; font-weight:800; padding:5px 12px; border-radius:8px;">🔄 Auto (Entry ➔ Exit)</button>
             <button type="button" id="btnModeEntry" class="filter-chip" onclick="window.setAttendanceMode('ENTRY_ONLY')" style="font-size:0.78rem; font-weight:800; padding:5px 12px; border-radius:8px; background:#f0fdf4; color:#15803d; border-color:#86efac;">🟢 Entry Only (வருகை)</button>
             <button type="button" id="btnModeExit" class="filter-chip" onclick="window.setAttendanceMode('EXIT_ONLY')" style="font-size:0.78rem; font-weight:800; padding:5px 12px; border-radius:8px; background:#fef2f2; color:#b91c1c; border-color:#fca5a5;">🔴 Exit Only (புறப்பாடு)</button>
+            <button type="button" id="btnModeAwardPts" class="filter-chip" onclick="window.setAttendanceMode('AWARD_POINTS')" style="font-size:0.78rem; font-weight:800; padding:5px 12px; border-radius:8px; background:#fffbeb; color:#b45309; border-color:#fcd34d;">⚡ Award Points Mode (புள்ளிகள்)</button>
+          </div>
+        </div>
+
+        <!-- Dynamic Award Points Settings Bar (Visible when in AWARD_POINTS mode) -->
+        <div id="attPointsControlBar" style="display:none; background:#fffbeb; border:1.5px solid #f59e0b; border-radius:14px; padding:12px 16px; margin-bottom:14px; box-shadow:0 3px 12px rgba(245,158,11,0.12);">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+            <strong style="color:#92400e; font-size:0.88rem; display:flex; align-items:center; gap:6px;">
+              <span>⚡ Live Points Award Desk Active:</span>
+              <span style="font-size:0.76rem; font-weight:normal; color:#78350f;">Every scanned pass will immediately award points to that member's House Team!</span>
+            </strong>
+            <span style="background:#fef3c7; color:#b45309; font-size:0.75rem; font-weight:900; padding:2px 8px; border-radius:6px; border:1px solid #fcd34d;">🏆 Live Championship Points</span>
+          </div>
+          <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+            <div style="display:flex; align-items:center; gap:6px;">
+              <label style="font-size:0.78rem; font-weight:800; color:#78350f;">Points:</label>
+              <div style="display:flex; gap:4px;">
+                <button type="button" class="filter-chip att-pts-chip" data-pts="10" onclick="window.setAttAwardPoints(10)">+10</button>
+                <button type="button" class="filter-chip att-pts-chip active" data-pts="25" onclick="window.setAttAwardPoints(25)">+25</button>
+                <button type="button" class="filter-chip att-pts-chip" data-pts="50" onclick="window.setAttAwardPoints(50)">+50</button>
+                <button type="button" class="filter-chip att-pts-chip" data-pts="100" onclick="window.setAttAwardPoints(100)">+100</button>
+              </div>
+              <input type="number" id="attAwardPointsValue" value="25" style="width:65px; padding:4px 6px; font-size:0.82rem; font-weight:800; border:1px solid #cbd5e1; border-radius:6px; text-align:center;">
+            </div>
+            <div style="display:flex; align-items:center; gap:6px; flex:1; min-width:220px;">
+              <label style="font-size:0.78rem; font-weight:800; color:#78350f; white-space:nowrap;">Category:</label>
+              <select id="attAwardCategorySelect" class="form-control-dbyc" style="padding:4px 8px; font-size:0.8rem; height:32px;">
+                <option value="Sports Tournament">⚽ Sports Tournament (விளையாட்டு)</option>
+                <option value="Attendance Excellence">📋 Attendance Excellence (சிறந்த வருகை)</option>
+                <option value="Cultural / Quiz">📚 Cultural / Quiz / Oratory (கலை)</option>
+                <option value="Discipline & Spirit">🌟 Discipline & Spirit (ஒழுக்கம்)</option>
+                <option value="Volunteering">🤝 Volunteering & Service (தன்னார்வம்)</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -4668,7 +4702,7 @@ body {
         <span class="bottom-nav-icon">🪪</span>
         <span>My Pass</span>
       </button>
-      <button class="bottom-nav-item" data-view="attendance">
+      <button class="bottom-nav-item" data-view="attendance" data-role-required="leader">
         <span class="bottom-nav-icon">📷</span>
         <span>Scan</span>
       </button>
@@ -6038,9 +6072,57 @@ body {
           <h3 class="modal-title">⚡ Award Live Points to Team</h3>
           <small style="color:#64748b;">Add or deduct points for tournaments & activities</small>
         </div>
-        <button style="background:none; border:none; font-size:1.4rem; cursor:pointer;" onclick="document.getElementById('awardPointsModal').style.display='none'">&times;</button>
+        <button style="background:none; border:none; font-size:1.4rem; cursor:pointer;" onclick="window.closeAwardPointsModal();">&times;</button>
       </div>
+
+      <!-- Live QR Pass Scanner & Auto-Detection inside Award Points Modal -->
+      <div style="background:#f0f9ff; border:1.5px dashed #0284c7; border-radius:12px; padding:12px; margin-bottom:14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+          <strong style="font-size:0.85rem; color:#0369a1; display:flex; align-items:center; gap:6px;">
+            <span>📷 Quick Scan Member QR Pass</span>
+            <small style="color:#64748b; font-weight:normal;">(Auto-identifies Member & Team)</small>
+          </strong>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <button type="button" id="btnAwardModalCam" class="btn-dbyc-primary" style="padding:4px 10px; font-size:0.75rem; font-weight:800;" onclick="window.toggleAwardPointsCamera();">
+              📷 Camera
+            </button>
+            <button type="button" class="btn-dbyc-primary" style="background:#ea580c; padding:4px 10px; font-size:0.75rem; font-weight:800;" onclick="document.getElementById('awardPointsSnapInput').click();">
+              📸 Snap Photo
+            </button>
+            <input type="file" id="awardPointsSnapInput" accept="image/*" capture="environment" style="display:none;" onchange="window.scanAwardPointsFromFile(event);">
+            <button type="button" class="btn-dbyc-secondary" style="background:#ffffff; color:#334155; padding:4px 10px; font-size:0.75rem; font-weight:800; border:1px solid #cbd5e1;" onclick="document.getElementById('awardPointsFileInput').click();">
+              📁 Gallery
+            </button>
+            <input type="file" id="awardPointsFileInput" accept="image/*" style="display:none;" onchange="window.scanAwardPointsFromFile(event);">
+          </div>
+        </div>
+
+        <!-- Video Stream Box in Modal -->
+        <div id="awardPointsCameraBox" style="display:none; height:180px; background:#0f172a; border-radius:10px; overflow:hidden; position:relative; margin-bottom:8px; border:2px solid #0284c7;">
+          <video id="awardPointsVideo" playsinline autoplay muted style="width:100%; height:100%; object-fit:cover;"></video>
+          <div style="position:absolute; width:140px; height:140px; border:2px solid #10b981; border-radius:12px; pointer-events:none; top:50%; left:50%; transform:translate(-50%, -50%); box-shadow:0 0 0 2000px rgba(0,0,0,0.5);">
+            <div style="width:100%; height:2px; background:#10b981; box-shadow:0 0 8px #10b981; animation:scanPulse 1.4s infinite ease-in-out;"></div>
+          </div>
+          <button type="button" style="position:absolute; top:8px; right:8px; background:rgba(0,0,0,0.6); color:#fff; border:none; border-radius:50%; width:26px; height:26px; cursor:pointer; font-size:0.9rem;" onclick="window.stopAwardPointsCamera();">✕</button>
+        </div>
+
+        <!-- Scanned Member Badge Preview -->
+        <div id="awardScannedMemberBadge" style="display:none; background:#ffffff; border:1.5px solid #10b981; border-radius:10px; padding:10px; margin-top:6px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <img id="awardScannedMemberImg" src="" style="width:42px; height:42px; border-radius:50%; object-fit:cover; border:2px solid #10b981; background:#f8fafc;">
+            <div style="flex:1;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <strong id="awardScannedMemberName" style="font-size:0.9rem; color:#0f172a;">Member Name</strong>
+                <span id="awardScannedMemberTeamTag" style="font-size:0.75rem; font-weight:800; padding:2px 8px; border-radius:6px; background:#fef3c7; color:#b45309;">House Team</span>
+              </div>
+              <small id="awardScannedMemberSub" style="color:#64748b; font-size:0.74rem; display:block;">ID • Group</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <form id="awardPointsForm">
+        <input type="hidden" id="awardScannedMemberId" value="">
         <div class="form-group-dbyc">
           <label>Select Team (அணி) *</label>
           <select id="awardTargetTeamSelect" class="form-control-dbyc" required>
@@ -6233,13 +6315,13 @@ window.generateOfflineQrDataUrl = function(text) {
     const qr = qrcode(0, 'M');
     qr.addData(String(text || ''));
     qr.make();
-    return qr.createDataURL(4, 0);
+    return qr.createDataURL(5, 4);
   } catch(e) {
     try {
       const qr2 = qrcode(6, 'L');
       qr2.addData(String(text || ''));
       qr2.make();
-      return qr2.createDataURL(4, 0);
+      return qr2.createDataURL(5, 4);
     } catch(e2) {
       console.warn('Offline QR generation error:', e2);
       return '';
@@ -7009,10 +7091,23 @@ function saveLocalData(skipCloudPush) {
 // 2. ROLE-BASED ACCESS CONTROL (RBAC)
 // ==========================================
 function getUserRoleType() {
-  if (!appState.currentUser) return 'MEMBER';
+  if (!appState || !appState.currentUser) return 'MEMBER';
   const role = (appState.currentUser.role || '').toLowerCase();
   if (role.includes('director')) return 'DIRECTOR';
-  if (role.includes('leader') || role.includes('incharge')) return 'LEADER';
+  if (role.includes('leader') || role.includes('incharge') || role.includes('in-charge') || role.includes('animator') || role.includes('office bearer')) return 'LEADER';
+
+  // Check if current user is in official leaders council list
+  const currentId = appState.currentUser.id;
+  const currentMobile = (appState.currentUser.mobile || '').replace(/[^0-9]/g, '');
+  const currentName = (appState.currentUser.name || '').toLowerCase();
+  const isLeaderInList = (appState.leaders || []).some(l =>
+    (l.memberId && l.memberId === currentId) ||
+    (l.id && l.id === currentId) ||
+    (l.mobile && String(l.mobile).replace(/[^0-9]/g, '') === currentMobile && currentMobile.length >= 8) ||
+    (l.name && l.name.toLowerCase() === currentName)
+  );
+  if (isLeaderInList) return 'LEADER';
+
   return 'MEMBER';
 }
 
@@ -7041,9 +7136,19 @@ function isDirectorOrAsstDirector() {
 }
 
 function isLeaderOrDirector() {
-  if (!appState.currentUser) return false;
+  if (!appState || !appState.currentUser) return false;
   const role = (appState.currentUser.role || '').toLowerCase();
-  return role.includes('director') || role.includes('leader') || role.includes('in-charge') || role.includes('staff');
+  if (role.includes('director') || role.includes('leader') || role.includes('incharge') || role.includes('in-charge') || role.includes('animator') || role.includes('office bearer') || role.includes('staff')) return true;
+
+  const currentId = appState.currentUser.id;
+  const currentMobile = (appState.currentUser.mobile || '').replace(/[^0-9]/g, '');
+  const currentName = (appState.currentUser.name || '').toLowerCase();
+  return (appState.leaders || []).some(l =>
+    (l.memberId && l.memberId === currentId) ||
+    (l.id && l.id === currentId) ||
+    (l.mobile && String(l.mobile).replace(/[^0-9]/g, '') === currentMobile && currentMobile.length >= 8) ||
+    (l.name && l.name.toLowerCase() === currentName)
+  );
 }
 
 function requireDirectorMasterAuth(actionName, callback) {
@@ -7065,20 +7170,26 @@ function applyRolePermissions() {
   const isDir = isDirectorOnly();
   const isAdmin = isDirectorOrAsstDirector();
   const roleType = getUserRoleType();
-  const isLeaderOrAdmin = (roleType === 'DIRECTOR' || roleType === 'ASST_DIRECTOR' || roleType === 'LEADER');
-  const isMember = (roleType === 'MEMBER');
+  const isLeaderOrAdmin = (roleType === 'DIRECTOR' || roleType === 'ASST_DIRECTOR' || roleType === 'LEADER' || isLeaderOrDirector());
+  const isMember = !isLeaderOrAdmin;
 
   // Master Edit UI toggle in navbar
   window.updateMasterEditUI();
 
   // MEMBER LOGIN VIEW RESTRICTIONS:
   // "for member login only my profile, my qr code, members, birthdays, calander, 4 teams, live score, live and videos, dbyc news, dbyc rules can be available."
+  // QR Attendance is strictly reserved for Leaders, Director, and Assistant Director!
   const allowedMemberViews = ['profile', 'passes', 'members', 'officebearers', 'birthdays', 'calendar', 'teams', 'livescore', 'media', 'news', 'rules'];
 
   document.querySelectorAll('#sidebarDrawer .sidebar-menu-item').forEach(link => {
     const v = link.getAttribute('data-view');
     const parentLi = link.closest('li');
     if (!parentLi) return;
+
+    if (v === 'attendance') {
+      parentLi.style.display = isLeaderOrAdmin ? 'block' : 'none';
+      return;
+    }
 
     if (isMember) {
       if (allowedMemberViews.includes(v)) {
@@ -7098,9 +7209,13 @@ function applyRolePermissions() {
     }
   });
 
-  // Bottom navigation items
+  // Bottom navigation items (Scan icon hidden from ordinary members)
   document.querySelectorAll('.bottom-nav-item').forEach(btn => {
     const v = btn.getAttribute('data-view');
+    if (v === 'attendance') {
+      btn.style.display = isLeaderOrAdmin ? 'flex' : 'none';
+      return;
+    }
     if (isMember) {
       btn.style.display = allowedMemberViews.includes(v) ? 'flex' : 'none';
     } else {
@@ -7118,9 +7233,13 @@ function applyRolePermissions() {
     el.style.display = isAdmin ? 'flex' : 'none';
   });
 
-  // Leader elements
+  // Leader elements (including QR Attendance tile on dashboard)
   document.querySelectorAll('[data-role-required="leader"]').forEach(el => {
-    el.style.display = isLeaderOrAdmin ? 'flex' : 'none';
+    if (el.tagName === 'LI') {
+      el.style.display = isLeaderOrAdmin ? 'block' : 'none';
+    } else {
+      el.style.display = isLeaderOrAdmin ? 'flex' : 'none';
+    }
   });
 
   // Apply 4 Granular Director Edit Permissions:
@@ -8021,6 +8140,313 @@ function setupProfileHandlers() {
   }
 }
 
+// ==============================================================================
+// AWARD POINTS LIVE QR SCANNER CONTROLLER (AUTO-IDENTIFIES MEMBER & HOUSE TEAM)
+// ==============================================================================
+let awardPointsStream = null;
+let awardPointsScanInterval = null;
+let isAwardPointsCamActive = false;
+
+window.closeAwardPointsModal = function() {
+  window.stopAwardPointsCamera();
+  const modal = document.getElementById('awardPointsModal');
+  if (modal) modal.style.display = 'none';
+};
+
+window.stopAwardPointsCamera = function() {
+  isAwardPointsCamActive = false;
+  if (awardPointsScanInterval) {
+    clearInterval(awardPointsScanInterval);
+    awardPointsScanInterval = null;
+  }
+  if (awardPointsStream) {
+    try { awardPointsStream.getTracks().forEach(t => t.stop()); } catch(e) {}
+    awardPointsStream = null;
+  }
+  const box = document.getElementById('awardPointsCameraBox');
+  if (box) box.style.display = 'none';
+  const btn = document.getElementById('btnAwardModalCam');
+  if (btn) {
+    btn.textContent = '📷 Camera';
+    btn.style.background = '#004b98';
+  }
+};
+
+window.toggleAwardPointsCamera = function() {
+  if (isAwardPointsCamActive) {
+    window.stopAwardPointsCamera();
+    return;
+  }
+
+  const box = document.getElementById('awardPointsCameraBox');
+  const btn = document.getElementById('btnAwardModalCam');
+  const video = document.getElementById('awardPointsVideo');
+
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    showToast('📸 Camera stream not available. Tap Snap Photo.');
+    document.getElementById('awardPointsSnapInput')?.click();
+    return;
+  }
+
+  isAwardPointsCamActive = true;
+  if (box) box.style.display = 'block';
+  if (btn) {
+    btn.textContent = '⏹️ Stop';
+    btn.style.background = '#dc2626';
+  }
+
+  const constraintsList = [
+    { video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } } },
+    { video: { facingMode: 'environment' } },
+    { video: { facingMode: 'user' } },
+    { video: true }
+  ];
+
+  const tryStart = (idx) => {
+    if (idx >= constraintsList.length) {
+      window.stopAwardPointsCamera();
+      showToast('⚠️ Camera access unavailable. Tap Snap Photo.');
+      return;
+    }
+    navigator.mediaDevices.getUserMedia(constraintsList[idx])
+      .then(stream => {
+        awardPointsStream = stream;
+        if (video) {
+          video.srcObject = stream;
+          video.setAttribute('playsinline', 'true');
+          video.setAttribute('muted', 'true');
+          video.muted = true;
+          video.onloadedmetadata = () => { video.play().catch(() => {}); };
+          video.play().catch(() => {});
+        }
+        startAwardPointsScanningLoop();
+      })
+      .catch(() => tryStart(idx + 1));
+  };
+
+  tryStart(0);
+};
+
+function startAwardPointsScanningLoop() {
+  if (awardPointsScanInterval) clearInterval(awardPointsScanInterval);
+
+  let detector = null;
+  if ('BarcodeDetector' in window) {
+    try { detector = new BarcodeDetector({ formats: ['qr_code'] }); } catch(e) {}
+  }
+
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  let isScanning = false;
+
+  awardPointsScanInterval = setInterval(async () => {
+    if (!isAwardPointsCamActive || isScanning) return;
+    const video = document.getElementById('awardPointsVideo');
+    if (!video || video.readyState < 2 || !video.videoWidth) return;
+
+    isScanning = true;
+    try {
+      if (detector) {
+        try {
+          const codes = await detector.detect(video);
+          if (codes && codes.length > 0 && codes[0].rawValue) {
+            window.handleScannedAwardPointsQr(codes[0].rawValue);
+            isScanning = false;
+            return;
+          }
+        } catch(e) { detector = null; }
+      }
+
+      if (typeof jsQR !== 'undefined') {
+        const vw = video.videoWidth;
+        const vh = video.videoHeight;
+        
+        // Scan center crop first
+        const cropW = Math.round(vw * 0.6);
+        const cropH = Math.round(vh * 0.6);
+        const cropX = Math.round((vw - cropW) / 2);
+        const cropY = Math.round((vh - cropH) / 2);
+
+        canvas.width = 360;
+        canvas.height = 360;
+        ctx.drawImage(video, cropX, cropY, cropW, cropH, 0, 0, 360, 360);
+        let imgData = ctx.getImageData(0, 0, 360, 360);
+        let qr = jsQR(imgData.data, 360, 360, { inversionAttempts: 'dontInvert' });
+
+        if (!qr || !qr.data) {
+          const maxDim = 480;
+          let fw = vw, fh = vh;
+          if (fw > maxDim) {
+            fh = Math.round((fh * maxDim) / fw);
+            fw = maxDim;
+          }
+          canvas.width = fw;
+          canvas.height = fh;
+          ctx.drawImage(video, 0, 0, fw, fh);
+          imgData = ctx.getImageData(0, 0, fw, fh);
+          qr = jsQR(imgData.data, fw, fh, { inversionAttempts: 'attemptBoth' });
+        }
+
+        if (qr && qr.data) {
+          window.handleScannedAwardPointsQr(qr.data);
+          isScanning = false;
+          return;
+        }
+      }
+    } catch(err) {
+      console.warn('Modal scan err:', err);
+    }
+    isScanning = false;
+  }, 100);
+}
+
+window.handleScannedAwardPointsQr = function(rawVal) {
+  if (!rawVal) return;
+  const members = window.appState.members || [];
+  let qClean = decodeURIComponent(rawVal).trim().toUpperCase();
+  if (qClean.includes('DBYC:')) {
+    const parts = qClean.split(':');
+    if (parts.length >= 2) qClean = parts[1].trim();
+  }
+
+  let member = members.find(m => (m.id || '').toUpperCase() === qClean || (m.member_code || '').toUpperCase() === qClean || (m.id || '').toUpperCase().includes(qClean));
+  if (!member) {
+    const digits = rawVal.replace(/[^0-9]/g, '');
+    if (digits.length >= 7) {
+      member = members.find(m => (m.mobile || '').replace(/[^0-9]/g, '') === digits);
+    }
+  }
+  if (!member) {
+    member = members.find(m => (m.name || '').toUpperCase().includes(qClean));
+  }
+
+  if (!member) {
+    showToast(`⚠️ Member not found for scanned code: "${rawVal}"`);
+    return;
+  }
+
+  // Stop camera stream once detected
+  window.stopAwardPointsCamera();
+
+  // Find their team
+  const targetTeamId = member.teamId || member.team || 'TEAM-1';
+  const team = (window.appState.teams || []).find(t => t.id === targetTeamId) || (window.appState.teams && window.appState.teams[0]);
+
+  // Auto-select their team in dropdown
+  const teamSelect = document.getElementById('awardTargetTeamSelect');
+  if (teamSelect && team) {
+    teamSelect.value = team.id;
+  }
+
+  // Record scanned member ID in hidden input
+  const scannedIdInput = document.getElementById('awardScannedMemberId');
+  if (scannedIdInput) scannedIdInput.value = member.id;
+
+  // Show badge preview
+  const badge = document.getElementById('awardScannedMemberBadge');
+  const img = document.getElementById('awardScannedMemberImg');
+  const nameEl = document.getElementById('awardScannedMemberName');
+  const teamEl = document.getElementById('awardScannedMemberTeamTag');
+  const subEl = document.getElementById('awardScannedMemberSub');
+
+  if (badge) badge.style.display = 'block';
+  if (img) img.src = member.photo || window.DBYC_OFFICIAL_LOGO || 'assets/logo.png';
+  if (nameEl) nameEl.textContent = member.name;
+  if (teamEl && team) {
+    teamEl.textContent = `${team.name} (${team.icon || team.badge || '🚩'})`;
+    teamEl.style.background = team.color ? `${team.color}22` : '#fef3c7';
+    teamEl.style.color = team.color || '#b45309';
+  }
+  if (subEl) subEl.textContent = `${member.id} • ${member.group || 'Member'}`;
+
+  // Pre-fill reason
+  const catEl = document.getElementById('awardCategorySelect');
+  const catVal = catEl ? catEl.value : 'Sports Tournament';
+  const reasonInput = document.getElementById('awardPointsReason');
+  if (reasonInput) {
+    reasonInput.value = `Awarded to ${member.name} (${member.id} • ${member.group || 'Member'}) for ${catVal}`;
+  }
+
+  // Chime sound
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+    osc.frequency.setValueAtTime(880, ctx.currentTime + 0.1);
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.35);
+  } catch(e) {}
+  try { if (navigator.vibrate) navigator.vibrate([80, 50, 80]); } catch(e) {}
+
+  showToast(`🎯 Member identified: ${member.name} ➔ Assigned to ${team ? team.name : 'Team'}!`);
+};
+
+window.scanAwardPointsFromFile = function(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  showToast('🔍 Analyzing pass photo...');
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      // 1. BarcodeDetector
+      if ('BarcodeDetector' in window) {
+        try {
+          const detector = new BarcodeDetector({ formats: ['qr_code'] });
+          detector.detect(img).then(codes => {
+            if (codes && codes.length > 0 && codes[0].rawValue) {
+              window.handleScannedAwardPointsQr(codes[0].rawValue);
+              return;
+            }
+          }).catch(() => {});
+        } catch(err) {}
+      }
+
+      // 2. jsQR with downscaling
+      if (typeof jsQR !== 'undefined') {
+        try {
+          const canvas = document.createElement('canvas');
+          let w = img.width, h = img.height;
+          const maxDim = 1000;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) {
+              h = Math.round((h * maxDim) / w);
+              w = maxDim;
+            } else {
+              w = Math.round((w * maxDim) / h);
+              h = maxDim;
+            }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          const imgData = ctx.getImageData(0, 0, w, h);
+          const qr = jsQR(imgData.data, w, h, { inversionAttempts: 'attemptBoth' });
+          if (qr && qr.data) {
+            window.handleScannedAwardPointsQr(qr.data);
+            return;
+          }
+        } catch(e) {
+          console.warn('File decode error:', e);
+        }
+      }
+
+      showToast('⚠️ No clear QR code found in photo. Please ensure pass is clearly visible.');
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+};
+
 function setupTeamHandlers() {
   window.openAwardPointsModal = function(teamId) {
     if (!window.canUserEdit()) {
@@ -8033,6 +8459,10 @@ function setupTeamHandlers() {
       const select = document.getElementById('awardTargetTeamSelect');
       if (select) select.value = teamId;
     }
+    const badge = document.getElementById('awardScannedMemberBadge');
+    if (badge) badge.style.display = 'none';
+    const scannedIdInput = document.getElementById('awardScannedMemberId');
+    if (scannedIdInput) scannedIdInput.value = '';
     modal.style.display = 'flex';
   };
 
@@ -8078,12 +8508,18 @@ function setupTeamHandlers() {
       team.points = (team.points || 0) + ptsVal;
       if (team.points < 0) team.points = 0;
 
-      // Add to teamPointsLog
+      // Add to teamPointsLog (with scanned member info if available)
+      const scannedMemId = document.getElementById('awardScannedMemberId')?.value;
+      const scannedMem = scannedMemId ? (appState.members || []).find(m => m.id === scannedMemId) : null;
+
       if (!appState.teamPointsLog) appState.teamPointsLog = [];
       appState.teamPointsLog.unshift({
         id: 'PTS-' + Date.now(),
         teamId: team.id,
+        team: team.name,
         teamName: team.name,
+        memberId: scannedMem ? scannedMem.id : null,
+        memberName: scannedMem ? scannedMem.name : null,
         points: ptsVal,
         category: category,
         reason: reason,
@@ -8383,8 +8819,9 @@ function switchView(viewName) {
     showToast('🔒 Access Denied: App Modifications & System Settings are strictly reserved for Rev. Fr. Director only.');
     return;
   }
-  if (cleanName === 'attendance' && roleType === 'MEMBER') {
-    showToast('⚠️ QR Attendance Scanner is restricted to Group Incharges & Directors.');
+  const isLeaderOrAdmin = (roleType === 'DIRECTOR' || roleType === 'ASST_DIRECTOR' || roleType === 'LEADER' || (typeof isLeaderOrDirector === 'function' && isLeaderOrDirector()));
+  if (cleanName === 'attendance' && !isLeaderOrAdmin) {
+    showToast('🔒 Access Restricted: QR Attendance is strictly accessible to Rev. Fr. Director, Assistant Director, and Leaders only.');
     return;
   }
 
@@ -8465,48 +8902,79 @@ window.setAttendanceMode = function(mode) {
   const btnAuto = document.getElementById('btnModeAuto');
   const btnEntry = document.getElementById('btnModeEntry');
   const btnExit = document.getElementById('btnModeExit');
+  const btnAward = document.getElementById('btnModeAwardPts');
   const label = document.getElementById('currentAttModeLabel');
   const desc = document.getElementById('currentAttModeDesc');
+  const pointsBar = document.getElementById('attPointsControlBar');
 
-  [btnAuto, btnEntry, btnExit].forEach(b => { if (b) b.classList.remove('active'); });
+  [btnAuto, btnEntry, btnExit, btnAward].forEach(b => { if (b) b.classList.remove('active'); });
 
-  if (mode === 'ENTRY_ONLY') {
-    if (btnEntry) btnEntry.classList.add('active');
+  if (mode === 'AWARD_POINTS') {
+    if (btnAward) btnAward.classList.add('active');
+    if (pointsBar) pointsBar.style.display = 'block';
     if (label) {
-      label.textContent = '🟢 Entry Only (வருகை மட்டும்)';
-      label.style.background = '#f0fdf4';
-      label.style.color = '#15803d';
-      label.style.borderColor = '#86efac';
+      label.textContent = '⚡ Award Points Mode (புள்ளிகள் வழங்குதல்)';
+      label.style.background = '#fffbeb';
+      label.style.color = '#b45309';
+      label.style.borderColor = '#fcd34d';
     }
-    if (desc) desc.textContent = 'Logs arrival/entry timestamp for all checked-in members.';
-    showToast('🟢 Mode set to: ENTRY ONLY (வருகை மட்டும்)');
-  } else if (mode === 'EXIT_ONLY') {
-    if (btnExit) btnExit.classList.add('active');
-    if (label) {
-      label.textContent = '🔴 Exit Only (புறப்பாடு மட்டும்)';
-      label.style.background = '#fef2f2';
-      label.style.color = '#b91c1c';
-      label.style.borderColor = '#fca5a5';
-    }
-    if (desc) desc.textContent = 'Logs departure/exit timestamp and computes total center stay duration.';
-    showToast('🔴 Mode set to: EXIT ONLY (புறப்பாடு மட்டும்)');
+    if (desc) desc.textContent = 'Live scanner credits championship points to scanned member\'s house team!';
+    showToast('⚡ Scanner Mode: AWARD POINTS (புள்ளிகள் வழங்குதல்)');
   } else {
-    window.currentAttendanceMode = 'SMART_AUTO';
-    if (btnAuto) btnAuto.classList.add('active');
-    if (label) {
-      label.textContent = '🔄 Smart Auto (Entry ➔ Exit)';
-      label.style.background = '#ecfdf5';
-      label.style.color = '#059669';
-      label.style.borderColor = '#a7f3d0';
+    if (pointsBar) pointsBar.style.display = 'none';
+
+    if (mode === 'ENTRY_ONLY') {
+      if (btnEntry) btnEntry.classList.add('active');
+      if (label) {
+        label.textContent = '🟢 Entry Only (வருகை மட்டும்)';
+        label.style.background = '#f0fdf4';
+        label.style.color = '#15803d';
+        label.style.borderColor = '#86efac';
+      }
+      if (desc) desc.textContent = 'Logs arrival/entry timestamp for all checked-in members (+10 PTS to team).';
+      showToast('🟢 Mode set to: ENTRY ONLY (வருகை மட்டும்)');
+    } else if (mode === 'EXIT_ONLY') {
+      if (btnExit) btnExit.classList.add('active');
+      if (label) {
+        label.textContent = '🔴 Exit Only (புறப்பாடு மட்டும்)';
+        label.style.background = '#fef2f2';
+        label.style.color = '#b91c1c';
+        label.style.borderColor = '#fca5a5';
+      }
+      if (desc) desc.textContent = 'Logs departure/exit timestamp and computes total center stay duration.';
+      showToast('🔴 Mode set to: EXIT ONLY (புறப்பாடு மட்டும்)');
+    } else {
+      window.currentAttendanceMode = 'SMART_AUTO';
+      if (btnAuto) btnAuto.classList.add('active');
+      if (label) {
+        label.textContent = '🔄 Smart Auto (Entry ➔ Exit)';
+        label.style.background = '#ecfdf5';
+        label.style.color = '#059669';
+        label.style.borderColor = '#a7f3d0';
+      }
+      if (desc) desc.textContent = 'Auto logs Entry on 1st scan (+10 PTS) and Exit with total duration on 2nd scan.';
+      showToast('🔄 Mode set to: SMART AUTO (Entry ➔ Exit)');
     }
-    if (desc) desc.textContent = 'Auto logs Entry on 1st scan and Exit with total duration on 2nd scan.';
-    showToast('🔄 Mode set to: SMART AUTO (Entry ➔ Exit)');
   }
 
   if (typeof renderFastAttendanceDesk === 'function') renderFastAttendanceDesk();
 };
 
+window.setAttAwardPoints = function(pts) {
+  const input = document.getElementById('attAwardPointsValue');
+  if (input) input.value = pts;
+  document.querySelectorAll('.att-pts-chip').forEach(c => {
+    c.classList.toggle('active', c.getAttribute('data-pts') === String(pts));
+  });
+};
+
 function renderTodayAttendance() {
+  const isLeaderOrAdmin = (typeof isLeaderOrDirector === 'function' ? isLeaderOrDirector() : false) || (getUserRoleType() !== 'MEMBER');
+  if (!isLeaderOrAdmin) {
+    showToast('🔒 Access Restricted: QR Attendance is accessible only for Leaders, Director, and Assistant Director.');
+    if (typeof switchView === 'function') switchView('dashboard');
+    return;
+  }
   const container = document.getElementById('todayAttendanceList');
   if (!container) return;
   const activeDate = window.getActiveAttendanceDate ? window.getActiveAttendanceDate() : new Date().toISOString().split('T')[0];
@@ -8651,12 +9119,8 @@ let lastScannedCode = '';
 let lastScannedTime = 0;
 
 function setupAttendanceHandlers() {
-  document.getElementById('startCameraBtn')?.addEventListener('click', () => {
-    window.toggleQrCamera();
-  });
-  document.getElementById('manualCheckinBtn')?.addEventListener('click', () => {
-    window.manualCheckinSubmit();
-  });
+  // NOTE: startCameraBtn and manualCheckinBtn have inline onclick handlers in HTML.
+  // We do NOT add duplicate addEventListener here to prevent double-firing and instant camera shutdown!
   document.getElementById('manualCheckinInput')?.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -8811,6 +9275,11 @@ window.renderFastAttendanceDesk = function() {
 };
 
 window.toggleAttendanceRecord = function(memberId, forcedMode) {
+  const isLeaderOrAdmin = (typeof isLeaderOrDirector === 'function' ? isLeaderOrDirector() : false) || (getUserRoleType() !== 'MEMBER');
+  if (!isLeaderOrAdmin) {
+    showToast('🔒 Attendance desk restricted to Rev. Fr. Director, Assistant Director, and Leaders only.');
+    return;
+  }
   const activeDate = window.getActiveAttendanceDate();
   const sessionEl = document.getElementById('pwaAttendanceSessionSelect');
   const session = sessionEl ? sessionEl.value : 'Weekly DBYC Youth Assembly';
@@ -8862,11 +9331,13 @@ window.toggleAttendanceRecord = function(memberId, forcedMode) {
     };
 
     window.appState.attendance.unshift(record);
+    const ptsResult = (typeof window.awardAttendancePointsForMember === 'function') ? window.awardAttendancePointsForMember(member, activeDate, record.recordedBy) : { awarded: false };
+    const ptsMsg = ptsResult.awarded ? ` ⚡ +10 PTS to ${ptsResult.teamName} (${ptsResult.teamIcon})!` : '';
     saveLocalData();
     if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
       window.DbycCloud.pushToCloud();
     }
-    showToast(`🟢 ENTRY Logged: ${member.name} (${entryTime})`);
+    showToast(`🟢 ENTRY Logged: ${member.name} (${entryTime})!${ptsMsg}`);
 
     // Audio chime
     try {
@@ -8944,6 +9415,11 @@ window.markAllInActiveGroupPresent = function() {
 };
 
 window.manualCheckinSubmit = function() {
+  const isLeaderOrAdmin = (typeof isLeaderOrDirector === 'function' ? isLeaderOrDirector() : false) || (getUserRoleType() !== 'MEMBER');
+  if (!isLeaderOrAdmin) {
+    showToast('🔒 Attendance check-in restricted to Rev. Fr. Director, Assistant Director, and Leaders only.');
+    return;
+  }
   const input = document.getElementById('manualCheckinInput');
   const val = input ? input.value.trim() : '';
   if (!val) {
@@ -8952,6 +9428,120 @@ window.manualCheckinSubmit = function() {
   }
   window.processAttendanceCheckin(val);
   if (input) input.value = '';
+};
+
+// Helper to award +10 Points to Member's House Team on Daily Check-In
+window.awardAttendancePointsForMember = function(member, activeDate, recordedBy) {
+  if (!member) return { awarded: false };
+  if (!window.appState.teams || window.appState.teams.length === 0) {
+    window.appState.teams = [
+      { id: 'TEAM-1', name: 'Red Dragons', color: '#dc2626', badge: '🔴', points: 350, rank: 1 },
+      { id: 'TEAM-2', name: 'Blue Sharks', color: '#0284c7', badge: '🔵', points: 310, rank: 2 },
+      { id: 'TEAM-3', name: 'Green Warriors', color: '#16a34a', badge: '🟢', points: 290, rank: 3 },
+      { id: 'TEAM-4', name: 'Yellow Tigers', color: '#d97706', badge: '🟡', points: 270, rank: 4 }
+    ];
+  }
+  const targetTeamId = member.teamId || member.team || 'TEAM-1';
+  const team = (window.appState.teams || []).find(t => t.id === targetTeamId) || window.appState.teams[0];
+
+  if (!window.appState.teamPointsLog) window.appState.teamPointsLog = [];
+  const alreadyAwardedToday = window.appState.teamPointsLog.some(log =>
+    log.memberId === member.id &&
+    log.date === activeDate &&
+    log.category === 'Attendance Excellence'
+  );
+
+  if (!alreadyAwardedToday && team) {
+    const pts = 10;
+    team.points = (team.points || 0) + pts;
+    window.appState.teamPointsLog.unshift({
+      id: 'PTS-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+      date: activeDate,
+      teamId: team.id,
+      team: team.name,
+      teamName: team.name,
+      memberId: member.id,
+      memberName: member.name,
+      points: pts,
+      category: 'Attendance Excellence',
+      reason: `Daily Attendance Check-In: ${member.name} (${member.group || 'Member'})`,
+      awardedBy: (window.appState.currentUser && window.appState.currentUser.name) ? window.appState.currentUser.name : (recordedBy || 'Attendance Scanner Desk'),
+      timestamp: new Date().toISOString()
+    });
+
+    (window.appState.teams || []).sort((a, b) => (b.points || 0) - (a.points || 0));
+    window.appState.teams.forEach((t, i) => { t.rank = i + 1; });
+    if (typeof renderTeamsView === 'function') renderTeamsView();
+    return { awarded: true, pts, teamName: team.name, teamIcon: team.icon || team.badge || '🚩' };
+  }
+  return { awarded: false, teamName: team ? team.name : '', teamIcon: team ? (team.icon || team.badge || '🚩') : '🚩' };
+};
+
+// Helper to award arbitrary points directly to Member & House Team via Scanner
+window.awardPointsToMemberDirect = function(member, pointsVal, category, customReason, source) {
+  if (!member) return { success: false };
+  if (!window.appState.teams || window.appState.teams.length === 0) {
+    window.appState.teams = [
+      { id: 'TEAM-1', name: 'Red Dragons', color: '#dc2626', badge: '🔴', points: 350, rank: 1 },
+      { id: 'TEAM-2', name: 'Blue Sharks', color: '#0284c7', badge: '🔵', points: 310, rank: 2 },
+      { id: 'TEAM-3', name: 'Green Warriors', color: '#16a34a', badge: '🟢', points: 290, rank: 3 },
+      { id: 'TEAM-4', name: 'Yellow Tigers', color: '#d97706', badge: '🟡', points: 270, rank: 4 }
+    ];
+  }
+  const targetTeamId = member.teamId || member.team || 'TEAM-1';
+  const team = (window.appState.teams || []).find(t => t.id === targetTeamId) || window.appState.teams[0];
+
+  const pts = parseInt(pointsVal, 10) || 25;
+  team.points = Math.max(0, (team.points || 0) + pts);
+
+  if (!window.appState.teamPointsLog) window.appState.teamPointsLog = [];
+  const logRecord = {
+    id: 'PTS-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+    date: new Date().toISOString().split('T')[0],
+    teamId: team.id,
+    team: team.name,
+    teamName: team.name,
+    memberId: member.id,
+    memberName: member.name,
+    points: pts,
+    category: category || 'Sports Tournament',
+    reason: customReason || `Awarded to ${member.name} (${member.id} • ${member.group || 'Member'}) for ${category || 'Tournament'}`,
+    awardedBy: (window.appState.currentUser && window.appState.currentUser.name) ? window.appState.currentUser.name : (source || 'Points Scanner Desk'),
+    timestamp: new Date().toISOString()
+  };
+  window.appState.teamPointsLog.unshift(logRecord);
+
+  (window.appState.teams || []).sort((a, b) => (b.points || 0) - (a.points || 0));
+  window.appState.teams.forEach((t, i) => { t.rank = i + 1; });
+
+  saveLocalData();
+  if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+    window.DbycCloud.pushToCloud();
+  }
+
+  if (typeof renderTeamsView === 'function') renderTeamsView();
+
+  // Triumphant Fanfare Chime (C5 -> E5 -> G5 -> C6)
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const notes = [523.25, 659.25, 783.99, 1046.50];
+    notes.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.08);
+      gain.gain.setValueAtTime(0.25, ctx.currentTime + idx * 0.08);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + idx * 0.08 + 0.35);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime + idx * 0.08);
+      osc.stop(ctx.currentTime + idx * 0.08 + 0.35);
+    });
+  } catch(e) {}
+  try { if (navigator.vibrate) navigator.vibrate([100, 50, 150]); } catch(e) {}
+
+  showToast(`🏆 +${pts} PTS AWARDED! Scanned: ${member.name} ➔ ${team.name} (${team.icon || team.badge || '🚩'}) for ${category}!`);
+  return { success: true, team, ptsRecord: logRecord };
 };
 
 window.processAttendanceCheckin = function(query, scanMethod, forcedMode) {
@@ -8995,13 +9585,29 @@ window.processAttendanceCheckin = function(query, scanMethod, forcedMode) {
     return;
   }
 
+  const mode = forcedMode || window.currentAttendanceMode || 'SMART_AUTO';
+
+  // ==========================================
+  // CASE A: DEDICATED LIVE POINTS AWARD MODE
+  // ==========================================
+  if (mode === 'AWARD_POINTS') {
+    const ptsInput = document.getElementById('attAwardPointsValue');
+    const ptsVal = ptsInput ? parseInt(ptsInput.value, 10) : 25;
+    const catSelect = document.getElementById('attAwardCategorySelect');
+    const category = catSelect ? catSelect.value : 'Sports Tournament';
+    window.awardPointsToMemberDirect(member, ptsVal, category, '', 'Attendance Scanner Desk');
+    return;
+  }
+
+  // ==========================================
+  // CASE B: ATTENDANCE ENTRY / EXIT TRACKING (+ AUTO POINTS ON ENTRY)
+  // ==========================================
   const activeDate = window.getActiveAttendanceDate();
   if (!window.appState.attendance) window.appState.attendance = [];
 
   const sessionEl = document.getElementById('pwaAttendanceSessionSelect');
   const currentSession = sessionEl ? sessionEl.value : 'Weekly DBYC Youth Assembly';
 
-  const mode = forcedMode || window.currentAttendanceMode || 'SMART_AUTO';
   const existingRecord = window.appState.attendance.find(a => a.date === activeDate && a.memberId === member.id && (!a.session || a.session === currentSession));
 
   const methodUsed = scanMethod || 'QR_CAMERA';
@@ -9090,6 +9696,11 @@ window.processAttendanceCheckin = function(query, scanMethod, forcedMode) {
   };
 
   window.appState.attendance.unshift(record);
+
+  // Automatically award +10 Points to Member's House Team on Entry!
+  const ptsResult = window.awardAttendancePointsForMember(member, activeDate, record.recordedBy);
+  const ptsMsg = ptsResult.awarded ? ` ⚡ +10 PTS to ${ptsResult.teamName} (${ptsResult.teamIcon})!` : '';
+
   saveLocalData();
   if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
     window.DbycCloud.pushToCloud();
@@ -9116,7 +9727,7 @@ window.processAttendanceCheckin = function(query, scanMethod, forcedMode) {
   } catch(e) {}
   try { if (navigator.vibrate) navigator.vibrate(200); } catch(e) {}
 
-  showToast(`🟢 ENTRY Logged (வருகை): ${member.name} entered at ${timeFormatted} (${member.group || 'Member'})!`);
+  showToast(`🟢 ENTRY Logged (வருகை): ${member.name} entered at ${timeFormatted} (${member.group || 'Member'})!${ptsMsg}`);
 };
 
 window.exportAttendanceCsv = function() {
@@ -9154,38 +9765,47 @@ window.exportAttendanceCsv = function() {
   showToast('📥 Comprehensive Attendance CSV exported successfully!');
 };
 
-window.toggleQrCamera = function() {
+let isCameraStarting = false;
+let lastCameraActionTime = 0;
+
+window.startQrCamera = function() {
+  const isLeaderOrAdmin = (typeof isLeaderOrDirector === 'function' ? isLeaderOrDirector() : false) || (getUserRoleType() !== 'MEMBER');
+  if (!isLeaderOrAdmin) {
+    showToast('🔒 Camera scanner restricted to Rev. Fr. Director, Assistant Director, and Leaders only.');
+    return;
+  }
+
+  // If already running or currently opening, do not restart
+  if (isQrScanningActive || isCameraStarting) return;
+
+  const now = Date.now();
+  if (now - lastCameraActionTime < 600) return; // Prevent double-tap on mobile touchscreens
+  lastCameraActionTime = now;
+  isCameraStarting = true;
+
   const container = document.getElementById('qrVideoContainer');
   const btn = document.getElementById('startCameraBtn');
   const flipBtn = document.getElementById('flipCamBtn');
 
-  if (isQrScanningActive) {
-    window.stopQrCamera();
-    return;
+  if (btn) {
+    btn.textContent = '⏳ Starting Camera...';
+    btn.style.background = '#0284c7';
   }
 
   // Check mediaDevices support
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    showToast('📸 Camera stream unavailable. Opening direct camera photo snap...');
+    isCameraStarting = false;
+    showToast('📸 Live stream unavailable. Opening direct camera photo snap...');
     const snapInput = document.getElementById('qrDirectSnapInput') || document.getElementById('qrPhotoFileInput');
-    if (snapInput) {
-      snapInput.click();
-      return;
-    }
+    if (snapInput) snapInput.click();
+    return;
   }
-
-  isQrScanningActive = true;
-  if (btn) {
-    btn.textContent = '⏹️ Stop Camera Scanner';
-    btn.style.background = '#dc2626';
-  }
-  if (flipBtn) flipBtn.style.display = 'inline-block';
 
   if (container) {
     container.setAttribute('data-active', 'true');
     container.innerHTML = `
       <div style="position:relative; width:100%; height:100%; min-height:280px; max-height:360px; display:flex; align-items:center; justify-content:center; background:#000; overflow:hidden; border-radius:12px;">
-        <video id="qrVideo" playsinline autoplay muted style="width:100%; height:100%; object-fit:cover; border-radius:12px;"></video>
+        <video id="qrVideo" playsinline webkit-playsinline autoplay muted style="width:100%; height:100%; object-fit:cover; border-radius:12px;"></video>
         
         <!-- Animated QR Target Focus Box -->
         <div id="qrScannerTargetBox" style="position:absolute; width:220px; height:220px; border:3px solid #10b981; border-radius:18px; box-shadow:0 0 0 4000px rgba(0,0,0,0.5); pointer-events:none; display:flex; align-items:center; justify-content:center; transition:border-color 0.2s;">
@@ -9213,29 +9833,62 @@ window.toggleQrCamera = function() {
   }
 
   const startStreamWithVideo = (stream) => {
+    isCameraStarting = false;
+    isQrScanningActive = true;
     qrAttendanceStream = stream;
-    const video = document.getElementById('qrVideo');
+
+    if (btn) {
+      btn.textContent = '⏹️ Stop Camera Scanner';
+      btn.style.background = '#dc2626';
+    }
+    if (flipBtn) flipBtn.style.display = 'inline-block';
+
+    let video = document.getElementById('qrVideo');
+    if (!video && container) {
+      container.setAttribute('data-active', 'true');
+      container.innerHTML = `
+        <div style="position:relative; width:100%; height:100%; min-height:280px; max-height:360px; display:flex; align-items:center; justify-content:center; background:#000; overflow:hidden; border-radius:12px;">
+          <video id="qrVideo" playsinline webkit-playsinline autoplay muted style="width:100%; height:100%; object-fit:cover; border-radius:12px;"></video>
+          <div id="qrScannerTargetBox" style="position:absolute; width:220px; height:220px; border:3px solid #10b981; border-radius:18px; box-shadow:0 0 0 4000px rgba(0,0,0,0.5); pointer-events:none; display:flex; align-items:center; justify-content:center;">
+            <div style="width:100%; height:2px; background:#10b981; box-shadow:0 0 10px #10b981; animation:scanPulse 1.4s infinite ease-in-out;"></div>
+          </div>
+          <div id="qrScanStatusPill" style="position:absolute; bottom:12px; background:rgba(0,0,0,0.75); color:#10b981; font-weight:800; font-size:0.75rem; padding:4px 12px; border-radius:100px; border:1px solid #10b981;">
+            🟢 Camera Live — Point at Member QR Pass
+          </div>
+        </div>
+      `;
+      video = document.getElementById('qrVideo');
+    }
+
     if (video) {
       video.srcObject = stream;
       video.setAttribute('playsinline', 'true');
+      video.setAttribute('webkit-playsinline', 'true');
       video.setAttribute('muted', 'true');
       video.muted = true;
-      video.play().catch(e => console.warn('Video play caught:', e));
+      video.autoplay = true;
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(e => console.warn('Video play error:', e));
+      }
     }
+
     showToast('📷 Live camera active. Align QR code inside target box.');
     startScanningLoop();
   };
 
-  // Progressive fallback constraints (environment -> user -> any video)
+  // Resilient constraints (ideal facing mode without rigid dimensions that cause OverconstrainedError)
   const constraintsList = [
-    { video: { facingMode: { ideal: currentFacingMode }, width: { ideal: 1280 }, height: { ideal: 720 } } },
+    { video: { facingMode: { ideal: currentFacingMode } } },
     { video: { facingMode: currentFacingMode } },
+    { video: { facingMode: 'environment' } },
     { video: { facingMode: 'user' } },
     { video: true }
   ];
 
   const tryNextConstraint = (idx) => {
     if (idx >= constraintsList.length) {
+      isCameraStarting = false;
       isQrScanningActive = false;
       if (btn) {
         btn.textContent = '📷 Turn On Camera Scanner';
@@ -9246,16 +9899,16 @@ window.toggleQrCamera = function() {
         container.innerHTML = `
           <div style="color:#ef4444; padding:20px; text-align:center; max-width:340px;">
             <div style="font-size:2rem; margin-bottom:6px;">📷</div>
-            <strong style="display:block; margin-bottom:4px; font-size:0.92rem; color:#fff;">Camera Access Restricted</strong>
+            <strong style="display:block; margin-bottom:4px; font-size:0.92rem; color:#fff;">Camera Stream Inactive</strong>
             <p style="font-size:0.76rem; color:#cbd5e1; margin:0 0 12px; line-height:1.4;">
-              Camera stream could not start directly in this browser context. You can snap a photo with your device camera:
+              Live stream could not start in this browser context. You can snap a photo with your device camera:
             </p>
             <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:8px 16px; font-size:0.84rem; font-weight:800; border-radius:8px;" onclick="document.getElementById('qrDirectSnapInput').click();">
               📸 Take / Snap Photo of Pass
             </button>
           </div>`;
       }
-      showToast('ℹ️ Camera stream restricted. Use Photo Snap or 1-tap fast attendance desk.');
+      showToast('ℹ️ Live camera stream restricted. Tap Snap Photo.');
       return;
     }
 
@@ -9272,8 +9925,15 @@ window.toggleQrCamera = function() {
   tryNextConstraint(0);
 };
 
-window.stopQrCamera = function() {
+window.stopQrCamera = function(forced) {
+  if (isCameraStarting && !forced) return;
+  const now = Date.now();
+  if (!forced && (now - lastCameraActionTime < 800)) return; // Prevent instant kill on mobile
+  lastCameraActionTime = now;
+
+  isCameraStarting = false;
   isQrScanningActive = false;
+
   if (qrScanInterval) {
     clearInterval(qrScanInterval);
     qrScanInterval = null;
@@ -9297,9 +9957,18 @@ window.stopQrCamera = function() {
     container.innerHTML = `
       <div style="color: #64748b; font-size: 0.85rem; text-align: center; padding: 20px;">
         <span style="font-size: 2.2rem; display: block; margin-bottom: 6px;">📷</span>
-        Camera is turned off. Tap "Turn On Camera Scanner" above or snap a photo.
+        Live Camera Scanner is inactive.<br>Tap "Turn On Camera Scanner" above or snap a photo.
       </div>
     `;
+  }
+};
+
+window.toggleQrCamera = function() {
+  if (isCameraStarting) return;
+  if (isQrScanningActive) {
+    window.stopQrCamera();
+  } else {
+    window.startQrCamera();
   }
 };
 
@@ -9323,7 +9992,7 @@ function startScanningLoop() {
     isScanningFrame = true;
 
     try {
-      // 1. Try native BarcodeDetector if available and functional
+      // 1. Hardware accelerated native BarcodeDetector
       if (barcodeDetector) {
         try {
           const barcodes = await barcodeDetector.detect(video);
@@ -9337,29 +10006,40 @@ function startScanningLoop() {
         }
       }
 
-      // 2. Superfast downscaled jsQR Canvas Decoder (max 480px width)
+      // 2. High-Sensitivity jsQR Dual Scanner (Target Focus Box + Full Frame)
       if (typeof jsQR !== 'undefined') {
         const vw = video.videoWidth;
         const vh = video.videoHeight;
-        const maxDim = 480;
-        let scanW = vw;
-        let scanH = vh;
-        if (scanW > maxDim) {
-          scanH = Math.round((scanH * maxDim) / scanW);
-          scanW = maxDim;
-        }
 
-        if (canvas.width !== scanW || canvas.height !== scanH) {
+        // Step A: Focused Scan of Central 60% Focus Box (Highest precision for passes)
+        const cropW = Math.round(vw * 0.6);
+        const cropH = Math.round(vh * 0.6);
+        const cropX = Math.round((vw - cropW) / 2);
+        const cropY = Math.round((vh - cropH) / 2);
+
+        canvas.width = 360;
+        canvas.height = 360;
+        ctx.drawImage(video, cropX, cropY, cropW, cropH, 0, 0, 360, 360);
+        let imgData = ctx.getImageData(0, 0, 360, 360);
+        let qr = jsQR(imgData.data, 360, 360, { inversionAttempts: 'dontInvert' });
+
+        // Step B: Downscaled Full-Frame fallback
+        if (!qr || !qr.data) {
+          const maxDim = 480;
+          let scanW = vw;
+          let scanH = vh;
+          if (scanW > maxDim) {
+            scanH = Math.round((scanH * maxDim) / scanW);
+            scanW = maxDim;
+          }
           canvas.width = scanW;
           canvas.height = scanH;
-        }
-
-        ctx.drawImage(video, 0, 0, scanW, scanH);
-        const imgData = ctx.getImageData(0, 0, scanW, scanH);
-
-        let qr = jsQR(imgData.data, scanW, scanH, { inversionAttempts: 'dontInvert' });
-        if (!qr || !qr.data) {
-          qr = jsQR(imgData.data, scanW, scanH, { inversionAttempts: 'attemptBoth' });
+          ctx.drawImage(video, 0, 0, scanW, scanH);
+          imgData = ctx.getImageData(0, 0, scanW, scanH);
+          qr = jsQR(imgData.data, scanW, scanH, { inversionAttempts: 'dontInvert' });
+          if (!qr || !qr.data) {
+            qr = jsQR(imgData.data, scanW, scanH, { inversionAttempts: 'attemptBoth' });
+          }
         }
 
         if (qr && qr.data) {
@@ -9373,7 +10053,7 @@ function startScanningLoop() {
     }
 
     isScanningFrame = false;
-  }, 120);
+  }, 100);
 }
 
 function handleScannedQrResult(rawVal) {
@@ -12769,10 +13449,10 @@ function renderTeamsView() {
     historyContainer.innerHTML = logs.map(l => `
       <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 12px; background:#f8fafc; border-radius:10px; margin-bottom:8px; border:1px solid #e2e8f0;">
         <div>
-          <strong style="font-size:0.85rem; color:#0f172a;">${l.team}</strong>
-          <div style="font-size:0.75rem; color:#64748b;">${l.reason} • By ${l.awardedBy}</div>
+          <strong style="font-size:0.85rem; color:#0f172a;">${l.team || l.teamName || 'House Team'}</strong>
+          <div style="font-size:0.75rem; color:#64748b;">${l.reason || 'Tournament points'} • By ${l.awardedBy || 'Director'} ${l.date ? '• ' + l.date : ''}</div>
         </div>
-        <div style="font-size:0.95rem; font-weight:900; color:#059669;">+${l.points} PTS</div>
+        <div style="font-size:0.95rem; font-weight:900; color:${l.points >= 0 ? '#059669' : '#dc2626'};">${l.points > 0 ? '+' : ''}${l.points} PTS</div>
       </div>
     `).join('');
   }
@@ -13608,10 +14288,10 @@ function renderTeamsView() {
     historyContainer.innerHTML = logs.map(l => `
       <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 12px; background:#f8fafc; border-radius:10px; margin-bottom:8px; border:1px solid #e2e8f0;">
         <div>
-          <strong style="font-size:0.85rem; color:#0f172a;">${l.team}</strong>
-          <div style="font-size:0.75rem; color:#64748b;">${l.reason} • By ${l.awardedBy}</div>
+          <strong style="font-size:0.85rem; color:#0f172a;">${l.team || l.teamName || 'House Team'}</strong>
+          <div style="font-size:0.75rem; color:#64748b;">${l.reason || 'Tournament points'} • By ${l.awardedBy || 'Director'} ${l.date ? '• ' + l.date : ''}</div>
         </div>
-        <div style="font-size:0.95rem; font-weight:900; color:#059669;">+${l.points} PTS</div>
+        <div style="font-size:0.95rem; font-weight:900; color:${l.points >= 0 ? '#059669' : '#dc2626'};">${l.points > 0 ? '+' : ''}${l.points} PTS</div>
       </div>
     `).join('');
   }

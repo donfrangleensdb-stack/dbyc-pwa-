@@ -5214,11 +5214,9 @@ body {
           <div class="form-group-dbyc">
             <label>Role in DBYC</label>
             <select id="formRole" class="form-control-dbyc">
-              <option value="Member">Member (உறுப்பினர்)</option>
+              <option value="Member" selected>Member (உறுப்பினர்)</option>
               <option value="Group Leader">Group Leader (குழு தலைவர்)</option>
               <option value="Group Incharge">Group Incharge (பொறுப்பாளர்)</option>
-              <option value="Assistant Director (Direct Incharge)">Assistant Director</option>
-              <option value="Director (Incharge)">Director</option>
             </select>
           </div>
         </div>
@@ -14150,6 +14148,9 @@ window.saveMemberRegistrationFormDirect = function(event) {
       memberData.approvedBy = prev.approvedBy || (wasApproved ? (prev.approvedBy || 'Rev. Fr. Director, SDB') : (isDirector ? (appState.currentUser ? appState.currentUser.name : 'Rev. Fr. Director, SDB') : ''));
       memberData.approvedAt = prev.approvedAt || (wasApproved ? (prev.approvedAt || new Date().toISOString()) : (isDirector ? new Date().toISOString() : ''));
       memberData.updatedAt = new Date().toISOString();
+      if (prev && prev.role && prev.role.toLowerCase().includes('director')) {
+        memberData.role = prev.role;
+      }
 
       appState.members[idx] = Object.assign({}, prev, memberData);
       savedMemberId = prev.id;

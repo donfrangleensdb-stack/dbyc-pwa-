@@ -2781,7 +2781,7 @@ body {
             <span id="masterEditText">Edit Controls</span>
           </button>
         </div>
-        <button id="cloudSyncStatusBtn" class="pill-tool-btn" style="background:#ecfdf5; border:1.5px solid #10b981; color:#065f46; font-weight:800; display:inline-flex; align-items:center; gap:6px; cursor:pointer;" onclick="window.openCloudSyncModal();" title="Google Drive & Server Storage Manager">
+        <button id="cloudSyncStatusBtn" class="pill-tool-btn" data-role-required="director-only" style="background:#ecfdf5; border:1.5px solid #10b981; color:#065f46; font-weight:800; display:none; align-items:center; gap:6px; cursor:pointer;" onclick="window.openCloudSyncModal();" title="Google Drive & Server Storage Manager">
           <span id="cloudStatusDot" style="width:8px; height:8px; border-radius:50%; background:#10b981; display:inline-block; box-shadow:0 0 8px #10b981;"></span>
           <span id="cloudStatusText">Google Drive / Server</span>
         </button>
@@ -4336,7 +4336,7 @@ body {
               <h3 style="font-size:1.2rem; font-weight:900; color:#fde047;">🏆 DBYC 4 House Teams & Live Points Tournament</h3>
               <p style="font-size:0.82rem; opacity:0.95; color:#e0f2fe;">Don Bosco Youth Centre • 4 Teams Annual Championship & Live Points Board</p>
             </div>
-            <button class="btn-dbyc-primary" style="background:#f59e0b; color:#0f172a; font-weight:900;" onclick="openAwardPointsModal()">
+            <button id="openAwardPointsTopBtn" class="btn-dbyc-primary" style="background:#f59e0b; color:#0f172a; font-weight:900;" onclick="openAwardPointsModal()">
               ⚡ Award Live Points (+/-)
             </button>
           </div>
@@ -4424,8 +4424,8 @@ body {
           </div>
         </div>
 
-        <!-- 1. Google Drive Cloud Storage & Sync Dashboard -->
-        <div class="master-security-card" style="border:2px solid #0284c7; background:#ffffff; border-radius:16px; padding:18px; margin-bottom:18px; box-shadow:0 4px 14px rgba(2,132,199,0.08);">
+        <!-- 1. Google Drive Cloud Storage & Sync Dashboard (Confidential: Director Only) -->
+        <div class="master-security-card" id="settingsCloudSyncCard" data-role-required="director-only" style="border:2px solid #0284c7; background:#ffffff; border-radius:16px; padding:18px; margin-bottom:18px; box-shadow:0 4px 14px rgba(2,132,199,0.08); display:none;">
           <div class="master-security-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
             <div style="display:flex; align-items:center; gap:10px;">
               <span style="font-size:1.6rem;">☁️</span>
@@ -4497,8 +4497,7 @@ body {
               </ol>
               <div style="position:relative;">
                 <button type="button" class="btn-dbyc-primary" style="position:absolute; right:8px; top:8px; font-size:0.75rem; padding:4px 10px; background:#0284c7;" onclick="window.copyGoogleDriveScript();">📋 Copy Script</button>
-                <textarea id="googleDriveScriptCodeText" readonly style="width:100%; height:160px; font-family:monospace; font-size:0.74rem; background:#0f172a; color:#f8fafc; border-radius:8px; padding:10px; border:none; resize:vertical; box-sizing:border-box;">// Don Bosco Youth Centre Basin Bridge - Code.gs
-// Includes OTP Email Dispatch via MailApp, Rolling Backups & Anti-Overwrite Protection</textarea>
+                <textarea id="googleDriveScriptCodeText" readonly style="width:100%; height:160px; font-family:monospace; font-size:0.74rem; background:#0f172a; color:#f8fafc; border-radius:8px; padding:10px; border:none; resize:vertical; box-sizing:border-box;"></textarea>
               </div>
             </div>
           </details>
@@ -4521,26 +4520,17 @@ body {
             Control modification privileges independently for each section. When a module is turned <strong>OFF</strong>, only the Director and Assistant Director can edit:
           </p>
 
+          <!-- Master Edit Switch in Settings -->
+          <div style="background:#eff6ff; border:2px solid #0284c7; border-radius:14px; padding:14px; display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; box-shadow:0 2px 8px rgba(2,132,199,0.12);">
+            <div>
+              <strong style="font-size:0.95rem; color:#002b66; display:block;">🛡️ MASTER EDIT CONTROLS (பிரதான திருத்துதல் கட்டுப்பாடு)</strong>
+              <small style="font-size:0.75rem; color:#0284c7; font-weight:700;">Turn ON/OFF all editing across entire DBYC portal</small>
+            </div>
+            <button type="button" id="settingsToggleMasterEditBtn" onclick="window.toggleMasterEditing()" class="btn-dbyc-primary" style="padding:8px 18px; font-size:0.82rem; font-weight:900; border-radius:8px; white-space:nowrap;"></button>
+          </div>
+
           <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:12px;">
-            <!-- 1. Profile Editing -->
-            <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px; padding:12px; display:flex; align-items:center; justify-content:space-between; gap:8px;">
-              <div>
-                <strong style="font-size:0.86rem; color:#0f172a; display:block;">👤 Member Profile Editing</strong>
-                <small style="font-size:0.75rem; color:#64748b;">Allow members to edit profile fields & photo</small>
-              </div>
-              <button type="button" id="settingsToggleEditProfileBtn" onclick="window.toggleEditPermission('profile')" class="btn-dbyc-primary" style="padding:6px 14px; font-size:0.8rem; font-weight:800; border-radius:8px; white-space:nowrap;"></button>
-            </div>
-
-            <!-- 2. Certificate Editing -->
-            <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px; padding:12px; display:flex; align-items:center; justify-content:space-between; gap:8px;">
-              <div>
-                <strong style="font-size:0.86rem; color:#0f172a; display:block;">📜 Certificate & Photo Editing</strong>
-                <small style="font-size:0.75rem; color:#64748b;">Allow editing title, candidate photo & text</small>
-              </div>
-              <button type="button" id="settingsToggleEditCertificatesBtn" onclick="window.toggleEditPermission('certificates')" class="btn-dbyc-primary" style="padding:6px 14px; font-size:0.8rem; font-weight:800; border-radius:8px; white-space:nowrap;"></button>
-            </div>
-
-            <!-- 3. QR Passes Editing -->
+            <!-- 1. QR Passes Editing -->
             <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px; padding:12px; display:flex; align-items:center; justify-content:space-between; gap:8px;">
               <div>
                 <strong style="font-size:0.86rem; color:#0f172a; display:block;">🪪 QR Pass & Photo Editing</strong>
@@ -4549,7 +4539,52 @@ body {
               <button type="button" id="settingsToggleEditPassesBtn" onclick="window.toggleEditPermission('passes')" class="btn-dbyc-primary" style="padding:6px 14px; font-size:0.8rem; font-weight:800; border-radius:8px; white-space:nowrap;"></button>
             </div>
 
-            <!-- 4. Member New Registration -->
+            <!-- 2. Members Content Editing -->
+            <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px; padding:12px; display:flex; align-items:center; justify-content:space-between; gap:8px;">
+              <div>
+                <strong style="font-size:0.86rem; color:#0f172a; display:block;">👥 Members Content Editing</strong>
+                <small style="font-size:0.75rem; color:#64748b;">Allow adding, editing, renewing, or deleting members</small>
+              </div>
+              <button type="button" id="settingsToggleEditMembersBtn" onclick="window.toggleEditPermission('members')" class="btn-dbyc-primary" style="padding:6px 14px; font-size:0.8rem; font-weight:800; border-radius:8px; white-space:nowrap;"></button>
+            </div>
+
+            <!-- 3. Office Bearers Editing -->
+            <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px; padding:12px; display:flex; align-items:center; justify-content:space-between; gap:8px;">
+              <div>
+                <strong style="font-size:0.86rem; color:#0f172a; display:block;">🎖️ Office Bearers Editing</strong>
+                <small style="font-size:0.75rem; color:#64748b;">Allow editing office bearers & leader profiles</small>
+              </div>
+              <button type="button" id="settingsToggleEditOfficeBearersBtn" onclick="window.toggleEditPermission('officebearers')" class="btn-dbyc-primary" style="padding:6px 14px; font-size:0.8rem; font-weight:800; border-radius:8px; white-space:nowrap;"></button>
+            </div>
+
+            <!-- 4. Teams Content Editing -->
+            <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px; padding:12px; display:flex; align-items:center; justify-content:space-between; gap:8px;">
+              <div>
+                <strong style="font-size:0.86rem; color:#0f172a; display:block;">⚽ Teams Content Editing</strong>
+                <small style="font-size:0.75rem; color:#64748b;">Edit team name, captain & emblem (Award Points always enabled)</small>
+              </div>
+              <button type="button" id="settingsToggleEditTeamsBtn" onclick="window.toggleEditPermission('teams')" class="btn-dbyc-primary" style="padding:6px 14px; font-size:0.8rem; font-weight:800; border-radius:8px; white-space:nowrap;"></button>
+            </div>
+
+            <!-- 5. Profile Editing -->
+            <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px; padding:12px; display:flex; align-items:center; justify-content:space-between; gap:8px;">
+              <div>
+                <strong style="font-size:0.86rem; color:#0f172a; display:block;">👤 Member & Leader Profile Details</strong>
+                <small style="font-size:0.75rem; color:#64748b;">Permission for leaders & members to edit details</small>
+              </div>
+              <button type="button" id="settingsToggleEditProfileBtn" onclick="window.toggleEditPermission('profile')" class="btn-dbyc-primary" style="padding:6px 14px; font-size:0.8rem; font-weight:800; border-radius:8px; white-space:nowrap;"></button>
+            </div>
+
+            <!-- 6. Certificate Editing -->
+            <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px; padding:12px; display:flex; align-items:center; justify-content:space-between; gap:8px;">
+              <div>
+                <strong style="font-size:0.86rem; color:#0f172a; display:block;">📜 Certificate & Photo Editing</strong>
+                <small style="font-size:0.75rem; color:#64748b;">Allow editing title, candidate photo & text</small>
+              </div>
+              <button type="button" id="settingsToggleEditCertificatesBtn" onclick="window.toggleEditPermission('certificates')" class="btn-dbyc-primary" style="padding:6px 14px; font-size:0.8rem; font-weight:800; border-radius:8px; white-space:nowrap;"></button>
+            </div>
+
+            <!-- 7. Member New Registration -->
             <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px; padding:12px; display:flex; align-items:center; justify-content:space-between; gap:8px;">
               <div>
                 <strong style="font-size:0.86rem; color:#0f172a; display:block;">📝 New Member Registration</strong>
@@ -5857,41 +5892,77 @@ body {
         <button style="background:none; border:none; font-size:1.4rem; cursor:pointer;" onclick="document.getElementById('editPermissionsModal').style.display='none'">&times;</button>
       </div>
 
-      <div style="display:flex; flex-direction:column; gap:12px; margin: 16px 0;">
-        <!-- 1. Profile Editing -->
-        <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:12px; padding:12px; display:flex; align-items:center; justify-content:space-between;">
+      <div style="display:flex; flex-direction:column; gap:10px; margin: 16px 0;">
+        <!-- 0. Master Edit Controls Switch -->
+        <div style="background:#eff6ff; border:2px solid #0284c7; border-radius:14px; padding:12px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 8px rgba(2,132,199,0.15);">
           <div>
-            <div style="font-weight:800; font-size:0.88rem; color:#0f172a;">👤 Member Profile Editing</div>
-            <small style="color:#64748b;">Allow members to edit their own profile info</small>
+            <div style="font-weight:900; font-size:0.95rem; color:#002b66;">🛡️ MASTER EDIT CONTROLS</div>
+            <small style="color:#0284c7; font-weight:700;">When OFF, all editing across the portal is strictly locked</small>
           </div>
-          <button type="button" id="toggleEditProfileBtn" onclick="window.toggleEditPermission('profile')" class="btn-dbyc-primary" style="padding:6px 12px; font-size:0.78rem; font-weight:800;"></button>
+          <button type="button" id="toggleMasterEditBtn" onclick="window.toggleMasterEditing()" class="btn-dbyc-primary" style="padding:8px 16px; font-size:0.82rem; font-weight:900; border-radius:8px;"></button>
         </div>
 
-        <!-- 2. Certificate Editing -->
-        <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:12px; padding:12px; display:flex; align-items:center; justify-content:space-between;">
+        <!-- 1. QR Passes Editing -->
+        <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:12px; padding:10px 12px; display:flex; align-items:center; justify-content:space-between;">
           <div>
-            <div style="font-weight:800; font-size:0.88rem; color:#0f172a;">📜 Certificate & Photo Editing</div>
+            <div style="font-weight:800; font-size:0.86rem; color:#0f172a;">🪪 QR Pass Photo & Data Editing</div>
+            <small style="color:#64748b;">Allow editing QR pass details and member photos</small>
+          </div>
+          <button type="button" id="toggleEditPassesBtn" onclick="window.toggleEditPermission('passes')" class="btn-dbyc-primary" style="padding:6px 12px; font-size:0.78rem; font-weight:800; border-radius:8px;"></button>
+        </div>
+
+        <!-- 2. Members Content Editing -->
+        <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:12px; padding:10px 12px; display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <div style="font-weight:800; font-size:0.86rem; color:#0f172a;">👥 Members Content Editing</div>
+            <small style="color:#64748b;">Allow adding, editing, renewing, or deleting members</small>
+          </div>
+          <button type="button" id="toggleEditMembersBtn" onclick="window.toggleEditPermission('members')" class="btn-dbyc-primary" style="padding:6px 12px; font-size:0.78rem; font-weight:800; border-radius:8px;"></button>
+        </div>
+
+        <!-- 3. Office Bearers Editing -->
+        <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:12px; padding:10px 12px; display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <div style="font-weight:800; font-size:0.86rem; color:#0f172a;">🎖️ Office Bearers Editing</div>
+            <small style="color:#64748b;">Allow editing office bearers council & leader profiles</small>
+          </div>
+          <button type="button" id="toggleEditOfficeBearersBtn" onclick="window.toggleEditPermission('officebearers')" class="btn-dbyc-primary" style="padding:6px 12px; font-size:0.78rem; font-weight:800; border-radius:8px;"></button>
+        </div>
+
+        <!-- 4. Teams Content Editing -->
+        <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:12px; padding:10px 12px; display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <div style="font-weight:800; font-size:0.86rem; color:#0f172a;">⚽ Teams Content Editing</div>
+            <small style="color:#64748b;">Edit team name, captain & emblem (Award Points is always enabled)</small>
+          </div>
+          <button type="button" id="toggleEditTeamsBtn" onclick="window.toggleEditPermission('teams')" class="btn-dbyc-primary" style="padding:6px 12px; font-size:0.78rem; font-weight:800; border-radius:8px;"></button>
+        </div>
+
+        <!-- 5. Profile Editing -->
+        <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:12px; padding:10px 12px; display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <div style="font-weight:800; font-size:0.86rem; color:#0f172a;">👤 Member & Leader Profile Details</div>
+            <small style="color:#64748b;">Permission for youth leaders & members to edit their details</small>
+          </div>
+          <button type="button" id="toggleEditProfileBtn" onclick="window.toggleEditPermission('profile')" class="btn-dbyc-primary" style="padding:6px 12px; font-size:0.78rem; font-weight:800; border-radius:8px;"></button>
+        </div>
+
+        <!-- 6. Certificate Editing -->
+        <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:12px; padding:10px 12px; display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <div style="font-weight:800; font-size:0.86rem; color:#0f172a;">📜 Certificate & Photo Editing</div>
             <small style="color:#64748b;">Allow editing certificate text & candidate photo</small>
           </div>
-          <button type="button" id="toggleEditCertificatesBtn" onclick="window.toggleEditPermission('certificates')" class="btn-dbyc-primary" style="padding:6px 12px; font-size:0.78rem; font-weight:800;"></button>
+          <button type="button" id="toggleEditCertificatesBtn" onclick="window.toggleEditPermission('certificates')" class="btn-dbyc-primary" style="padding:6px 12px; font-size:0.78rem; font-weight:800; border-radius:8px;"></button>
         </div>
 
-        <!-- 3. QR Passes Editing -->
-        <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:12px; padding:12px; display:flex; align-items:center; justify-content:space-between;">
+        <!-- 7. Member New Registration -->
+        <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:12px; padding:10px 12px; display:flex; align-items:center; justify-content:space-between;">
           <div>
-            <div style="font-weight:800; font-size:0.88rem; color:#0f172a;">🪪 QR Pass Photo & Data Editing</div>
-            <small style="color:#64748b;">Allow editing pass details and member photos</small>
-          </div>
-          <button type="button" id="toggleEditPassesBtn" onclick="window.toggleEditPermission('passes')" class="btn-dbyc-primary" style="padding:6px 12px; font-size:0.78rem; font-weight:800;"></button>
-        </div>
-
-        <!-- 4. Member New Registration -->
-        <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:12px; padding:12px; display:flex; align-items:center; justify-content:space-between;">
-          <div>
-            <div style="font-weight:800; font-size:0.88rem; color:#0f172a;">📝 New Member Registration</div>
+            <div style="font-weight:800; font-size:0.86rem; color:#0f172a;">📝 New Member Registration</div>
             <small style="color:#64748b;">Allow new registrations and member editing</small>
           </div>
-          <button type="button" id="toggleEditRegistrationBtn" onclick="window.toggleEditPermission('registration')" class="btn-dbyc-primary" style="padding:6px 12px; font-size:0.78rem; font-weight:800;"></button>
+          <button type="button" id="toggleEditRegistrationBtn" onclick="window.toggleEditPermission('registration')" class="btn-dbyc-primary" style="padding:6px 12px; font-size:0.78rem; font-weight:800; border-radius:8px;"></button>
         </div>
       </div>
 
@@ -6119,7 +6190,7 @@ body {
           🌐 Google Apps Script Web App URL:
         </label>
         <div style="display:flex; gap:6px;">
-          <input type="url" id="modalGasEndpointInput" class="form-control-dbyc" placeholder="https://script.google.com/macros/s/.../exec" value="https://script.google.com/macros/s/AKfycbzMcQf_cmYGFeu5h8x_MqUGAtjTTvJJo5yG7PLNTWTrf_qHEWKSnmUvSFgzc_HdG-G3/exec" style="flex:1; font-family:monospace; font-size:0.8rem; padding:8px 10px; border:2px solid #0284c7; border-radius:8px; background:#f8fafc; color:#0f172a; outline:none; box-sizing:border-box;">
+          <input type="url" id="modalGasEndpointInput" class="form-control-dbyc" placeholder="https://script.google.com/macros/s/.../exec" value="" style="flex:1; font-family:monospace; font-size:0.8rem; padding:8px 10px; border:2px solid #0284c7; border-radius:8px; background:#f8fafc; color:#0f172a; outline:none; box-sizing:border-box;">
           <button type="button" class="btn-dbyc-primary" style="background:#0284c7; color:#fff; font-weight:800; padding:8px 12px; font-size:0.78rem; border-radius:8px; border:none; cursor:pointer; white-space:nowrap;" onclick="window.saveStorageEndpoints();">
             💾 Save
           </button>
@@ -7377,10 +7448,37 @@ function applyRolePermissions() {
     }
   });
 
-  // Director-only elements
+  // Director-only elements (Master Controls, Cloud Sync Manager, Settings Cards)
   document.querySelectorAll('[data-role-required="director-only"]').forEach(el => {
-    el.style.display = isDir ? 'flex' : 'none';
+    if (el.tagName === 'LI') {
+      el.style.display = isDir ? 'block' : 'none';
+    } else if (el.id === 'settingsCloudSyncCard' || el.classList.contains('master-security-card')) {
+      el.style.display = isDir ? 'block' : 'none';
+    } else if (el.id === 'cloudSyncStatusBtn') {
+      el.style.display = isDir ? 'inline-flex' : 'none';
+    } else {
+      el.style.display = isDir ? 'flex' : 'none';
+    }
   });
+
+  // Strict confidentiality: sanitize Google Drive and Apps Script values from DOM for non-directors
+  if (!isDir) {
+    const gasIn1 = document.getElementById('gasEndpointInput');
+    const gasIn2 = document.getElementById('modalGasEndpointInput');
+    const codeBox = document.getElementById('googleDriveScriptCodeText');
+    if (gasIn1) gasIn1.value = '';
+    if (gasIn2) gasIn2.value = '';
+    if (codeBox) codeBox.value = '';
+    const cloudBtn = document.getElementById('cloudSyncStatusBtn');
+    if (cloudBtn) cloudBtn.style.display = 'none';
+    const cloudCard = document.getElementById('settingsCloudSyncCard');
+    if (cloudCard) cloudCard.style.display = 'none';
+  } else {
+    const cloudBtn = document.getElementById('cloudSyncStatusBtn');
+    if (cloudBtn) cloudBtn.style.display = 'inline-flex';
+    const cloudCard = document.getElementById('settingsCloudSyncCard');
+    if (cloudCard) cloudCard.style.display = 'block';
+  }
 
   // Admin elements (Director & Asst Director: Qualifications)
   document.querySelectorAll('[data-role-required="admin"]').forEach(el => {
@@ -7396,15 +7494,13 @@ function applyRolePermissions() {
     }
   });
 
-  // Apply 4 Granular Director Edit Permissions:
-  // 1. Profile: window.canEdit('profile')
-  // 2. Certificates: window.canEdit('certificates')
-  // 3. QR Passes: window.canEdit('passes')
-  // 4. New Registration: window.canEdit('registration')
-  const canEditProfile = (typeof window.canEdit === 'function') ? window.canEdit('profile') : true;
-  const canEditCerts = (typeof window.canEdit === 'function') ? window.canEdit('certificates') : true;
-  const canEditPasses = (typeof window.canEdit === 'function') ? window.canEdit('passes') : true;
-  const canEditReg = (typeof window.canEdit === 'function') ? window.canEdit('registration') : true;
+  // Apply Granular Director Edit Permissions:
+  const canEditProfile = (typeof window.canEdit === 'function') ? window.canEdit('profile') : false;
+  const canEditCerts = (typeof window.canEdit === 'function') ? window.canEdit('certificates') : false;
+  const canEditPasses = (typeof window.canEdit === 'function') ? window.canEdit('passes') : false;
+  const canEditMembers = (typeof window.canEdit === 'function') ? window.canEdit('members') : false;
+  const canEditOB = (typeof window.canEdit === 'function') ? window.canEdit('officebearers') : false;
+  const canEditTeams = (typeof window.canEdit === 'function') ? window.canEdit('teams') : false;
 
   const editProfBtn = document.getElementById('openEditProfileBtn');
   if (editProfBtn) editProfBtn.style.display = canEditProfile ? 'inline-flex' : 'none';
@@ -7413,17 +7509,27 @@ function applyRolePermissions() {
   if (profPhotoUploadBtn) profPhotoUploadBtn.style.display = canEditProfile ? 'inline-block' : 'none';
 
   const addMemBtn = document.getElementById('openAddMemberBtn');
-  if (addMemBtn) addMemBtn.style.display = canEditReg ? 'inline-flex' : 'none';
+  if (addMemBtn) addMemBtn.style.display = canEditMembers ? 'inline-flex' : 'none';
 
   const addEvtBtn = document.getElementById('openAddEventBtn');
-  if (addEvtBtn) addEvtBtn.style.display = isAdmin ? 'inline-flex' : 'none';
+  if (addEvtBtn) addEvtBtn.style.display = (isAdmin && window.isMasterEditActive) ? 'inline-flex' : 'none';
 
   const addMinBtn = document.getElementById('openAddMinutesBtn');
-  if (addMinBtn) addMinBtn.style.display = isAdmin ? 'inline-flex' : 'none';
+  if (addMinBtn) addMinBtn.style.display = (isAdmin && window.isMasterEditActive) ? 'inline-flex' : 'none';
 
   const addLeaderBtn = document.getElementById('addLeaderProfileBtn');
-  if (addLeaderBtn) addLeaderBtn.style.display = isAdmin ? 'inline-flex' : 'none';
+  if (addLeaderBtn) addLeaderBtn.style.display = canEditOB ? 'inline-flex' : 'none';
+
+  const canAwardPoints = (typeof window.canEdit === 'function') ? window.canEdit('award_points') : false;
+  const awardTopBtn = document.getElementById('openAwardPointsTopBtn');
+  if (awardTopBtn) awardTopBtn.style.display = canAwardPoints ? 'inline-flex' : 'none';
 }
+
+window.applyRolePermissions = applyRolePermissions;
+window.isDirectorOnly = isDirectorOnly;
+window.isDirectorUser = isDirectorUser;
+window.getUserRoleType = getUserRoleType;
+window.isDirectorOrAsstDirector = isDirectorOrAsstDirector;
 
 function setupMemberFormAutoCalculation() {
   const dobInput = document.getElementById('formDob');
@@ -8255,6 +8361,10 @@ function setupProfileHandlers() {
   if (form) {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
+      if (typeof window.canEdit === 'function' && !window.canEdit('profile')) {
+        showToast('🔒 You need permission from Rev. Fr. Director to edit your profile details.');
+        return;
+      }
       const user = appState.currentUser;
       if (!user) return;
 
@@ -8613,7 +8723,7 @@ window.scanAwardPointsFromFile = function(event) {
 
 function setupTeamHandlers() {
   window.openAwardPointsModal = function(teamId) {
-    if (!window.canUserEdit()) {
+    if (typeof window.canEdit === 'function' && !window.canEdit('award_points')) {
       showToast('🔒 Only Rev. Fr. Director, Assistant Director, or Leaders can award points.');
       return;
     }
@@ -8644,7 +8754,7 @@ function setupTeamHandlers() {
   if (awardForm) {
     awardForm.addEventListener('submit', function(e) {
       e.preventDefault();
-      if (!window.canUserEdit()) {
+      if (typeof window.canEdit === 'function' && !window.canEdit('award_points')) {
         showToast('🔒 Editing restricted to Directors and Leaders.');
         return;
       }
@@ -10325,6 +10435,10 @@ function setupPassHandlers() {
     passPhotoInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (!file || !currentViewingPassMemberId) return;
+      if (typeof window.canEdit === 'function' && !window.canEdit('passes')) {
+        showToast('🔒 QR Pass photo editing is turned OFF by Rev. Fr. Director.');
+        return;
+      }
 
       const reader = new FileReader();
       reader.onload = function(evt) {
@@ -10354,6 +10468,10 @@ function setupPassHandlers() {
   document.getElementById('editPassForm')?.addEventListener('submit', (e) => {
     e.preventDefault();
     if (!currentViewingPassMemberId) return;
+    if (typeof window.canEdit === 'function' && !window.canEdit('passes')) {
+      showToast('🔒 QR Pass editing is turned OFF by Rev. Fr. Director.');
+      return;
+    }
 
     const m = appState.members.find(mem => mem.id === currentViewingPassMemberId);
     if (m) {
@@ -10476,39 +10594,47 @@ function generateIdPass(memberId) {
           <img src="${qrUrl}" alt="Member QR Pass" width="115" height="115" style="display:block; border-radius:4px;">
         </div>
 
-        <!-- All-Bold Details Table: ONLY requested fields -->
-        <table class="id-pass-details-table" style="width:100%; border-collapse:collapse; margin-top:2px; font-size:0.78rem;">
-          <tr>
-            <td class="label" style="font-weight:900; color:#475569; padding:2.5px 5px; border-bottom:1px dashed #e2e8f0; width:40%;">DBYC ID:</td>
-            <td class="val" style="font-weight:900; color:#004b98; font-size:0.86rem; padding:2.5px 5px; border-bottom:1px dashed #e2e8f0;">${member.id}</td>
+        <!-- All-Bold Details Table: ONLY requested fields with small images / icons -->
+        <table class="id-pass-details-table" style="width:100%; border-collapse:collapse; margin-top:2px; font-size:0.80rem;">
+          <tr style="border-bottom:1px dashed #cbd5e1;">
+            <td style="width:24px; font-size:1.02rem; padding:3px 2px; text-align:center; vertical-align:middle;">🪪</td>
+            <td class="label" style="font-weight:900; color:#0f172a; padding:3px 4px; width:44%; white-space:nowrap;">DBYC ID:</td>
+            <td class="val" style="font-weight:900; color:#004b98; font-size:0.90rem; padding:3px 4px;">${member.id}</td>
+          </tr>
+          <tr style="border-bottom:1px dashed #cbd5e1;">
+            <td style="width:24px; font-size:1.02rem; padding:3px 2px; text-align:center; vertical-align:middle;">👥</td>
+            <td class="label" style="font-weight:900; color:#0f172a; padding:3px 4px; white-space:nowrap;">Member Group:</td>
+            <td class="val" style="font-weight:900; color:#0f172a; padding:3px 4px;">${member.group || 'Youth'}</td>
+          </tr>
+          <tr style="border-bottom:1px dashed #cbd5e1;">
+            <td style="width:24px; font-size:1.02rem; padding:3px 2px; text-align:center; vertical-align:middle;">⏳</td>
+            <td class="label" style="font-weight:900; color:#0f172a; padding:3px 4px; white-space:nowrap;">Duration in DBYC:</td>
+            <td class="val" style="font-weight:900; color:#b45309; padding:3px 4px;">${tenure}</td>
+          </tr>
+          <tr style="border-bottom:1px dashed #cbd5e1;">
+            <td style="width:24px; font-size:1.02rem; padding:3px 2px; text-align:center; vertical-align:middle;">📞</td>
+            <td class="label" style="font-weight:900; color:#0f172a; padding:3px 4px; white-space:nowrap;">Mobile Number:</td>
+            <td class="val" style="font-weight:900; color:#0f172a; padding:3px 4px;">${member.mobile || 'N/A'}</td>
+          </tr>
+          <tr style="border-bottom:1px dashed #cbd5e1;">
+            <td style="width:24px; font-size:1.02rem; padding:3px 2px; text-align:center; vertical-align:middle;">🩸</td>
+            <td class="label" style="font-weight:900; color:#0f172a; padding:3px 4px; white-space:nowrap;">Blood Group:</td>
+            <td class="val" style="font-weight:900; color:#dc2626; font-size:0.90rem; padding:3px 4px;">${member.bloodGroup || 'N/A'}</td>
+          </tr>
+          <tr style="border-bottom:1px dashed #cbd5e1;">
+            <td style="width:24px; font-size:1.02rem; padding:3px 2px; text-align:center; vertical-align:middle;">🎂</td>
+            <td class="label" style="font-weight:900; color:#0f172a; padding:3px 4px; white-space:nowrap;">Date of Birth:</td>
+            <td class="val" style="font-weight:900; color:#0f172a; padding:3px 4px;">${cardDob}</td>
+          </tr>
+          <tr style="border-bottom:1px dashed #cbd5e1;">
+            <td style="width:24px; font-size:1.02rem; padding:3px 2px; text-align:center; vertical-align:top;">📍</td>
+            <td class="label" style="font-weight:900; color:#0f172a; padding:3px 4px; vertical-align:top; white-space:nowrap;">Address:</td>
+            <td class="val" style="font-weight:900; color:#1e293b; padding:3px 4px; font-size:0.75rem; line-height:1.25;">${cardAddress}</td>
           </tr>
           <tr>
-            <td class="label" style="font-weight:900; color:#475569; padding:2.5px 5px; border-bottom:1px dashed #e2e8f0;">Member Group:</td>
-            <td class="val" style="font-weight:900; color:#0f172a; padding:2.5px 5px; border-bottom:1px dashed #e2e8f0;">👥 ${member.group || 'Youth'}</td>
-          </tr>
-          <tr>
-            <td class="label" style="font-weight:900; color:#475569; padding:2.5px 5px; border-bottom:1px dashed #e2e8f0;">Duration in DBYC:</td>
-            <td class="val" style="font-weight:900; color:#b45309; padding:2.5px 5px; border-bottom:1px dashed #e2e8f0;">⏳ ${tenure}</td>
-          </tr>
-          <tr>
-            <td class="label" style="font-weight:900; color:#475569; padding:2.5px 5px; border-bottom:1px dashed #e2e8f0;">Mobile Number:</td>
-            <td class="val" style="font-weight:800; color:#0f172a; padding:2.5px 5px; border-bottom:1px dashed #e2e8f0;">📞 ${member.mobile || 'N/A'}</td>
-          </tr>
-          <tr>
-            <td class="label" style="font-weight:900; color:#475569; padding:2.5px 5px; border-bottom:1px dashed #e2e8f0;">Blood Group:</td>
-            <td class="val" style="font-weight:900; color:#dc2626; padding:2.5px 5px; border-bottom:1px dashed #e2e8f0;">🩸 ${member.bloodGroup || 'N/A'}</td>
-          </tr>
-          <tr>
-            <td class="label" style="font-weight:900; color:#475569; padding:2.5px 5px; border-bottom:1px dashed #e2e8f0;">Date of Birth:</td>
-            <td class="val" style="font-weight:800; color:#0f172a; padding:2.5px 5px; border-bottom:1px dashed #e2e8f0;">🎂 ${cardDob}</td>
-          </tr>
-          <tr>
-            <td class="label" style="font-weight:900; color:#475569; padding:2.5px 5px; border-bottom:1px dashed #e2e8f0; vertical-align:top;">Address:</td>
-            <td class="val" style="font-weight:800; color:#334155; padding:2.5px 5px; border-bottom:1px dashed #e2e8f0; font-size:0.73rem; line-height:1.2;">📍 ${cardAddress}</td>
-          </tr>
-          <tr>
-            <td class="label" style="font-weight:900; color:#475569; padding:2.5px 5px; vertical-align:top;">Special Activities:</td>
-            <td class="val" style="font-weight:800; color:#004b98; padding:2.5px 5px; font-size:0.73rem; line-height:1.2;">⚽ ${cardActivities}</td>
+            <td style="width:24px; font-size:1.02rem; padding:3px 2px; text-align:center; vertical-align:top;">🎯</td>
+            <td class="label" style="font-weight:900; color:#0f172a; padding:3px 4px; vertical-align:top; white-space:nowrap;">Special Activities:</td>
+            <td class="val" style="font-weight:900; color:#004b98; padding:3px 4px; font-size:0.75rem; line-height:1.25;">${cardActivities}</td>
           </tr>
         </table>
       </div>
@@ -11052,6 +11178,10 @@ window.updateFormValidityDates = function() {
 
 window.quickRenewMember = function(memberId) {
   if (!memberId) return;
+  if (typeof window.canEdit === 'function' && !window.canEdit('members')) {
+    showToast('🔒 Member renewal is turned OFF by Rev. Fr. Director.');
+    return;
+  }
   var members = (window.appState && window.appState.members) ? window.appState.members : [];
   var m = members.find(function(x) { return x.id === memberId; });
   if (!m) return;
@@ -11264,49 +11394,58 @@ window.drawOfficial56x86PassToCanvas = async function(m, scale) {
   ctx.strokeRect(tblX, tblY, tblW, tblH);
 
   var rows = [
-    { label: 'DBYC ID:', val: member.id || 'N/A', color: '#004b98', boldVal: true },
-    { label: 'Member Group:', val: member.group || 'Youth', color: '#0f172a', boldVal: true },
-    { label: 'Duration in DBYC:', val: tenure, color: '#b45309', boldVal: true },
-    { label: 'Mobile Number:', val: member.mobile || 'N/A', color: '#0f172a', boldVal: false },
-    { label: 'Blood Group:', val: member.bloodGroup || 'N/A', color: '#dc2626', boldVal: true },
-    { label: 'Date of Birth:', val: cardDob, color: '#0f172a', boldVal: false },
-    { label: 'Address:', val: cardAddress, color: '#334155', boldVal: false, multiline: true },
-    { label: 'Special Activities:', val: cardActivities, color: '#004b98', boldVal: true, multiline: true }
+    { icon: '🪪', label: 'DBYC ID:', val: member.id || 'N/A', color: '#004b98', boldVal: true, valFont: '900 33px sans-serif' },
+    { icon: '👥', label: 'Member Group:', val: member.group || 'Youth', color: '#0f172a', boldVal: true, valFont: '900 31px sans-serif' },
+    { icon: '⏳', label: 'Duration in DBYC:', val: tenure, color: '#b45309', boldVal: true, valFont: '900 31px sans-serif' },
+    { icon: '📞', label: 'Mobile Number:', val: member.mobile || 'N/A', color: '#0f172a', boldVal: true, valFont: '900 31px sans-serif' },
+    { icon: '🩸', label: 'Blood Group:', val: member.bloodGroup || 'N/A', color: '#dc2626', boldVal: true, valFont: '900 35px sans-serif' },
+    { icon: '🎂', label: 'Date of Birth:', val: cardDob, color: '#0f172a', boldVal: true, valFont: '900 31px sans-serif' },
+    { icon: '📍', label: 'Address:', val: cardAddress, color: '#1e293b', boldVal: true, multiline: true, valFont: '900 27px sans-serif' },
+    { icon: '🎯', label: 'Special Activities:', val: cardActivities, color: '#004b98', boldVal: true, multiline: true, valFont: '900 27px sans-serif' }
   ];
 
-  var curY = tblY + 50;
+  var curY = tblY + 52;
+  var valStartX = tblX + 410;
+  var maxValW = tblW - 430;
+
   for (var i = 0; i < rows.length; i++) {
     var r = rows[i];
+    
+    // Draw Small Image / Icon
+    ctx.font = "32px 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif";
     ctx.textAlign = 'left';
-    ctx.fillStyle = '#475569';
-    ctx.font = 'bold 26px sans-serif';
-    ctx.fillText(r.label, tblX + 20, curY);
+    ctx.fillText(r.icon, tblX + 22, curY);
 
+    // Draw Bold Legible Label
+    ctx.fillStyle = '#0f172a'; // Deep high-contrast dark
+    ctx.font = '900 29px sans-serif'; // Solid bold
+    ctx.fillText(r.label, tblX + 70, curY);
+
+    // Draw Bold Legible Value
     ctx.fillStyle = r.color;
-    ctx.font = r.boldVal ? 'bold 29px sans-serif' : 'bold 26px sans-serif';
+    ctx.font = r.valFont || '900 30px sans-serif';
 
     if (r.multiline) {
       var words = String(r.val || '').split(' ');
       var line = '';
       var lineY = curY;
-      var maxValW = tblW - 370;
       for (var w = 0; w < words.length; w++) {
         var testLine = line + (line ? ' ' : '') + words[w];
         if (ctx.measureText(testLine).width > maxValW && line) {
-          ctx.fillText(line, tblX + 340, lineY);
+          ctx.fillText(line, valStartX, lineY);
           line = words[w];
-          lineY += 32;
+          lineY += 34;
         } else {
           line = testLine;
         }
       }
       if (line) {
-        ctx.fillText(line, tblX + 340, lineY);
+        ctx.fillText(line, valStartX, lineY);
       }
-      var consumed = Math.max(82, (lineY - curY) + 50);
+      var consumed = Math.max(82, (lineY - curY) + 52);
       if (i < rows.length - 1) {
         ctx.strokeStyle = '#e2e8f0';
-        ctx.lineWidth = 1.5;
+        ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(tblX + 16, curY + consumed - 30);
         ctx.lineTo(tblX + tblW - 16, curY + consumed - 30);
@@ -11314,16 +11453,16 @@ window.drawOfficial56x86PassToCanvas = async function(m, scale) {
       }
       curY += consumed;
     } else {
-      ctx.fillText(r.val, tblX + 340, curY);
+      ctx.fillText(r.val, valStartX, curY);
       if (i < rows.length - 1) {
         ctx.strokeStyle = '#e2e8f0';
-        ctx.lineWidth = 1.5;
+        ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.moveTo(tblX + 16, curY + 32);
-        ctx.lineTo(tblX + tblW - 16, curY + 32);
+        ctx.moveTo(tblX + 16, curY + 34);
+        ctx.lineTo(tblX + tblW - 16, curY + 34);
         ctx.stroke();
       }
-      curY += 80;
+      curY += 82;
     }
   }
 
@@ -13643,7 +13782,7 @@ window.triggerLiveMemberCamera = function() {
 window.openAddMemberModal = function(memberId) {
   if (!memberId && window.isRegisteringFromLogin) {
     // Permitted for new member registration from home login page
-  } else if (typeof window.canEdit === 'function' && !window.canEdit('registration')) {
+  } else if (typeof window.canEdit === 'function' && !window.canEdit(memberId ? 'members' : 'registration')) {
     showToast('🔒 Member registration and details editing is currently turned OFF by Rev. Fr. Director.');
     return;
   }
@@ -13758,6 +13897,19 @@ window.closeAddMemberModal = function() {
 // 3. SAVE MEMBER REGISTRATION FORM DIRECTLY (WITH DIRECTOR APPROVAL)
 window.saveMemberRegistrationFormDirect = function(event) {
   if (event) event.preventDefault();
+
+  const editIdCheck = document.getElementById('formEditingMemberId')?.value;
+  if (editIdCheck) {
+    if (typeof window.canEdit === 'function' && !window.canEdit('members')) {
+      showToast('🔒 Member editing is turned OFF by Rev. Fr. Director.');
+      return;
+    }
+  } else if (!window.isRegisteringFromLogin) {
+    if (typeof window.canEdit === 'function' && !window.canEdit('registration') && !window.canEdit('members')) {
+      showToast('🔒 Member registration is turned OFF by Rev. Fr. Director.');
+      return;
+    }
+  }
 
   const name = document.getElementById('formName')?.value.trim();
   const mobile = document.getElementById('formMobile')?.value.trim();
@@ -14036,7 +14188,7 @@ function renderMembersRegistry() {
     return `
       <div class="member-card" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; padding:14px; background:#ffffff; border-radius:14px; border:1px solid #e2e8f0; box-shadow:0 2px 6px rgba(0,0,0,0.04); margin-bottom:10px;">
         <div style="display:flex; align-items:center; gap:12px;">
-          <img src="${photo}" alt="${m.name}" style="width:56px; height:56px; border-radius:50%; object-fit:cover; border:2.5px solid #004b98; flex-shrink:0; background:#f8fafc; cursor:pointer;" onclick="window.quickEditMemberPhoto('${m.id}')" title="Tap to change member photo">
+          <img src="${photo}" alt="${m.name}" style="width:56px; height:56px; border-radius:50%; object-fit:cover; border:2.5px solid #004b98; flex-shrink:0; background:#f8fafc; cursor:pointer;" onclick="${(typeof window.canEdit === 'function' && window.canEdit('members')) ? `window.quickEditMemberPhoto('${m.id}')` : `window.viewMemberPass('${m.id}')`}" title="${(typeof window.canEdit === 'function' && window.canEdit('members')) ? 'Tap to change member photo' : 'View Member QR Pass'}">
           <div>
             <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
               <h4 style="font-size:1.05rem; font-weight:800; color:#002b66; margin:0;">${m.name}</h4>
@@ -14053,17 +14205,19 @@ function renderMembersRegistry() {
         </div>
 
         <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-          <!-- 1-Year Renewal Action Button -->
-          <button type="button" class="btn-dbyc-primary" style="background:#16a34a; padding:6px 12px; font-size:0.78rem; font-weight:800; border-radius:8px; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 6px rgba(22,163,74,0.3);" onclick="window.quickRenewMember('${m.id}')" title="Renew member registration for 1 full year (+1 Year Extension)">
-            🔄 Renew (+1 Yr)
-          </button>
-          <!-- Quick Photo Edit for All Members -->
-          <button type="button" class="btn-dbyc-secondary" style="background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; padding:6px 10px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.quickEditMemberPhoto('${m.id}')" title="Change or update member photo">
-            📷 Photo
-          </button>
-          ${(typeof window.canEdit === 'function' && window.canEdit('registration')) ? `<button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:6px 12px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.openAddMemberModal('${m.id}')" title="Edit member details and photo">
-            ✏️ Edit
-          </button>` : ''}
+          ${(typeof window.canEdit === 'function' && window.canEdit('members')) ? `
+            <!-- 1-Year Renewal Action Button -->
+            <button type="button" class="btn-dbyc-primary" style="background:#16a34a; padding:6px 12px; font-size:0.78rem; font-weight:800; border-radius:8px; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 6px rgba(22,163,74,0.3);" onclick="window.quickRenewMember('${m.id}')" title="Renew member registration for 1 full year (+1 Year Extension)">
+              🔄 Renew (+1 Yr)
+            </button>
+            <!-- Quick Photo Edit for Members -->
+            <button type="button" class="btn-dbyc-secondary" style="background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; padding:6px 10px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.quickEditMemberPhoto('${m.id}')" title="Change or update member photo">
+              📷 Photo
+            </button>
+            <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:6px 12px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.openAddMemberModal('${m.id}')" title="Edit member details and photo">
+              ✏️ Edit
+            </button>
+          ` : ''}
           <button type="button" class="btn-dbyc-primary" style="background:#0b57d0; padding:6px 12px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.viewMemberPass('${m.id}')" title="View digital QR pass">
             🪪 QR Pass
           </button>
@@ -14074,7 +14228,7 @@ function renderMembersRegistry() {
           <button type="button" class="btn-dbyc-primary" style="background:linear-gradient(135deg, #7c3aed, #4338ca); padding:6px 10px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.printCombinedPassAndForm('${m.id}')" title="Print Form + QR Pass Together on 1 Full A4 Page">
             🖪 Pass + Form Together
           </button>
-          ${(typeof window.canEdit === 'function' && window.canEdit('registration')) ? `<button type="button" class="btn-dbyc-primary" style="background:#fee2e2; color:#b91c1c; border:1px solid #fecaca; padding:6px 10px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.deleteMember('${m.id}')" title="Permanently delete member">
+          ${(typeof window.canEdit === 'function' && window.canEdit('members')) ? `<button type="button" class="btn-dbyc-primary" style="background:#fee2e2; color:#b91c1c; border:1px solid #fecaca; padding:6px 10px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.deleteMember('${m.id}')" title="Permanently delete member">
             🗑️ Delete
           </button>` : ''}
           ${approvalBtn}
@@ -14090,6 +14244,10 @@ function renderMembersRegistry() {
 
 window.deleteMember = function(memberId) {
   if (!memberId) return;
+  if (typeof window.canEdit === 'function' && !window.canEdit('members')) {
+    showToast('🔒 Member deletion is turned OFF by Rev. Fr. Director.');
+    return;
+  }
   const member = (appState.members || []).find(m => m.id === memberId);
   const memName = member ? member.name : memberId;
 
@@ -14730,56 +14888,105 @@ function renderSettingsView() {
 // TEAM LOGO EDITING & STRICT ROLE PERMISSION ENFORCEMENT
 // ==============================================================================
 
-// 1. MASTER EDITING PERMISSION STATE & CONTROLS
-// 1. GRANULAR EDIT PERMISSION STATE & CONTROLS (DIRECTOR CONTROLLED)
-window.appState.editPermissions = {
-  profile: true,
-  certificates: true,
-  passes: true,
-  registration: true
+// 1. MASTER EDITING PERMISSION STATE & CONTROLS (DIRECTOR CONTROLLED)
+const savedMasterEdit = localStorage.getItem('dbyc_master_edit_active');
+window.isMasterEditActive = (savedMasterEdit === 'true'); // Default is OFF (false)
+
+const defaultPermissions = {
+  profile: false,        // Member & Leader Profile Details Editing (Permission required)
+  passes: false,         // QR Pass Photo & Data Editing
+  members: false,        // Members Content Editing
+  officebearers: false,  // Office Bearers Editing
+  teams: false,          // Teams Content Editing (Awarding Points is independent & allowed)
+  certificates: false,   // Certificates Editing
+  registration: false    // New Member Registration
 };
 
-window.canEdit = function(feature) {
-  if (isDirectorOrAsstDirector()) return true;
-  if (typeof isLeaderOrDirector === 'function' && isLeaderOrDirector()) return true;
-  if (window.isMasterEditActive) return true;
-  const role = (window.appState && window.appState.currentUser && window.appState.currentUser.role) ? window.appState.currentUser.role.toLowerCase() : '';
-  if (role.includes('leader') || role.includes('secretary') || role.includes('president') || role.includes('captain') || role.includes('gs') || role.includes('admin') || role.includes('office')) return true;
-  if (!window.appState || !window.appState.editPermissions) return true;
+const savedPerms = localStorage.getItem('dbyc_edit_permissions');
+try {
+  window.appState.editPermissions = savedPerms ? Object.assign({}, defaultPermissions, JSON.parse(savedPerms)) : defaultPermissions;
+} catch(e) {
+  window.appState.editPermissions = defaultPermissions;
+}
+
+window.canEdit = function(feature, targetMemberId) {
+  // 1. Awarding points in teams is ALWAYS permitted for leaders and directors (explicit user exception)
+  if (feature === 'award_points' || feature === 'points' || feature === 'award') {
+    return isDirectorOrAsstDirector() || (typeof isLeaderOrDirector === 'function' && isLeaderOrDirector());
+  }
+
+  // 2. When Master Edit Control is OFF, NO ONE can edit QR passes, members content, office bearers, teams, or profile details!
+  if (!window.isMasterEditActive) {
+    return false;
+  }
+
+  // 3. When Master Edit Control is ON:
+  const p = window.appState.editPermissions || {};
+  const roleType = getUserRoleType();
+  const isAdmin = isDirectorOrAsstDirector();
+
+  // Map aliases
   let key = feature;
-  if (key === 'qr_passes') key = 'passes';
+  if (!key) return isAdmin;
+  if (key === 'qr_passes' || key === 'qr_pass') key = 'passes';
   if (key === 'new_registration') key = 'registration';
-  return window.appState.editPermissions[key] !== false;
+  if (key === 'leaders') key = 'officebearers';
+  if (key === 'my_details') key = 'profile';
+
+  // If Rev. Fr. Director or Asst Director with Edit Controls ON:
+  if (isAdmin) {
+    return true; // Rev. Fr. Director has full editing authority when Master Edit is ON
+  }
+
+  // For Youth Leaders and Members:
+  // "youth leaders and members need permition to edit even their detials"
+  if (key === 'profile') {
+    return !!p.profile; // requires explicit permission from Director
+  }
+
+  if (key === 'passes') {
+    return !!p.passes;
+  }
+
+  if (key === 'members' || key === 'registration') {
+    return (roleType === 'LEADER') && !!p.members;
+  }
+
+  if (key === 'officebearers') {
+    return (roleType === 'LEADER') && !!p.officebearers;
+  }
+
+  if (key === 'teams') {
+    return (roleType === 'LEADER') && !!p.teams;
+  }
+
+  if (key === 'certificates') {
+    return (roleType === 'LEADER') && !!p.certificates;
+  }
+
+  return false;
 };
 
-window.isMasterEditActive = false;
+window.canUserEdit = window.canEdit;
 
 window.toggleMasterEditing = function() {
+  if (!isDirectorOrAsstDirector()) {
+    showToast('⚠️ Only Rev. Fr. Director or Asst. Director can toggle Master Edit Controls.');
+    return;
+  }
   window.isMasterEditActive = !window.isMasterEditActive;
-  const icon = document.getElementById('masterEditIcon');
-  const txt = document.getElementById('masterEditText');
-  if (window.isMasterEditActive) {
-    if (icon) icon.textContent = '🔓';
-    if (txt) txt.textContent = 'Edit Mode: ON';
-    showToast('🔓 Master Edit Mode ACTIVATED for this session.');
-  } else {
-    if (icon) icon.textContent = '🛡️';
-    if (txt) txt.textContent = 'Edit Controls';
-    showToast('🔒 Master Edit Mode DEACTIVATED.');
+  localStorage.setItem('dbyc_master_edit_active', window.isMasterEditActive ? 'true' : 'false');
+  if (window.appState) {
+    window.appState.masterEditActive = window.isMasterEditActive;
   }
-  if (typeof renderCurrentActiveView === 'function') renderCurrentActiveView();
-};
 
-window.canUserEdit = function(feature) {
-  if (isDirectorOrAsstDirector()) return true;
-  if (window.isMasterEditActive) return true;
-  if (typeof isLeaderOrDirector === 'function' && isLeaderOrDirector()) return true;
-  const role = (window.appState && window.appState.currentUser && window.appState.currentUser.role) ? window.appState.currentUser.role.toLowerCase() : '';
-  if (role.includes('director') || role.includes('leader') || role.includes('admin') || role.includes('secretary') || role.includes('president') || role.includes('captain')) return true;
-  if (feature && window.appState && window.appState.editPermissions && window.appState.editPermissions[feature] !== undefined) {
-    return !!window.appState.editPermissions[feature];
+  showToast(window.isMasterEditActive ? '🔓 Master Edit Controls ACTIVATED (ON).' : '🔒 Master Edit Controls DEACTIVATED (OFF). All editing locked.');
+  window.updateMasterEditUI();
+  if (typeof applyRolePermissions === 'function') applyRolePermissions();
+  if (typeof window.renderCurrentActiveView === 'function') window.renderCurrentActiveView();
+  if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+    window.DbycCloud.pushToCloud();
   }
-  return false;
 };
 
 window.toggleEditPermission = function(feature) {
@@ -14788,24 +14995,35 @@ window.toggleEditPermission = function(feature) {
     return;
   }
   if (!window.appState.editPermissions) {
-    window.appState.editPermissions = { profile: true, certificates: true, passes: true, registration: true };
+    window.appState.editPermissions = Object.assign({}, defaultPermissions);
   }
   window.appState.editPermissions[feature] = !window.appState.editPermissions[feature];
+  localStorage.setItem('dbyc_edit_permissions', JSON.stringify(window.appState.editPermissions));
   saveLocalData();
   if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
     window.DbycCloud.pushToCloud();
   }
   window.updateEditPermissionsUI();
-  applyRolePermissions();
-  if (typeof renderCurrentActiveView === 'function') {
-    renderCurrentActiveView();
+  if (typeof applyRolePermissions === 'function') applyRolePermissions();
+  if (typeof window.renderCurrentActiveView === 'function') {
+    window.renderCurrentActiveView();
   }
-  const label = feature === 'profile' ? 'Profile' : feature === 'certificates' ? 'Certificates' : feature === 'passes' ? 'QR Passes' : 'New Registration';
+  const labels = {
+    profile: 'Profile Details',
+    passes: 'QR Passes',
+    members: 'Members Content',
+    officebearers: 'Office Bearers',
+    teams: 'Teams Content',
+    certificates: 'Certificates',
+    registration: 'New Registration'
+  };
+  const label = labels[feature] || feature;
   showToast(`🔒 ${label} Editing: ${window.appState.editPermissions[feature] ? 'ENABLED (ON)' : 'DISABLED (OFF)'}`);
 };
 
 window.updateEditPermissionsUI = function() {
-  const p = window.appState.editPermissions || { profile: true, certificates: true, passes: true, registration: true };
+  const p = window.appState.editPermissions || {};
+  const isMasterOn = !!window.isMasterEditActive;
   
   const setupBtn = (id, isOn, label) => {
     const el = document.getElementById(id);
@@ -14816,17 +15034,29 @@ window.updateEditPermissionsUI = function() {
     el.innerHTML = isOn ? `✓ ${label}: ON` : `✕ ${label}: OFF`;
   };
 
-  // Update modal buttons
-  setupBtn('toggleEditProfileBtn', p.profile, 'Profile');
-  setupBtn('toggleEditCertificatesBtn', p.certificates, 'Certificates');
-  setupBtn('toggleEditPassesBtn', p.passes, 'QR Passes');
-  setupBtn('toggleEditRegistrationBtn', p.registration, 'Registration');
+  setupBtn('toggleMasterEditBtn', isMasterOn, 'MASTER EDIT CONTROLS');
+  setupBtn('settingsToggleMasterEditBtn', isMasterOn, 'MASTER EDIT CONTROLS');
 
-  // Update Settings view buttons
-  setupBtn('settingsToggleEditProfileBtn', p.profile, 'Profile');
-  setupBtn('settingsToggleEditCertificatesBtn', p.certificates, 'Certificates');
+  setupBtn('toggleEditPassesBtn', p.passes, 'QR Passes');
   setupBtn('settingsToggleEditPassesBtn', p.passes, 'QR Passes');
-  setupBtn('settingsToggleEditRegistrationBtn', p.registration, 'Registration');
+
+  setupBtn('toggleEditMembersBtn', p.members, 'Members Content');
+  setupBtn('settingsToggleEditMembersBtn', p.members, 'Members Content');
+
+  setupBtn('toggleEditOfficeBearersBtn', p.officebearers, 'Office Bearers');
+  setupBtn('settingsToggleEditOfficeBearersBtn', p.officebearers, 'Office Bearers');
+
+  setupBtn('toggleEditTeamsBtn', p.teams, 'Teams Content');
+  setupBtn('settingsToggleEditTeamsBtn', p.teams, 'Teams Content');
+
+  setupBtn('toggleEditProfileBtn', p.profile, 'Profile Details');
+  setupBtn('settingsToggleEditProfileBtn', p.profile, 'Profile Details');
+
+  setupBtn('toggleEditCertificatesBtn', p.certificates, 'Certificates');
+  setupBtn('settingsToggleEditCertificatesBtn', p.certificates, 'Certificates');
+
+  setupBtn('toggleEditRegistrationBtn', p.registration, 'New Registration');
+  setupBtn('settingsToggleEditRegistrationBtn', p.registration, 'New Registration');
 };
 
 window.openEditPermissionsModal = function() {
@@ -14843,6 +15073,17 @@ window.updateMasterEditUI = function() {
   if (container) {
     container.style.display = isDirector ? 'flex' : 'none';
   }
+  const btn = document.getElementById('masterEditToggleBtn');
+  const icon = document.getElementById('masterEditIcon');
+  const txt = document.getElementById('masterEditText');
+  const isOn = !!window.isMasterEditActive;
+  if (btn) {
+    btn.style.background = isOn ? '#ecfdf5' : '#fef2f2';
+    btn.style.borderColor = isOn ? '#10b981' : '#ef4444';
+    btn.style.color = isOn ? '#047857' : '#b91c1c';
+  }
+  if (icon) icon.textContent = isOn ? '🔓' : '🛡️';
+  if (txt) txt.textContent = isOn ? 'Edit Controls: ON' : 'Edit Controls: OFF';
   window.updateEditPermissionsUI();
 };
 
@@ -14973,7 +15214,8 @@ function renderLeadersDashboard() {
     return;
   }
 
-  const canEdit = window.canUserEdit && window.canUserEdit();
+  const canEditLeader = (typeof window.canEdit === 'function') ? window.canEdit('officebearers') : false;
+  const canEdit = canEditLeader;
 
   container.innerHTML = filtered.map(l => {
     const photo = l.photo || window.DBYC_OFFICIAL_LOGO || 'assets/logo.png';
@@ -15040,9 +15282,9 @@ function renderLeadersDashboard() {
             <button type="button" class="btn-dbyc-primary" style="background:#004b98; padding:5px 12px; font-size:0.75rem; font-weight:800; border-radius:8px; display:inline-flex; align-items:center; gap:4px;" onclick="window.viewOfficeBearerDetails('${l.id}')">
               👁️ View Details
             </button>
-            <button type="button" class="btn-dbyc-secondary" style="background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; padding:5px 8px; font-size:0.75rem; font-weight:800; border-radius:8px;" onclick="window.quickEditLeaderPhoto('${l.id}')" title="Change Leader Photo">
+            ${canEditLeader ? `<button type="button" class="btn-dbyc-secondary" style="background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; padding:5px 8px; font-size:0.75rem; font-weight:800; border-radius:8px;" onclick="window.quickEditLeaderPhoto('${l.id}')" title="Change Leader Photo">
               📷
-            </button>
+            </button>` : ''}
             ${editBtn}
           </div>
         </div>
@@ -15052,8 +15294,8 @@ function renderLeadersDashboard() {
 }
 
 window.openEditLeaderModal = function(leaderId) {
-  if (!window.canUserEdit()) {
-    showToast('🔒 Editing is restricted. Only Rev. Fr. Director or Assistant Director can enable editing.');
+  if (typeof window.canEdit === 'function' && !window.canEdit('officebearers')) {
+    showToast('🔒 Office bearer editing is turned OFF by Rev. Fr. Director.');
     return;
   }
 
@@ -15093,6 +15335,10 @@ window.openEditLeaderModal = function(leaderId) {
 };
 
 window.handleLeaderPhotoUpload = function(event) {
+  if (typeof window.canEdit === 'function' && !window.canEdit('officebearers')) {
+    showToast('🔒 Office bearer photo editing is turned OFF by Rev. Fr. Director.');
+    return;
+  }
   const file = (event && event.target && event.target.files) ? event.target.files[0] : event;
   if (!file) return;
 
@@ -15124,6 +15370,10 @@ window.handleLeaderPhotoUpload = function(event) {
 };
 
 window.removeLeaderPhoto = function() {
+  if (typeof window.canEdit === 'function' && !window.canEdit('officebearers')) {
+    showToast('🔒 Office bearer photo editing is turned OFF by Rev. Fr. Director.');
+    return;
+  }
   window.capturedLeaderPhotoBase64 = '';
   const previewImg = document.getElementById('leaderPhotoPreviewImg');
   if (previewImg) previewImg.src = window.DBYC_OFFICIAL_LOGO || 'assets/logo.png';
@@ -15172,8 +15422,8 @@ window.triggerLiveLeaderCamera = function() {
 
 window.saveLeaderProfileSubmit = function(event) {
   if (event) event.preventDefault();
-  if (!window.canUserEdit()) {
-    showToast('🔒 Only authorized Directors can save leader updates.');
+  if (typeof window.canEdit === 'function' && !window.canEdit('officebearers')) {
+    showToast('🔒 Office bearer editing is turned OFF by Rev. Fr. Director.');
     return;
   }
 
@@ -15260,8 +15510,8 @@ window.saveLeaderProfileSubmit = function(event) {
 window.capturedTeamLogoBase64 = '';
 
 window.openEditTeamModal = function(teamId) {
-  if (!window.canUserEdit()) {
-    showToast('🔒 Team details can only be edited by Rev. Fr. Director or Assistant Director.');
+  if (typeof window.canEdit === 'function' && !window.canEdit('teams')) {
+    showToast('🔒 Team details editing is turned OFF by Rev. Fr. Director.');
     return;
   }
 
@@ -15292,6 +15542,10 @@ window.openEditTeamModal = function(teamId) {
 };
 
 window.handleTeamLogoUpload = function(event) {
+  if (typeof window.canEdit === 'function' && !window.canEdit('teams')) {
+    showToast('🔒 Team logo editing is turned OFF by Rev. Fr. Director.');
+    return;
+  }
   const file = (event && event.target && event.target.files) ? event.target.files[0] : event;
   if (!file) return;
 
@@ -15323,6 +15577,10 @@ window.handleTeamLogoUpload = function(event) {
 };
 
 window.removeTeamLogo = function() {
+  if (typeof window.canEdit === 'function' && !window.canEdit('teams')) {
+    showToast('🔒 Team logo editing is turned OFF by Rev. Fr. Director.');
+    return;
+  }
   window.capturedTeamLogoBase64 = '';
   const previewImg = document.getElementById('teamEmblemPreviewImg');
   if (previewImg) previewImg.src = window.DBYC_OFFICIAL_LOGO || 'assets/logo.png';
@@ -15341,8 +15599,8 @@ window.triggerLiveTeamCamera = function() {
 function setupEditTeamFormSubmit() {
   document.getElementById('editTeamForm')?.addEventListener('submit', function(e) {
     e.preventDefault();
-    if (!window.canUserEdit()) {
-      showToast('🔒 Editing restricted to Directors.');
+    if (typeof window.canEdit === 'function' && !window.canEdit('teams')) {
+      showToast('🔒 Team editing is turned OFF by Rev. Fr. Director.');
       return;
     }
 
@@ -15399,16 +15657,24 @@ function renderTeamsView() {
   teams.sort((a, b) => b.points - a.points);
   teams.forEach((t, i) => { t.rank = i + 1; });
 
-  const canEdit = window.canUserEdit();
+  const canAwardPoints = (typeof window.canEdit === 'function') ? window.canEdit('award_points') : false;
+  const canEditTeams = (typeof window.canEdit === 'function') ? window.canEdit('teams') : false;
 
   if (cardsContainer) {
     cardsContainer.innerHTML = teams.map(t => {
       const count = (window.appState.members || []).filter(m => m.team === t.id).length;
       const teamLogo = t.logo || window.DBYC_OFFICIAL_LOGO || 'assets/logo.png';
-      const editTeamBtn = canEdit
+      
+      const awardBtnHtml = canAwardPoints
+        ? `<button type="button" class="btn-dbyc-primary" style="background:#f59e0b; color:#0f172a; padding:5px 10px; font-size:0.75rem; font-weight:800; border-radius:8px; cursor:pointer;" onclick="window.openAwardPointsModal('${t.id}')" title="Award or deduct points">⚡ Award (+/-)</button>`
+        : '';
+      const editTeamBtnHtml = canEditTeams
+        ? `<button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:5px 10px; font-size:0.75rem; font-weight:800; border-radius:8px; cursor:pointer;" onclick="window.openEditTeamModal('${t.id}')" title="Edit team total points, name & emblem">✏️ Edit Points</button>`
+        : '';
+      const editTeamBtn = (awardBtnHtml || editTeamBtnHtml)
         ? `<div style="display:flex; justify-content:center; gap:6px; margin-top:10px; flex-wrap:wrap;">
-             <button type="button" class="btn-dbyc-primary" style="background:#f59e0b; color:#0f172a; padding:5px 10px; font-size:0.75rem; font-weight:800; border-radius:8px; cursor:pointer;" onclick="window.openAwardPointsModal('${t.id}')" title="Award or deduct points">⚡ Award (+/-)</button>
-             <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:5px 10px; font-size:0.75rem; font-weight:800; border-radius:8px; cursor:pointer;" onclick="window.openEditTeamModal('${t.id}')" title="Edit team total points, name & emblem">✏️ Edit Points</button>
+             ${awardBtnHtml}
+             ${editTeamBtnHtml}
            </div>`
         : '';
 
@@ -16240,17 +16506,23 @@ window.DbycGoogleDriveServerStorage = {
       }
       if (window.appState) window.appState.gasUrl = this.backendUrl;
 
-      // Prepopulate input fields if already in DOM
+      // Prepopulate input fields ONLY for Director
+      const isDir = (typeof isDirectorOnly === 'function' && isDirectorOnly()) || (typeof isDirectorUser === 'function' && isDirectorUser());
       const gasIn1 = document.getElementById('gasEndpointInput');
       const gasIn2 = document.getElementById('modalGasEndpointInput');
-      if (gasIn1) gasIn1.value = this.backendUrl;
-      if (gasIn2) gasIn2.value = this.backendUrl;
+      if (isDir) {
+        if (gasIn1) gasIn1.value = this.backendUrl;
+        if (gasIn2) gasIn2.value = this.backendUrl;
+      } else {
+        if (gasIn1) gasIn1.value = '';
+        if (gasIn2) gasIn2.value = '';
+      }
 
       this.initBroadcastSync();
 
       // Immediate auto-pull from Google Drive on app startup
       this.isConnected = true;
-      this.updateStatusUI('connected', 'Google Drive Live (Auto)');
+      this.updateStatusUI('connected', isDir ? 'Google Drive Live (Auto)' : 'DBYC Cloud Live (Auto)');
       setTimeout(() => {
         this.pullLatestFromCloud(true);
       }, 600);
@@ -16338,17 +16610,19 @@ window.DbycGoogleDriveServerStorage = {
         this.isSyncing = false;
         this.lastSyncTime = new Date();
         this.isConnected = true;
+        const isDir = (typeof isDirectorUser === 'function') ? isDirectorUser() : false;
         const timeStr = this.lastSyncTime.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-        this.updateStatusUI('connected', 'Google Drive Live (' + timeStr + ')');
+        this.updateStatusUI('connected', isDir ? ('Google Drive Live (' + timeStr + ')') : ('DBYC Cloud Live (' + timeStr + ')'));
         if (showToastNotice && typeof showToast === 'function') {
-          showToast('☁️ Auto-synced to Google Drive successfully!');
+          showToast(isDir ? '☁️ Auto-synced to Google Drive successfully!' : '☁️ Synced to DBYC Cloud successfully!');
         }
       }).catch(err => {
         this.isSyncing = false;
-        console.warn('Google Drive sync error:', err);
+        const isDir = (typeof isDirectorUser === 'function') ? isDirectorUser() : false;
+        console.warn('DBYC Cloud sync note:', err);
         this.updateStatusUI('connected', 'Saved Locally (Sync Pending)');
         if (showToastNotice && typeof showToast === 'function') {
-          showToast('ℹ️ Saved locally. Will push to Google Drive when online.');
+          showToast(isDir ? 'ℹ️ Saved locally. Will push to Google Drive when online.' : 'ℹ️ Saved locally. Will sync to cloud when online.');
         }
       });
       return;
@@ -16375,7 +16649,10 @@ window.DbycGoogleDriveServerStorage = {
       return;
     }
 
-    if (!silent && typeof showToast === 'function') showToast('📥 Syncing latest data from Google Drive...');
+    const isDir = (typeof isDirectorUser === 'function') ? isDirectorUser() : false;
+    if (!silent && typeof showToast === 'function') {
+      showToast(isDir ? '📥 Syncing latest data from Google Drive...' : '📥 Syncing latest data from DBYC Cloud...');
+    }
     this.updateStatusUI('syncing', 'Syncing...');
 
     const fetchUrl = endpoint + (endpoint.includes('?') ? '&' : '?') + 'action=SYNC_GET&_ts=' + Date.now();
@@ -16389,12 +16666,16 @@ window.DbycGoogleDriveServerStorage = {
           this.lastSyncTime = new Date();
           this.isConnected = true;
           const timeStr = this.lastSyncTime.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-          this.updateStatusUI('connected', 'Google Drive Live (' + timeStr + ')');
-          if (!silent && typeof showToast === 'function') showToast('✅ Google Drive database synchronized!');
+          this.updateStatusUI('connected', isDir ? ('Google Drive Live (' + timeStr + ')') : ('DBYC Cloud Live (' + timeStr + ')'));
+          if (!silent && typeof showToast === 'function') {
+            showToast(isDir ? '✅ Google Drive database synchronized!' : '✅ DBYC Cloud database synchronized!');
+          }
         } else {
           this.isConnected = true;
-          this.updateStatusUI('connected', 'Google Drive Ready');
-          if (!silent && typeof showToast === 'function') showToast('ℹ️ Google Drive storage is online.');
+          this.updateStatusUI('connected', isDir ? 'Google Drive Ready' : 'DBYC Cloud Ready');
+          if (!silent && typeof showToast === 'function') {
+            showToast(isDir ? 'ℹ️ Google Drive storage is online.' : 'ℹ️ DBYC Cloud storage is online.');
+          }
         }
       })
       .catch(err => {
@@ -16586,6 +16867,7 @@ window.DbycGoogleDriveServerStorage = {
   },
 
   updateStatusUI: function(state, text) {
+    const isDir = (typeof isDirectorUser === 'function') ? isDirectorUser() : false;
     const dot = document.getElementById('cloudStatusDot');
     const label = document.getElementById('cloudStatusText');
     const btn = document.getElementById('cloudSyncStatusBtn');
@@ -16594,11 +16876,15 @@ window.DbycGoogleDriveServerStorage = {
     const modalSub = document.getElementById('modalCloudLastSync');
     const modalBadge = document.getElementById('modalStorageStatusBadge');
 
-    if (label) label.textContent = text;
-    if (modalHead) modalHead.textContent = '☁️ ' + text;
-    if (modalBadge) modalBadge.textContent = 'Google Drive Storage: ' + text;
-    if (modalSub && this.lastSyncTime) {
-      modalSub.textContent = 'Auto-synced at ' + this.lastSyncTime.toLocaleTimeString() + ' (Google Drive Backend)';
+    const safeLabel = isDir ? text : String(text || '').replace(/Google Drive/gi, 'DBYC Cloud').replace(/Apps Script/gi, 'Server');
+
+    if (label) label.textContent = safeLabel;
+    if (isDir) {
+      if (modalHead) modalHead.textContent = '☁️ ' + text;
+      if (modalBadge) modalBadge.textContent = 'Google Drive Storage: ' + text;
+      if (modalSub && this.lastSyncTime) {
+        modalSub.textContent = 'Auto-synced at ' + this.lastSyncTime.toLocaleTimeString() + ' (Google Drive Backend)';
+      }
     }
 
     const color = (state === 'connected') ? '#10b981' : (state === 'syncing') ? '#f59e0b' : '#3b82f6';
@@ -16610,7 +16896,10 @@ window.DbycGoogleDriveServerStorage = {
       modalDot.style.background = color;
       modalDot.style.boxShadow = '0 0 10px ' + color;
     }
-    if (btn) btn.style.borderColor = color;
+    if (btn) {
+      btn.style.display = isDir ? 'inline-flex' : 'none';
+      btn.style.borderColor = color;
+    }
 
     // Update stats counters
     const mCount = document.getElementById('cloudStatsMembers');
@@ -16849,7 +17138,8 @@ window.renderOfficeBearersDashboard = function() {
     return;
   }
 
-  const canEdit = true; // Full editing enabled for all office bearers
+  const canEditOB = (typeof window.canEdit === 'function') ? window.canEdit('officebearers') : false;
+  const canEdit = canEditOB;
 
   container.innerHTML = filtered.map(l => {
     const photo = l.photo || window.DBYC_OFFICIAL_LOGO || window.DBYC_DEFAULT_AVATAR;
@@ -16876,7 +17166,7 @@ window.renderOfficeBearersDashboard = function() {
 
         <div style="padding:14px; flex:1;">
           <div style="display:flex; gap:12px; align-items:flex-start;">
-            <img src="${photo}" alt="${l.name}" style="width:64px; height:64px; border-radius:50%; object-fit:cover; border:2.5px solid ${catBg}; box-shadow:0 2px 8px rgba(0,0,0,0.15); flex-shrink:0; cursor:pointer; background:#f8fafc;" onclick="window.quickEditLeaderPhoto('${l.id}')" title="Tap to change or upload photo">
+            <img src="${photo}" alt="${l.name}" style="width:64px; height:64px; border-radius:50%; object-fit:cover; border:2.5px solid ${catBg}; box-shadow:0 2px 8px rgba(0,0,0,0.15); flex-shrink:0; cursor:pointer; background:#f8fafc;" onclick="${canEditOB ? `window.quickEditLeaderPhoto('${l.id}')` : `window.viewOfficeBearerDetails('${l.id}')`}" title="${canEditOB ? 'Tap to change or upload photo' : 'View Office Bearer Dossier'}">
             <div style="flex:1;">
               <h3 style="font-size:1.05rem; font-weight:900; color:#0f172a; margin:0 0 2px;">${l.name}</h3>
               <div style="display:inline-block; background:#eff6ff; color:#004b98; border:1px solid #bfdbfe; font-size:0.75rem; font-weight:800; padding:2px 8px; border-radius:6px; margin-bottom:4px;">
@@ -16915,10 +17205,10 @@ window.renderOfficeBearersDashboard = function() {
             <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:6px; display:inline-flex; align-items:center; gap:3px;" onclick="window.viewOfficeBearerDetails('${l.id}')" title="View Full Office Bearer Dossier">
               👁️ View Details
             </button>
-            <!-- Edit Photo Button for All Office Bearers -->
-            <button type="button" class="btn-dbyc-secondary" style="background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:6px; display:inline-flex; align-items:center; gap:3px;" onclick="window.quickEditMemberPhoto('${targetMemberId}')" title="Change or update photo">
+            <!-- Edit Photo Button for Office Bearers -->
+            ${canEditOB ? `<button type="button" class="btn-dbyc-secondary" style="background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:6px; display:inline-flex; align-items:center; gap:3px;" onclick="window.quickEditMemberPhoto('${targetMemberId}')" title="Change or update photo">
               📷 Photo
-            </button>
+            </button>` : ''}
             <!-- QR Pass & Form Print Buttons -->
             <button type="button" class="btn-dbyc-primary" style="background:#0b57d0; padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:6px;" onclick="window.downloadMemberPassPdf('${targetMemberId}')" title="Download QR Pass">
               🪪 Pass
@@ -16968,6 +17258,13 @@ window.renderCurrentActiveView = function() {
 };
 
 window.openCloudSyncModal = function() {
+  const isDir = (typeof isDirectorUser === 'function' && isDirectorUser()) || (typeof isDirectorOnly === 'function' && isDirectorOnly()) || (typeof getUserRoleType === 'function' && getUserRoleType() === 'DIRECTOR');
+  if (!isDir) {
+    if (typeof showToast === 'function') {
+      showToast('🔒 Confidential System Manager: Accessible exclusively by Rev. Fr. Director.');
+    }
+    return;
+  }
   const modal = document.getElementById('cloudSyncModal');
   if (modal) modal.style.display = 'flex';
   
@@ -16984,9 +17281,17 @@ window.openCloudSyncModal = function() {
 window.closeCloudSyncModal = function() {
   const modal = document.getElementById('cloudSyncModal');
   if (modal) modal.style.display = 'none';
+  // Clear modal input value on close so it never sits in memory
+  const gasInput = document.getElementById('modalGasEndpointInput');
+  if (gasInput) gasInput.value = '';
 };
 
 window.saveStorageEndpoints = function() {
+  const isDir = (typeof isDirectorUser === 'function' && isDirectorUser()) || (typeof isDirectorOnly === 'function' && isDirectorOnly()) || (typeof getUserRoleType === 'function' && getUserRoleType() === 'DIRECTOR');
+  if (!isDir) {
+    if (typeof showToast === 'function') showToast('🔒 Unauthorized: Only Rev. Fr. Director can modify cloud backend endpoints.');
+    return;
+  }
   const in1 = document.getElementById('gasEndpointInput');
   const in2 = document.getElementById('modalGasEndpointInput');
   const url = (in1 && in1.value.trim()) || (in2 && in2.value.trim()) || window.DBYC_MASTER_BACKEND_URL;
@@ -17006,6 +17311,11 @@ window.saveStorageEndpoints = function() {
 };
 
 window.exportForGoogleDrive = function() {
+  const isDir = (typeof isDirectorUser === 'function' && isDirectorUser()) || (typeof isDirectorOnly === 'function' && isDirectorOnly()) || (typeof getUserRoleType === 'function' && getUserRoleType() === 'DIRECTOR');
+  if (!isDir) {
+    if (typeof showToast === 'function') showToast('🔒 Unauthorized: Cloud database export is restricted to Rev. Fr. Director.');
+    return;
+  }
   const payload = {
     system: "Don Bosco Youth Centre Basin Bridge, Chennai - 600 012",
     storageType: "Google Drive Backup Archive",
@@ -17040,6 +17350,11 @@ window.exportForGoogleDrive = function() {
 };
 
 window.importFromGoogleDriveFile = function(event) {
+  const isDir = (typeof isDirectorUser === 'function' && isDirectorUser()) || (typeof isDirectorOnly === 'function' && isDirectorOnly()) || (typeof getUserRoleType === 'function' && getUserRoleType() === 'DIRECTOR');
+  if (!isDir) {
+    if (typeof showToast === 'function') showToast('🔒 Unauthorized: Cloud database restore is restricted to Rev. Fr. Director.');
+    return;
+  }
   const file = event && event.target && event.target.files && event.target.files[0];
   if (!file) return;
   const reader = new FileReader();
@@ -17062,6 +17377,11 @@ window.importFromGoogleDriveFile = function(event) {
 };
 
 window.copyGoogleDriveScript = function() {
+  const isDir = (typeof isDirectorUser === 'function' && isDirectorUser()) || (typeof isDirectorOnly === 'function' && isDirectorOnly()) || (typeof getUserRoleType === 'function' && getUserRoleType() === 'DIRECTOR');
+  if (!isDir) {
+    if (typeof showToast === 'function') showToast('🔒 Confidential: Backend script is restricted to Rev. Fr. Director.');
+    return;
+  }
   const codeBox = document.getElementById('googleDriveScriptCodeText');
   if (codeBox) {
     codeBox.select();
@@ -17081,13 +17401,49 @@ window.directRoleLogin = function(roleType) {
   const members = appState.members || [];
 
   if (roleType === 'DIRECTOR') {
-    member = members.find(m => (m.role || '').toLowerCase().includes('director') && !(m.role || '').toLowerCase().includes('asst')) || members[0];
+    member = members.find(m => {
+      const r = (m.role || '').toLowerCase();
+      return r.includes('director') && !r.includes('asst');
+    }) || members[0];
   } else if (roleType === 'ASST_DIRECTOR') {
-    member = members.find(m => (m.role || '').toLowerCase().includes('asst')) || members[1] || members[0];
+    member = members.find(m => {
+      const r = (m.role || '').toLowerCase();
+      return r.includes('asst') || r.includes('assistant');
+    }) || members[1] || members[0];
   } else if (roleType === 'LEADER') {
-    member = members.find(m => (m.role || '').toLowerCase().includes('leader') || (m.role || '').toLowerCase().includes('incharge')) || members[3] || members[0];
+    member = members.find(m => {
+      const r = (m.role || '').toLowerCase();
+      const g = (m.group || '').toLowerCase();
+      return !r.includes('director') && (r.includes('leader') || r.includes('secretary') || r.includes('gs') || r.includes('captain') || r.includes('animator') || g.includes('leader'));
+    });
+    if (!member) {
+      member = {
+        id: 'DBYC-LDR-001',
+        name: 'Antony Cruz (Youth Leader)',
+        role: 'Youth Leader',
+        group: 'Green Warriors',
+        mobile: '9840123456',
+        email: 'leader@dbyc.org',
+        pin: '2026'
+      };
+    }
   } else {
-    member = members.find(m => (m.role || '').toLowerCase() === 'member') || members[2] || members[0];
+    member = members.find(m => {
+      const r = (m.role || '').toLowerCase();
+      const g = (m.group || '').toLowerCase();
+      return !r.includes('director') && !r.includes('leader') && !r.includes('secretary') && !r.includes('gs') && !g.includes('leader');
+    });
+    if (!member) {
+      member = {
+        id: 'DBYC-MBR-001',
+        name: 'Stephen Paul (Member)',
+        role: 'Member',
+        group: 'Sub Juniors Group',
+        mobile: '9840999888',
+        email: 'member@dbyc.org',
+        pin: '1234'
+      };
+    }
   }
 
   if (!member) {
@@ -17191,7 +17547,10 @@ window.enterAppAs = function(roleType) {
   const members = appState.members || [];
 
   if (roleType === 'DIRECTOR') {
-    member = members.find(m => (m.role || '').toLowerCase().includes('director') && !(m.role || '').toLowerCase().includes('asst')) || members[0];
+    member = members.find(m => {
+      const r = (m.role || '').toLowerCase();
+      return r.includes('director') && !r.includes('asst');
+    }) || members[0];
     if (!member) {
       member = {
         id: 'DBYC-DIR-001',
@@ -17204,7 +17563,10 @@ window.enterAppAs = function(roleType) {
       };
     }
   } else if (roleType === 'ASST_DIRECTOR') {
-    member = members.find(m => (m.role || '').toLowerCase().includes('asst')) || members[1] || members[0];
+    member = members.find(m => {
+      const r = (m.role || '').toLowerCase();
+      return r.includes('asst') || r.includes('assistant');
+    }) || members[1] || members[0];
     if (!member) {
       member = {
         id: 'DBYC-ASST-001',
@@ -17217,7 +17579,11 @@ window.enterAppAs = function(roleType) {
       };
     }
   } else if (roleType === 'LEADER') {
-    member = members.find(m => (m.role || '').toLowerCase().includes('leader') || (m.role || '').toLowerCase().includes('incharge')) || members[3] || members[0];
+    member = members.find(m => {
+      const r = (m.role || '').toLowerCase();
+      const g = (m.group || '').toLowerCase();
+      return !r.includes('director') && (r.includes('leader') || r.includes('secretary') || r.includes('gs') || r.includes('captain') || r.includes('animator') || g.includes('leader'));
+    });
     if (!member) {
       member = {
         id: 'DBYC-LDR-001',
@@ -17230,7 +17596,11 @@ window.enterAppAs = function(roleType) {
       };
     }
   } else {
-    member = members.find(m => (m.role || '').toLowerCase() === 'member') || members[2] || members[0];
+    member = members.find(m => {
+      const r = (m.role || '').toLowerCase();
+      const g = (m.group || '').toLowerCase();
+      return !r.includes('director') && !r.includes('leader') && !r.includes('secretary') && !r.includes('gs') && !g.includes('leader');
+    });
     if (!member) {
       member = {
         id: 'DBYC-MBR-001',
@@ -17343,6 +17713,18 @@ function showMainApp() {
   } else {
     if (alertBox) alertBox.style.display = 'none';
     if (masterBanner) masterBanner.style.display = 'none';
+  }
+
+  // Enforce role-based access control and confidentiality immediately
+  if (typeof applyRolePermissions === 'function') {
+    applyRolePermissions();
+  }
+
+  if (window.DbycGoogleDriveServerStorage && typeof window.DbycGoogleDriveServerStorage.updateStatusUI === 'function') {
+    window.DbycGoogleDriveServerStorage.updateStatusUI(
+      window.DbycGoogleDriveServerStorage.isConnected ? 'connected' : 'local',
+      window.DbycGoogleDriveServerStorage.isConnected ? 'Cloud Live' : 'Local Ready'
+    );
   }
 
   if (typeof switchView === 'function') {
@@ -18118,21 +18500,28 @@ window.viewOfficeBearerDetails = function(leaderId) {
     if (passBtn) passBtn.style.display = 'none';
   }
 
+  const canEditOB = (typeof window.canEdit === 'function') ? window.canEdit('officebearers') : false;
+
   const editPhotoBtn = document.getElementById('obDetailEditPhotoBtn');
   if (editPhotoBtn) {
-    editPhotoBtn.onclick = function() {
-      window.closeOfficeBearerDetailModal();
-      if (linkedMem) {
-        window.quickEditMemberPhoto(linkedMem.id);
-      } else {
-        window.quickEditLeaderPhoto(ldr.id);
-      }
-    };
+    if (canEditOB) {
+      editPhotoBtn.style.display = 'inline-block';
+      editPhotoBtn.onclick = function() {
+        window.closeOfficeBearerDetailModal();
+        if (linkedMem) {
+          window.quickEditMemberPhoto(linkedMem.id);
+        } else {
+          window.quickEditLeaderPhoto(ldr.id);
+        }
+      };
+    } else {
+      editPhotoBtn.style.display = 'none';
+    }
   }
 
   const editProfileBtn = document.getElementById('obDetailEditProfileBtn');
   if (editProfileBtn) {
-    if (window.canUserEdit && window.canUserEdit()) {
+    if (canEditOB) {
       editProfileBtn.style.display = 'inline-block';
       editProfileBtn.onclick = function() {
         window.closeOfficeBearerDetailModal();
@@ -18155,6 +18544,26 @@ window.closeOfficeBearerDetailModal = function() {
 window.tempQuickPhotoBase64 = '';
 
 window.quickEditMemberPhoto = function(memberId) {
+  const isSelf = window.appState.currentUser && (window.appState.currentUser.id === memberId);
+  const isLeader = (window.appState.leaders || []).some(l => l.id === memberId || (l.memberId && l.memberId === memberId));
+  
+  if (isSelf) {
+    if (typeof window.canEdit === 'function' && !window.canEdit('profile')) {
+      showToast('🔒 You need permission from Rev. Fr. Director to update your profile photo.');
+      return;
+    }
+  } else if (isLeader) {
+    if (typeof window.canEdit === 'function' && !window.canEdit('officebearers')) {
+      showToast('🔒 Office bearer photo editing is turned OFF by Rev. Fr. Director.');
+      return;
+    }
+  } else {
+    if (typeof window.canEdit === 'function' && !window.canEdit('members')) {
+      showToast('🔒 Member photo editing is turned OFF by Rev. Fr. Director.');
+      return;
+    }
+  }
+
   const members = window.appState.members || [];
   const leaders = window.appState.leaders || window.DBYC_OFFICIAL_LEADERS_SEED || [];
   let m = members.find(x => x.id === memberId);
@@ -18182,6 +18591,19 @@ window.quickEditMemberPhoto = function(memberId) {
 };
 
 window.quickEditLeaderPhoto = function(leaderId) {
+  const isSelf = window.appState.currentUser && (window.appState.currentUser.id === leaderId);
+  if (isSelf) {
+    if (typeof window.canEdit === 'function' && !window.canEdit('profile') && !window.canEdit('officebearers')) {
+      showToast('🔒 You need permission from Rev. Fr. Director to update your photo.');
+      return;
+    }
+  } else {
+    if (typeof window.canEdit === 'function' && !window.canEdit('officebearers')) {
+      showToast('🔒 Office bearer photo editing is turned OFF by Rev. Fr. Director.');
+      return;
+    }
+  }
+
   const leaders = window.appState.leaders || [];
   const l = leaders.find(x => x.id === leaderId);
   if (!l) {
@@ -19118,6 +19540,26 @@ window.syncLeadersWithMembers = function() {
 
 // 3. EDIT PHOTO FOR ALL MEMBERS (PHOTO PORTAL EDIT OPTION)
 window.quickEditMemberPhoto = function(memberId) {
+  const isSelf = window.appState.currentUser && (window.appState.currentUser.id === memberId);
+  const isLeader = (window.appState.leaders || []).some(l => l.id === memberId || (l.memberId && l.memberId === memberId));
+  
+  if (isSelf) {
+    if (typeof window.canEdit === 'function' && !window.canEdit('profile')) {
+      showToast('🔒 You need permission from Rev. Fr. Director to update your profile photo.');
+      return;
+    }
+  } else if (isLeader) {
+    if (typeof window.canEdit === 'function' && !window.canEdit('officebearers')) {
+      showToast('🔒 Office bearer photo editing is turned OFF by Rev. Fr. Director.');
+      return;
+    }
+  } else {
+    if (typeof window.canEdit === 'function' && !window.canEdit('members')) {
+      showToast('🔒 Member photo editing is turned OFF by Rev. Fr. Director.');
+      return;
+    }
+  }
+
   const members = window.appState.members || [];
   const leaders = window.appState.leaders || [];
 
@@ -19700,11 +20142,21 @@ const origRenderSettings = window.renderSettingsView;
 window.renderSettingsView = function() {
   if (typeof origRenderSettings === 'function') origRenderSettings();
 
-  // 1. Populate URL in input box
+  const isDir = (typeof isDirectorUser === 'function') ? isDirectorUser() : false;
+  const cloudCard = document.getElementById('settingsCloudSyncCard');
+  if (cloudCard) {
+    cloudCard.style.display = isDir ? 'block' : 'none';
+  }
+
+  // 1. Populate URL in input box (STRICTLY DIRECTOR ONLY)
   const gasIn = document.getElementById('gasEndpointInput');
-  const storedUrl = localStorage.getItem('dbyc_backend_url') || localStorage.getItem('dbyc_gas_url') || window.DBYC_MASTER_BACKEND_URL;
-  if (gasIn && storedUrl) {
-    gasIn.value = storedUrl;
+  if (isDir) {
+    const storedUrl = localStorage.getItem('dbyc_backend_url') || localStorage.getItem('dbyc_gas_url') || window.DBYC_MASTER_BACKEND_URL;
+    if (gasIn && storedUrl) {
+      gasIn.value = storedUrl;
+    }
+  } else {
+    if (gasIn) gasIn.value = '';
   }
 
   // 2. Update Edit Permissions UI switches
@@ -19733,9 +20185,9 @@ window.renderSettingsView = function() {
     pinBadge.textContent = customPin ? '🔒 Custom Director PIN Active' : '🔒 Official Director PIN (1815) Active';
   }
 
-  // 6. Update Code.gs text in copy box
+  // 6. Update Code.gs text in copy box (STRICTLY DIRECTOR ONLY)
   const codeBox = document.getElementById('googleDriveScriptCodeText');
-  if (codeBox) {
+  if (codeBox && isDir) {
     codeBox.value = `/**
  * Don Bosco Youth Centre (DBYC) Basin Bridge - Google Drive Cloud Backend
  * File: Code.gs
@@ -19895,6 +20347,8 @@ function doGet(e) {
     })).setMimeType(ContentService.MimeType.JSON);
   }
 }`;
+  } else if (codeBox) {
+    codeBox.value = '';
   }
 };
 
@@ -19930,6 +20384,10 @@ window.compressImageFile = function(file, maxWidth, quality, callback) {
 };
 
 window.handleProfilePhotoUpload = function(event) {
+  if (typeof window.canEdit === 'function' && !window.canEdit('profile')) {
+    showToast('🔒 You need permission from Rev. Fr. Director to change your profile photo.');
+    return;
+  }
   const file = (event && event.target && event.target.files) ? event.target.files[0] : event;
   if (!file) return;
 

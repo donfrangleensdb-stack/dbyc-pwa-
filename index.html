@@ -5313,9 +5313,7 @@ body {
               </button>
             </div>
 
-            <input type="file" id="formOcrCamInput" accept="image/*" capture="environment" style="display:none;" onchange="window.handleFormOcrScan(event);">
-            <input type="file" id="formOcrFileInput" accept="image/*" style="display:none;" onchange="window.handleFormOcrScan(event);">
-            <div id="formOcrStatus" style="display:none; margin-top:10px; font-size:0.8rem; font-weight:700; color:#14532d; background:#ffffff; padding:8px 12px; border-radius:8px; border:1px solid #86efac;"></div>
+            <!-- Duplicate OCR inputs removed to guarantee unique DOM IDs and prevent element collision -->
           </div>
         </div>
       </form>
@@ -6414,7 +6412,7 @@ body {
           <div id="googleVerifyOtpError" class="google-input-error-msg"></div>
 
           <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
-            <button type="button" class="google-btn-link" id="resendOtpBtn" onclick="window.resendGoogleOtp();">
+            <button type="button" class="google-btn-link" id="googleResendOtpBtn" onclick="window.resendGoogleOtp();">
               🔄 Resend Code
             </button>
             <button type="submit" id="btnVerifyGoogleOtp" class="google-btn-primary" style="padding:10px 24px;">
@@ -6595,14 +6593,30 @@ window.calculateTenure = function(joinDateOrYears) {
   return '1 Year';
 };
 
+let lastToastText = '';
+let lastToastTime = 0;
+
 window.showToast = function(msg, duration = 3000) {
   try {
+    const now = Date.now();
+    // Block duplicate toast popups within 2000ms
+    if (msg === lastToastText && (now - lastToastTime) < 2000) {
+      return;
+    }
+    lastToastText = msg;
+    lastToastTime = now;
+
     let container = document.getElementById('dbycToastContainer');
     if (!container) {
       container = document.createElement('div');
       container.id = 'dbycToastContainer';
       container.style.cssText = 'position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:99999; display:flex; flex-direction:column; gap:8px; pointer-events:none; align-items:center; max-width:90%; width:auto;';
       document.body.appendChild(container);
+    }
+
+    // Limit active visible toasts in container to maximum 2 (prevents stacking & duplicate popups)
+    while (container.children.length >= 2) {
+      container.removeChild(container.firstChild);
     }
 
     const toast = document.createElement('div');
@@ -6621,6 +6635,27 @@ window.showToast = function(msg, duration = 3000) {
     console.log('Toast:', msg);
   }
 };
+
+// Universal Modal Coordinator: Close all open modals to prevent duplicate backdrop stacking
+window.closeAllModals = function() {
+  document.querySelectorAll('.modal-backdrop, .modal, .dbyc-modal').forEach(m => {
+    m.style.display = 'none';
+  });
+};
+
+// Global click dismiss on backdrop
+document.addEventListener('click', function(e) {
+  if (e.target && e.target.classList && e.target.classList.contains('modal-backdrop')) {
+    e.target.style.display = 'none';
+  }
+});
+
+// Global escape key dismiss
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    window.closeAllModals();
+  }
+});
 
 let appState = window.appState = {
   currentLang: 'en',
@@ -7523,6 +7558,10 @@ function applyRolePermissions() {
   const canAwardPoints = (typeof window.canEdit === 'function') ? window.canEdit('award_points') : false;
   const awardTopBtn = document.getElementById('openAwardPointsTopBtn');
   if (awardTopBtn) awardTopBtn.style.display = canAwardPoints ? 'inline-flex' : 'none';
+
+  if (window.DbycGoogleDriveServerStorage && typeof window.DbycGoogleDriveServerStorage.scheduleNextAdaptivePoll === 'function') {
+    window.DbycGoogleDriveServerStorage.scheduleNextAdaptivePoll();
+  }
 }
 
 window.applyRolePermissions = applyRolePermissions;
@@ -8316,11 +8355,46 @@ function showMainApp() {
 }
 
 function logout() {
+  if (window.loginTransitionTimer) {
+    clearTimeout(window.loginTransitionTimer);
+    window.loginTransitionTimer = null;
+  }
+  // 1. Clear session keys, saved tokens and role credentials
   localStorage.removeItem(DBYC_USER);
   localStorage.removeItem('dbyc_active_session');
   localStorage.removeItem('dbyc_saved_session');
+  localStorage.removeItem('dbyc_current_role');
+  try { sessionStorage.clear(); } catch(e) {}
+
+  // 2. Lock down editing permissions and reset active user state
   appState.currentUser = null;
-  showToast('🔒 Logged out successfully.');
+  window.isMasterEditActive = false;
+  if (window.appState) {
+    window.appState.masterEditActive = false;
+  }
+  localStorage.setItem('dbyc_master_edit_active', 'false');
+
+  // 3. Clear sensitive credentials from all login input fields
+  const inputsToClear = ['loginPasswordInput', 'securityPinInput', 'rolePhoneInput', 'otpMobileInput', 'otpCodeInput', 'loginMemberIdInput'];
+  inputsToClear.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.value = ''; el.style.borderColor = ''; }
+  });
+
+  // 4. Force-close all open modals and popups
+  window.closeAllModals();
+
+  // 5. Hide error and success banners
+  const errEl = document.getElementById('loginErrorMessage');
+  const succEl = document.getElementById('loginSuccessMessage');
+  if (errEl) errEl.style.display = 'none';
+  if (succEl) succEl.style.display = 'none';
+
+  // 6. Reset role permissions and UI badges
+  if (typeof applyRolePermissions === 'function') applyRolePermissions();
+  if (typeof window.updateMasterEditUI === 'function') window.updateMasterEditUI();
+
+  showToast('🔒 Logged out securely.');
   showLogin();
 }
 window.logout = logout;
@@ -8723,6 +8797,7 @@ window.scanAwardPointsFromFile = function(event) {
 
 function setupTeamHandlers() {
   window.openAwardPointsModal = function(teamId) {
+    if (typeof window.closeAllModals === 'function') window.closeAllModals();
     if (typeof window.canEdit === 'function' && !window.canEdit('award_points')) {
       showToast('🔒 Only Rev. Fr. Director, Assistant Director, or Leaders can award points.');
       return;
@@ -9008,9 +9083,11 @@ window.qualifySubmission = function(type, id) {
       item.status = 'APPROVED';
       item.approvedBy = appState.currentUser ? appState.currentUser.name : 'Rev. Fr. Director, SDB';
       item.approvedAt = new Date().toISOString();
+      item.updatedAt = new Date().toISOString();
       saveLocalData();
-      if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') window.DbycCloud.pushToCloud();
+      if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') window.DbycCloud.pushToCloud(false);
       if (typeof renderMediaStudio === 'function') renderMediaStudio();
+      if (typeof renderQualificationDesk === 'function') renderQualificationDesk();
       showToast('✅ Media submission qualified and published!');
     }
   } else if (type === 'MEMBER') {
@@ -9028,16 +9105,21 @@ window.rejectSubmission = function(type, id) {
     return;
   }
   if (type === 'NEWS') {
+    const deletedId = id;
+    if (!appState.deletedNewsIds) appState.deletedNewsIds = [];
+    if (!appState.deletedNewsIds.includes(deletedId)) appState.deletedNewsIds.push(deletedId);
     appState.news = (appState.news || []).filter(n => n.id !== id);
     saveLocalData();
-    if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') window.DbycCloud.pushToCloud();
+    if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') window.DbycCloud.pushToCloud(false);
     if (typeof renderNewsList === 'function') renderNewsList();
+    if (typeof renderQualificationDesk === 'function') renderQualificationDesk();
     showToast('🗑️ News item rejected and removed.');
   } else if (type === 'MEDIA') {
     appState.media = (appState.media || []).filter(m => m.id !== id);
     saveLocalData();
-    if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') window.DbycCloud.pushToCloud();
+    if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') window.DbycCloud.pushToCloud(false);
     if (typeof renderMediaStudio === 'function') renderMediaStudio();
+    if (typeof renderQualificationDesk === 'function') renderQualificationDesk();
     showToast('🗑️ Media item rejected and removed.');
   }
 };
@@ -9573,6 +9655,10 @@ window.toggleAttendanceRecord = function(memberId, forcedMode) {
 
   if (existingIdx !== -1) {
     const record = window.appState.attendance[existingIdx];
+    if (forcedMode === 'ENTRY_ONLY') {
+      showToast(`ℹ️ ${member.name} is already marked Present for ${activeDate} (${record.entryTime || '✓'})!`);
+      return;
+    }
     if (mode === 'SMART_AUTO' && !record.exitTime) {
       // Auto transition from Entry to Exit
       window.logMemberExitDirect(memberId);
@@ -12283,6 +12369,7 @@ window.printApplicationForm = function(memberId) {
 
 window.downloadApplicationFormPdf = window.printApplicationForm;
 window.openEditPassModal = function(memberId) {
+  if (typeof window.closeAllModals === 'function') window.closeAllModals();
   if (typeof window.canEdit === 'function' && !window.canEdit('passes')) {
     showToast('🔒 QR Pass editing is currently turned OFF by Rev. Fr. Director.');
     return;
@@ -13307,14 +13394,45 @@ function setupMediaStudioHandlers() {
   });
 
   function handleMediaPhotoFile(file) {
-    const reader = new FileReader();
-    reader.onload = (evt) => {
-      activeMediaPhotoBase64 = evt.target.result;
-      if (photoPreviewImg) photoPreviewImg.src = activeMediaPhotoBase64;
-      if (photoPreview) photoPreview.style.display = 'block';
-      showToast('📸 Photo loaded for upload!');
-    };
-    reader.readAsDataURL(file);
+    if (!file) return;
+    if (typeof window.compressImageFile === 'function') {
+      window.compressImageFile(file, 800, 0.75, function(dataUrl) {
+        activeMediaPhotoBase64 = dataUrl;
+        if (photoPreviewImg) photoPreviewImg.src = activeMediaPhotoBase64;
+        if (photoPreview) photoPreview.style.display = 'block';
+        showToast('📸 Photo loaded & optimized for upload!');
+      });
+    } else {
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        const raw = evt.target.result;
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let w = img.width, h = img.height;
+          const maxDim = 800;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
+            else { w = Math.round((w * maxDim) / h); h = maxDim; }
+          }
+          canvas.width = w; canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          activeMediaPhotoBase64 = canvas.toDataURL('image/jpeg', 0.75);
+          if (photoPreviewImg) photoPreviewImg.src = activeMediaPhotoBase64;
+          if (photoPreview) photoPreview.style.display = 'block';
+          showToast('📸 Photo loaded & optimized for upload!');
+        };
+        img.onerror = () => {
+          activeMediaPhotoBase64 = raw;
+          if (photoPreviewImg) photoPreviewImg.src = activeMediaPhotoBase64;
+          if (photoPreview) photoPreview.style.display = 'block';
+          showToast('📸 Photo loaded for upload!');
+        };
+        img.src = raw;
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
   // Form 1: YouTube Video Submit
@@ -13485,19 +13603,21 @@ function renderMediaStudio(filter = 'ALL') {
 
   const isDirector = isDirectorOrAsstDirector();
 
+  const currentId = appState.currentUser ? appState.currentUser.id : '';
+  const currentName = appState.currentUser ? appState.currentUser.name : '';
+  const canViewItem = (m) => m.status === 'APPROVED' || isDirector || (currentId && m.authorId === currentId) || (currentName && m.author === currentName);
+
   let list = appState.media || [];
   if (filter === 'ALL') {
-    list = list.filter(m => m.status === 'APPROVED');
+    list = list.filter(m => canViewItem(m));
   } else if (filter === 'VIDEO') {
-    list = list.filter(m => m.type === 'VIDEO' && m.status === 'APPROVED');
+    list = list.filter(m => m.type === 'VIDEO' && canViewItem(m));
   } else if (filter === 'PHOTO') {
-    list = list.filter(m => m.type === 'PHOTO' && m.status === 'APPROVED');
+    list = list.filter(m => m.type === 'PHOTO' && canViewItem(m));
   } else if (filter === 'LIVE') {
-    list = list.filter(m => m.type === 'LIVE' && m.status === 'APPROVED');
+    list = list.filter(m => m.type === 'LIVE' && canViewItem(m));
   } else if (filter === 'MY_UPLOADS') {
-    const currentId = appState.currentUser ? appState.currentUser.id : '';
-    const currentName = appState.currentUser ? appState.currentUser.name : '';
-    list = list.filter(m => m.authorId === currentId || m.author === currentName);
+    list = list.filter(m => (currentId && m.authorId === currentId) || (currentName && m.author === currentName));
   }
 
   if (list.length === 0) {
@@ -13780,6 +13900,7 @@ window.triggerLiveMemberCamera = function() {
 
 // 2. MODAL CONTROLS FOR REGISTRATION / EDIT FORM
 window.openAddMemberModal = function(memberId) {
+  if (typeof window.closeAllModals === 'function') window.closeAllModals();
   if (!memberId && window.isRegisteringFromLogin) {
     // Permitted for new member registration from home login page
   } else if (typeof window.canEdit === 'function' && !window.canEdit(memberId ? 'members' : 'registration')) {
@@ -13898,6 +14019,13 @@ window.closeAddMemberModal = function() {
 window.saveMemberRegistrationFormDirect = function(event) {
   if (event) event.preventDefault();
 
+  const submitBtn = document.getElementById('btnSubmitFormDirect');
+  if (submitBtn) {
+    if (submitBtn.disabled) return;
+    submitBtn.disabled = true;
+    setTimeout(() => { submitBtn.disabled = false; }, 2000);
+  }
+
   const editIdCheck = document.getElementById('formEditingMemberId')?.value;
   if (editIdCheck) {
     if (typeof window.canEdit === 'function' && !window.canEdit('members')) {
@@ -13993,10 +14121,11 @@ window.saveMemberRegistrationFormDirect = function(event) {
       memberData.id = prev.id;
       if (!memberData.photo && prev.photo) memberData.photo = prev.photo;
       // Retain approval status if already approved, otherwise set based on role
-      memberData.approvalStatus = prev.approvalStatus || (isDirector ? 'APPROVED' : 'PENDING');
+      const wasApproved = prev.approvalStatus === 'APPROVED' || prev.status === 'APPROVED' || prev.status === 'Active';
+      memberData.approvalStatus = wasApproved ? 'APPROVED' : (prev.approvalStatus || (isDirector ? 'APPROVED' : 'PENDING'));
       memberData.status = memberData.approvalStatus;
-      memberData.approvedBy = prev.approvedBy || (isDirector ? (appState.currentUser ? appState.currentUser.name : 'Rev. Fr. Director, SDB') : '');
-      memberData.approvedAt = prev.approvedAt || (isDirector ? new Date().toISOString() : '');
+      memberData.approvedBy = prev.approvedBy || (wasApproved ? (prev.approvedBy || 'Rev. Fr. Director, SDB') : (isDirector ? (appState.currentUser ? appState.currentUser.name : 'Rev. Fr. Director, SDB') : ''));
+      memberData.approvedAt = prev.approvedAt || (wasApproved ? (prev.approvedAt || new Date().toISOString()) : (isDirector ? new Date().toISOString() : ''));
       memberData.updatedAt = new Date().toISOString();
 
       appState.members[idx] = Object.assign({}, prev, memberData);
@@ -14004,6 +14133,19 @@ window.saveMemberRegistrationFormDirect = function(event) {
       showToast('✅ Member details & photo updated successfully!');
     }
   } else {
+    // Duplicate Protection: Prevent registering duplicate members with same phone or exact name
+    const cleanMobile = mobile.replace(/\D/g, '');
+    const cleanName = name.toLowerCase().trim();
+    const existingMem = (appState.members || []).find(m => {
+      const mMobile = (m.mobile || '').replace(/\D/g, '');
+      const mName = (m.name || '').toLowerCase().trim();
+      return (cleanMobile.length >= 8 && mMobile === cleanMobile) || (cleanName && mName === cleanName);
+    });
+    if (existingMem) {
+      showToast(`⚠️ Member already registered: "${existingMem.name}" (${existingMem.id}) with phone ${existingMem.mobile}!`);
+      return;
+    }
+
     // New Member Registration
     const count = appState.members.length + 1;
     let groupCode = 'M';
@@ -15294,6 +15436,7 @@ function renderLeadersDashboard() {
 }
 
 window.openEditLeaderModal = function(leaderId) {
+  if (typeof window.closeAllModals === 'function') window.closeAllModals();
   if (typeof window.canEdit === 'function' && !window.canEdit('officebearers')) {
     showToast('🔒 Office bearer editing is turned OFF by Rev. Fr. Director.');
     return;
@@ -15510,6 +15653,7 @@ window.saveLeaderProfileSubmit = function(event) {
 window.capturedTeamLogoBase64 = '';
 
 window.openEditTeamModal = function(teamId) {
+  if (typeof window.closeAllModals === 'function') window.closeAllModals();
   if (typeof window.canEdit === 'function' && !window.canEdit('teams')) {
     showToast('🔒 Team details editing is turned OFF by Rev. Fr. Director.');
     return;
@@ -15989,10 +16133,14 @@ window.qualifyAndApproveMember = function(memberId) {
   const m = (appState.members || []).find(x => x.id === memberId);
   if (!m) return;
   m.approvalStatus = 'APPROVED';
-  m.status = 'Active';
+  m.status = 'APPROVED';
   m.approvedBy = appState.currentUser ? appState.currentUser.name : 'Rev. Fr. Director, SDB';
   m.approvedAt = new Date().toISOString();
+  m.updatedAt = new Date().toISOString();
   saveLocalData();
+  if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+    window.DbycCloud.pushToCloud(false);
+  }
   showToast(`✅ Member ${m.name} qualified and approved by Director!`);
   renderQualificationDesk();
   renderMembersRegistry();
@@ -16002,8 +16150,14 @@ window.rejectMember = function(memberId) {
   if (!confirm('Reject this member application?')) return;
   const idx = (appState.members || []).findIndex(x => x.id === memberId);
   if (idx !== -1) {
+    const deletedId = appState.members[idx].id;
+    if (!appState.deletedMemberIds) appState.deletedMemberIds = [];
+    if (!appState.deletedMemberIds.includes(deletedId)) appState.deletedMemberIds.push(deletedId);
     appState.members.splice(idx, 1);
     saveLocalData();
+    if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+      window.DbycCloud.pushToCloud(false);
+    }
     showToast('Member registration rejected and archived.');
     renderQualificationDesk();
     renderMembersRegistry();
@@ -16017,7 +16171,11 @@ window.qualifyAndApproveEvent = function(eventId) {
   e.status = 'APPROVED';
   e.approvedBy = appState.currentUser ? appState.currentUser.name : 'Rev. Fr. Director, SDB';
   e.approvedAt = new Date().toISOString();
+  e.updatedAt = new Date().toISOString();
   saveLocalData();
+  if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+    window.DbycCloud.pushToCloud(false);
+  }
   showToast(`✅ Event "${e.title}" qualified and approved!`);
   renderQualificationDesk();
   renderEventsList();
@@ -16029,6 +16187,9 @@ window.rejectEvent = function(eventId) {
   if (idx !== -1) {
     appState.events.splice(idx, 1);
     saveLocalData();
+    if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+      window.DbycCloud.pushToCloud(false);
+    }
     showToast('Event removed.');
     renderQualificationDesk();
     renderEventsList();
@@ -16042,7 +16203,11 @@ window.qualifyAndApproveNews = function(newsId) {
   n.status = 'APPROVED';
   n.approvedBy = appState.currentUser ? appState.currentUser.name : 'Rev. Fr. Director, SDB';
   n.approvedAt = new Date().toISOString();
+  n.updatedAt = new Date().toISOString();
   saveLocalData();
+  if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+    window.DbycCloud.pushToCloud(false);
+  }
   showToast(`✅ News article "${n.title}" qualified and approved!`);
   renderQualificationDesk();
   renderNewsList();
@@ -16052,8 +16217,14 @@ window.rejectNews = function(newsId) {
   if (!confirm('Reject this news announcement?')) return;
   const idx = (appState.news || []).findIndex(x => x.id === newsId);
   if (idx !== -1) {
+    const deletedId = appState.news[idx].id;
+    if (!appState.deletedNewsIds) appState.deletedNewsIds = [];
+    if (!appState.deletedNewsIds.includes(deletedId)) appState.deletedNewsIds.push(deletedId);
     appState.news.splice(idx, 1);
     saveLocalData();
+    if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+      window.DbycCloud.pushToCloud(false);
+    }
     showToast('Announcement removed.');
     renderQualificationDesk();
     renderNewsList();
@@ -16067,7 +16238,11 @@ window.qualifyAndApproveMinute = function(minuteId) {
   m.status = 'APPROVED';
   m.approvedBy = appState.currentUser ? appState.currentUser.name : 'Rev. Fr. Director, SDB';
   m.approvedAt = new Date().toISOString();
+  m.updatedAt = new Date().toISOString();
   saveLocalData();
+  if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+    window.DbycCloud.pushToCloud(false);
+  }
   showToast(`✅ Meeting minute "${m.title}" qualified and approved!`);
   renderQualificationDesk();
   renderMinutesList();
@@ -16101,11 +16276,12 @@ function renderQualificationDesk(filter = 'ALL') {
     return;
   }
 
-  // Gather pending items across all 4 required streams
+  // Gather pending items across all required streams
   const pendingMembers = (appState.members || []).filter(m => m.status === 'PENDING' || m.approvalStatus === 'PENDING').map(m => ({ ...m, itemType: 'MEMBERS' }));
   const pendingEvents = (appState.events || []).filter(e => e.status === 'PENDING' || e.approvalStatus === 'PENDING').map(e => ({ ...e, itemType: 'CALENDAR' }));
   const pendingNews = (appState.news || []).filter(n => n.status === 'PENDING' || n.approvalStatus === 'PENDING').map(n => ({ ...n, itemType: 'NEWS' }));
   const pendingMinutes = (appState.minutes || []).filter(m => m.status === 'PENDING' || m.approvalStatus === 'PENDING').map(m => ({ ...m, itemType: 'MINUTES' }));
+  const pendingMedia = (appState.media || []).filter(m => m.status === 'PENDING').map(m => ({ ...m, itemType: 'MEDIA' }));
 
   // Update counters
   const setElText = (id, txt) => {
@@ -16116,7 +16292,7 @@ function renderQualificationDesk(filter = 'ALL') {
   setElText('qualCountCalendar', pendingEvents.length);
   setElText('qualCountNews', pendingNews.length);
   setElText('qualCountMinutes', pendingMinutes.length);
-  const totalPending = pendingMembers.length + pendingEvents.length + pendingNews.length + pendingMinutes.length;
+  const totalPending = pendingMembers.length + pendingEvents.length + pendingNews.length + pendingMinutes.length + pendingMedia.length;
   setElText('qualCountAll', totalPending);
   setElText('qualPendingHeaderBadge', `${totalPending} PENDING`);
 
@@ -16130,11 +16306,12 @@ function renderQualificationDesk(filter = 'ALL') {
   });
 
   let displayItems = [];
-  if (filter === 'ALL') displayItems = [...pendingMembers, ...pendingEvents, ...pendingNews, ...pendingMinutes];
+  if (filter === 'ALL') displayItems = [...pendingMembers, ...pendingEvents, ...pendingNews, ...pendingMinutes, ...pendingMedia];
   else if (filter === 'MEMBERS') displayItems = pendingMembers;
   else if (filter === 'CALENDAR') displayItems = pendingEvents;
   else if (filter === 'NEWS') displayItems = pendingNews;
   else if (filter === 'MINUTES') displayItems = pendingMinutes;
+  else if (filter === 'MEDIA') displayItems = pendingMedia;
 
   if (displayItems.length === 0) {
     container.innerHTML = `
@@ -16195,6 +16372,20 @@ function renderQualificationDesk(filter = 'ALL') {
       `;
       approveBtn = `<button type="button" class="btn-dbyc-primary" style="background:#16a34a; font-weight:800; padding:8px 14px; border-radius:8px; font-size:0.82rem;" onclick="window.qualifyAndApproveMinute('${item.id}')">✅ Qualify & Approve Minute</button>`;
       rejectBtn = `<button type="button" class="btn-dbyc-primary" style="background:#ef4444; font-weight:800; padding:8px 14px; border-radius:8px; font-size:0.82rem;" onclick="window.rejectMinute('${item.id}')">❌ Reject</button>`;
+    } else if (item.itemType === 'MEDIA') {
+      typeBadge = `<span class="role-badge" style="background:#db2777; color:#fff; font-weight:800;">📸 Event Gallery / Status Photo</span>`;
+      previewContent = `
+        <div style="display:flex; gap:14px; align-items:center;">
+          <img src="${item.url || 'assets/logo.png'}" alt="${item.title}" style="width:75px; height:55px; border-radius:8px; object-fit:cover; border:2px solid #004b98; flex-shrink:0;">
+          <div>
+            <h4 style="font-size:1.05rem; font-weight:800; color:#002b66; margin-bottom:3px;">${item.title}</h4>
+            <div style="font-size:0.82rem; color:#475569;">Uploaded by: <strong>${item.author || 'Member'}</strong> • Category: <strong>${item.category || item.album || 'Gallery'}</strong></div>
+            <div style="font-size:0.78rem; color:#64748b; margin-top:2px;">📅 Date: ${item.date || 'Recent'}</div>
+          </div>
+        </div>
+      `;
+      approveBtn = `<button type="button" class="btn-dbyc-primary" style="background:#16a34a; font-weight:800; padding:8px 14px; border-radius:8px; font-size:0.82rem;" onclick="window.qualifySubmission('MEDIA', '${item.id}')">✅ Qualify & Publish</button>`;
+      rejectBtn = `<button type="button" class="btn-dbyc-primary" style="background:#ef4444; font-weight:800; padding:8px 14px; border-radius:8px; font-size:0.82rem;" onclick="window.rejectSubmission('MEDIA', '${item.id}')">❌ Reject</button>`;
     }
 
     return `
@@ -16489,8 +16680,41 @@ window.DbycGoogleDriveServerStorage = {
   isSyncing: false,
   lastSyncTime: null,
   syncTimer: null,
+  adaptivePollTimeout: null,
+  lastAppliedCloudUpdatedAt: null,
   bc: null,
   _listenersAttached: false,
+  _coordinationListenersAttached: false,
+
+  getAdaptiveInterval: function() {
+    const isDir = (typeof isDirectorOnly === 'function' && isDirectorOnly()) || (typeof isDirectorUser === 'function' && isDirectorUser());
+    const isLeader = (typeof isLeaderOnly === 'function' && isLeaderOnly()) || (window.appState && (window.appState.currentRole === 'UNIT_LEADER' || window.appState.currentRole === 'OFFICE_BEARER'));
+    // Role-adaptive polling cadence:
+    // Directors / Admins: 20s (need rapid updates for approvals and event management)
+    // Unit Leaders: 25s (need quick feedback for attendance & matches)
+    // General Youth Members: 85s (cuts ~85% of traffic, avoids cloud congestion)
+    let base = 85000;
+    if (isDir) base = 20000;
+    else if (isLeader) base = 25000;
+    // Add ±3000ms random jitter so devices don't hit the server at the exact same split-second
+    const jitter = Math.floor((Math.random() - 0.5) * 6000);
+    return Math.max(10000, base + jitter);
+  },
+
+  scheduleNextAdaptivePoll: function() {
+    if (this.adaptivePollTimeout) clearTimeout(this.adaptivePollTimeout);
+    // When screen is locked or tab is hidden, stop polling completely to eliminate server load & battery drain
+    if (typeof document !== 'undefined' && document.visibilityState === 'hidden') return;
+
+    const delay = this.getAdaptiveInterval();
+    this.adaptivePollTimeout = setTimeout(() => {
+      if (document.visibilityState === 'visible' && navigator.onLine && this.backendUrl && !this.isSyncing) {
+        this.pullLatestFromCloud(true);
+      } else {
+        this.scheduleNextAdaptivePoll();
+      }
+    }, delay);
+  },
 
   init: function() {
     if (this.isInitialized) return;
@@ -16527,13 +16751,48 @@ window.DbycGoogleDriveServerStorage = {
         this.pullLatestFromCloud(true);
       }, 600);
 
-      // Calm, non-disruptive background sync check every 5 minutes (300,000 ms) instead of 20 seconds
+      // Real-time adaptive coordination between Mobile and Desktop (Adaptive Staggered Polling)
       if (this.syncTimer) clearInterval(this.syncTimer);
-      this.syncTimer = setInterval(() => {
-        if (navigator.onLine && this.backendUrl) {
-          this.pullLatestFromCloud(true);
-        }
-      }, 300000);
+      if (this.adaptivePollTimeout) clearTimeout(this.adaptivePollTimeout);
+      this.scheduleNextAdaptivePoll();
+
+      // Instant synchronization triggers on device wake / tab focus / visibility change
+      if (!this._coordinationListenersAttached) {
+        this._coordinationListenersAttached = true;
+        window.addEventListener('focus', () => {
+          if (navigator.onLine && this.backendUrl && !this.isSyncing) {
+            this.pullLatestFromCloud(true);
+          }
+          this.scheduleNextAdaptivePoll();
+        });
+        document.addEventListener('visibilitychange', () => {
+          if (document.visibilityState === 'visible') {
+            if (navigator.onLine && this.backendUrl && !this.isSyncing) {
+              this.pullLatestFromCloud(true);
+            }
+            this.scheduleNextAdaptivePoll();
+          } else {
+            // Screen locked or tab switched: pause background polling
+            if (this.adaptivePollTimeout) clearTimeout(this.adaptivePollTimeout);
+          }
+        });
+        window.addEventListener('storage', (e) => {
+          if (e.key === 'dbyc_master_edit_active' && e.newValue !== null) {
+            window.isMasterEditActive = (e.newValue === 'true');
+            if (window.appState) window.appState.masterEditActive = window.isMasterEditActive;
+            if (typeof window.updateMasterEditUI === 'function') window.updateMasterEditUI();
+            if (typeof applyRolePermissions === 'function') applyRolePermissions();
+            if (typeof window.renderCurrentActiveView === 'function') window.renderCurrentActiveView();
+          } else if (e.key === 'dbyc_edit_permissions' && e.newValue) {
+            try {
+              window.appState.editPermissions = JSON.parse(e.newValue);
+              if (typeof window.updateEditPermissionsUI === 'function') window.updateEditPermissionsUI();
+              if (typeof applyRolePermissions === 'function') applyRolePermissions();
+              if (typeof window.renderCurrentActiveView === 'function') window.renderCurrentActiveView();
+            } catch(err) {}
+          }
+        });
+      }
 
       // Online reconnect listener (ONLY when device comes back online)
       if (!this._listenersAttached) {
@@ -16580,6 +16839,7 @@ window.DbycGoogleDriveServerStorage = {
       deletedMemberIds: (window.appState && window.appState.deletedMemberIds) || [],
       deletedNewsIds: (window.appState && window.appState.deletedNewsIds) || [],
       deletedMinuteIds: (window.appState && window.appState.deletedMinuteIds) || [],
+      masterEditActive: !!window.isMasterEditActive,
       editPermissions: (window.appState && window.appState.editPermissions) || {},
       attendance: (window.appState && window.appState.attendance) || [],
       events: (window.appState && window.appState.events) || [],
@@ -16609,6 +16869,7 @@ window.DbycGoogleDriveServerStorage = {
       }).then(() => {
         this.isSyncing = false;
         this.lastSyncTime = new Date();
+        this.lastAppliedCloudUpdatedAt = payload.updatedAt;
         this.isConnected = true;
         const isDir = (typeof isDirectorUser === 'function') ? isDirectorUser() : false;
         const timeStr = this.lastSyncTime.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
@@ -16640,14 +16901,23 @@ window.DbycGoogleDriveServerStorage = {
   pullLatestFromCloud: function(silent) {
     if (!navigator.onLine) {
       if (!silent && typeof showToast === 'function') showToast('⚠️ Device is offline. Using local storage.');
+      this.scheduleNextAdaptivePoll();
       return;
     }
 
     const endpoint = this.backendUrl || window.DBYC_MASTER_BACKEND_URL;
     if (!endpoint) {
       if (!silent && typeof showToast === 'function') showToast('ℹ️ Google Drive backend URL is being connected...');
+      this.scheduleNextAdaptivePoll();
       return;
     }
+
+    // Concurrency guard: avoid firing multiple overlapping pulls from the same client
+    if (this.isSyncing) {
+      this.scheduleNextAdaptivePoll();
+      return;
+    }
+    this.isSyncing = true;
 
     const isDir = (typeof isDirectorUser === 'function') ? isDirectorUser() : false;
     if (!silent && typeof showToast === 'function') {
@@ -16655,11 +16925,22 @@ window.DbycGoogleDriveServerStorage = {
     }
     this.updateStatusUI('syncing', 'Syncing...');
 
-    const fetchUrl = endpoint + (endpoint.includes('?') ? '&' : '?') + 'action=SYNC_GET&_ts=' + Date.now();
+    let abortController = null;
+    let timeoutId = null;
+    if (typeof AbortController !== 'undefined') {
+      abortController = new AbortController();
+      timeoutId = setTimeout(() => {
+        try { abortController.abort(); } catch(e) {}
+      }, 12000);
+    }
 
-    fetch(fetchUrl)
+    const fetchUrl = endpoint + (endpoint.includes('?') ? '&' : '?') + 'action=SYNC_GET&_ts=' + Date.now();
+    const fetchOptions = abortController ? { signal: abortController.signal } : {};
+
+    fetch(fetchUrl, fetchOptions)
       .then(res => res.json())
       .then(data => {
+        if (timeoutId) clearTimeout(timeoutId);
         const remoteData = (data && data.data) ? data.data : data;
         if (remoteData && (remoteData.members || remoteData.teams || remoteData.events || remoteData.leaders || remoteData.attendance || remoteData.deletedMemberIds)) {
           this.applyCloudData(remoteData);
@@ -16679,15 +16960,27 @@ window.DbycGoogleDriveServerStorage = {
         }
       })
       .catch(err => {
-        console.warn('Pull from Google Drive storage error:', err);
+        if (timeoutId) clearTimeout(timeoutId);
+        console.warn('Pull from Google Drive storage note:', (err && err.name === 'AbortError') ? 'Sync timed out (network busy)' : err);
         this.updateStatusUI(this.isConnected ? 'connected' : 'local', 'Sync Pending');
         if (!silent && typeof showToast === 'function') showToast('ℹ️ Google Drive connection note. Local storage active.');
+      })
+      .finally(() => {
+        this.isSyncing = false;
+        this.scheduleNextAdaptivePoll();
       });
   },
 
   applyCloudData: function(cloudData) {
     if (!cloudData || typeof cloudData !== 'object') return;
     if (!window.appState) return;
+
+    // Zero-overhead conditional short-circuit:
+    // If incoming cloud data has an updatedAt timestamp matching our last applied snapshot,
+    // skip CPU-intensive array iterations and Map reconstructions completely!
+    if (cloudData.updatedAt && this.lastAppliedCloudUpdatedAt && cloudData.updatedAt === this.lastAppliedCloudUpdatedAt) {
+      return;
+    }
 
     let hasChanges = false;
 
@@ -16720,10 +17013,26 @@ window.DbycGoogleDriveServerStorage = {
             hasChanges = true;
           } else {
             const localMem = memberMap.get(cm.id);
-            const localTs = new Date(localMem.updatedAt || localMem.createdAt || 0).getTime();
-            const cloudTs = new Date(cm.updatedAt || cm.createdAt || 0).getTime();
+            const localTs = new Date(localMem.updatedAt || localMem.approvedAt || localMem.createdAt || 0).getTime();
+            const cloudTs = new Date(cm.updatedAt || cm.approvedAt || cm.createdAt || 0).getTime();
+
+            // CRITICAL APPROVAL PRESERVATION: Once qualified/approved by Director, never demote back to PENDING!
+            const wasApproved = localMem.approvalStatus === 'APPROVED' || localMem.status === 'APPROVED' || localMem.status === 'Active' ||
+                                cm.approvalStatus === 'APPROVED' || cm.status === 'APPROVED' || cm.status === 'Active';
+
             if (cloudTs > localTs) {
-              memberMap.set(cm.id, Object.assign({}, localMem, cm));
+              const merged = Object.assign({}, localMem, cm);
+              if (wasApproved) {
+                merged.approvalStatus = 'APPROVED';
+                merged.status = 'APPROVED';
+                merged.approvedBy = localMem.approvedBy || cm.approvedBy || 'Rev. Fr. Director, SDB';
+                merged.approvedAt = localMem.approvedAt || cm.approvedAt || new Date().toISOString();
+              }
+              memberMap.set(cm.id, merged);
+              hasChanges = true;
+            } else if (wasApproved && (localMem.approvalStatus !== 'APPROVED' || localMem.status !== 'APPROVED')) {
+              localMem.approvalStatus = 'APPROVED';
+              localMem.status = 'APPROVED';
               hasChanges = true;
             }
           }
@@ -16778,12 +17087,105 @@ window.DbycGoogleDriveServerStorage = {
       window.appState.minutes = Array.from(minMap.values()).filter(m => !localDeletedMins.has(m.id));
     }
 
-    // 6. Safe merge of teams & events
+    // 6. Safe merge of teams (points, ranks, slogans, emblems, captains)
     if (cloudData.teams && Array.isArray(cloudData.teams) && cloudData.teams.length > 0) {
       if (!window.appState.teams || window.appState.teams.length === 0) {
         window.appState.teams = cloudData.teams;
         hasChanges = true;
+      } else {
+        cloudData.teams.forEach(ct => {
+          const localTeam = window.appState.teams.find(lt => lt.id === ct.id);
+          if (localTeam) {
+            if (ct.points !== undefined && ct.points !== localTeam.points) {
+              localTeam.points = ct.points;
+              hasChanges = true;
+            }
+            if (ct.rank !== undefined && ct.rank !== localTeam.rank) {
+              localTeam.rank = ct.rank;
+              hasChanges = true;
+            }
+            if (ct.name && ct.name !== localTeam.name) {
+              localTeam.name = ct.name;
+              hasChanges = true;
+            }
+            if (ct.logo && ct.logo !== localTeam.logo) {
+              localTeam.logo = ct.logo;
+              hasChanges = true;
+            }
+            if (ct.captain && ct.captain !== localTeam.captain) {
+              localTeam.captain = ct.captain;
+              hasChanges = true;
+            }
+          }
+        });
       }
+    }
+
+    // Safe merge of teamPointsLog across devices
+    if (cloudData.teamPointsLog && Array.isArray(cloudData.teamPointsLog)) {
+      const logMap = new Map((window.appState.teamPointsLog || []).map(l => [l.id || (l.team + '_' + l.date + '_' + l.points), l]));
+      cloudData.teamPointsLog.forEach(cl => {
+        const key = cl.id || (cl.team + '_' + cl.date + '_' + cl.points);
+        if (!logMap.has(key)) {
+          logMap.set(key, cl);
+          hasChanges = true;
+        }
+      });
+      window.appState.teamPointsLog = Array.from(logMap.values());
+    }
+
+    // Safe merge of leaders (official office bearers dossiers & photos)
+    if (cloudData.leaders && Array.isArray(cloudData.leaders) && cloudData.leaders.length > 0) {
+      const ldrMap = new Map((window.appState.leaders || []).map(l => [l.id, l]));
+      cloudData.leaders.forEach(cl => {
+        if (cl && cl.id) {
+          if (!ldrMap.has(cl.id)) {
+            ldrMap.set(cl.id, cl);
+            hasChanges = true;
+          } else {
+            const localLdr = ldrMap.get(cl.id);
+            const localTs = new Date(localLdr.updatedAt || localLdr.createdAt || 0).getTime();
+            const cloudTs = new Date(cl.updatedAt || cl.createdAt || 0).getTime();
+            if (cloudTs > localTs) {
+              ldrMap.set(cl.id, Object.assign({}, localLdr, cl));
+              hasChanges = true;
+            }
+          }
+        }
+      });
+      window.appState.leaders = Array.from(ldrMap.values());
+    }
+
+    // Safe merge of certificates
+    if (cloudData.certificates && Array.isArray(cloudData.certificates)) {
+      const certMap = new Map((window.appState.certificates || []).map(c => [c.id || (c.memberId + '_' + c.issueDate), c]));
+      cloudData.certificates.forEach(cc => {
+        const key = cc.id || (cc.memberId + '_' + cc.issueDate);
+        if (!certMap.has(key)) {
+          certMap.set(key, cc);
+          hasChanges = true;
+        }
+      });
+      window.appState.certificates = Array.from(certMap.values());
+    }
+
+    // Safe merge of Master Edit Controls state across mobile & desktop
+    if (typeof cloudData.masterEditActive === 'boolean' && cloudData.masterEditActive !== window.isMasterEditActive) {
+      window.isMasterEditActive = cloudData.masterEditActive;
+      localStorage.setItem('dbyc_master_edit_active', window.isMasterEditActive ? 'true' : 'false');
+      if (window.appState) window.appState.masterEditActive = window.isMasterEditActive;
+      if (typeof window.updateMasterEditUI === 'function') window.updateMasterEditUI();
+      if (typeof applyRolePermissions === 'function') applyRolePermissions();
+      hasChanges = true;
+    }
+
+    // Safe merge of granular edit permissions
+    if (cloudData.editPermissions && typeof cloudData.editPermissions === 'object') {
+      window.appState.editPermissions = Object.assign({}, window.appState.editPermissions || {}, cloudData.editPermissions);
+      localStorage.setItem('dbyc_edit_permissions', JSON.stringify(window.appState.editPermissions));
+      if (typeof window.updateEditPermissionsUI === 'function') window.updateEditPermissionsUI();
+      if (typeof applyRolePermissions === 'function') applyRolePermissions();
+      hasChanges = true;
     }
     if (cloudData.events && Array.isArray(cloudData.events) && cloudData.events.length > 0) {
       const eventMap = new Map((window.appState.events || []).map(e => [e.id, e]));
@@ -16807,6 +17209,8 @@ window.DbycGoogleDriveServerStorage = {
       });
       window.telecastPhotos = Array.from(tcMap.values());
       if (window.appState) window.appState.telecastPhotos = window.telecastPhotos;
+      try { localStorage.setItem('dbyc_telecast_photos', JSON.stringify(window.telecastPhotos)); } catch(e) {}
+      if (typeof window.renderTelecastPhotosList === 'function') window.renderTelecastPhotosList();
       if (typeof window.showTelecastSlide === 'function') {
         window.showTelecastSlide(0);
       }
@@ -16829,8 +17233,17 @@ window.DbycGoogleDriveServerStorage = {
       const mediaMap = new Map((window.appState.media || []).map(m => [m.id, m]));
       cloudData.media.forEach(cm => {
         if (cm && cm.id) {
-          mediaMap.set(cm.id, cm);
-          hasChanges = true;
+          const localItem = mediaMap.get(cm.id);
+          const wasApproved = (localItem && localItem.status === 'APPROVED') || cm.status === 'APPROVED';
+          if (!mediaMap.has(cm.id)) {
+            mediaMap.set(cm.id, cm);
+            hasChanges = true;
+          } else {
+            const merged = Object.assign({}, localItem, cm);
+            if (wasApproved) merged.status = 'APPROVED';
+            mediaMap.set(cm.id, merged);
+            hasChanges = true;
+          }
         }
       });
       window.appState.media = Array.from(mediaMap.values());
@@ -16863,6 +17276,9 @@ window.DbycGoogleDriveServerStorage = {
       this.lastSyncTime = new Date();
       const timeStr = this.lastSyncTime.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
       this.updateStatusUI('connected', 'Google Drive Live (' + timeStr + ')');
+    }
+    if (cloudData && cloudData.updatedAt) {
+      this.lastAppliedCloudUpdatedAt = cloudData.updatedAt;
     }
   },
 
@@ -18072,6 +18488,7 @@ window.simpleRoleLoginSubmit = function() {
     }
     appState.currentUser = matchedMember;
     localStorage.setItem(DBYC_USER, JSON.stringify(matchedMember));
+    localStorage.setItem('dbyc_current_role', (matchedMember.role && matchedMember.role.toLowerCase().includes('leader')) ? 'LEADER' : 'MEMBER');
     localStorage.setItem('dbyc_active_session', JSON.stringify({
       userId: matchedMember.id,
       role: matchedMember.role || 'Member',
@@ -18079,7 +18496,8 @@ window.simpleRoleLoginSubmit = function() {
       loginMode: 'ID_PIN_LOGIN',
       loginTime: Date.now()
     }));
-    setTimeout(() => {
+    if (window.loginTransitionTimer) clearTimeout(window.loginTransitionTimer);
+    window.loginTransitionTimer = setTimeout(() => {
       showToast(`✅ Welcome ${matchedMember.name}!`);
       showMainApp();
     }, 350);
@@ -18105,6 +18523,7 @@ window.simpleRoleLoginSubmit = function() {
     }
     appState.currentUser = dirMember;
     localStorage.setItem(DBYC_USER, JSON.stringify(dirMember));
+    localStorage.setItem('dbyc_current_role', 'DIRECTOR');
     localStorage.setItem('dbyc_active_session', JSON.stringify({
       userId: dirMember.id,
       role: 'Director',
@@ -18116,7 +18535,8 @@ window.simpleRoleLoginSubmit = function() {
       successEl.innerHTML = `✓ Authorized Director Access: <strong>${dirMember.name}</strong>...`;
       successEl.style.display = 'block';
     }
-    setTimeout(() => {
+    if (window.loginTransitionTimer) clearTimeout(window.loginTransitionTimer);
+    window.loginTransitionTimer = setTimeout(() => {
       showToast(`✅ Welcome Father Director!`);
       showMainApp();
     }, 350);
@@ -18140,6 +18560,7 @@ window.simpleRoleLoginSubmit = function() {
     }
     appState.currentUser = asstMember;
     localStorage.setItem(DBYC_USER, JSON.stringify(asstMember));
+    localStorage.setItem('dbyc_current_role', 'ASST_DIRECTOR');
     localStorage.setItem('dbyc_active_session', JSON.stringify({
       userId: asstMember.id,
       role: 'Asst. Director',
@@ -18151,7 +18572,8 @@ window.simpleRoleLoginSubmit = function() {
       successEl.innerHTML = `✓ Authorized Asst Director Access: <strong>${asstMember.name}</strong>...`;
       successEl.style.display = 'block';
     }
-    setTimeout(() => {
+    if (window.loginTransitionTimer) clearTimeout(window.loginTransitionTimer);
+    window.loginTransitionTimer = setTimeout(() => {
       showToast(`✅ Welcome Father Assistant Director!`);
       showMainApp();
     }, 350);
@@ -18171,18 +18593,21 @@ window.simpleRoleLoginSubmit = function() {
     return;
   }
 
-  appState.currentUser = member;
-  localStorage.setItem(DBYC_USER, JSON.stringify(member));
+  const targetUser = matchedMember || { id: 'DBYC-GUEST', name: 'DBYC Member', role: 'Member' };
+  appState.currentUser = targetUser;
+  localStorage.setItem(DBYC_USER, JSON.stringify(targetUser));
+  localStorage.setItem('dbyc_current_role', 'MEMBER');
   localStorage.setItem('dbyc_active_session', JSON.stringify({
-    userId: member.id,
-    role: member.role,
-    name: member.name,
+    userId: targetUser.id,
+    role: targetUser.role,
+    name: targetUser.name,
     loginMode: 'PASSWORD',
     loginTime: Date.now()
   }));
 
-  setTimeout(() => {
-    showToast(`✅ Welcome, ${member.name} (${member.role})!`);
+  if (window.loginTransitionTimer) clearTimeout(window.loginTransitionTimer);
+  window.loginTransitionTimer = setTimeout(() => {
+    showToast(`✅ Welcome, ${targetUser.name} (${targetUser.role})!`);
     showMainApp();
   }, 350);
 };
@@ -18349,6 +18774,23 @@ window.quickFillMobileOtp = function() {
   }
 };
 
+window.backToPhoneInput = function() {
+  const stepPhone = document.getElementById('otpStepPhone');
+  const stepCode = document.getElementById('otpStepCode');
+  if (stepCode) stepCode.style.display = 'none';
+  if (stepPhone) stepPhone.style.display = 'block';
+  const phoneInp = document.getElementById('otpMobileInput');
+  if (phoneInp) phoneInp.focus();
+};
+
+window.resendMobileOtp = function() {
+  window.sendMobileOtp();
+};
+
+window.autofillSimulatedOtp = function() {
+  window.quickFillMobileOtp();
+};
+
 window.verifyMobileOtpSubmit = function() {
   const input = document.getElementById('otpCodeInput');
   const errEl = document.getElementById('otpVerifyError');
@@ -18437,6 +18879,7 @@ function showLogin() {
 
 // 1. Office Bearers Dossier (View Option)
 window.viewOfficeBearerDetails = function(leaderId) {
+  if (typeof window.closeAllModals === 'function') window.closeAllModals();
   const leaders = window.appState.leaders || [];
   const ldr = leaders.find(l => l.id === leaderId);
   if (!ldr) {
@@ -20362,17 +20805,23 @@ window.compressImageFile = function(file, maxWidth, quality, callback) {
     const img = new Image();
     img.onload = function() {
       const canvas = document.createElement('canvas');
+      const maxDim = maxWidth || 800;
       let w = img.width;
       let h = img.height;
-      if (w > maxWidth) {
-        h = Math.round((h * maxWidth) / w);
-        w = maxWidth;
+      if (w > maxDim || h > maxDim) {
+        if (w > h) {
+          h = Math.round((h * maxDim) / w);
+          w = maxDim;
+        } else {
+          w = Math.round((w * maxDim) / h);
+          h = maxDim;
+        }
       }
       canvas.width = w;
       canvas.height = h;
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, w, h);
-      const dataUrl = canvas.toDataURL('image/jpeg', quality || 0.82);
+      const dataUrl = canvas.toDataURL('image/jpeg', quality || 0.75);
       callback(dataUrl);
     };
     img.onerror = function() {
@@ -20432,6 +20881,10 @@ window.initTelecastCarousel = function() {
     }
   } catch(e) {}
 
+  if ((!window.telecastPhotos || window.telecastPhotos.length === 0) && window.appState && window.appState.telecastPhotos && window.appState.telecastPhotos.length > 0) {
+    window.telecastPhotos = window.appState.telecastPhotos;
+  }
+
   if (!window.telecastPhotos || window.telecastPhotos.length === 0) {
     window.telecastPhotos = [
       {
@@ -20460,6 +20913,10 @@ window.initTelecastCarousel = function() {
       }
     ];
     try { localStorage.setItem('dbyc_telecast_photos', JSON.stringify(window.telecastPhotos)); } catch(e) {}
+  }
+
+  if (window.appState) {
+    window.appState.telecastPhotos = window.telecastPhotos;
   }
 
   window.renderTelecastPhotosList();
@@ -20544,11 +21001,11 @@ window.handleEventPhotoFileSelect = function(event) {
   const file = (event && event.target && event.target.files) ? event.target.files[0] : event;
   if (!file) return;
 
-  window.compressImageFile(file, 1920, 0.90, function(dataUrl) {
+  window.compressImageFile(file, 800, 0.75, function(dataUrl) {
     window.stagedEventPhotoBase64 = dataUrl;
     const preview = document.getElementById('eventPhotoPreviewImg');
     if (preview) preview.src = dataUrl;
-    showToast('📸 Event photo selected and compressed!');
+    showToast('📸 Event photo selected and optimized!');
   });
 };
 
@@ -20578,10 +21035,19 @@ window.handleEventPhotoUploadSubmit = function(e) {
   if (!window.telecastPhotos) window.telecastPhotos = [];
   window.telecastPhotos.unshift(newPhoto);
 
+  if (window.appState) {
+    window.appState.telecastPhotos = window.telecastPhotos;
+  }
+
   try {
     localStorage.setItem('dbyc_telecast_photos', JSON.stringify(window.telecastPhotos));
   } catch(err) {
-    console.warn('Storage quota limit, keeping in memory:', err);
+    console.warn('Storage quota note:', err);
+  }
+
+  saveLocalData();
+  if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+    window.DbycCloud.pushToCloud(false);
   }
 
   window.stagedEventPhotoBase64 = '';
@@ -20592,7 +21058,7 @@ window.handleEventPhotoUploadSubmit = function(e) {
   window.renderTelecastPhotosList();
   window.showTelecastSlide(0);
   window.resetTelecastTimer();
-  showToast('✅ Photo added to Home Event Telecast Carousel!');
+  showToast('✅ Photo added to Home Event Telecast Carousel & synced to cloud!');
 };
 
 window.renderTelecastPhotosList = function() {
@@ -20628,13 +21094,21 @@ window.deleteTelecastPhoto = function(index) {
   if (!confirm(`Remove photo "${item.title}" from Home Telecast?`)) return;
 
   window.telecastPhotos.splice(index, 1);
+  if (window.appState) {
+    window.appState.telecastPhotos = window.telecastPhotos;
+  }
   try {
     localStorage.setItem('dbyc_telecast_photos', JSON.stringify(window.telecastPhotos));
   } catch(e) {}
 
+  saveLocalData();
+  if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+    window.DbycCloud.pushToCloud(false);
+  }
+
   window.renderTelecastPhotosList();
   window.showTelecastSlide(0);
-  showToast('✅ Photo removed from telecast.');
+  showToast('✅ Photo removed from telecast & synced across devices.');
 };
 
 // ==============================================================================

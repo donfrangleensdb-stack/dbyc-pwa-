@@ -6753,6 +6753,13 @@ function loadLocalData() {
 
       const deletedMems = new Set(appState.deletedMemberIds);
       appState.members = (parsed.members || []).filter(m => !deletedMems.has(m.id));
+      (appState.members || []).forEach(m => {
+        if (m && (m.approvalStatus === 'APPROVED' || m.approvedBy || m.membershipStatus === 'ACTIVE' || m.status === 'Active')) {
+          m.approvalStatus = 'APPROVED';
+          m.status = 'APPROVED';
+          m.membershipStatus = 'ACTIVE';
+        }
+      });
 
       const deletedNews = new Set(appState.deletedNewsIds);
       appState.news = (parsed.news || []).filter(n => !deletedNews.has(n.id));
@@ -6769,8 +6776,14 @@ function loadLocalData() {
       appState.matches = parsed.matches || [];
       appState.media = parsed.media || [];
       appState.certificates = (parsed.certificates || []).filter(c => !deletedMems.has(c.memberId));
+      const isDirectorRecordEarly = (l) => {
+        if (!l) return false;
+        const r = (l.role || '').toLowerCase();
+        const n = (l.name || '').toLowerCase();
+        return r.includes('director') || n.includes('director') || n.includes('frangleen');
+      };
       appState.leaders = (parsed.leaders && parsed.leaders.length > 0)
-        ? parsed.leaders
+        ? parsed.leaders.filter(l => !isDirectorRecordEarly(l))
         : (window.DBYC_OFFICIAL_LEADERS_SEED ? JSON.parse(JSON.stringify(window.DBYC_OFFICIAL_LEADERS_SEED)) : []);
 
       appState.teams = (parsed.teams && parsed.teams.length > 0) ? parsed.teams : [
@@ -7339,10 +7352,11 @@ function saveLocalData(skipCloudPush) {
   }
 
   // Automatic background push to Google Drive backend across all devices
-  if (!skipCloudPush && window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+  const cloudMgr = window.DbycGoogleDriveServerStorage || window.DbycCloud;
+  if (!skipCloudPush && cloudMgr && typeof cloudMgr.pushToCloud === 'function') {
     if (_dbycCloudDebounceTimer) clearTimeout(_dbycCloudDebounceTimer);
     _dbycCloudDebounceTimer = setTimeout(() => {
-      window.DbycCloud.pushToCloud(false);
+      cloudMgr.pushToCloud(false);
     }, 400);
   }
 }
@@ -9231,11 +9245,12 @@ function updateDashboardStats() {
   const statEventsEl = document.getElementById('statTotalEvents');
   if (statEventsEl) statEventsEl.textContent = totalEvents;
 
-  // Pending Qualifications Count across all 4 streams
-  const pendingMembers = (appState.members || []).filter(m => m.status === 'PENDING' || m.approvalStatus === 'PENDING').length;
-  const pendingEvents = (appState.events || []).filter(e => e.status === 'PENDING' || e.approvalStatus === 'PENDING').length;
-  const pendingNews = (appState.news || []).filter(n => n.status === 'PENDING' || n.approvalStatus === 'PENDING').length;
-  const pendingMinutes = (appState.minutes || []).filter(m => m.status === 'PENDING' || m.approvalStatus === 'PENDING').length;
+  // Pending Qualifications Count across all streams (strictly unapproved items)
+  const isMemAppr = (m) => (m.approvalStatus === 'APPROVED' || m.status === 'APPROVED' || m.status === 'Active' || m.membershipStatus === 'ACTIVE');
+  const pendingMembers = (appState.members || []).filter(m => !isMemAppr(m) && (m.status === 'PENDING' || m.approvalStatus === 'PENDING')).length;
+  const pendingEvents = (appState.events || []).filter(e => !(e.approvalStatus === 'APPROVED' || e.status === 'APPROVED') && (e.status === 'PENDING' || e.approvalStatus === 'PENDING')).length;
+  const pendingNews = (appState.news || []).filter(n => !(n.approvalStatus === 'APPROVED' || n.status === 'APPROVED') && (n.status === 'PENDING' || n.approvalStatus === 'PENDING')).length;
+  const pendingMinutes = (appState.minutes || []).filter(m => !(m.approvalStatus === 'APPROVED' || m.status === 'APPROVED') && (m.status === 'PENDING' || m.approvalStatus === 'PENDING')).length;
   const totalPending = pendingMembers + pendingEvents + pendingNews + pendingMinutes;
 
   const qualBadge = document.getElementById('qualPendingHeaderBadge');
@@ -14301,7 +14316,7 @@ function renderMembersRegistry() {
 
   container.innerHTML = filtered.map(m => {
     const photo = m.photo || window.DBYC_OFFICIAL_LOGO || 'assets/logo.png';
-    const isApproved = m.approvalStatus === 'APPROVED' || m.status === 'APPROVED';
+    const isApproved = m.approvalStatus === 'APPROVED' || m.status === 'APPROVED' || m.status === 'Active' || m.membershipStatus === 'ACTIVE';
     const statusBadge = isApproved
       ? `<span class="role-badge" style="background:#ecfdf5; color:#059669; font-weight:800;">✅ Qualified & Approved</span>`
       : `<span class="role-badge" style="background:#ffedd5; color:#c2410c; font-weight:800;">⏳ Pending Approval</span>`;
@@ -15239,9 +15254,44 @@ if (!window.appState.leaders || window.appState.leaders.length === 0) {
 window.activeLeaderCategoryFilter = 'ALL';
 window.capturedLeaderPhotoBase64 = '';
 
+window.purgeDirectorsFromLeaders = function() {
+  const isDirectorRecord = (l) => {
+    if (!l) return false;
+    const r = (l.role || '').toLowerCase();
+    const n = (l.name || '').toLowerCase();
+    return r.includes('director') || n.includes('director') || n.includes('frangleen');
+  };
+
+  if (window.appState && Array.isArray(window.appState.leaders)) {
+    const beforeCount = window.appState.leaders.length;
+    window.appState.leaders = window.appState.leaders.filter(l => !isDirectorRecord(l));
+    if (window.appState.leaders.length !== beforeCount) {
+      if (typeof saveLocalData === 'function') saveLocalData(true);
+    }
+  }
+
+  // Also clean up stored localStorage
+  try {
+    const raw = localStorage.getItem(DBYC_STORAGE);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && Array.isArray(parsed.leaders)) {
+        parsed.leaders = parsed.leaders.filter(l => !isDirectorRecord(l));
+        localStorage.setItem(DBYC_STORAGE, JSON.stringify(parsed));
+      }
+    }
+  } catch(e) {}
+};
+window.purgeDirectorsFromLeaders();
+
 function renderLeadersDashboard() {
   const container = document.getElementById('leadersListContainer');
   if (!container) return;
+
+  // Clean out any directors from office bearers
+  if (typeof window.purgeDirectorsFromLeaders === 'function') {
+    window.purgeDirectorsFromLeaders();
+  }
 
   // 1. Initialize leaders from seed if empty
   if (!window.appState.leaders || window.appState.leaders.length === 0) {
@@ -15280,8 +15330,15 @@ function renderLeadersDashboard() {
   // 3. Dynamically include any newly registered member with an Office Bearer category or leadership role
   members.forEach(m => {
     const roleLower = (m.role || '').toLowerCase();
+    const mNameNorm = (m.name || '').trim().toLowerCase();
+
+    // NEVER import Director or Assistant Director into Office Bearers!
+    if (roleLower.includes('director') || mNameNorm.includes('director') || mNameNorm.includes('frangleen')) {
+      return;
+    }
+
     const isLeadershipRole = roleLower.includes('leader') || roleLower.includes('secretary') ||
-      roleLower.includes('president') || roleLower.includes('director') || roleLower.includes('animator') ||
+      roleLower.includes('president') || roleLower.includes('animator') ||
       roleLower.includes('treasurer') || roleLower.includes('captain') || roleLower.includes('coordinator') ||
       roleLower.includes('council') || roleLower.includes('choir') || roleLower.includes('sports');
 
@@ -15291,7 +15348,6 @@ function renderLeadersDashboard() {
 
     if (isLeadershipRole || hasLeaderCat) {
       const mPhoneClean = (m.mobile || '').replace(/\D/g, '');
-      const mNameNorm = (m.name || '').trim().toLowerCase();
       const existing = leaders.find(l => {
         if (l.memberId === m.id) return true;
         const lPhoneClean = (l.phone || '').replace(/\D/g, '');
@@ -15335,6 +15391,10 @@ function renderLeadersDashboard() {
   const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
 
   const filtered = leaders.filter(ldr => {
+    const r = (ldr.role || '').toLowerCase();
+    const n = (ldr.name || '').toLowerCase();
+    if (r.includes('director') || n.includes('director') || n.includes('frangleen')) return false;
+
     const matchesCat = (window.activeLeaderCategoryFilter === 'ALL' || ldr.category === window.activeLeaderCategoryFilter);
     const matchesSearch = !query ||
       (ldr.name && ldr.name.toLowerCase().includes(query)) ||
@@ -16134,16 +16194,19 @@ window.qualifyAndApproveMember = function(memberId) {
   if (!m) return;
   m.approvalStatus = 'APPROVED';
   m.status = 'APPROVED';
+  m.membershipStatus = 'ACTIVE';
   m.approvedBy = appState.currentUser ? appState.currentUser.name : 'Rev. Fr. Director, SDB';
   m.approvedAt = new Date().toISOString();
   m.updatedAt = new Date().toISOString();
   saveLocalData();
-  if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
-    window.DbycCloud.pushToCloud(false);
+  const cloudMgr = window.DbycGoogleDriveServerStorage || window.DbycCloud;
+  if (cloudMgr && typeof cloudMgr.pushToCloud === 'function') {
+    cloudMgr.pushToCloud(false);
   }
   showToast(`✅ Member ${m.name} qualified and approved by Director!`);
   renderQualificationDesk();
   renderMembersRegistry();
+  if (typeof updateDashboardStats === 'function') updateDashboardStats();
 };
 
 window.rejectMember = function(memberId) {
@@ -16276,12 +16339,13 @@ function renderQualificationDesk(filter = 'ALL') {
     return;
   }
 
-  // Gather pending items across all required streams
-  const pendingMembers = (appState.members || []).filter(m => m.status === 'PENDING' || m.approvalStatus === 'PENDING').map(m => ({ ...m, itemType: 'MEMBERS' }));
-  const pendingEvents = (appState.events || []).filter(e => e.status === 'PENDING' || e.approvalStatus === 'PENDING').map(e => ({ ...e, itemType: 'CALENDAR' }));
-  const pendingNews = (appState.news || []).filter(n => n.status === 'PENDING' || n.approvalStatus === 'PENDING').map(n => ({ ...n, itemType: 'NEWS' }));
-  const pendingMinutes = (appState.minutes || []).filter(m => m.status === 'PENDING' || m.approvalStatus === 'PENDING').map(m => ({ ...m, itemType: 'MINUTES' }));
-  const pendingMedia = (appState.media || []).filter(m => m.status === 'PENDING').map(m => ({ ...m, itemType: 'MEDIA' }));
+  // Gather pending items across all required streams (Strictly unapproved items)
+  const isMemberApproved = (m) => (m.approvalStatus === 'APPROVED' || m.status === 'APPROVED' || m.status === 'Active' || m.membershipStatus === 'ACTIVE');
+  const pendingMembers = (appState.members || []).filter(m => !isMemberApproved(m) && (m.status === 'PENDING' || m.approvalStatus === 'PENDING' || !m.approvalStatus)).map(m => ({ ...m, itemType: 'MEMBERS' }));
+  const pendingEvents = (appState.events || []).filter(e => !(e.approvalStatus === 'APPROVED' || e.status === 'APPROVED') && (e.status === 'PENDING' || e.approvalStatus === 'PENDING')).map(e => ({ ...e, itemType: 'CALENDAR' }));
+  const pendingNews = (appState.news || []).filter(n => !(n.approvalStatus === 'APPROVED' || n.status === 'APPROVED') && (n.status === 'PENDING' || n.approvalStatus === 'PENDING')).map(n => ({ ...n, itemType: 'NEWS' }));
+  const pendingMinutes = (appState.minutes || []).filter(m => !(m.approvalStatus === 'APPROVED' || m.status === 'APPROVED') && (m.status === 'PENDING' || m.approvalStatus === 'PENDING')).map(m => ({ ...m, itemType: 'MINUTES' }));
+  const pendingMedia = (appState.media || []).filter(m => m.status !== 'APPROVED' && m.status === 'PENDING').map(m => ({ ...m, itemType: 'MEDIA' }));
 
   // Update counters
   const setElText = (id, txt) => {
@@ -16850,7 +16914,11 @@ window.DbycGoogleDriveServerStorage = {
       telecastPhotos: window.telecastPhotos || (window.appState && window.appState.telecastPhotos) || [],
       teams: (window.appState && window.appState.teams) || [],
       teamPointsLog: (window.appState && window.appState.teamPointsLog) || [],
-      leaders: (window.appState && window.appState.leaders) || [],
+      leaders: ((window.appState && window.appState.leaders) || []).filter(l => {
+        const r = (l && l.role || '').toLowerCase();
+        const n = (l && l.name || '').toLowerCase();
+        return !r.includes('director') && !n.includes('director') && !n.includes('frangleen');
+      }),
       certificates: (window.appState && window.appState.certificates) || []
     };
 
@@ -17136,9 +17204,15 @@ window.DbycGoogleDriveServerStorage = {
 
     // Safe merge of leaders (official office bearers dossiers & photos)
     if (cloudData.leaders && Array.isArray(cloudData.leaders) && cloudData.leaders.length > 0) {
-      const ldrMap = new Map((window.appState.leaders || []).map(l => [l.id, l]));
+      const isDirRec = (l) => {
+        if (!l) return false;
+        const r = (l.role || '').toLowerCase();
+        const n = (l.name || '').toLowerCase();
+        return r.includes('director') || n.includes('director') || n.includes('frangleen');
+      };
+      const ldrMap = new Map((window.appState.leaders || []).filter(l => !isDirRec(l)).map(l => [l.id, l]));
       cloudData.leaders.forEach(cl => {
-        if (cl && cl.id) {
+        if (cl && cl.id && !isDirRec(cl)) {
           if (!ldrMap.has(cl.id)) {
             ldrMap.set(cl.id, cl);
             hasChanges = true;
@@ -17153,7 +17227,7 @@ window.DbycGoogleDriveServerStorage = {
           }
         }
       });
-      window.appState.leaders = Array.from(ldrMap.values());
+      window.appState.leaders = Array.from(ldrMap.values()).filter(l => !isDirRec(l));
     }
 
     // Safe merge of certificates
@@ -17447,7 +17521,7 @@ window.syncLeadersWithMembers = function() {
   const leadershipRoles = [
     'president', 'secretary', 'general secretary', 'gs', 'ags', 'treasurer',
     'sports secretary', 'cultural secretary', 'spiritual secretary',
-    'leader', 'incharge', 'director', 'asst director', 'council', 'committee',
+    'leader', 'incharge', 'council', 'committee',
     'vice president', 'joint secretary'
   ];
 
@@ -17460,13 +17534,18 @@ window.syncLeadersWithMembers = function() {
     const roleLower = (m.role || '').toLowerCase();
     const groupLower = (m.group || '').toLowerCase();
     const catLower = (m.category || '').toLowerCase();
+    const mNameNorm = (m.name || '').trim().toLowerCase();
+
+    // NEVER import Director or Assistant Director into Office Bearers!
+    if (roleLower.includes('director') || mNameNorm.includes('director') || mNameNorm.includes('frangleen')) {
+      return;
+    }
 
     const isLeaderRole = leadershipRoles.some(r => roleLower.includes(r));
     const isLeaderCat = leadershipCategories.some(c => catLower.includes(c) || groupLower.includes(c));
 
     if (isLeaderRole || isLeaderCat) {
       const mPhoneClean = (m.mobile || '').replace(/\D/g, '');
-      const mNameNorm = (m.name || '').trim().toLowerCase();
 
       const existingLeader = leaders.find(l => {
         if (l.memberId && l.memberId === m.id) return true;
@@ -17504,19 +17583,30 @@ window.syncLeadersWithMembers = function() {
     }
   });
 
+  const validLeaders = leaders.filter(l => {
+    const r = (l.role || '').toLowerCase();
+    const n = (l.name || '').toLowerCase();
+    return !r.includes('director') && !n.includes('director') && !n.includes('frangleen');
+  });
+
   const countBadge = document.getElementById('obHeaderCountBadge');
   if (countBadge) {
-    countBadge.textContent = `${leaders.length} Bearers of Responsibility • Basin Bridge, Chennai - 12`;
+    countBadge.textContent = `${validLeaders.length} Bearers of Responsibility • Basin Bridge, Chennai - 12`;
   }
   const ldrCountBadge = document.getElementById('leadersHeaderCountBadge');
   if (ldrCountBadge) {
-    ldrCountBadge.textContent = `${leaders.length} Bearers of Responsibility • Basin Bridge, Chennai - 12`;
+    ldrCountBadge.textContent = `${validLeaders.length} Bearers of Responsibility • Basin Bridge, Chennai - 12`;
   }
 };
 
 window.renderOfficeBearersDashboard = function() {
   const container = document.getElementById('officeBearersListContainer');
   if (!container) return;
+
+  // Clean out any directors from office bearers
+  if (typeof window.purgeDirectorsFromLeaders === 'function') {
+    window.purgeDirectorsFromLeaders();
+  }
 
   // 1. Live Dynamic Two-Way Sync with appState.members
   if (typeof window.syncLeadersWithMembers === 'function') {
@@ -17534,6 +17624,10 @@ window.renderOfficeBearersDashboard = function() {
   const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
 
   const filtered = leaders.filter(ldr => {
+    const r = (ldr.role || '').toLowerCase();
+    const n = (ldr.name || '').toLowerCase();
+    if (r.includes('director') || n.includes('director') || n.includes('frangleen')) return false;
+
     const matchesCat = (window.activeObCategoryFilter === 'ALL' || ldr.category === window.activeObCategoryFilter);
     const matchesSearch = !query ||
       (ldr.name && ldr.name.toLowerCase().includes(query)) ||
@@ -18257,6 +18351,7 @@ const DBYC_ROLE_PASSWORDS = {
     hint: 'Youth Member Password: 1234 (Universal Member PIN)'
   }
 };
+window.DBYC_ROLE_PASSWORDS = DBYC_ROLE_PASSWORDS;
 
 // 1. Entrance Portal Tab Switching (Password vs Mobile OTP)
 window.switchEntranceTab = function(mode) {
@@ -19881,6 +19976,12 @@ window.openNewMemberRegistrationFromLogin = function() {
 
 window.syncLeadersWithMembers = function() {
   if (!window.appState) return;
+
+  // Clean out any directors from office bearers
+  if (typeof window.purgeDirectorsFromLeaders === 'function') {
+    window.purgeDirectorsFromLeaders();
+  }
+
   if (!window.appState.leaders || window.appState.leaders.length === 0) {
     window.appState.leaders = JSON.parse(JSON.stringify(window.DBYC_OFFICIAL_LEADERS_SEED || []));
   }
@@ -19922,7 +20023,7 @@ window.syncLeadersWithMembers = function() {
   // 2. Automatically pull ALL registered members with an Office Bearer category or leadership role
   const leadershipRoles = [
     'president', 'secretary', 'general secretary', 'treasurer', 'joint secretary',
-    'vice president', 'animator', 'director', 'asst director', 'leader', 'incharge',
+    'vice president', 'animator', 'leader', 'incharge',
     'captain', 'councillor', 'council', 'committee', 'choir', 'sports', 'media'
   ];
 
@@ -19930,13 +20031,18 @@ window.syncLeadersWithMembers = function() {
     const roleLower = (m.role || '').toLowerCase();
     const groupLower = (m.group || '').toLowerCase();
     const catLower = (m.category || '').toLowerCase();
+    const mNameNorm = (m.name || '').trim().toLowerCase();
+
+    // NEVER import Director or Assistant Director into Office Bearers!
+    if (roleLower.includes('director') || mNameNorm.includes('director') || mNameNorm.includes('frangleen')) {
+      return;
+    }
 
     const isLeaderRole = leadershipRoles.some(r => roleLower.includes(r));
     const isLeaderCat = catLower.includes('leader') || groupLower.includes('leader') || catLower.includes('committee') || catLower.includes('elder');
 
     if (isLeaderRole || isLeaderCat) {
       const mPhoneClean = (m.mobile || '').replace(/\D/g, '');
-      const mNameNorm = (m.name || '').trim().toLowerCase();
 
       const existingLeader = leaders.find(l => {
         if (l.memberId && l.memberId === m.id) return true;
@@ -19974,9 +20080,19 @@ window.syncLeadersWithMembers = function() {
     }
   });
 
+  const validLeaders = leaders.filter(l => {
+    const r = (l.role || '').toLowerCase();
+    const n = (l.name || '').toLowerCase();
+    return !r.includes('director') && !n.includes('director') && !n.includes('frangleen');
+  });
+
   const countBadge = document.getElementById('obHeaderCountBadge');
   if (countBadge) {
-    countBadge.textContent = `${leaders.length} Bearers of Responsibility • Basin Bridge, Chennai - 12`;
+    countBadge.textContent = `${validLeaders.length} Bearers of Responsibility • Basin Bridge, Chennai - 12`;
+  }
+  const ldrCountBadge = document.getElementById('leadersHeaderCountBadge');
+  if (ldrCountBadge) {
+    ldrCountBadge.textContent = `${validLeaders.length} Bearers of Responsibility • Basin Bridge, Chennai - 12`;
   }
 };
 

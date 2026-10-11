@@ -1074,10 +1074,10 @@ body {
   border-radius: 18px;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 43, 102, 0.18);
-  border: 2px solid #004b98;
-  width: 320px;
-  max-width: 340px;
-  min-height: 492px;
+  border: 2.5px solid #004b98;
+  width: 100%;
+  max-width: 390px;
+  min-height: 540px;
   margin: 0 auto;
   position: relative;
   display: flex;
@@ -10671,102 +10671,115 @@ function generateIdPass(memberId) {
 
   card.innerHTML = `
     <!-- Official 56mm x 86mm CR-80 Portrait ID Card -->
-    <div class="id-pass-card id-pass-card-56x86" id="printableIdCard" style="width:320px; min-height:492px; background:#ffffff; background-image:url('${window.DBYC_ID_CARD_BG || "assets/id_bg_theme.jpg"}'); background-size:cover; background-position:center; border:2.5px solid #004b98; border-radius:18px; overflow:hidden; box-shadow:0 12px 35px rgba(0,43,102,0.18); font-family:system-ui,-apple-system,sans-serif; margin:0 auto; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; position:relative;">
+    <div class="id-pass-card id-pass-card-56x86" id="printableIdCard" style="width:100%; max-width:390px; min-height:550px; background:#ffffff; background-image:url('${window.DBYC_ID_CARD_BG || "assets/id_bg_theme.jpg"}'); background-size:cover; background-position:center; border:2.5px solid #004b98; border-radius:18px; overflow:hidden; box-shadow:0 12px 35px rgba(0,43,102,0.18); font-family:system-ui,-apple-system,sans-serif; margin:0 auto; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; position:relative;">
       
       <!-- Top Header Band: Header SAME (Don Bosco left, DBYC crest right) -->
-      <div class="id-pass-header" style="background:linear-gradient(135deg, #00264d 0%, #004b98 100%); padding:9px 12px; display:flex; align-items:center; justify-content:space-between; gap:8px; border-bottom:2.5px solid #fde047; flex-shrink:0;">
-        <img src="${window.DON_BOSCO_PORTRAIT || DBYC_OFFICIAL_LOGO}" alt="Don Bosco" class="id-pass-header-logo" style="width:38px; height:38px; border-radius:50%; object-fit:cover; border:2px solid #fde047; box-shadow:0 0 6px rgba(253,224,71,0.6);" title="Don Bosco Youth Centre">
+      <div class="id-pass-header" style="background:linear-gradient(135deg, #00264d 0%, #004b98 100%); padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:8px; border-bottom:2.5px solid #fde047; flex-shrink:0;">
+        <img src="${window.DON_BOSCO_PORTRAIT || DBYC_OFFICIAL_LOGO}" alt="Don Bosco" class="id-pass-header-logo" style="width:42px; height:42px; border-radius:50%; object-fit:cover; border:2px solid #fde047; box-shadow:0 0 6px rgba(253,224,71,0.6);" title="Don Bosco Youth Centre">
         <div style="text-align:center; flex:1; line-height:1.2;">
-          <h3 style="font-size:0.92rem; font-weight:900; letter-spacing:0.3px; color:#ffffff; margin:0; text-transform:uppercase;">DON BOSCO YOUTH CENTRE</h3>
-          <p style="font-size:0.72rem; color:#fde047; font-weight:800; margin:2px 0 0;">Basin Bridge, Chennai - 600 012</p>
+          <h3 style="font-size:1.05rem; font-weight:900; letter-spacing:0.3px; color:#ffffff; margin:0; text-transform:uppercase;">DON BOSCO YOUTH CENTRE</h3>
+          <p style="font-size:0.82rem; color:#fde047; font-weight:800; margin:2px 0 0;">Basin Bridge, Chennai - 600 012</p>
         </div>
-        <img src="${DBYC_OFFICIAL_LOGO}" alt="DBYC Crest" class="id-pass-header-logo" style="width:38px; height:38px; border-radius:50%; object-fit:cover; border:2px solid #fde047; background:#ffffff;" title="Don Bosco Youth Centre Crest">
+        <img src="${DBYC_OFFICIAL_LOGO}" alt="DBYC Crest" class="id-pass-header-logo" style="width:42px; height:42px; border-radius:50%; object-fit:cover; border:2px solid #fde047; background:#ffffff;" title="Don Bosco Youth Centre Crest">
       </div>
 
       <!-- Card Body: Image of Person, Bold Name, Member Group, QR, ONLY Requested Details -->
-      <div class="id-pass-body" style="padding:10px 12px; display:flex; flex-direction:column; align-items:center; gap:4px; flex:1; background:rgba(255, 255, 255, 0.90);">
-        <div style="position:relative;">
-          <img src="${photoSrc}" alt="${member.name}" class="id-pass-candidate-photo" style="width:78px; height:82px; border-radius:12px; object-fit:cover; border:2.5px solid #004b98; outline:1.5px solid #fde047; box-shadow:0 3px 10px rgba(0,0,0,0.15);">
-          ${(typeof window.canEdit === 'function' && window.canEdit('passes')) ? `<button class="avatar-upload-btn" title="Change Photo" onclick="document.getElementById('passPhotoFileInput').click()" style="position:absolute; bottom:-4px; right:-4px; background:#004b98; color:#fff; border:1.5px solid #fff; border-radius:50%; width:24px; height:24px; font-size:0.7rem; cursor:pointer;">📷</button>` : ''}
-        </div>
-
-        <h4 style="font-size:1.1rem; font-weight:900; color:#00264d; margin:2px 0 0; text-transform:uppercase; letter-spacing:0.3px; text-align:center;">${member.name}</h4>
+      <div class="id-pass-body" style="padding:10px 14px; display:flex; flex-direction:column; align-items:center; gap:4px; flex:1; background:rgba(255, 255, 255, 0.92);">
         
-        <span style="background:#fee2e2; color:#b91c1c; font-weight:900; font-size:0.72rem; padding:2px 10px; border-radius:100px; border:1px solid #fca5a5; display:inline-block; margin-bottom:2px;">
+        <!-- Member Name & Group Badge (Bold!) -->
+        <h4 style="font-size:1.35rem; font-weight:900; color:#00264d; margin:2px 0 0; text-transform:uppercase; letter-spacing:0.3px; text-align:center;">${member.name}</h4>
+        
+        <span style="background:#fee2e2; color:#b91c1c; font-weight:900; font-size:0.85rem; padding:3px 14px; border-radius:100px; border:1px solid #fca5a5; display:inline-block; margin-bottom:4px;">
           ★ ${(member.group || 'Youth').toUpperCase()} ★
         </span>
 
-        <!-- High-Contrast QR Code -->
-        <div class="id-pass-qr-box" style="background:#ffffff; padding:5px; border-radius:8px; border:1.5px solid #cbd5e1; box-shadow:0 2px 6px rgba(0,0,0,0.06); margin:2px 0;">
-          <img src="${qrUrl}" alt="Member QR Pass" width="115" height="115" style="display:block; border-radius:4px;">
+        <!-- Side-by-Side: QR Code in the LEFT & Image / Photo in the RIGHT (Both Bigger) -->
+        <div style="display:flex; justify-content:space-between; align-items:center; width:100%; padding:6px 4px; gap:12px; margin:2px 0 6px; box-sizing:border-box;">
+          
+          <!-- LEFT: QR Code (Bigger) -->
+          <div style="display:flex; flex-direction:column; align-items:center; flex:1;">
+            <div class="id-pass-qr-box" style="background:#ffffff; padding:6px; border-radius:10px; border:2px solid #004b98; box-shadow:0 3px 8px rgba(0,75,152,0.15); display:inline-flex; align-items:center; justify-content:center;">
+              <img src="${qrUrl}" alt="Member QR Pass" width="135" height="135" style="display:block; border-radius:6px; object-fit:contain;">
+            </div>
+            <span style="font-size:11px; font-weight:800; color:#004b98; margin-top:4px; letter-spacing:0.5px;">SCAN QR PASS</span>
+          </div>
+
+          <!-- RIGHT: Image / Candidate Photo (Bigger) -->
+          <div style="display:flex; flex-direction:column; align-items:center; flex:1;">
+            <div style="position:relative; display:inline-block;">
+              <img src="${photoSrc}" alt="${member.name}" class="id-pass-candidate-photo" style="width:125px; height:135px; border-radius:12px; object-fit:cover; border:2.5px solid #004b98; outline:2px solid #fde047; box-shadow:0 4px 12px rgba(0,0,0,0.18);">
+              ${(typeof window.canEdit === 'function' && window.canEdit('passes')) ? `<button class="avatar-upload-btn" title="Change Photo" onclick="document.getElementById('passPhotoFileInput').click()" style="position:absolute; bottom:-4px; right:-4px; background:#004b98; color:#fff; border:1.5px solid #fff; border-radius:50%; width:28px; height:28px; font-size:0.85rem; cursor:pointer; display:flex; align-items:center; justify-content:center;">📷</button>` : ''}
+            </div>
+            <span style="font-size:11px; font-weight:800; color:#475569; margin-top:4px; letter-spacing:0.5px;">MEMBER PHOTO</span>
+          </div>
         </div>
 
-        <!-- All-Bold Details Table: ONLY requested fields with small images / icons -->
-        <table class="id-pass-details-table" style="width:100%; border-collapse:collapse; margin-top:2px; font-size:0.80rem;">
-          <tr style="border-bottom:1px dashed #cbd5e1;">
-            <td style="width:24px; font-size:1.02rem; padding:3px 2px; text-align:center; vertical-align:middle;">🪪</td>
-            <td class="label" style="font-weight:900; color:#0f172a; padding:3px 4px; width:44%; white-space:nowrap;">DBYC ID:</td>
-            <td class="val" style="font-weight:900; color:#004b98; font-size:0.90rem; padding:3px 4px;">${member.id}</td>
+        <!-- All-Bold Details Table: Font Size 18px -->
+        <table class="id-pass-details-table" style="width:100%; border-collapse:collapse; margin-top:4px; font-size:18px;">
+          <tr style="border-bottom:1.5px dashed #cbd5e1;">
+            <td style="width:28px; font-size:20px; padding:6px 2px; text-align:center; vertical-align:middle;">🪪</td>
+            <td class="label" style="font-size:18px; font-weight:900; color:#0f172a; padding:6px 6px; width:44%; white-space:nowrap;">DBYC ID:</td>
+            <td class="val" style="font-size:18px; font-weight:900; color:#004b98; padding:6px 6px;">${member.id}</td>
           </tr>
-          <tr style="border-bottom:1px dashed #cbd5e1;">
-            <td style="width:24px; font-size:1.02rem; padding:3px 2px; text-align:center; vertical-align:middle;">👥</td>
-            <td class="label" style="font-weight:900; color:#0f172a; padding:3px 4px; white-space:nowrap;">Member Group:</td>
-            <td class="val" style="font-weight:900; color:#0f172a; padding:3px 4px;">${member.group || 'Youth'}</td>
+          <tr style="border-bottom:1.5px dashed #cbd5e1;">
+            <td style="width:28px; font-size:20px; padding:6px 2px; text-align:center; vertical-align:middle;">👥</td>
+            <td class="label" style="font-size:18px; font-weight:900; color:#0f172a; padding:6px 6px; white-space:nowrap;">Member Group:</td>
+            <td class="val" style="font-size:18px; font-weight:900; color:#0f172a; padding:6px 6px;">${member.group || 'Youth'}</td>
           </tr>
-          <tr style="border-bottom:1px dashed #cbd5e1;">
-            <td style="width:24px; font-size:1.02rem; padding:3px 2px; text-align:center; vertical-align:middle;">⏳</td>
-            <td class="label" style="font-weight:900; color:#0f172a; padding:3px 4px; white-space:nowrap;">Duration in DBYC:</td>
-            <td class="val" style="font-weight:900; color:#b45309; padding:3px 4px;">${tenure}</td>
+          <tr style="border-bottom:1.5px dashed #cbd5e1;">
+            <td style="width:28px; font-size:20px; padding:6px 2px; text-align:center; vertical-align:middle;">⏳</td>
+            <td class="label" style="font-size:18px; font-weight:900; color:#0f172a; padding:6px 6px; white-space:nowrap;">Duration in DBYC:</td>
+            <td class="val" style="font-size:18px; font-weight:900; color:#b45309; padding:6px 6px;">${tenure}</td>
           </tr>
-          <tr style="border-bottom:1px dashed #cbd5e1;">
-            <td style="width:24px; font-size:1.02rem; padding:3px 2px; text-align:center; vertical-align:middle;">📞</td>
-            <td class="label" style="font-weight:900; color:#0f172a; padding:3px 4px; white-space:nowrap;">Mobile Number:</td>
-            <td class="val" style="font-weight:900; color:#0f172a; padding:3px 4px;">${member.mobile || 'N/A'}</td>
+          <tr style="border-bottom:1.5px dashed #cbd5e1;">
+            <td style="width:28px; font-size:20px; padding:6px 2px; text-align:center; vertical-align:middle;">📞</td>
+            <td class="label" style="font-size:18px; font-weight:900; color:#0f172a; padding:6px 6px; white-space:nowrap;">Mobile Number:</td>
+            <td class="val" style="font-size:18px; font-weight:900; color:#0f172a; padding:6px 6px;">${member.mobile || 'N/A'}</td>
           </tr>
-          <tr style="border-bottom:1px dashed #cbd5e1;">
-            <td style="width:24px; font-size:1.02rem; padding:3px 2px; text-align:center; vertical-align:middle;">🩸</td>
-            <td class="label" style="font-weight:900; color:#0f172a; padding:3px 4px; white-space:nowrap;">Blood Group:</td>
-            <td class="val" style="font-weight:900; color:#dc2626; font-size:0.90rem; padding:3px 4px;">${member.bloodGroup || 'N/A'}</td>
+          <tr style="border-bottom:1.5px dashed #cbd5e1;">
+            <td style="width:28px; font-size:20px; padding:6px 2px; text-align:center; vertical-align:middle;">🩸</td>
+            <td class="label" style="font-size:18px; font-weight:900; color:#0f172a; padding:6px 6px; white-space:nowrap;">Blood Group:</td>
+            <td class="val" style="font-size:18px; font-weight:900; color:#dc2626; padding:6px 6px;">${member.bloodGroup || 'N/A'}</td>
           </tr>
-          <tr style="border-bottom:1px dashed #cbd5e1;">
-            <td style="width:24px; font-size:1.02rem; padding:3px 2px; text-align:center; vertical-align:middle;">🎂</td>
-            <td class="label" style="font-weight:900; color:#0f172a; padding:3px 4px; white-space:nowrap;">Date of Birth:</td>
-            <td class="val" style="font-weight:900; color:#0f172a; padding:3px 4px;">${cardDob}</td>
+          <tr style="border-bottom:1.5px dashed #cbd5e1;">
+            <td style="width:28px; font-size:20px; padding:6px 2px; text-align:center; vertical-align:middle;">🎂</td>
+            <td class="label" style="font-size:18px; font-weight:900; color:#0f172a; padding:6px 6px; white-space:nowrap;">Date of Birth:</td>
+            <td class="val" style="font-size:18px; font-weight:900; color:#0f172a; padding:6px 6px;">${cardDob}</td>
           </tr>
-          <tr style="border-bottom:1px dashed #cbd5e1;">
-            <td style="width:24px; font-size:1.02rem; padding:3px 2px; text-align:center; vertical-align:top;">📍</td>
-            <td class="label" style="font-weight:900; color:#0f172a; padding:3px 4px; vertical-align:top; white-space:nowrap;">Address:</td>
-            <td class="val" style="font-weight:900; color:#1e293b; padding:3px 4px; font-size:0.75rem; line-height:1.25;">${cardAddress}</td>
+          <tr style="border-bottom:1.5px dashed #cbd5e1;">
+            <td style="width:28px; font-size:20px; padding:6px 2px; text-align:center; vertical-align:top;">📍</td>
+            <td class="label" style="font-size:18px; font-weight:900; color:#0f172a; padding:6px 6px; vertical-align:top; white-space:nowrap;">Address:</td>
+            <td class="val" style="font-size:18px; font-weight:900; color:#1e293b; padding:6px 6px; line-height:1.3;">${cardAddress}</td>
           </tr>
           <tr>
-            <td style="width:24px; font-size:1.02rem; padding:3px 2px; text-align:center; vertical-align:top;">🎯</td>
-            <td class="label" style="font-weight:900; color:#0f172a; padding:3px 4px; vertical-align:top; white-space:nowrap;">Special Activities:</td>
-            <td class="val" style="font-weight:900; color:#004b98; padding:3px 4px; font-size:0.75rem; line-height:1.25;">${cardActivities}</td>
+            <td style="width:28px; font-size:20px; padding:6px 2px; text-align:center; vertical-align:top;">🎯</td>
+            <td class="label" style="font-size:18px; font-weight:900; color:#0f172a; padding:6px 6px; vertical-align:top; white-space:nowrap;">Special Activities:</td>
+            <td class="val" style="font-size:18px; font-weight:900; color:#004b98; padding:6px 6px; line-height:1.3;">${cardActivities}</td>
           </tr>
         </table>
       </div>
 
       <!-- Official Director Signature & Seal Authority Area -->
-      <div style="display:flex; justify-content:space-between; align-items:flex-end; padding:0 12px 2px; margin-top:-4px; z-index:2; position:relative; background:rgba(255, 255, 255, 0.90);">
-        <!-- Left: Director Official Signature (Fixed Above Director Title) -->
-        <div style="text-align:left;">
-          <img src="${window.DBYC_DIRECTOR_SIGNATURE || 'assets/director_signature.png'}" alt="Director Signature" style="width:70px; height:auto; max-height:34px; object-fit:contain; display:block; filter:contrast(1.2);">
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; padding:8px 16px 4px; margin-top:4px; z-index:2; position:relative; background:rgba(255, 255, 255, 0.95); border-top:1.5px solid #cbd5e1;">
+        <!-- Left: Director Official Signature + "The Director" strictly below it -->
+        <div style="text-align:left; display:flex; flex-direction:column; align-items:flex-start;">
+          <img src="${window.DBYC_DIRECTOR_SIGNATURE || 'assets/director_signature.png'}" alt="Director Signature" style="width:90px; height:auto; max-height:42px; object-fit:contain; display:block; filter:contrast(1.2);">
+          <div style="font-size:18px; font-weight:900; color:#0f172a; margin-top:3px; letter-spacing:0.5px;">The Director</div>
         </div>
         <!-- Right: Official DBYC Seal -->
         <div style="text-align:right;">
-          <img src="${window.DBYC_OFFICIAL_SEAL || 'assets/dbyc_seal.png'}" alt="DBYC Official Seal" style="width:48px; height:48px; object-fit:contain; display:block; opacity:0.92; filter:drop-shadow(0 1px 3px rgba(0,0,0,0.15));">
+          <img src="${window.DBYC_OFFICIAL_SEAL || 'assets/dbyc_seal.png'}" alt="DBYC Official Seal" style="width:54px; height:54px; object-fit:contain; display:block; opacity:0.95; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.15));">
         </div>
       </div>
 
-      <!-- Footer Ribbon: Footer SAME (Rev. Fr. Director font little small, DBYC right) -->
-      <div class="id-pass-footer-ribbon" style="background:#0f172a; color:#ffffff; padding:6px 12px; display:flex; justify-content:space-between; align-items:center; border-top:2px solid #fde047; font-weight:800; flex-shrink:0;">
-        <span style="font-size:0.62rem; color:#e2e8f0; font-weight:800;">Rev. Fr. Director, SDB</span>
-        <span style="font-size:0.72rem; color:#fde047; font-weight:900;">DBYC Basin Bridge, Ch-12</span>
+      <!-- Footer Ribbon -->
+      <div class="id-pass-footer-ribbon" style="background:#0f172a; color:#ffffff; padding:7px 14px; text-align:center; border-top:2px solid #fde047; font-weight:800; flex-shrink:0;">
+        <span style="font-size:15px; color:#fde047; font-weight:900; letter-spacing:0.3px;">DBYC Basin Bridge, Chennai - 600 012</span>
       </div>
     </div>
 
     <!-- 3 Distinct HD Action Buttons (PDF, PNG, Print) -->
-    <div style="display:flex; flex-direction:column; gap:8px; width:100%; max-width:320px; margin:16px auto 0;">
+    <div style="display:flex; flex-direction:column; gap:8px; width:100%; max-width:390px; margin:16px auto 0;">
       <button type="button" class="btn-dbyc-primary" style="background:#059669; font-size:0.92rem; font-weight:800; padding:11px; border-radius:10px; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 3px 8px rgba(5,150,105,0.3); cursor:pointer;" onclick="window.downloadMemberPassPdf('${member.id}')">
         📄 Download HD PDF (PDF பதிவிறக்கம்)
       </button>
@@ -11430,11 +11443,53 @@ window.drawOfficial56x86PassToCanvas = async function(m, scale) {
   ctx.font = 'bold 23px sans-serif';
   ctx.fillText('Basin Bridge, Chennai - 600 012', cvs.width / 2, 136);
 
-  // 4. Member Photo (Bigger & Sharp!)
-  var photoW = 180;
-  var photoH = 195;
-  var photoX = cvs.width / 2 - photoW / 2;
-  var photoY = 215;
+  // 4. Member Name & Group Badge (Header level)
+  ctx.fillStyle = '#00264d';
+  ctx.font = 'bold 44px sans-serif';
+  var upperName = (member.name || 'MEMBER').toUpperCase();
+  ctx.fillText(upperName, cvs.width / 2, 245);
+
+  var groupName = (member.group || 'Youth').toUpperCase();
+  var groupText = '★ ' + groupName + ' ★';
+  ctx.font = 'bold 24px sans-serif';
+  var groupW = ctx.measureText(groupText).width + 36;
+  ctx.fillStyle = '#fee2e2';
+  ctx.fillRect(cvs.width / 2 - groupW / 2, 260, groupW, 34);
+  ctx.strokeStyle = '#fca5a5';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(cvs.width / 2 - groupW / 2, 260, groupW, 34);
+  ctx.fillStyle = '#b91c1c';
+  ctx.fillText(groupText, cvs.width / 2, 285);
+
+  // 5. SIDE-BY-SIDE: QR Code on LEFT & Member Photo on RIGHT (Both Bigger!)
+  var rawQr = 'DBYC:' + member.id + ':' + member.name + ':' + (member.group || 'Youth');
+  var qrUrl = (typeof window.generateOfflineQrDataUrl === 'function' ? window.generateOfflineQrDataUrl(rawQr) : '') || ('https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=' + encodeURIComponent(rawQr));
+  var qrImg = await window.loadImageForCanvas(qrUrl);
+
+  // LEFT: High-Contrast QR Code (Bigger: 310px)
+  var qrSize = 310;
+  var qrBoxX = 75;
+  var qrBoxY = 315;
+
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(qrBoxX - 8, qrBoxY - 8, qrSize + 16, qrSize + 16);
+  ctx.strokeStyle = '#004b98';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(qrBoxX - 8, qrBoxY - 8, qrSize + 16, qrSize + 16);
+
+  if (qrImg) {
+    ctx.drawImage(qrImg, qrBoxX, qrBoxY, qrSize, qrSize);
+  }
+  ctx.font = 'bold 20px sans-serif';
+  ctx.fillStyle = '#004b98';
+  ctx.textAlign = 'center';
+  ctx.fillText('SCAN QR PASS', qrBoxX + qrSize / 2, qrBoxY + qrSize + 26);
+
+  // RIGHT: Member Photo / Image (Bigger: 290px x 310px)
+  var photoW = 290;
+  var photoH = 310;
+  var photoX = cvs.width - 75 - photoW;
+  var photoY = 315;
 
   ctx.fillStyle = '#f8fafc';
   ctx.fillRect(photoX, photoY, photoW, photoH);
@@ -11449,88 +11504,54 @@ window.drawOfficial56x86PassToCanvas = async function(m, scale) {
   if (candPhoto) {
     ctx.drawImage(candPhoto, photoX + 6, photoY + 6, photoW - 12, photoH - 12);
   }
+  ctx.font = 'bold 20px sans-serif';
+  ctx.fillStyle = '#475569';
+  ctx.textAlign = 'center';
+  ctx.fillText('MEMBER PHOTO', photoX + photoW / 2, photoY + photoH + 26);
 
-  // 5. Member Name (Bold!)
-  ctx.fillStyle = '#00264d';
-  ctx.font = 'bold 38px sans-serif';
-  var upperName = (member.name || 'MEMBER').toUpperCase();
-  ctx.fillText(upperName, cvs.width / 2, 448);
-
-  // 6. Member Group Pill
-  var groupName = (member.group || 'Youth').toUpperCase();
-  var groupText = '★ ' + groupName + ' ★';
-  ctx.font = 'bold 22px sans-serif';
-  var groupW = ctx.measureText(groupText).width + 36;
-  ctx.fillStyle = '#fee2e2';
-  ctx.fillRect(cvs.width / 2 - groupW / 2, 466, groupW, 36);
-  ctx.strokeStyle = '#fca5a5';
-  ctx.lineWidth = 2;
-  ctx.strokeRect(cvs.width / 2 - groupW / 2, 466, groupW, 36);
-  ctx.fillStyle = '#b91c1c';
-  ctx.fillText(groupText, cvs.width / 2, 491);
-
-  // 7. High-Contrast QR Code (Bigger & Crisp!)
-  var rawQr = 'DBYC:' + member.id + ':' + member.name + ':' + (member.group || 'Youth');
-  var qrUrl = (typeof window.generateOfflineQrDataUrl === 'function' ? window.generateOfflineQrDataUrl(rawQr) : '') || ('https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=' + encodeURIComponent(rawQr));
-  var qrImg = await window.loadImageForCanvas(qrUrl);
-
-  var qrSize = 240;
-  var qrBoxX = cvs.width / 2 - qrSize / 2;
-  var qrBoxY = 512;
-
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(qrBoxX - 8, qrBoxY - 8, qrSize + 16, qrSize + 16);
-  ctx.strokeStyle = '#cbd5e1';
-  ctx.lineWidth = 3;
-  ctx.strokeRect(qrBoxX - 8, qrBoxY - 8, qrSize + 16, qrSize + 16);
-
-  if (qrImg) {
-    ctx.drawImage(qrImg, qrBoxX, qrBoxY, qrSize, qrSize);
-  }
-
-  // 8. Details Table: Translucent White to allow theme to show through
+  // 6. Details Table: Translucent White, Font Size 18 (scaled to 36px bold in HD Canvas)
   var tblX = 45;
-  var tblY = 775;
+  var tblY = 680;
   var tblW = cvs.width - 90;
-  var tblH = 745;
+  var tblH = 870;
 
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.88)';
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.90)';
   ctx.fillRect(tblX, tblY, tblW, tblH);
   ctx.strokeStyle = '#cbd5e1';
   ctx.lineWidth = 3;
   ctx.strokeRect(tblX, tblY, tblW, tblH);
 
   var rows = [
-    { icon: '🪪', label: 'DBYC ID:', val: member.id || 'N/A', color: '#004b98', boldVal: true, valFont: '900 33px sans-serif' },
-    { icon: '👥', label: 'Member Group:', val: member.group || 'Youth', color: '#0f172a', boldVal: true, valFont: '900 31px sans-serif' },
-    { icon: '⏳', label: 'Duration in DBYC:', val: tenure, color: '#b45309', boldVal: true, valFont: '900 31px sans-serif' },
-    { icon: '📞', label: 'Mobile Number:', val: member.mobile || 'N/A', color: '#0f172a', boldVal: true, valFont: '900 31px sans-serif' },
-    { icon: '🩸', label: 'Blood Group:', val: member.bloodGroup || 'N/A', color: '#dc2626', boldVal: true, valFont: '900 35px sans-serif' },
-    { icon: '🎂', label: 'Date of Birth:', val: cardDob, color: '#0f172a', boldVal: true, valFont: '900 31px sans-serif' },
-    { icon: '📍', label: 'Address:', val: cardAddress, color: '#1e293b', boldVal: true, multiline: true, valFont: '900 27px sans-serif' },
-    { icon: '🎯', label: 'Special Activities:', val: cardActivities, color: '#004b98', boldVal: true, multiline: true, valFont: '900 27px sans-serif' }
+    { icon: '🪪', label: 'DBYC ID:', val: member.id || 'N/A', color: '#004b98', boldVal: true, valFont: '900 36px sans-serif' },
+    { icon: '👥', label: 'Member Group:', val: member.group || 'Youth', color: '#0f172a', boldVal: true, valFont: '900 36px sans-serif' },
+    { icon: '⏳', label: 'Duration in DBYC:', val: tenure, color: '#b45309', boldVal: true, valFont: '900 36px sans-serif' },
+    { icon: '📞', label: 'Mobile Number:', val: member.mobile || 'N/A', color: '#0f172a', boldVal: true, valFont: '900 36px sans-serif' },
+    { icon: '🩸', label: 'Blood Group:', val: member.bloodGroup || 'N/A', color: '#dc2626', boldVal: true, valFont: '900 38px sans-serif' },
+    { icon: '🎂', label: 'Date of Birth:', val: cardDob, color: '#0f172a', boldVal: true, valFont: '900 36px sans-serif' },
+    { icon: '📍', label: 'Address:', val: cardAddress, color: '#1e293b', boldVal: true, multiline: true, valFont: '900 32px sans-serif' },
+    { icon: '🎯', label: 'Special Activities:', val: cardActivities, color: '#004b98', boldVal: true, multiline: true, valFont: '900 32px sans-serif' }
   ];
 
-  var curY = tblY + 52;
-  var valStartX = tblX + 410;
-  var maxValW = tblW - 430;
+  var curY = tblY + 58;
+  var valStartX = tblX + 430;
+  var maxValW = tblW - 450;
 
   for (var i = 0; i < rows.length; i++) {
     var r = rows[i];
     
     // Draw Small Image / Icon
-    ctx.font = "32px 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif";
+    ctx.font = "36px 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif";
     ctx.textAlign = 'left';
     ctx.fillText(r.icon, tblX + 22, curY);
 
-    // Draw Bold Legible Label
-    ctx.fillStyle = '#0f172a'; // Deep high-contrast dark
-    ctx.font = '900 29px sans-serif'; // Solid bold
-    ctx.fillText(r.label, tblX + 70, curY);
+    // Draw Bold Legible Label (Font size 18 scaled)
+    ctx.fillStyle = '#0f172a';
+    ctx.font = '900 36px sans-serif';
+    ctx.fillText(r.label, tblX + 72, curY);
 
-    // Draw Bold Legible Value
+    // Draw Bold Legible Value (Font size 18 scaled)
     ctx.fillStyle = r.color;
-    ctx.font = r.valFont || '900 30px sans-serif';
+    ctx.font = r.valFont || '900 36px sans-serif';
 
     if (r.multiline) {
       var words = String(r.val || '').split(' ');
@@ -11541,7 +11562,7 @@ window.drawOfficial56x86PassToCanvas = async function(m, scale) {
         if (ctx.measureText(testLine).width > maxValW && line) {
           ctx.fillText(line, valStartX, lineY);
           line = words[w];
-          lineY += 34;
+          lineY += 38;
         } else {
           line = testLine;
         }
@@ -11549,13 +11570,13 @@ window.drawOfficial56x86PassToCanvas = async function(m, scale) {
       if (line) {
         ctx.fillText(line, valStartX, lineY);
       }
-      var consumed = Math.max(82, (lineY - curY) + 52);
+      var consumed = Math.max(92, (lineY - curY) + 54);
       if (i < rows.length - 1) {
         ctx.strokeStyle = '#e2e8f0';
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.moveTo(tblX + 16, curY + consumed - 30);
-        ctx.lineTo(tblX + tblW - 16, curY + consumed - 30);
+        ctx.moveTo(tblX + 16, curY + consumed - 32);
+        ctx.lineTo(tblX + tblW - 16, curY + consumed - 32);
         ctx.stroke();
       }
       curY += consumed;
@@ -11565,50 +11586,49 @@ window.drawOfficial56x86PassToCanvas = async function(m, scale) {
         ctx.strokeStyle = '#e2e8f0';
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.moveTo(tblX + 16, curY + 34);
-        ctx.lineTo(tblX + tblW - 16, curY + 34);
+        ctx.moveTo(tblX + 16, curY + 40);
+        ctx.lineTo(tblX + tblW - 16, curY + 40);
         ctx.stroke();
       }
-      curY += 82;
+      curY += 92;
     }
   }
 
-  // 9. Director Official Signature & Official Seal
-  var footerY = 1636;
+  // 7. Official Director Signature & Seal: Below the sign keep ONLY the words The Director
+  var footerY = 1640;
   var sigImg = await window.loadImageForCanvas(window.DBYC_DIRECTOR_SIGNATURE || 'assets/director_signature.png');
   if (sigImg) {
-    var sigW = 185;
+    var sigW = 190;
     var sigH = Math.round(sigImg.height * (sigW / sigImg.width));
-    ctx.drawImage(sigImg, 50, footerY - sigH - 8, sigW, sigH);
+    ctx.drawImage(sigImg, 50, footerY - sigH - 42, sigW, sigH);
   }
+
+  // Below the sign keep ONLY the words The Director
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#0f172a';
+  ctx.font = 'bold 34px sans-serif';
+  ctx.fillText('The Director', 50, footerY - 10);
 
   // Official DBYC Rubber Stamp / Seal on Right
   var sealImg = await window.loadImageForCanvas(window.DBYC_OFFICIAL_SEAL || 'assets/dbyc_seal.png');
   if (sealImg) {
     var sealSize = 145;
     var sealX = cvs.width - 50 - sealSize;
-    var sealY = footerY - sealSize - 4;
+    var sealY = footerY - sealSize - 6;
     ctx.drawImage(sealImg, sealX, sealY, sealSize, sealSize);
   }
 
-  // 10. Footer Ribbon: Director font little small & sign fixed above
+  // 8. Footer Ribbon: Below the sign keeps only the words The Director
   ctx.fillStyle = '#0f172a';
   ctx.fillRect(20, footerY, cvs.width - 40, cvs.height - footerY - 20);
 
   ctx.fillStyle = '#fde047';
   ctx.fillRect(20, footerY, cvs.width - 40, 6);
 
-  // Director text: little small font (16px bold instead of 24px)
-  ctx.textAlign = 'left';
-  ctx.fillStyle = '#e2e8f0';
-  ctx.font = 'bold 16px sans-serif';
-  ctx.fillText('Rev. Fr. Director, SDB', 50, footerY + 41);
-
-  // DBYC Basin Bridge, Ch-12 (23px bold yellow)
-  ctx.textAlign = 'right';
+  ctx.textAlign = 'center';
   ctx.fillStyle = '#fde047';
-  ctx.font = 'bold 23px sans-serif';
-  ctx.fillText('DBYC Basin Bridge, Ch-12', cvs.width - 50, footerY + 41);
+  ctx.font = 'bold 28px sans-serif';
+  ctx.fillText('DBYC Basin Bridge, Chennai - 600 012', cvs.width / 2, footerY + 38);
 
   return cvs;
 };
@@ -20235,17 +20255,12 @@ window.renderOfficialIdCardHtml = function(member) {
         <img src="${logoDbyc}" alt="DBYC Crest" style="width:7.5mm; height:7.5mm; border-radius:50%; object-fit:contain; border:1px solid #fde047; background:#ffffff; flex-shrink:0;">
       </div>
 
-      <!-- 3. Core Content: Image of Person, Bold Name, Member Group, QR, Details Table -->
+      <!-- 3. Core Content: Bold Name, Member Group, QR (LEFT), Image (RIGHT), Details Table -->
       <div style="position:relative; z-index:1; padding:1.2mm 2mm 0.4mm; display:flex; flex-direction:column; align-items:center; justify-content:space-between; flex:1; box-sizing:border-box; overflow:hidden;">
         
-        <!-- Member Photo (Bigger!) -->
-        <div style="width:14mm; height:15mm; border-radius:2mm; overflow:hidden; border:1.5px solid #004b98; outline:1px solid #fde047; background:#f8fafc; box-shadow:0 2px 6px rgba(0,0,0,0.15); flex-shrink:0; position:relative;">
-          <img src="${photoSrc}" alt="${member.name}" style="width:100%; height:100%; object-fit:cover;">
-        </div>
-
         <!-- Member Name & Group Badge (Bold!) -->
-        <div style="margin-top:0.5mm; line-height:1.15; width:100%;">
-          <div style="font-size:3.2mm; font-weight:900; color:#00264d; text-transform:uppercase; letter-spacing:0.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+        <div style="margin-top:0.4mm; line-height:1.15; width:100%;">
+          <div style="font-size:3.4mm; font-weight:900; color:#00264d; text-transform:uppercase; letter-spacing:0.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
             ${member.name}
           </div>
           <div style="display:inline-block; background:#fee2e2; color:#b91c1c; font-size:1.8mm; font-weight:900; padding:0.3mm 2.2mm; border-radius:2mm; border:0.6px solid #fca5a5; margin-top:0.3mm; max-width:94%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
@@ -20253,16 +20268,30 @@ window.renderOfficialIdCardHtml = function(member) {
           </div>
         </div>
 
-        <!-- High-Contrast QR Code (Bigger!) -->
-        <div style="width:19mm; height:19mm; border:1px solid #cbd5e1; border-radius:1.5mm; padding:0.6mm; background:#ffffff; box-shadow:0 1px 4px rgba(0,0,0,0.06); margin:0.6mm auto; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-          <img src="${qrUrl}" alt="QR Pass" style="width:100%; height:100%; object-fit:contain;">
+        <!-- Side-by-Side: QR Code in the LEFT & Image / Photo in the RIGHT (Both Bigger) -->
+        <div style="display:flex; justify-content:space-between; align-items:center; width:100%; padding:0.6mm 0.4mm; gap:1.5mm; margin:0.4mm 0;">
+          <!-- LEFT: QR Code (Bigger) -->
+          <div style="display:flex; flex-direction:column; align-items:center; flex:1;">
+            <div style="width:19mm; height:19mm; border:1px solid #004b98; border-radius:1.5mm; padding:0.6mm; background:#ffffff; box-shadow:0 1px 4px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <img src="${qrUrl}" alt="QR Pass" style="width:100%; height:100%; object-fit:contain;">
+            </div>
+            <span style="font-size:1.4mm; font-weight:800; color:#004b98; margin-top:0.3mm;">SCAN QR PASS</span>
+          </div>
+
+          <!-- RIGHT: Member Photo / Image (Bigger) -->
+          <div style="display:flex; flex-direction:column; align-items:center; flex:1;">
+            <div style="width:18mm; height:19mm; border-radius:1.8mm; overflow:hidden; border:1.5px solid #004b98; outline:1px solid #fde047; background:#f8fafc; box-shadow:0 2px 6px rgba(0,0,0,0.15); flex-shrink:0; position:relative;">
+              <img src="${photoSrc}" alt="${member.name}" style="width:100%; height:100%; object-fit:cover;">
+            </div>
+            <span style="font-size:1.4mm; font-weight:800; color:#475569; margin-top:0.3mm;">MEMBER PHOTO</span>
+          </div>
         </div>
 
         <!-- Details Grid: ONLY requested fields (All Bold!) with translucent background -->
-        <table style="width:100%; border-collapse:collapse; font-size:1.85mm; line-height:1.2; text-align:left; background:rgba(255,255,255,0.88); border-radius:1.5mm; padding:0.6mm; border:0.6px solid #e2e8f0; margin-top:0.3mm; backdrop-filter:blur(2px);">
+        <table style="width:100%; border-collapse:collapse; font-size:2.2mm; line-height:1.2; text-align:left; background:rgba(255,255,255,0.90); border-radius:1.5mm; padding:0.6mm; border:0.6px solid #cbd5e1; margin-top:0.3mm; backdrop-filter:blur(2px);">
           <tr>
             <td style="padding:0.4mm 0.8mm; font-weight:900; color:#475569; width:38%; white-space:nowrap;">DBYC ID:</td>
-            <td style="padding:0.4mm 0.8mm; font-weight:900; color:#004b98; font-size:2.0mm;">${member.id}</td>
+            <td style="padding:0.4mm 0.8mm; font-weight:900; color:#004b98; font-size:2.3mm;">${member.id}</td>
           </tr>
           <tr>
             <td style="padding:0.4mm 0.8mm; font-weight:900; color:#475569; white-space:nowrap;">Member Group:</td>
@@ -20286,11 +20315,11 @@ window.renderOfficialIdCardHtml = function(member) {
           </tr>
           <tr>
             <td style="padding:0.4mm 0.8mm; font-weight:900; color:#475569; white-space:nowrap; vertical-align:top;">Address:</td>
-            <td style="padding:0.4mm 0.8mm; font-weight:800; color:#334155; font-size:1.65mm; line-height:1.15;">${cardAddress}</td>
+            <td style="padding:0.4mm 0.8mm; font-weight:800; color:#334155; font-size:1.9mm; line-height:1.15;">${cardAddress}</td>
           </tr>
           <tr>
             <td style="padding:0.4mm 0.8mm; font-weight:900; color:#475569; white-space:nowrap; vertical-align:top;">Special Activities:</td>
-            <td style="padding:0.4mm 0.8mm; font-weight:800; color:#004b98; font-size:1.65mm; line-height:1.15;">${cardActivities}</td>
+            <td style="padding:0.4mm 0.8mm; font-weight:800; color:#004b98; font-size:1.9mm; line-height:1.15;">${cardActivities}</td>
           </tr>
         </table>
       </div>
@@ -20298,17 +20327,17 @@ window.renderOfficialIdCardHtml = function(member) {
       <!-- 4. Signature & Official DBYC Seal Area -->
       <div style="position:relative; z-index:1; padding:0 2mm 0.4mm; display:flex; justify-content:space-between; align-items:flex-end;">
         <div style="text-align:left; line-height:1;">
-          <img src="${sigSrc}" alt="Rev. Fr. Director Signature" style="height:4.8mm; max-width:20mm; object-fit:contain; display:block; margin-bottom:-0.3mm;">
+          <img src="${sigSrc}" alt="Director Signature" style="height:5.2mm; max-width:22mm; object-fit:contain; display:block; margin-bottom:0.2mm;">
+          <div style="font-size:2.2mm; font-weight:900; color:#0f172a; margin-top:0.3mm;">The Director</div>
         </div>
         <div style="text-align:right; line-height:1;">
           <img src="${sealSrc}" alt="Official DBYC Seal" style="width:11.5mm; height:11.5mm; object-fit:contain; display:block; margin-bottom:-0.4mm; filter:drop-shadow(0 1px 2px rgba(97,71,162,0.18));" title="Official Seal: Don Bosco Youth Centre, Basin Bridge, Chennai - 12">
         </div>
       </div>
 
-      <!-- 5. Footer Ribbon: Director font little small, signature fixed above -->
-      <div style="position:relative; z-index:1; background:#0f172a; border-top:1.2px solid #fde047; padding:0.8mm 2mm; display:flex; justify-content:space-between; align-items:center; color:#ffffff; flex-shrink:0;">
-        <span style="font-size:1.35mm; font-weight:800; color:#e2e8f0; letter-spacing:0.2px;">Rev. Fr. Director, SDB</span>
-        <span style="font-size:1.65mm; font-weight:900; color:#fde047;">DBYC Basin Bridge, Ch-12</span>
+      <!-- 5. Footer Ribbon -->
+      <div style="position:relative; z-index:1; background:#0f172a; border-top:1.2px solid #fde047; padding:0.8mm 2mm; text-align:center; color:#ffffff; flex-shrink:0;">
+        <span style="font-size:1.8mm; font-weight:900; color:#fde047;">DBYC Basin Bridge, Chennai - 600 012</span>
       </div>
     </div>
   `;

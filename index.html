@@ -10714,17 +10714,12 @@ function generateIdPass(memberId) {
           </div>
         </div>
 
-        <!-- All-Bold Details Table: Font Size 26px with Short Labels (ID, Group, Years, CN, BG, DOB, ADD, ACTS) -->
+        <!-- All-Bold Details Table: Font Size 26px with Short Labels (ID, Years, CN, BG, DOB, ADD, ACTS) -->
         <table class="id-pass-details-table" style="width:100%; border-collapse:collapse; margin-top:4px; font-size:26px;">
           <tr style="border-bottom:1.5px dashed #cbd5e1;">
             <td style="width:34px; font-size:27px; padding:6px 2px; text-align:center; vertical-align:middle;">🪪</td>
             <td class="label" style="font-size:26px; font-weight:900; color:#0f172a; padding:6px 6px; width:28%; white-space:nowrap;">ID:</td>
             <td class="val" style="font-size:26px; font-weight:900; color:#004b98; padding:6px 6px;">${member.id}</td>
-          </tr>
-          <tr style="border-bottom:1.5px dashed #cbd5e1;">
-            <td style="width:34px; font-size:27px; padding:6px 2px; text-align:center; vertical-align:middle;">👥</td>
-            <td class="label" style="font-size:26px; font-weight:900; color:#0f172a; padding:6px 6px; white-space:nowrap;">Group:</td>
-            <td class="val" style="font-size:26px; font-weight:900; color:#0f172a; padding:6px 6px;">${cleanGroup}</td>
           </tr>
           <tr style="border-bottom:1.5px dashed #cbd5e1;">
             <td style="width:34px; font-size:27px; padding:6px 2px; text-align:center; vertical-align:middle;">⏳</td>
@@ -11516,7 +11511,6 @@ window.drawOfficial56x86PassToCanvas = async function(m, scale) {
 
   var rows = [
     { icon: '🪪', label: 'ID:', val: member.id || 'N/A', color: '#004b98', boldVal: true, valFont: '900 52px sans-serif' },
-    { icon: '👥', label: 'Group:', val: cleanGroup, color: '#0f172a', boldVal: true, valFont: '900 52px sans-serif' },
     { icon: '⏳', label: 'Years:', val: tenure, color: '#b45309', boldVal: true, valFont: '900 52px sans-serif' },
     { icon: '📞', label: 'CN:', val: member.mobile || 'N/A', color: '#0f172a', boldVal: true, valFont: '900 52px sans-serif' },
     { icon: '🩸', label: 'BG:', val: member.bloodGroup || 'N/A', color: '#dc2626', boldVal: true, valFont: '900 54px sans-serif' },
@@ -11525,7 +11519,7 @@ window.drawOfficial56x86PassToCanvas = async function(m, scale) {
     { icon: '🎯', label: 'ACTS:', val: cardActivities, color: '#004b98', boldVal: true, multiline: true, valFont: '900 46px sans-serif' }
   ];
 
-  var curY = tblY + 58;
+  var curY = tblY + 68;
   var valStartX = tblX + 270;
   var maxValW = tblW - 290;
 
@@ -11563,13 +11557,13 @@ window.drawOfficial56x86PassToCanvas = async function(m, scale) {
       if (line) {
         ctx.fillText(line, valStartX, lineY);
       }
-      var consumed = Math.max(94, (lineY - curY) + 54);
+      var consumed = Math.max(104, (lineY - curY) + 54);
       if (i < rows.length - 1) {
         ctx.strokeStyle = '#e2e8f0';
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.moveTo(tblX + 16, curY + consumed - 32);
-        ctx.lineTo(tblX + tblW - 16, curY + consumed - 32);
+        ctx.moveTo(tblX + 16, curY + consumed - 30);
+        ctx.lineTo(tblX + tblW - 16, curY + consumed - 30);
         ctx.stroke();
       }
       curY += consumed;
@@ -11579,11 +11573,11 @@ window.drawOfficial56x86PassToCanvas = async function(m, scale) {
         ctx.strokeStyle = '#e2e8f0';
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.moveTo(tblX + 16, curY + 40);
-        ctx.lineTo(tblX + tblW - 16, curY + 40);
+        ctx.moveTo(tblX + 16, curY + 44);
+        ctx.lineTo(tblX + tblW - 16, curY + 44);
         ctx.stroke();
       }
-      curY += 94;
+      curY += 104;
     }
   }
 
@@ -20285,10 +20279,6 @@ window.renderOfficialIdCardHtml = function(member) {
           <tr>
             <td style="padding:0.4mm 0.8mm; font-weight:900; color:#475569; width:28%; white-space:nowrap; font-size:2.9mm;">ID:</td>
             <td style="padding:0.4mm 0.8mm; font-weight:900; color:#004b98; font-size:2.9mm;">${member.id}</td>
-          </tr>
-          <tr>
-            <td style="padding:0.4mm 0.8mm; font-weight:900; color:#475569; white-space:nowrap; font-size:2.9mm;">Group:</td>
-            <td style="padding:0.4mm 0.8mm; font-weight:900; color:#0f172a; font-size:2.9mm;">${cleanGroup}</td>
           </tr>
           <tr>
             <td style="padding:0.4mm 0.8mm; font-weight:900; color:#475569; white-space:nowrap; font-size:2.9mm;">Years:</td>

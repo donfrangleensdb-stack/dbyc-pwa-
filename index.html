@@ -1068,16 +1068,28 @@ body {
 /* ==========================================
    7. MEMBER DIGITAL QR PASS (Official 56mm x 86mm CR-80 Portrait Standard)
    ========================================== */
+#idPassCardContainer {
+  width: 100%;
+  max-width: 100%;
+  display: block;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  padding: 6px 0;
+  margin: 0 auto;
+}
+
 .id-pass-card,
 .id-pass-card-56x86 {
   background: #ffffff;
-  border-radius: 18px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 43, 102, 0.18);
   border: 2.5px solid #004b98;
   width: 100%;
-  max-width: 390px;
-  min-height: 540px;
+  max-width: min(420px, 100%);
+  min-height: 560px;
   margin: 0 auto;
   position: relative;
   display: flex;
@@ -1089,17 +1101,20 @@ body {
 .id-pass-header {
   background: linear-gradient(135deg, #00264d 0%, #004b98 100%);
   color: #ffffff;
-  padding: 10px 12px;
+  padding: 9px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
   border-bottom: 2.5px solid #fde047;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .id-pass-header-logo {
-  width: 42px;
-  height: 42px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #fde047;
@@ -1108,71 +1123,310 @@ body {
   box-shadow: 0 0 8px rgba(253, 224, 71, 0.5);
 }
 
+.id-pass-header-text {
+  text-align: center;
+  flex: 1;
+  line-height: 1.2;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.id-pass-header-title {
+  font-size: clamp(10.5px, 3.2vw, 13.5pt);
+  font-weight: 900;
+  letter-spacing: 0.25px;
+  color: #ffffff;
+  margin: 0;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.id-pass-header-sub {
+  font-size: clamp(8px, 2.4vw, 10.5pt);
+  color: #fde047;
+  font-weight: 800;
+  margin: 1.5px 0 0;
+  white-space: nowrap;
+}
+
 .id-pass-body {
-  padding: 10px 12px;
+  padding: 8px 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 3px;
   flex: 1;
+  box-sizing: border-box;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.94);
 }
 
-.id-pass-candidate-photo {
-  width: 88px;
-  height: 92px;
-  border-radius: 12px;
-  object-fit: cover;
-  border: 2.5px solid #004b98;
-  outline: 1.5px solid #fde047;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  margin-top: 2px;
+.id-pass-member-name {
+  font-size: clamp(13px, 3.8vw, 15pt);
+  font-weight: 900;
+  color: #00264d;
+  margin: 2px 0 0;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  text-align: center;
+  word-break: break-word;
+}
+
+.id-pass-group-badge {
+  background: #fee2e2;
+  color: #b91c1c;
+  font-weight: 900;
+  font-size: clamp(9.5px, 2.8vw, 11.5pt);
+  padding: 2.5px 12px;
+  border-radius: 100px;
+  border: 1px solid #fca5a5;
+  display: inline-block;
+  margin-bottom: 2px;
+}
+
+.id-pass-media-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 3px 0;
+  gap: 10px;
+  margin: 2px 0;
+  box-sizing: border-box;
 }
 
 .id-pass-qr-box {
   background: #ffffff;
-  padding: 8px;
-  border-radius: 10px;
-  border: 1.5px solid #cbd5e1;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: 5px;
+  border-radius: 8px;
+  border: 2px solid #004b98;
+  box-shadow: 0 3px 8px rgba(0,75,152,0.15);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
 }
 
+.id-pass-qr-img {
+  display: block;
+  border-radius: 5px;
+  object-fit: contain;
+  width: clamp(90px, 26vw, 130px);
+  height: clamp(90px, 26vw, 130px);
+}
+
+.id-pass-candidate-photo {
+  border-radius: 10px;
+  object-fit: cover;
+  border: 2px solid #004b98;
+  outline: 2px solid #fde047;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
+  cursor: pointer;
+  display: block;
+  width: clamp(86px, 25vw, 122px);
+  height: clamp(96px, 28vw, 132px);
+}
+
+/* All-Bold Details Table: Fixed layout for 100% boundary safety */
 .id-pass-details-table {
   width: 100%;
-  font-size: 26px;
   border-collapse: collapse;
-  margin-top: 4px;
+  margin-top: 3px;
+  table-layout: fixed;
+  box-sizing: border-box;
 }
 
-.id-pass-details-table td {
-  padding: 5px 6px;
+.id-pass-details-table tr {
   border-bottom: 1.5px dashed #cbd5e1;
 }
 
+.id-pass-details-table td {
+  box-sizing: border-box;
+  vertical-align: middle;
+}
+
+.id-pass-details-table td.icon-col {
+  width: 26px;
+  font-size: clamp(15px, 4.2vw, 21px);
+  padding: 3.5px 1px;
+  text-align: center;
+}
+
 .id-pass-details-table td.label {
+  width: 56px;
+  font-size: clamp(12.5px, 3.5vw, 17px);
   font-weight: 900;
   color: #0f172a;
-  width: 44%;
-  font-size: 26px;
+  white-space: nowrap;
+  padding: 3.5px 2px;
 }
 
 .id-pass-details-table td.val {
+  font-size: clamp(12.5px, 3.5vw, 17px);
+  font-weight: 900;
+  padding: 3.5px 3px;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  line-height: 1.25;
+}
+
+.id-pass-details-table td.val-id {
+  color: #004b98;
+}
+
+.id-pass-details-table td.val-tenure {
+  color: #b45309;
+}
+
+.id-pass-details-table td.val-phone {
+  color: #0f172a;
+}
+
+.id-pass-details-table td.val-blood {
+  color: #dc2626;
+}
+
+.id-pass-details-table td.val-dob {
+  color: #0f172a;
+}
+
+.id-pass-details-table td.val-add {
+  color: #1e293b;
+}
+
+.id-pass-details-table td.val-acts {
+  color: #004b98;
+}
+
+/* Authority Area */
+.id-pass-footer-authority {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 5px 10px 3px;
+  margin-top: 3px;
+  z-index: 2;
+  position: relative;
+  background: rgba(255, 255, 255, 0.95);
+  border-top: 1.5px solid #cbd5e1;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.id-pass-director-sig {
+  width: clamp(72px, 21vw, 90px);
+  height: auto;
+  max-height: 38px;
+  object-fit: contain;
+  display: block;
+  filter: contrast(1.2);
+}
+
+.id-pass-director-title {
+  font-size: clamp(9.5px, 2.7vw, 11.5pt);
   font-weight: 900;
   color: #0f172a;
-  font-size: 26px;
+  margin-top: 2px;
+  letter-spacing: 0.5px;
+}
+
+.id-pass-director-seal {
+  width: clamp(46px, 13.5vw, 54px);
+  height: clamp(46px, 13.5vw, 54px);
+  object-fit: contain;
+  display: block;
+  opacity: 0.95;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
 }
 
 .id-pass-footer-ribbon {
   background: #0f172a;
-  color: #ffffff;
-  padding: 6px 10px;
-  font-size: 0.72rem;
+  color: #fde047;
+  padding: 5px 8px;
+  font-size: clamp(9px, 2.5vw, 11pt);
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   border-top: 2px solid #fde047;
-  font-weight: 800;
+  font-weight: 900;
+  letter-spacing: 0.3px;
+  box-sizing: border-box;
+  width: 100%;
 }
 
+.id-pass-action-bar,
+.id-pass-download-bar {
+  width: 100%;
+  max-width: min(420px, 100%);
+  margin: 10px auto 0;
+  box-sizing: border-box;
+}
+
+/* Mobile Screens (<= 480px) */
+@media (max-width: 480px) {
+  #view_passes .main-content {
+    padding: 10px 8px 85px !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+    max-width: 100% !important;
+  }
+  #idPassCardContainer {
+    padding: 4px 0 !important;
+  }
+  .id-pass-card,
+  .id-pass-card-56x86 {
+    max-width: 100% !important;
+    border-radius: 12px !important;
+    border-width: 2px !important;
+  }
+  .id-pass-header {
+    padding: 7px 8px !important;
+    gap: 5px !important;
+  }
+  .id-pass-header-logo {
+    width: 32px !important;
+    height: 32px !important;
+  }
+  .id-pass-body {
+    padding: 6px 8px !important;
+    gap: 2px !important;
+  }
+  .id-pass-media-row {
+    gap: 8px !important;
+    padding: 2px 0 !important;
+  }
+  .id-pass-qr-box {
+    padding: 4px !important;
+  }
+  .id-pass-details-table td.icon-col {
+    width: 24px !important;
+    font-size: 15px !important;
+    padding: 3px 0 !important;
+  }
+  .id-pass-details-table td.label {
+    width: 52px !important;
+    font-size: 12px !important;
+    padding: 3px 2px !important;
+  }
+  .id-pass-details-table td.val {
+    font-size: 12px !important;
+    padding: 3px 2px !important;
+  }
+  .id-pass-footer-authority {
+    padding: 4px 8px 3px !important;
+  }
+  .id-pass-footer-ribbon {
+    padding: 4px 6px !important;
+    font-size: 9px !important;
+  }
+  .id-pass-action-bar,
+  .id-pass-download-bar {
+    max-width: 100% !important;
+    margin: 10px auto 0 !important;
+  }
+}
+
+/* Print Standard */
 @media print {
   .id-pass-card-56x86 {
     width: 56mm !important;
@@ -1188,6 +1442,7 @@ body {
     break-inside: avoid !important;
   }
 }
+
 
 /* ==========================================
    8. CERTIFICATE STUDIO
@@ -10530,109 +10785,109 @@ function generateIdPass(memberId) {
 
   card.innerHTML = `
     <!-- Official 56mm x 86mm CR-80 Portrait ID Card -->
-    <div class="id-pass-card id-pass-card-56x86" id="printableIdCard" style="width:100%; max-width:460px; min-height:580px; background:#ffffff; background-image:url('${window.DBYC_ID_CARD_BG || "assets/id_bg_theme.jpg"}'); background-size:cover; background-position:center; border:2.5px solid #004b98; border-radius:18px; overflow:hidden; box-shadow:0 12px 35px rgba(0,43,102,0.18); font-family:system-ui,-apple-system,sans-serif; margin:0 auto; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; position:relative;">
+    <div class="id-pass-card id-pass-card-56x86" id="printableIdCard" style="background-image:url('${window.DBYC_ID_CARD_BG || "assets/id_bg_theme.jpg"}');">
       
       <!-- Top Header Band: Header SAME (Don Bosco left, DBYC crest right) -->
-      <div class="id-pass-header" style="background:linear-gradient(135deg, #00264d 0%, #004b98 100%); padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:8px; border-bottom:2.5px solid #fde047; flex-shrink:0;">
-        <img src="${window.DON_BOSCO_PORTRAIT || DBYC_OFFICIAL_LOGO}" alt="Don Bosco" class="id-pass-header-logo" style="width:44px; height:44px; border-radius:50%; object-fit:cover; border:2px solid #fde047; box-shadow:0 0 6px rgba(253,224,71,0.6);" title="Don Bosco Youth Centre">
-        <div style="text-align:center; flex:1; line-height:1.2;">
-          <h3 style="font-size:14pt; font-weight:900; letter-spacing:0.3px; color:#ffffff; margin:0; text-transform:uppercase;">DON BOSCO YOUTH CENTRE</h3>
-          <p style="font-size:11pt; color:#fde047; font-weight:800; margin:2px 0 0;">Basin Bridge, Chennai - 600 012</p>
+      <div class="id-pass-header">
+        <img src="${window.DON_BOSCO_PORTRAIT || DBYC_OFFICIAL_LOGO}" alt="Don Bosco" class="id-pass-header-logo" title="Don Bosco Youth Centre">
+        <div class="id-pass-header-text">
+          <h3 class="id-pass-header-title">DON BOSCO YOUTH CENTRE</h3>
+          <p class="id-pass-header-sub">Basin Bridge, Chennai - 600 012</p>
         </div>
-        <img src="${DBYC_OFFICIAL_LOGO}" alt="DBYC Crest" class="id-pass-header-logo" style="width:44px; height:44px; border-radius:50%; object-fit:cover; border:2px solid #fde047; background:#ffffff;" title="Don Bosco Youth Centre Crest">
+        <img src="${DBYC_OFFICIAL_LOGO}" alt="DBYC Crest" class="id-pass-header-logo" title="Don Bosco Youth Centre Crest">
       </div>
 
-      <!-- Card Body: Image of Person, Bold Name, Member Group, QR, ONLY Requested Details -->
-      <div class="id-pass-body" style="padding:10px 14px; display:flex; flex-direction:column; align-items:center; gap:4px; flex:1; background:rgba(255, 255, 255, 0.92);">
+      <!-- Card Body: Image of Person, Bold Name, Member Group, QR, Requested Details -->
+      <div class="id-pass-body">
         
         <!-- Member Name & Group Badge (Bold!) -->
-        <h4 style="font-size:14pt; font-weight:900; color:#00264d; margin:2px 0 0; text-transform:uppercase; letter-spacing:0.3px; text-align:center;">${member.name}</h4>
+        <h4 class="id-pass-member-name">${member.name}</h4>
         
-        <span style="background:#fee2e2; color:#b91c1c; font-weight:900; font-size:12pt; padding:4px 16px; border-radius:100px; border:1px solid #fca5a5; display:inline-block; margin-bottom:4px;">
+        <span class="id-pass-group-badge">
           ★ ${cleanGroup.toUpperCase()} ★
         </span>
 
-        <!-- Side-by-Side: QR Code in the LEFT & Image / Photo in the RIGHT (Both Bigger, Captions Removed) -->
-        <div style="display:flex; justify-content:space-between; align-items:center; width:100%; padding:6px 4px; gap:14px; margin:2px 0 6px; box-sizing:border-box;">
+        <!-- Side-by-Side: QR Code in the LEFT & Image / Photo in the RIGHT -->
+        <div class="id-pass-media-row">
           
-          <!-- LEFT: QR Code (Bigger) -->
-          <div style="display:flex; flex-direction:column; align-items:center; flex:1;">
-            <div class="id-pass-qr-box" style="background:#ffffff; padding:6px; border-radius:10px; border:2px solid #004b98; box-shadow:0 3px 8px rgba(0,75,152,0.15); display:inline-flex; align-items:center; justify-content:center;">
-              <img src="${qrUrl}" alt="Member QR Pass" width="145" height="145" style="display:block; border-radius:6px; object-fit:contain;">
+          <!-- LEFT: QR Code -->
+          <div style="display:flex; flex-direction:column; align-items:center; flex:1; min-width:0;">
+            <div class="id-pass-qr-box">
+              <img src="${qrUrl}" alt="Member QR Pass" class="id-pass-qr-img">
             </div>
           </div>
 
-          <!-- RIGHT: Image / Candidate Photo (Bigger, Directly Editable) -->
-          <div style="display:flex; flex-direction:column; align-items:center; flex:1;">
+          <!-- RIGHT: Image / Candidate Photo (Directly Editable) -->
+          <div style="display:flex; flex-direction:column; align-items:center; flex:1; min-width:0;">
             <div style="position:relative; display:inline-block; cursor:pointer;" onclick="window.triggerPassPhotoUpload('${member.id}')" title="Click directly to change photo of ${member.name}">
-              <img src="${photoSrc}" alt="${member.name}" class="id-pass-candidate-photo" onclick="window.triggerPassPhotoUpload('${member.id}')" style="width:135px; height:145px; border-radius:12px; object-fit:cover; border:2.5px solid #004b98; outline:2px solid #fde047; box-shadow:0 4px 12px rgba(0,0,0,0.18); cursor:pointer;">
-              <button type="button" class="avatar-upload-btn" title="Click to Change Photo" onclick="event.stopPropagation(); window.triggerPassPhotoUpload('${member.id}')" style="position:absolute; bottom:-4px; right:-4px; background:#004b98; color:#fff; border:1.8px solid #fff; border-radius:50%; width:32px; height:32px; font-size:0.95rem; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 8px rgba(0,0,0,0.3); z-index:3;">📷</button>
+              <img src="${photoSrc}" alt="${member.name}" class="id-pass-candidate-photo" onclick="window.triggerPassPhotoUpload('${member.id}')">
+              <button type="button" class="avatar-upload-btn" title="Click to Change Photo" onclick="event.stopPropagation(); window.triggerPassPhotoUpload('${member.id}')" style="position:absolute; bottom:-3px; right:-3px; background:#004b98; color:#fff; border:1.5px solid #fff; border-radius:50%; width:28px; height:28px; font-size:0.85rem; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 8px rgba(0,0,0,0.3); z-index:3;">📷</button>
             </div>
             <div style="font-size:0.75rem; color:#004b98; font-weight:800; margin-top:3px; cursor:pointer; text-decoration:underline;" onclick="window.triggerPassPhotoUpload('${member.id}')" title="Change member photo">📷 Change Photo</div>
           </div>
         </div>
 
-        <!-- All-Bold Details Table: Font Size 26px with Short Labels (ID, Years, CN, BG, DOB, ADD, ACTS) -->
-        <table class="id-pass-details-table" style="width:100%; border-collapse:collapse; margin-top:4px; font-size:26px;">
-          <tr style="border-bottom:1.5px dashed #cbd5e1;">
-            <td style="width:34px; font-size:27px; padding:6px 2px; text-align:center; vertical-align:middle;">🪪</td>
-            <td class="label" style="font-size:26px; font-weight:900; color:#0f172a; padding:6px 6px; width:28%; white-space:nowrap;">ID:</td>
-            <td class="val" style="font-size:26px; font-weight:900; color:#004b98; padding:6px 6px;">${member.id}</td>
-          </tr>
-          <tr style="border-bottom:1.5px dashed #cbd5e1;">
-            <td style="width:34px; font-size:27px; padding:6px 2px; text-align:center; vertical-align:middle;">⏳</td>
-            <td class="label" style="font-size:26px; font-weight:900; color:#0f172a; padding:6px 6px; white-space:nowrap;">Years:</td>
-            <td class="val" style="font-size:26px; font-weight:900; color:#b45309; padding:6px 6px;">${tenure}</td>
-          </tr>
-          <tr style="border-bottom:1.5px dashed #cbd5e1;">
-            <td style="width:34px; font-size:27px; padding:6px 2px; text-align:center; vertical-align:middle;">📞</td>
-            <td class="label" style="font-size:26px; font-weight:900; color:#0f172a; padding:6px 6px; white-space:nowrap;">CN:</td>
-            <td class="val" style="font-size:26px; font-weight:900; color:#0f172a; padding:6px 6px;">${cardMobile}</td>
-          </tr>
-          <tr style="border-bottom:1.5px dashed #cbd5e1;">
-            <td style="width:34px; font-size:27px; padding:6px 2px; text-align:center; vertical-align:middle;">🩸</td>
-            <td class="label" style="font-size:26px; font-weight:900; color:#0f172a; padding:6px 6px; white-space:nowrap;">BG:</td>
-            <td class="val" style="font-size:26px; font-weight:900; color:#dc2626; padding:6px 6px;">${cardBlood}</td>
-          </tr>
-          <tr style="border-bottom:1.5px dashed #cbd5e1;">
-            <td style="width:34px; font-size:27px; padding:6px 2px; text-align:center; vertical-align:middle;">🎂</td>
-            <td class="label" style="font-size:26px; font-weight:900; color:#0f172a; padding:6px 6px; white-space:nowrap;">DOB:</td>
-            <td class="val" style="font-size:26px; font-weight:900; color:#0f172a; padding:6px 6px;">${cardDob}</td>
-          </tr>
-          <tr style="border-bottom:1.5px dashed #cbd5e1;">
-            <td style="width:34px; font-size:27px; padding:6px 2px; text-align:center; vertical-align:top;">📍</td>
-            <td class="label" style="font-size:26px; font-weight:900; color:#0f172a; padding:6px 6px; vertical-align:top; white-space:nowrap;">ADD:</td>
-            <td class="val" style="font-size:26px; font-weight:900; color:#1e293b; padding:6px 6px; line-height:1.25;">${cardAddress}</td>
+        <!-- All-Bold Details Table: Strict Boundary Safety with Responsive Typography -->
+        <table class="id-pass-details-table">
+          <tr>
+            <td class="icon-col">🪪</td>
+            <td class="label">ID:</td>
+            <td class="val val-id">${member.id}</td>
           </tr>
           <tr>
-            <td style="width:34px; font-size:27px; padding:6px 2px; text-align:center; vertical-align:top;">🎯</td>
-            <td class="label" style="font-size:26px; font-weight:900; color:#0f172a; padding:6px 6px; vertical-align:top; white-space:nowrap;">ACTS:</td>
-            <td class="val" style="font-size:26px; font-weight:900; color:#004b98; padding:6px 6px; line-height:1.25;">${cardActivities}</td>
+            <td class="icon-col">⏳</td>
+            <td class="label">Years:</td>
+            <td class="val val-tenure">${tenure}</td>
+          </tr>
+          <tr>
+            <td class="icon-col">📞</td>
+            <td class="label">CN:</td>
+            <td class="val val-phone">${cardMobile}</td>
+          </tr>
+          <tr>
+            <td class="icon-col">🩸</td>
+            <td class="label">BG:</td>
+            <td class="val val-blood">${cardBlood}</td>
+          </tr>
+          <tr>
+            <td class="icon-col">🎂</td>
+            <td class="label">DOB:</td>
+            <td class="val val-dob">${cardDob}</td>
+          </tr>
+          <tr>
+            <td class="icon-col" style="vertical-align:top;">📍</td>
+            <td class="label" style="vertical-align:top;">ADD:</td>
+            <td class="val val-add">${cardAddress}</td>
+          </tr>
+          <tr style="border-bottom:none;">
+            <td class="icon-col" style="vertical-align:top;">🎯</td>
+            <td class="label" style="vertical-align:top;">ACTS:</td>
+            <td class="val val-acts">${cardActivities}</td>
           </tr>
         </table>
       </div>
 
       <!-- Official Director Signature & Seal Authority Area -->
-      <div style="display:flex; justify-content:space-between; align-items:flex-end; padding:8px 16px 4px; margin-top:4px; z-index:2; position:relative; background:rgba(255, 255, 255, 0.95); border-top:1.5px solid #cbd5e1;">
+      <div class="id-pass-footer-authority">
         <!-- Left: Director Official Signature + "The Director" strictly below it -->
         <div style="text-align:left; display:flex; flex-direction:column; align-items:flex-start;">
-          <img src="${window.DBYC_DIRECTOR_SIGNATURE || 'assets/director_signature.png'}" alt="Director Signature" style="width:96px; height:auto; max-height:44px; object-fit:contain; display:block; filter:contrast(1.2);">
-          <div style="font-size:12pt; font-weight:900; color:#0f172a; margin-top:3px; letter-spacing:0.5px;">The Director</div>
+          <img src="${window.DBYC_DIRECTOR_SIGNATURE || 'assets/director_signature.png'}" alt="Director Signature" class="id-pass-director-sig">
+          <div class="id-pass-director-title">The Director</div>
         </div>
         <!-- Right: Official DBYC Seal -->
         <div style="text-align:right;">
-          <img src="${window.DBYC_OFFICIAL_SEAL || 'assets/dbyc_seal.png'}" alt="DBYC Official Seal" style="width:58px; height:58px; object-fit:contain; display:block; opacity:0.95; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.15));">
+          <img src="${window.DBYC_OFFICIAL_SEAL || 'assets/dbyc_seal.png'}" alt="DBYC Official Seal" class="id-pass-director-seal">
         </div>
       </div>
 
       <!-- Footer Ribbon -->
-      <div class="id-pass-footer-ribbon" style="background:#0f172a; color:#ffffff; padding:8px 14px; text-align:center; border-top:2px solid #fde047; font-weight:800; flex-shrink:0;">
-        <span style="font-size:12pt; color:#fde047; font-weight:900; letter-spacing:0.3px;">DBYC Basin Bridge, Chennai - 600 012</span>
+      <div class="id-pass-footer-ribbon">
+        <span>DBYC Basin Bridge, Chennai - 600 012</span>
       </div>
     </div>
 
     <!-- Direct Pass Editing & Photo Action Bar -->
-    <div style="display:flex; gap:10px; width:100%; max-width:460px; margin:14px auto 0;">
+    <div class="id-pass-action-bar" style="display:flex; gap:10px;">
       <button type="button" class="btn-dbyc-primary" style="flex:1; background:#ea580c; font-size:0.92rem; font-weight:900; padding:11px; border-radius:10px; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 3px 8px rgba(234,88,12,0.3); cursor:pointer;" onclick="window.openEditPassModal('${member.id}')">
         ✏️ Edit Pass Directly (அட்டை திருத்து)
       </button>
@@ -10642,7 +10897,7 @@ function generateIdPass(memberId) {
     </div>
 
     <!-- 3 Distinct HD Action Buttons (PDF, PNG, Print) -->
-    <div style="display:flex; flex-direction:column; gap:8px; width:100%; max-width:460px; margin:10px auto 0;">
+    <div class="id-pass-download-bar" style="display:flex; flex-direction:column; gap:8px;">
       <button type="button" class="btn-dbyc-primary" style="background:#059669; font-size:0.92rem; font-weight:800; padding:11px; border-radius:10px; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 3px 8px rgba(5,150,105,0.3); cursor:pointer;" onclick="window.downloadMemberPassPdf('${member.id}')">
         📄 Download HD PDF (PDF பதிவிறக்கம்)
       </button>

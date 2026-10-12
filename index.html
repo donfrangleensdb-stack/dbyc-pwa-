@@ -3306,9 +3306,7 @@ body {
             <button id="openAddMemberBtn" class="btn-dbyc-primary" style="background:#16a34a; font-weight:800; padding:8px 14px;">
               ➕ New Registration (சேர்க்கை)
             </button>
-            <button type="button" class="btn-dbyc-primary" style="background:#fee2e2; color:#b91c1c; border:1px solid #fecaca; font-weight:800; padding:8px 12px; font-size:0.82rem;" onclick="window.clearAllSampleDemoData();" title="Remove pre-loaded demo members (Michael Raj, Dominic Savio, etc.)">
-              🧹 Clear Demo Data
-            </button>
+            
           </div>
         </div>
 
@@ -4719,13 +4717,7 @@ body {
               <input type="file" id="bulkJsonFileInput" accept=".json" style="display:none;">
             </div>
 
-            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:14px;">
-              <strong style="font-size:0.88rem; color:#1e293b; display:block;">🧹 Clean Demo Members Only</strong>
-              <p style="font-size:0.75rem; color:#64748b; margin:4px 0 12px;">Safely removes mock demo members without touching real registered youth records.</p>
-              <button type="button" class="btn-dbyc-secondary" style="background:#ffffff; color:#b91c1c; border:1.5px solid #fecaca; width:100%; font-size:0.82rem; font-weight:800; padding:8px 12px; border-radius:8px;" onclick="window.clearAllSampleDemoData();">
-                🧹 Remove Demo Records Only
-              </button>
-            </div>
+            
           </div>
 
           <div style="margin-top:16px; padding-top:14px; border-top:1px dashed #cbd5e1;">
@@ -4813,7 +4805,7 @@ body {
        ======================================================= -->
 
   <!-- 1. Edit Profile Modal -->
-  <div id="editProfileModal" class="modal-backdrop">
+  <div id="editProfileModal" class="modal-backdrop" style="display:none;">
     <div class="modal-content">
       <div class="modal-header">
         <h3 class="modal-title">Edit My Profile (சுயவிவரம் திருத்து)</h3>
@@ -4874,53 +4866,115 @@ body {
     </div>
   </div>
 
-  <!-- 2. Edit Pass Modal -->
-  <div id="editPassModal" class="modal-backdrop">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 class="modal-title">Edit Digital QR Pass</h3>
-        <button id="closeEditPassBtn" style="background:none; border:none; font-size:1.4rem; cursor:pointer;">&times;</button>
+  <!-- 2. Edit Pass Modal (Direct Pass & Photo Editor) -->
+  <div id="editPassModal" class="modal-backdrop" style="display:none; align-items:center; justify-content:center; z-index:10500;">
+    <div class="modal-content" style="max-width:520px; width:95%; max-height:92vh; overflow-y:auto; border-radius:16px; border:2px solid #004b98; box-shadow:0 15px 40px rgba(0,75,152,0.25);">
+      <div class="modal-header" style="background:linear-gradient(135deg, #00264d, #004b98); color:#fff; border-bottom:2.5px solid #fde047; padding:14px 18px; border-radius:14px 14px 0 0;">
+        <h3 class="modal-title" style="margin:0; font-size:1.15rem; font-weight:900; color:#fff; display:flex; align-items:center; gap:8px;">
+          <span>✏️</span> Edit QR Pass & Photo Directly (நேரடி அட்டை திருத்துதல்)
+        </h3>
+        <button id="closeEditPassBtn" type="button" style="background:none; border:none; font-size:1.6rem; color:#fff; cursor:pointer; line-height:1;">&times;</button>
       </div>
-      <form id="editPassForm">
-        <div class="form-group-dbyc">
-          <label>Contact Mobile Number</label>
-          <input type="tel" id="editPassMobile" class="form-control-dbyc" required>
+      <form id="editPassForm" style="padding:18px;">
+        
+        <!-- Photo of the Person Section -->
+        <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px; padding:12px; margin-bottom:16px; display:flex; align-items:center; gap:16px;">
+          <div style="position:relative; flex-shrink:0;">
+            <img id="editPassPhotoPreview" src="assets/logo.png" alt="Member Photo Preview" style="width:72px; height:80px; border-radius:10px; object-fit:cover; border:2px solid #004b98; box-shadow:0 3px 8px rgba(0,0,0,0.15);">
+          </div>
+          <div style="flex:1;">
+            <div style="font-size:0.85rem; font-weight:900; color:#0f172a; margin-bottom:4px;">Photo of the Person (உறுப்பினர் புகைப்படம்)</div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button type="button" class="btn-dbyc-primary" style="background:#004b98; font-size:0.8rem; padding:6px 12px; border-radius:6px; cursor:pointer;" onclick="document.getElementById('editPassModalPhotoInput').click()">
+                📷 Change Photo
+              </button>
+              <button type="button" class="btn-dbyc-secondary" style="background:#e2e8f0; color:#0f172a; font-size:0.8rem; padding:6px 10px; border-radius:6px; cursor:pointer; border:1px solid #cbd5e1;" onclick="window.resetEditPassPhoto()">
+                🗑️ Default
+              </button>
+              <input type="file" id="editPassModalPhotoInput" accept="image/*" style="display:none;">
+            </div>
+            <div style="font-size:0.72rem; color:#64748b; margin-top:4px;">Supports JPG, PNG, WebP. High clarity auto-formatted.</div>
+          </div>
         </div>
-        <div class="form-group-dbyc">
-          <label>Allocated Group</label>
-          <select id="editPassGroup" class="form-control-dbyc">
-            <option value="Sub Juniors Group">Sub Juniors Group (6-14 yrs)</option>
-            <option value="Junior Group">Junior Group (15-18 yrs)</option>
-            <option value="Inters Group">Inters Group (19-25 yrs)</option>
-            <option value="Senior Group">Senior Group (25-34 yrs)</option>
-            <option value="Super Seniors Group">Super Seniors Group (34-55 yrs)</option>
-            <option value="Elders Group">Elders Group (56+ yrs)</option>
-          </select>
+
+        <!-- Member Full Name -->
+        <div class="form-group-dbyc" style="margin-bottom:12px;">
+          <label style="font-weight:800; font-size:0.85rem; color:#0f172a; display:block; margin-bottom:4px;">Member Full Name (முழு பெயர்) *</label>
+          <input type="text" id="editPassName" class="form-control-dbyc" required style="width:100%; box-sizing:border-box;">
         </div>
-        <div class="form-group-dbyc">
-          <label>Special Activities & Sports</label>
-          <input type="text" id="editPassActivities" class="form-control-dbyc" placeholder="e.g. Football, Table Tennis">
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
+          <!-- Allocated Group -->
+          <div class="form-group-dbyc" style="margin:0;">
+            <label style="font-weight:800; font-size:0.85rem; color:#0f172a; display:block; margin-bottom:4px;">Group (பிரிவு) *</label>
+            <select id="editPassGroup" class="form-control-dbyc" style="width:100%; box-sizing:border-box;">
+              <option value="Sub Juniors Group">Sub Juniors Group (6-14 yrs)</option>
+              <option value="Junior Group">Junior Group (15-18 yrs)</option>
+              <option value="Inters Group">Inters Group (19-25 yrs)</option>
+              <option value="Senior Group">Senior Group (25-34 yrs)</option>
+              <option value="Super Seniors Group">Super Seniors Group (34-55 yrs)</option>
+              <option value="Elders Group">Elders Group (56+ yrs)</option>
+              <option value="Oratory Leaders">Oratory Leaders</option>
+            </select>
+          </div>
+
+          <!-- Years / Tenure -->
+          <div class="form-group-dbyc" style="margin:0;">
+            <label style="font-weight:800; font-size:0.85rem; color:#0f172a; display:block; margin-bottom:4px;">Years in DBYC (ஆண்டுகள்)</label>
+            <input type="text" id="editPassYears" class="form-control-dbyc" placeholder="e.g. 11 Years" style="width:100%; box-sizing:border-box;">
+          </div>
         </div>
-        <div class="form-group-dbyc">
-          <label>Blood Group</label>
-          <select id="editPassBlood" class="form-control-dbyc">
-            <option value="O+ve">O+ve</option>
-            <option value="A+ve">A+ve</option>
-            <option value="B+ve">B+ve</option>
-            <option value="AB+ve">AB+ve</option>
-            <option value="O-ve">O-ve</option>
-            <option value="A-ve">A-ve</option>
-            <option value="B-ve">B-ve</option>
-            <option value="AB-ve">AB-ve</option>
-          </select>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
+          <!-- Contact Mobile Number (CN) -->
+          <div class="form-group-dbyc" style="margin:0;">
+            <label style="font-weight:800; font-size:0.85rem; color:#0f172a; display:block; margin-bottom:4px;">Mobile (CN) *</label>
+            <input type="tel" id="editPassMobile" class="form-control-dbyc" required style="width:100%; box-sizing:border-box;">
+          </div>
+
+          <!-- Blood Group (BG) -->
+          <div class="form-group-dbyc" style="margin:0;">
+            <label style="font-weight:800; font-size:0.85rem; color:#0f172a; display:block; margin-bottom:4px;">Blood Group (BG)</label>
+            <select id="editPassBlood" class="form-control-dbyc" style="width:100%; box-sizing:border-box;">
+              <option value="O+ve">O+ve</option>
+              <option value="A+ve">A+ve</option>
+              <option value="B+ve">B+ve</option>
+              <option value="AB+ve">AB+ve</option>
+              <option value="O-ve">O-ve</option>
+              <option value="A-ve">A-ve</option>
+              <option value="B-ve">B-ve</option>
+              <option value="AB-ve">AB-ve</option>
+            </select>
+          </div>
         </div>
-        <button type="submit" class="btn-dbyc-primary" style="width:100%;">💾 Update Pass</button>
+
+        <!-- Date of Birth (DOB) -->
+        <div class="form-group-dbyc" style="margin-bottom:12px;">
+          <label style="font-weight:800; font-size:0.85rem; color:#0f172a; display:block; margin-bottom:4px;">Date of Birth (DOB - பிறந்த தேதி)</label>
+          <input type="date" id="editPassDob" class="form-control-dbyc" style="width:100%; box-sizing:border-box;">
+        </div>
+
+        <!-- Home Address (ADD) -->
+        <div class="form-group-dbyc" style="margin-bottom:12px;">
+          <label style="font-weight:800; font-size:0.85rem; color:#0f172a; display:block; margin-bottom:4px;">Home Address (ADD - முகவரி)</label>
+          <textarea id="editPassAddress" class="form-control-dbyc" rows="2" placeholder="e.g. Basin Bridge, Chennai - 600 012" style="width:100%; box-sizing:border-box; resize:vertical;"></textarea>
+        </div>
+
+        <!-- Special Activities (ACTS) -->
+        <div class="form-group-dbyc" style="margin-bottom:16px;">
+          <label style="font-weight:800; font-size:0.85rem; color:#0f172a; display:block; margin-bottom:4px;">Special Activities & Sports (ACTS - செயல்பாடுகள்)</label>
+          <input type="text" id="editPassActivities" class="form-control-dbyc" placeholder="e.g. Football, Gym, Leadership" style="width:100%; box-sizing:border-box;">
+        </div>
+
+        <button type="submit" class="btn-dbyc-primary" style="width:100%; background:linear-gradient(135deg, #004b98, #0284c7); font-size:1rem; font-weight:900; padding:12px; border-radius:10px; box-shadow:0 4px 12px rgba(0,75,152,0.3); cursor:pointer;">
+          💾 Save & Update QR Pass Directly (சேமித்து புதுப்பி)
+        </button>
       </form>
     </div>
   </div>
 
   <!-- 3. Add News Modal -->
-  <div id="addNewsModal" class="modal-backdrop">
+  <div id="addNewsModal" class="modal-backdrop" style="display:none;">
     <div class="modal-content">
       <div class="modal-header">
         <h3 class="modal-title">Publish DBYC News Article</h3>
@@ -4965,7 +5019,7 @@ body {
   </div>
 
   <!-- 4. Add & Edit Member Official Application Form Modal -->
-  <div id="addMemberModal" class="modal-backdrop">
+  <div id="addMemberModal" class="modal-backdrop" style="display:none;">
     <div class="modal-content" style="max-width: 640px; border-radius: 20px;">
       <div class="modal-header">
         <div>
@@ -5319,7 +5373,7 @@ body {
   </div>
 
   <!-- 5. Add Event Modal -->
-  <div id="addEventModal" class="modal-backdrop">
+  <div id="addEventModal" class="modal-backdrop" style="display:none;">
     <div class="modal-content">
       <div class="modal-header">
         <h3 class="modal-title">Schedule New Event</h3>
@@ -5360,7 +5414,7 @@ body {
   </div>
 
   <!-- 6. Add Minutes Modal -->
-  <div id="addMinutesModal" class="modal-backdrop">
+  <div id="addMinutesModal" class="modal-backdrop" style="display:none;">
     <div class="modal-content">
       <div class="modal-header">
         <h3 class="modal-title">Record Meeting Minutes</h3>
@@ -5397,7 +5451,7 @@ body {
   </div>
 
   <!-- 7. Scan Member QR & ID Card Modal -->
-  <div id="scanMemberModal" class="modal-backdrop">
+  <div id="scanMemberModal" class="modal-backdrop" style="display:none;">
     <div class="modal-content" style="max-width: 540px;">
       <div class="modal-header">
         <div>
@@ -5430,16 +5484,7 @@ body {
         </div>
       </div>
 
-      <!-- Quick Demo Chips -->
-      <div style="margin-bottom:14px;">
-        <small style="font-weight:700; color:#64748b; font-size:0.75rem;">QUICK DEMO SCANS:</small>
-        <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;">
-          <button class="filter-chip scan-demo-btn" style="font-size:0.75rem; padding:4px 8px;" data-id="DBYC-2026-SJ01">⚡ Michael (Sub Jr)</button>
-          <button class="filter-chip scan-demo-btn" style="font-size:0.75rem; padding:4px 8px;" data-id="DBYC-2026-JN02">⚡ David (Junior)</button>
-          <button class="filter-chip scan-demo-btn" style="font-size:0.75rem; padding:4px 8px;" data-id="DBYC-2026-IN03">⚡ Dominic (Inters)</button>
-          <button class="filter-chip scan-demo-btn" style="font-size:0.75rem; padding:4px 8px;" data-id="DBYC-2026-SR04">⚡ John (Senior)</button>
-        </div>
-      </div>
+      
 
       <!-- Scanned Member Result Card -->
       <div id="scannedMemberResultCard" style="display:none; background:#f8fafc; border:2px solid #004b98; border-radius:12px; padding:14px; margin-top:10px;">
@@ -5461,7 +5506,7 @@ body {
   </div>
 
   <!-- 8. Upload Member Application / Document / Data Modal -->
-  <div id="uploadMemberDocModal" class="modal-backdrop">
+  <div id="uploadMemberDocModal" class="modal-backdrop" style="display:none;">
     <div class="modal-content" style="max-width: 580px;">
       <div class="modal-header">
         <div>
@@ -5545,8 +5590,7 @@ body {
           </div>
         </div>
         <div style="display:flex; gap:8px; margin-top:10px;">
-          <button id="importDemoBatchBtn" class="btn-dbyc-primary" style="flex:1; background:#0284c7; padding:10px; font-size:0.82rem;">⚡ Import 5 Sample Basin Bridge Members</button>
-          <button id="downloadCsvTemplateBtn" class="btn-dbyc-primary" style="background:#475569; padding:10px 14px; font-size:0.82rem;">📥 CSV Template</button>
+          <button id="downloadCsvTemplateBtn" class="btn-dbyc-primary" style="flex:1; background:#004b98; padding:10px 14px; font-size:0.85rem; font-weight:800; border-radius:8px;">📥 Download Official CSV Template</button>
         </div>
         <div id="bulkImportPreview" style="display:none; margin-top:12px; max-height:140px; overflow-y:auto; font-size:0.75rem; background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:8px;"></div>
       </div>
@@ -5558,7 +5602,7 @@ body {
   <div id="dbycToast"></div>
 
   <!-- 8. Live Camera Capture Modal -->
-  <div id="cameraCaptureModal" class="modal-backdrop">
+  <div id="cameraCaptureModal" class="modal-backdrop" style="display:none;">
     <div class="modal-content" style="max-width: 480px; text-align:center;">
       <div class="modal-header">
         <h3 class="modal-title">📷 Live Camera Photo Capture</h3>
@@ -5583,7 +5627,7 @@ body {
   <!-- 9. Edit Team Modal -->
   <div 
   <!-- Edit Leader Profile Modal -->
-  <div id="editLeaderModal" class="modal-backdrop">
+  <div id="editLeaderModal" class="modal-backdrop" style="display:none;">
     <div class="modal-content" style="max-width: 520px; border-radius: 20px;">
       <div class="modal-header">
         <div>
@@ -5821,7 +5865,7 @@ body {
     </div>
   </div>
 
-  <div id="editTeamModal" class="modal-backdrop">
+  <div id="editTeamModal" class="modal-backdrop" style="display:none;">
     <div class="modal-content" style="max-width: 480px;">
       <div class="modal-header">
         <div>
@@ -6154,7 +6198,7 @@ body {
     </div>
   </div>
 
-  <div id="cloudSyncModal" class="modal-backdrop">
+  <div id="cloudSyncModal" class="modal-backdrop" style="display:none;">
     <div class="modal-content" style="max-width: 540px; border-radius: 20px;">
       <div class="modal-header">
         <div>
@@ -6237,7 +6281,7 @@ body {
   </div>
 
   <!-- 10. Award Live Points Modal -->
-  <div id="awardPointsModal" class="modal-backdrop">
+  <div id="awardPointsModal" class="modal-backdrop" style="display:none;">
     <div class="modal-content" style="max-width: 500px;">
       <div class="modal-header">
         <div>
@@ -6594,8 +6638,29 @@ window.calculateTenure = function(joinDateOrYears) {
 let lastToastText = '';
 let lastToastTime = 0;
 
-window.showToast = function(msg, duration = 3000) {
+// ==========================================
+// STRICT AUTO-POPUP & NOTIFICATION SHIELD
+// Absolutely blocks all automated popups, auto-toasts, and unprompted dialogs
+// ==========================================
+window.isUserGestureActive = false;
+if (typeof window !== 'undefined') {
+  ['click', 'keydown', 'submit', 'touchstart'].forEach(evt => {
+    window.addEventListener(evt, () => {
+      window.isUserGestureActive = true;
+      clearTimeout(window._userGestureTimer);
+      window._userGestureTimer = setTimeout(() => {
+        window.isUserGestureActive = false;
+      }, 1200);
+    }, { capture: true, passive: true });
+  });
+}
+
+window.showToast = function(msg, duration = 3000, force = false) {
   try {
+    // Absolutely block all automated popups / toasts that are NOT initiated by a direct user gesture
+    if (!window.isUserGestureActive && !force) {
+      return;
+    }
     const now = Date.now();
     // Block duplicate toast popups within 2000ms
     if (msg === lastToastText && (now - lastToastTime) < 2000) {
@@ -6785,17 +6850,15 @@ function loadLocalData() {
         : (window.DBYC_OFFICIAL_LEADERS_SEED ? JSON.parse(JSON.stringify(window.DBYC_OFFICIAL_LEADERS_SEED)) : []);
 
       appState.teams = (parsed.teams && parsed.teams.length > 0) ? parsed.teams : [
-        { id: 'TEAM-1', name: 'Red Dragons', nameTa: 'சிவப்பு டிராகன்கள்', color: '#dc2626', captain: 'Stephen Paul', slogan: 'Courage & Passion (துணிவும் உற்சாகமும்)', points: 450, icon: '🐉' },
-        { id: 'TEAM-2', name: 'Blue Sharks', nameTa: 'நீல சுறாக்கள்', color: '#0284c7', captain: 'Michael Raj', slogan: 'Wisdom & Power (ஞானமும் வலிமையும்)', points: 520, icon: '🦈' },
-        { id: 'TEAM-3', name: 'Green Warriors', nameTa: 'பச்சை வீரர்கள்', color: '#16a34a', captain: 'Antony Cruz', slogan: 'Unity & Growth (ஒற்றுமையும் வளர்ச்சியும்)', points: 490, icon: '⚔️' },
-        { id: 'TEAM-4', name: 'Yellow Tigers', nameTa: 'மஞ்சள் புலிகள்', color: '#d97706', captain: 'Joseph Kumar', slogan: 'Speed & Glory (வேகமும் புகழும்)', points: 410, icon: '🐯' }
+        { id: 'TEAM-1', name: 'Red Dragons', nameTa: 'சிவப்பு டிராகன்கள்', color: '#dc2626', captain: '', slogan: 'Courage & Passion (துணிவும் உற்சாகமும்)', points: 0, icon: '🐉' },
+        { id: 'TEAM-2', name: 'Blue Sharks', nameTa: 'நீல சுறாக்கள்', color: '#0284c7', captain: '', slogan: 'Wisdom & Power (ஞானமும் வலிமையும்)', points: 0, icon: '🦈' },
+        { id: 'TEAM-3', name: 'Green Warriors', nameTa: 'பச்சை வீரர்கள்', color: '#16a34a', captain: '', slogan: 'Unity & Growth (ஒற்றுமையும் வளர்ச்சியும்)', points: 0, icon: '⚔️' },
+        { id: 'TEAM-4', name: 'Yellow Tigers', nameTa: 'மஞ்சள் புலிகள்', color: '#d97706', captain: '', slogan: 'Speed & Glory (வேகமும் புகழும்)', points: 0, icon: '🐯' }
       ];
-      appState.teamPointsLog = (parsed.teamPointsLog && parsed.teamPointsLog.length > 0) ? parsed.teamPointsLog : [
-        { id: 'LOG-1', date: '2026-09-28', teamId: 'TEAM-2', teamName: 'Blue Sharks', points: 50, category: 'Sports Tournament', reason: 'Won DBYC Inter-House Football 7s Opening Match', awardedBy: 'Rev. Fr. Director, SDB' },
-        { id: 'LOG-2', date: '2026-09-29', teamId: 'TEAM-3', teamName: 'Green Warriors', points: 30, category: 'Attendance Excellence', reason: 'Highest Sunday General Assembly Attendance (95%)', awardedBy: 'Rev. Fr. Asst. Director, SDB' },
-        { id: 'LOG-3', date: '2026-09-30', teamId: 'TEAM-1', teamName: 'Red Dragons', points: 40, category: 'Cultural / Quiz', reason: 'Don Bosco Life & Salesian History Quiz Champions', awardedBy: 'Antony Cruz (Leader)' },
-        { id: 'LOG-4', date: '2026-10-01', teamId: 'TEAM-4', teamName: 'Yellow Tigers', points: 25, category: 'Volunteering', reason: 'Oratory Grounds & Sports Equipment Maintenance', awardedBy: 'Rev. Fr. Director, SDB' }
-      ];
+      appState.teamPointsLog = parsed.teamPointsLog || [];
+      
+      // Auto-purge any demo data immediately
+      window.purgeAllDemoData();
     } catch (e) {
       seedBasinBridgeData();
     }
@@ -6803,6 +6866,71 @@ function loadLocalData() {
     seedBasinBridgeData();
   }
 }
+
+// Global Demo Data Purge Engine: Completely blocks and removes all mock/demo records
+window.purgeAllDemoData = function() {
+  const demoMemberIds = new Set([
+    'DBYC-2026-SJ01', 'DBYC-2026-JN02', 'DBYC-2026-IN03', 'DBYC-2026-SR04', 'DBYC-2026-SS05', 'DBYC-2026-EL06', 'DBYC-TEST-001'
+  ]);
+  const demoNames = new Set([
+    'Michael Raj', 'David Antony', 'Dominic Savio', 'John Bosco', 'Francis Xavier', 'Anthony Doss'
+  ]);
+  const demoEventIds = new Set(['EVT-01', 'EVT-02', 'EVT-03', 'EVT-001', 'EVT-002', 'EVT-003']);
+  const demoMinuteIds = new Set(['MIN-01', 'MIN-PENDING-01', 'MIN-001']);
+  const demoNewsIds = new Set(['NEWS-01', 'NEWS-02', 'NEWS-03', 'NEWS-PENDING-01']);
+  const demoMatchIds = new Set(['MATCH-01']);
+  const demoMediaIds = new Set(['MEDIA-01', 'MEDIA-02', 'MEDIA-03', 'MEDIA-04', 'MEDIA-05', 'MEDIA-PENDING-01', 'MEDIA-PENDING-02']);
+  const demoLogIds = new Set(['LOG-1', 'LOG-2', 'LOG-3', 'LOG-4']);
+
+  if (appState.members && Array.isArray(appState.members)) {
+    appState.members = appState.members.filter(m => {
+      if (!m) return false;
+      if (m.id === 'DBYC-DIR-001' || m.id === 'DBYC-DIR-002' || m.id === 'LDR-ORAT-01') return true;
+      if (demoMemberIds.has(m.id)) return false;
+      if (demoNames.has(m.name) && (String(m.id).startsWith('DBYC-2026-') || String(m.id).startsWith('DBYC-TEST-'))) return false;
+      return true;
+    });
+  }
+
+  if (appState.attendance && Array.isArray(appState.attendance)) {
+    appState.attendance = appState.attendance.filter(a => a && !demoMemberIds.has(a.memberId) && !demoNames.has(a.memberName));
+  }
+
+  if (appState.events && Array.isArray(appState.events)) {
+    appState.events = appState.events.filter(e => e && !demoEventIds.has(e.id));
+  }
+
+  if (appState.minutes && Array.isArray(appState.minutes)) {
+    appState.minutes = appState.minutes.filter(m => m && !demoMinuteIds.has(m.id));
+  }
+
+  if (appState.news && Array.isArray(appState.news)) {
+    appState.news = appState.news.filter(n => n && !demoNewsIds.has(n.id));
+  }
+
+  if (appState.matches && Array.isArray(appState.matches)) {
+    appState.matches = appState.matches.filter(m => m && !demoMatchIds.has(m.id));
+  }
+
+  if (appState.media && Array.isArray(appState.media)) {
+    appState.media = appState.media.filter(m => m && !demoMediaIds.has(m.id));
+  }
+
+  if (appState.teamPointsLog && Array.isArray(appState.teamPointsLog)) {
+    appState.teamPointsLog = appState.teamPointsLog.filter(l => l && !demoLogIds.has(l.id));
+  }
+
+  if (appState.teams && Array.isArray(appState.teams)) {
+    appState.teams.forEach(t => {
+      if (t.points === 450 || t.points === 520 || t.points === 490 || t.points === 410 || t.points === 350 || t.points === 310 || t.points === 290 || t.points === 270) {
+        t.points = 0;
+      }
+      if (demoNames.has(t.captain) || t.captain === 'Stephen Paul' || t.captain === 'Joseph Kumar' || t.captain === 'Antony Cruz' || t.captain === 'John Peter') {
+        t.captain = '';
+      }
+    });
+  }
+};
 
 function seedBasinBridgeData() {
   appState.members = [
@@ -6824,7 +6952,8 @@ function seedBasinBridgeData() {
       activities: 'Football, Gym, Leadership',
       futureAmbition: 'Salesian Youth Development',
       photo: DBYC_OFFICIAL_LOGO,
-      status: 'Active'
+      status: 'Active',
+      approvalStatus: 'APPROVED'
     },
     {
       id: 'DBYC-DIR-002',
@@ -6843,7 +6972,8 @@ function seedBasinBridgeData() {
       activities: 'Volleyball, Table Tennis, Music',
       futureAmbition: 'Youth Ministry & Oratory Formation',
       photo: '',
-      status: 'Active'
+      status: 'Active',
+      approvalStatus: 'APPROVED'
     },
     {
       id: 'LDR-ORAT-01',
@@ -6865,441 +6995,30 @@ function seedBasinBridgeData() {
       photo: '',
       status: 'Active',
       approvalStatus: 'APPROVED'
-    },
-    {
-      id: 'DBYC-2026-SJ01',
-      name: 'Michael Raj',
-      dob: '2014-10-04',
-      age: 12,
-      mobile: '9840123456',
-      pin: '0000',
-      group: 'Sub Juniors Group',
-      role: 'Member',
-      joinDate: '2023-01-10',
-      bloodGroup: 'B+ve',
-      fatherName: 'Joseph Raj',
-      motherName: 'Stella Mary',
-      education: '7th Std - Don Bosco School',
-      homeAddress: 'Vyasarpadi, Chennai',
-      activities: 'Football, Carrom',
-      futureAmbition: 'Professional Football Player',
-      photo: '',
-      status: 'Active'
-    },
-    {
-      id: 'DBYC-2026-JN02',
-      name: 'David Antony',
-      dob: '2010-10-18',
-      age: 16,
-      mobile: '9840234567',
-      pin: '1234',
-      group: 'Junior Group',
-      role: 'Group Leader',
-      joinDate: '2021-08-15',
-      bloodGroup: 'O+ve',
-      fatherName: 'Antony Peter',
-      motherName: 'Rosy',
-      education: '11th Std - DB HSS Basin Bridge',
-      homeAddress: 'Perambur, Chennai',
-      activities: 'Football, Table Tennis',
-      futureAmbition: 'State Table Tennis Champion',
-      photo: '',
-      status: 'Active'
-    },
-    {
-      id: 'DBYC-2026-IN03',
-      name: 'Dominic Savio',
-      dob: '2004-11-04',
-      age: 22,
-      mobile: '9840345678',
-      pin: '0000',
-      group: 'Inters Group',
-      role: 'Member',
-      joinDate: '2017-06-15',
-      bloodGroup: 'A+ve',
-      fatherName: 'Peter Paul',
-      motherName: 'Theresa',
-      education: 'B.Com - Loyola College',
-      homeAddress: 'Basin Bridge, Chennai',
-      activities: 'Football, Gym',
-      futureAmbition: 'Chartered Accountant',
-      photo: '',
-      status: 'Active'
-    },
-    {
-      id: 'DBYC-2026-SR04',
-      name: 'John Bosco',
-      dob: '1996-03-22',
-      age: 30,
-      mobile: '9840456789',
-      pin: '1234',
-      group: 'Senior Group',
-      role: 'Group Incharge',
-      joinDate: '2014-07-20',
-      bloodGroup: 'AB+ve',
-      fatherName: 'Francis Xavier',
-      motherName: 'Lourdes',
-      education: 'B.Tech / Software Engineer',
-      homeAddress: 'MKB Nagar, Chennai',
-      activities: 'Volleyball, Gym',
-      futureAmbition: 'Youth Mentor & Tech Lead',
-      photo: '',
-      status: 'Active'
-    },
-    {
-      id: 'DBYC-2026-SS05',
-      name: 'Francis Xavier',
-      dob: '1985-07-19',
-      age: 41,
-      mobile: '9840567890',
-      pin: '1234',
-      group: 'Super Seniors Group',
-      role: 'Group Leader',
-      joinDate: '2008-06-01',
-      bloodGroup: 'O+ve',
-      fatherName: 'Xavier George',
-      motherName: 'Agnes',
-      education: 'M.B.A / Senior Manager',
-      homeAddress: 'Royapuram, Chennai',
-      activities: 'Table Tennis, Carrom',
-      futureAmbition: 'Community Oratory Animator',
-      photo: '',
-      status: 'Active'
-    },
-    {
-      id: 'DBYC-2026-EL06',
-      name: 'Anthony Doss',
-      dob: '1965-05-10',
-      age: 61,
-      mobile: '9840678901',
-      pin: '0000',
-      group: 'Elders Group',
-      role: 'Member',
-      joinDate: '1982-01-10',
-      bloodGroup: 'B+ve',
-      fatherName: 'Doss Peter',
-      motherName: 'Mary',
-      education: 'Retired Officer',
-      homeAddress: 'Basin Bridge, Chennai',
-      activities: 'Carrom, Mentorship',
-      futureAmbition: 'Elder Council Guide',
-      photo: '',
-      status: 'Active'
     }
   ];
 
-  appState.attendance = [
-    { timestamp: new Date().toISOString(), date: new Date().toISOString().split('T')[0], memberId: 'DBYC-2026-SJ01', memberName: 'Michael Raj', group: 'Sub Juniors Group', markedBy: 'QR Scanner' },
-    { timestamp: new Date().toISOString(), date: new Date().toISOString().split('T')[0], memberId: 'DBYC-2026-JN02', memberName: 'David Antony', group: 'Junior Group', markedBy: 'QR Scanner' },
-    { timestamp: new Date().toISOString(), date: new Date().toISOString().split('T')[0], memberId: 'DBYC-2026-SR04', memberName: 'John Bosco', group: 'Senior Group', markedBy: 'QR Scanner' }
+  appState.attendance = [];
+  appState.events = [];
+  appState.minutes = [];
+  appState.news = [];
+  appState.matches = [];
+  appState.media = [];
+  appState.certificates = [];
+  appState.teamPointsLog = [];
+
+  appState.teams = [
+    { id: 'TEAM-1', name: 'Red Dragons', nameTa: 'சிவப்பு டிராகன்கள்', color: '#dc2626', badge: '🔴', points: 0, rank: 1, captain: '', slogan: 'Courage & Passion (துணிவும் உற்சாகமும்)', icon: '🐉', logo: '' },
+    { id: 'TEAM-2', name: 'Blue Sharks', nameTa: 'நீல சுறாக்கள்', color: '#0284c7', badge: '🔵', points: 0, rank: 2, captain: '', slogan: 'Wisdom & Power (ஞானமும் வலிமையும்)', icon: '🦈', logo: '' },
+    { id: 'TEAM-3', name: 'Green Warriors', nameTa: 'பச்சை வீரர்கள்', color: '#16a34a', badge: '🟢', points: 0, rank: 3, captain: '', slogan: 'Unity & Growth (ஒற்றுமையும் வளர்ச்சியும்)', icon: '⚔️', logo: '' },
+    { id: 'TEAM-4', name: 'Yellow Tigers', nameTa: 'மஞ்சள் புலிகள்', color: '#d97706', badge: '🟡', points: 0, rank: 4, captain: '', slogan: 'Speed & Glory (வேகமும் புகழும்)', icon: '🐯', logo: '' }
   ];
 
-  appState.events = [
-    { id: 'EVT-01', title: 'Don Bosco Feast & Basin Bridge Youth Sports Meet', category: 'Celebration', date: '2026-10-15', time: '09:00 AM', venue: 'DBYC Basin Bridge Ground', description: 'Grand annual tournaments for Sub Juniors, Juniors, Inters, Seniors, Super Seniors & Elders.' },
-    { id: 'EVT-02', title: 'Sunday General Assembly & Leaders Council Meet', category: 'Council Meeting', date: '2026-10-04', time: '10:00 AM', venue: 'Don Bosco Auditorium', description: 'Mandatory Sunday youth assembly (10 AM) followed by Leaders Council (11 AM - 1 PM).' },
-    { id: 'EVT-03', title: 'Youth Leadership & Career Mentorship Summit', category: 'Workshop', date: '2026-10-22', time: '04:30 PM', venue: 'Don Bosco Technical Hall', description: 'Interactive career guidance led by Rev. Fr. Assistant Director for Inters & Seniors.' }
-  ];
-
-  appState.minutes = [
-    {
-      id: 'MIN-01',
-      date: '2026-09-27',
-      title: 'Sunday Youth Leaders & Executive Committee Meeting',
-      presidedBy: 'Rev. Fr. Director & Rev. Fr. Asst. Director',
-      attendees: '22',
-      agenda: 'Review of 75% attendance rule, digital QR pass issuance, and upcoming football championship.',
-      decisions: 'All 6 groups must ensure QR scanning at 4:30 PM entry. Sub Juniors & Juniors parents notified.',
-      actionItems: 'Group Leaders to collect completed application renewal forms by Sunday.',
-      submittedBy: 'Rev. Fr. Director, SDB',
-      status: 'APPROVED',
-      qualifiedBy: 'Rev. Fr. Director, SDB'
-    },
-    {
-      id: 'MIN-PENDING-01',
-      date: '2026-09-30',
-      title: 'Sub Juniors Evening Study Circle & Sports Coaching Report',
-      presidedBy: 'David Antony (Junior Leader)',
-      attendees: '14',
-      agenda: 'Homework assistance, math tutoring, and sports warm-up discipline.',
-      decisions: 'Conducted 1-hour coaching followed by 45 mins table tennis training.',
-      actionItems: 'Maintain daily attendance register for tuition attendees.',
-      submittedBy: 'David Antony',
-      submittedById: 'DBYC-2026-JN02',
-      status: 'PENDING'
-    }
-  ];
-
-  appState.news = [
-    {
-      id: 'NEWS-01',
-      date: '2026-10-01',
-      title: 'Don Bosco Youth Centre, Basin Bridge - Digital PWA Portal LIVE',
-      category: 'Centre News',
-      priority: 'Breaking',
-      summary: 'Members can now check in via QR code and download official Membership & Attendance Certificates.',
-      author: 'Rev. Fr. Director, SDB',
-      status: 'APPROVED',
-      qualifiedBy: 'Rev. Fr. Director, SDB'
-    },
-    {
-      id: 'NEWS-02',
-      date: '2026-09-29',
-      title: 'Sub Juniors & Juniors Evening Coaching (4:30 PM - 7:30 PM)',
-      category: 'Sports',
-      priority: 'Urgent',
-      summary: 'Football, Carrom, and Table Tennis coaching underway. 75% attendance required for match selection.',
-      author: 'Rev. Fr. Asst. Director, SDB',
-      status: 'APPROVED',
-      qualifiedBy: 'Rev. Fr. Asst. Director, SDB'
-    },
-    {
-      id: 'NEWS-03',
-      date: '2026-09-25',
-      title: 'Mandatory Sunday General Assembly at 10:00 AM',
-      category: 'Assembly Circular',
-      priority: 'Normal',
-      summary: 'All group members must attend Sunday 10 AM assembly without fail. Entry closes at 10:10 AM.',
-      author: 'Rev. Fr. Director, SDB',
-      status: 'APPROVED',
-      qualifiedBy: 'Rev. Fr. Director, SDB'
-    },
-    {
-      id: 'NEWS-PENDING-01',
-      date: '2026-10-01',
-      title: 'Inters Group Friendly Practice Football Match on Friday',
-      category: 'Sports',
-      priority: 'Normal',
-      targetGroup: 'Inters Group',
-      summary: 'Inters Group members will organize a friendly football practice match at 5:00 PM on Friday at DBYC Ground.',
-      author: 'Dominic Savio',
-      authorRole: 'Member',
-      authorId: 'DBYC-2026-IN03',
-      status: 'PENDING'
-    }
-  ];
-
-  appState.matches = [
-    {
-      id: 'MATCH-01',
-      sport: 'Football',
-      tournament: 'DBYC Basin Bridge Annual Football Championship 2026',
-      venue: 'DBYC Basin Bridge Main Ground',
-      teamA: 'Sub Juniors Group',
-      teamB: 'Junior Group',
-      scoreA: 2,
-      scoreB: 1,
-      status: 'LIVE',
-      stage: "2nd Half (58')",
-      commentary: [
-        { min: "58'", text: "🔥 Great counter-attack by Sub Juniors! David Antony's strike hits the crossbar!" },
-        { min: "52'", text: "⚽ GOAL! Stephen Paul doubles the lead for Sub Juniors with a brilliant volley!" },
-        { min: "42'", text: "🟨 Yellow Card shown to Junior Group defender for foul." },
-        { min: "34'", text: "⚽ GOAL! Michael Raj scores the opening goal for Sub Juniors!" },
-        { min: "28'", text: "⚽ GOAL! David Antony levels the score for Junior Group from a free-kick!" }
-      ]
-    },
-    {
-      id: 'MATCH-02',
-      sport: 'Table Tennis',
-      tournament: 'Don Bosco Oratory Table Tennis Cup',
-      venue: 'DBYC Indoor Court',
-      teamA: 'Senior Group',
-      teamB: 'Inters Group',
-      scoreA: 2,
-      scoreB: 1,
-      status: 'LIVE',
-      stage: 'Set 3 (09-07)',
-      commentary: [
-        { min: "Set 3", text: "🏓 Intense rally! John Bosco leads 9-7 against Dominic Savio." },
-        { min: "Set 2", text: "Dominic Savio wins 2nd set 11-09 for Inters Group." },
-        { min: "Set 1", text: "John Bosco takes 1st set 11-08 for Senior Group." }
-      ]
-    },
-    {
-      id: 'MATCH-03',
-      sport: 'Volleyball',
-      tournament: 'Evening Veterans Volleyball League',
-      venue: 'DBYC Volleyball Court',
-      teamA: 'Super Seniors Group',
-      teamB: 'Elders Group',
-      scoreA: 0,
-      scoreB: 0,
-      status: 'UPCOMING',
-      stage: 'Today 05:30 PM',
-      commentary: [
-        { min: "Pre-match", text: "Teams warming up on the main court. Match starts at 5:30 PM." }
-      ]
-    },
-    {
-      id: 'MATCH-04',
-      sport: 'Carrom',
-      tournament: 'DBYC Indoor Carrom Fest',
-      venue: 'DBYC Recreation Hall',
-      teamA: 'Junior Group',
-      teamB: 'Inters Group',
-      scoreA: 25,
-      scoreB: 18,
-      status: 'COMPLETED',
-      stage: 'Final Board (FT)',
-      commentary: [
-        { min: "FT", text: "🏆 Junior Group wins the championship board 25-18!" }
-      ]
-    }
-  ];
-
-  
-    // Seed 4 House Teams
-    appState.teams = [
-      { id: 'TEAM-1', name: 'Red Dragons', nameTa: 'சிவப்பு டிராகன்கள்', color: '#dc2626', captain: 'Stephen Paul', slogan: 'Courage & Passion (துணிவும் உற்சாகமும்)', points: 450, icon: '🐉' },
-      { id: 'TEAM-2', name: 'Blue Sharks', nameTa: 'நீல சுறாக்கள்', color: '#0284c7', captain: 'Michael Raj', slogan: 'Wisdom & Power (ஞானமும் வலிமையும்)', points: 520, icon: '🦈' },
-      { id: 'TEAM-3', name: 'Green Warriors', nameTa: 'பச்சை வீரர்கள்', color: '#16a34a', captain: 'Antony Cruz', slogan: 'Unity & Growth (ஒற்றுமையும் வளர்ச்சியும்)', points: 490, icon: '⚔️' },
-      { id: 'TEAM-4', name: 'Yellow Tigers', nameTa: 'மஞ்சள் புலிகள்', color: '#d97706', captain: 'Joseph Kumar', slogan: 'Speed & Glory (வேகமும் புகழும்)', points: 410, icon: '🐯' }
-    ];
-
-    appState.teamPointsLog = [
-      { id: 'LOG-1', date: '2026-09-28', teamId: 'TEAM-2', teamName: 'Blue Sharks', points: 50, category: 'Sports Tournament', reason: 'Won DBYC Inter-House Football 7s Opening Match', awardedBy: 'Rev. Fr. Director, SDB' },
-      { id: 'LOG-2', date: '2026-09-29', teamId: 'TEAM-3', teamName: 'Green Warriors', points: 30, category: 'Attendance Excellence', reason: 'Highest Sunday General Assembly Attendance (95%)', awardedBy: 'Rev. Fr. Asst. Director, SDB' },
-      { id: 'LOG-3', date: '2026-09-30', teamId: 'TEAM-1', teamName: 'Red Dragons', points: 40, category: 'Cultural / Quiz', reason: 'Don Bosco Life & Salesian History Quiz Champions', awardedBy: 'Antony Cruz (Leader)' },
-      { id: 'LOG-4', date: '2026-10-01', teamId: 'TEAM-4', teamName: 'Yellow Tigers', points: 25, category: 'Volunteering', reason: 'Oratory Grounds & Sports Equipment Maintenance', awardedBy: 'Rev. Fr. Director, SDB' }
-    ];
-
-    appState.media = [
-    {
-      id: 'MEDIA-01',
-      type: 'LIVE',
-      title: 'Sunday Holy Mass & Don Bosco Youth General Assembly LIVE',
-      category: 'Spiritual',
-      author: 'Rev. Fr. Director, SDB',
-      date: '2026-10-01',
-      url: 'https://www.youtube.com/embed/live_stream?channel=UC_DBYC_BASIN_BRIDGE',
-      youtubeId: 'live_stream',
-      desc: 'Live broadcast of Holy Mass and Weekly Youth Assembly at Don Bosco Auditorium, Basin Bridge.',
-      status: 'APPROVED',
-      qualifiedBy: 'Rev. Fr. Director, SDB'
-    },
-    {
-      id: 'MEDIA-02',
-      type: 'VIDEO',
-      title: 'DBYC Annual Football Championship - Sub Juniors vs Juniors Highlights',
-      category: 'Sports',
-      author: 'Minutes Incharge',
-      date: '2026-09-28',
-      url: 'https://www.youtube.com/embed/ScMzIvxBSi4',
-      youtubeId: 'ScMzIvxBSi4',
-      thumb: 'assets/bg_oratory.jpg',
-      desc: 'Thrilling highlights of the annual inter-group football match played at DBYC Basin Bridge ground.',
-      status: 'APPROVED',
-      qualifiedBy: 'Rev. Fr. Director, SDB'
-    },
-    {
-      id: 'MEDIA-03',
-      type: 'VIDEO',
-      title: 'Don Bosco Feast & Oratory Cultural Extravaganza 2026',
-      category: 'Celebration',
-      author: 'Rev. Fr. Asst. Director, SDB',
-      date: '2026-09-20',
-      url: 'https://www.youtube.com/embed/ScMzIvxBSi4',
-      youtubeId: 'ScMzIvxBSi4',
-      thumb: 'assets/bg_gather.jpg',
-      desc: 'Music, drama, and awards ceremony by youth members of all 6 age groups.',
-      status: 'APPROVED',
-      qualifiedBy: 'Rev. Fr. Asst. Director, SDB'
-    },
-    {
-      id: 'MEDIA-04',
-      type: 'PHOTO',
-      title: 'Annual Youth Day Trophy & Certificate Distribution Ceremony',
-      category: 'Celebration',
-      author: 'Rev. Fr. Director, SDB',
-      date: '2026-09-15',
-      url: 'assets/bg_walk.jpg',
-      instaUrl: 'https://www.instagram.com/dbyc_basinbridge',
-      album: 'Youth Awards 2026',
-      desc: 'Honoring active members with 75%+ attendance with official DBYC certificates.',
-      status: 'APPROVED',
-      qualifiedBy: 'Rev. Fr. Director, SDB'
-    },
-    {
-      id: 'MEDIA-05',
-      type: 'PHOTO',
-      title: 'Don Bosco Oratory Courtyard Evening Coaching & Training Drills',
-      category: 'Training',
-      author: 'Group Leader',
-      date: '2026-09-10',
-      url: 'assets/bg_oratory.jpg',
-      instaUrl: 'https://www.instagram.com/dbyc_basinbridge',
-      album: 'Evening Coaching',
-      desc: 'Football and Table Tennis practice sessions (4:30 PM to 7:30 PM).',
-      status: 'APPROVED',
-      qualifiedBy: 'Rev. Fr. Director, SDB'
-    },
-    {
-      id: 'MEDIA-PENDING-01',
-      type: 'VIDEO',
-      title: 'Sub Juniors Football Passing & Goal Scoring Practice',
-      category: 'Sports',
-      author: 'Michael Raj',
-      authorId: 'DBYC-2026-SJ01',
-      date: '2026-10-01',
-      url: 'https://www.youtube.com/embed/ScMzIvxBSi4',
-      youtubeId: 'ScMzIvxBSi4',
-      thumb: 'assets/bg_walk.jpg',
-      desc: 'Short clip of Sub Juniors evening practice and skills session.',
-      status: 'PENDING'
-    },
-    {
-      id: 'MEDIA-PENDING-02',
-      type: 'PHOTO',
-      title: 'Youth Assembly Inters Group Gathering Photo',
-      category: 'Celebration',
-      author: 'Dominic Savio',
-      authorId: 'DBYC-2026-IN03',
-      date: '2026-09-30',
-      url: 'assets/bg_gather.jpg',
-      instaUrl: 'https://www.instagram.com/dbyc_basinbridge',
-      album: 'Youth Moments',
-      desc: 'Inters Group members meeting after the assembly at Don Bosco courtyard.',
-      status: 'PENDING'
-    }
-  ];
-
-  
-  
-  if (!appState.teams || appState.teams.length === 0) {
-    appState.teams = [
-      { id: 'TEAM-1', name: 'Red Dragons', nameTa: 'சிவப்பு டிராகன்கள்', color: '#dc2626', badge: '🔴', points: 350, rank: 1, captain: 'Michael Raj', slogan: 'Courage & Fire', logo: '' },
-      { id: 'TEAM-2', name: 'Blue Sharks', nameTa: 'நீல சுறாக்கள்', color: '#0284c7', badge: '🔵', points: 310, rank: 2, captain: 'John Peter', slogan: 'Relentless Power', logo: '' },
-      { id: 'TEAM-3', name: 'Green Warriors', nameTa: 'பச்சை வீரர்கள்', color: '#16a34a', badge: '🟢', points: 290, rank: 3, captain: 'David Antony', slogan: 'Honor & Loyalty', logo: '' },
-      { id: 'TEAM-4', name: 'Yellow Tigers', nameTa: 'மஞ்சள் புலிகள்', color: '#d97706', badge: '🟡', points: 270, rank: 4, captain: 'Antony Cruz', slogan: 'Speed & Passion', logo: '' }
-    ];
-  }
   if (!appState.leaders || appState.leaders.length === 0) {
-    appState.leaders = JSON.parse(JSON.stringify(window.DBYC_OFFICIAL_LEADERS_SEED));
+    appState.leaders = JSON.parse(JSON.stringify(window.DBYC_OFFICIAL_LEADERS_SEED || []));
   }
-  if (appState.members && appState.members.length > 0) {
-    appState.members.forEach(m => {
-      m.pin = m.pin || m.securityPin || '1234';
-      m.securityPin = m.pin;
-    });
-  }
-  saveLocalData();
-  setTimeout(() => {
-    const obLogo = document.getElementById('dbycOfficialLogoInObPortal');
-    if (obLogo && window.DBYC_OFFICIAL_LOGO) obLogo.src = window.DBYC_OFFICIAL_LOGO;
-  }, 200);
 
-  if (!appState.events || appState.events.length === 0) {
-    appState.events = [
-      { id: 'EVT-001', title: 'Don Bosco Feast & Sports Festival', category: 'Celebration', date: '2026-01-31', time: '08:30', venue: 'DBYC Basin Bridge Stadium', approvalStatus: 'APPROVED', status: 'APPROVED', approvedBy: 'Rev. Fr. Director, SDB' },
-      { id: 'EVT-002', title: 'Inter-House Football 7s Championship', category: 'Sports Tournament', date: '2026-10-15', time: '16:00', venue: 'Football Turf Ground', approvalStatus: 'APPROVED', status: 'APPROVED', approvedBy: 'Rev. Fr. Director, SDB' },
-      { id: 'EVT-003', title: 'Youth Council General Body Meeting', category: 'Council Meeting', date: '2026-10-25', time: '18:30', venue: 'Oratory AV Hall', approvalStatus: 'APPROVED', status: 'APPROVED', approvedBy: 'Rev. Fr. Asst. Director, SDB' }
-    ];
-  }
-  if (!appState.minutes || appState.minutes.length === 0) {
-    appState.minutes = [
-      { id: 'MIN-001', title: 'DBYC Council Planning Meeting & Annual Budget', date: '2026-09-20', presidedBy: 'Rev. Fr. Director, SDB', attendees: 24, agenda: 'House team points review, football tournament schedule, new member registrations', decisions: 'Approved tournament dates; awarded 100 points to Green Warriors for attendance excellence', approvalStatus: 'APPROVED', status: 'APPROVED', approvedBy: 'Rev. Fr. Director, SDB' }
-    ];
-  }
+  saveLocalData();
 }
 
 let _dbycCloudDebounceTimer = null;
@@ -7858,7 +7577,6 @@ function setupGoogleSignInHandlers() {
       }));
       localStorage.setItem(DBYC_REMEMBERED_ACCOUNT, JSON.stringify(member));
 
-      showToast(`✅ Contact verified! Welcome back, ${member.name}!`);
       showMainApp();
     } else {
       if (errEl) {
@@ -7917,7 +7635,6 @@ function setupGoogleSignInHandlers() {
     }));
     localStorage.setItem(DBYC_REMEMBERED_ACCOUNT, JSON.stringify(googleActiveTargetMember));
 
-    showToast(`🎉 Security PIN set successfully! Welcome, ${googleActiveTargetMember.name}!`);
     showMainApp();
   };
 
@@ -8137,7 +7854,6 @@ function setupGoogleSignInHandlers() {
     localStorage.setItem(DBYC_REMEMBERED_ACCOUNT, JSON.stringify(targetMember));
 
     if (pwdInput) pwdInput.value = '';
-    showToast(`✅ Welcome, ${targetMember.name}!`);
     showMainApp();
   };
 
@@ -10536,6 +10252,23 @@ window.scanQrFromFile = function(event) {
 // ==========================================
 let currentViewingPassMemberId = null;
 
+window.triggerPassPhotoUpload = function(memberId) {
+  const targetId = memberId || currentViewingPassMemberId;
+  if (!targetId) return;
+  currentViewingPassMemberId = targetId;
+  if (typeof window.canEdit === 'function' && !window.canEdit('passes')) {
+    if (typeof showToast === 'function') showToast('🔒 QR Pass photo editing requires Rev. Fr. Director permission.');
+    return;
+  }
+  const passPhotoInput = document.getElementById('passPhotoFileInput');
+  if (passPhotoInput) {
+    passPhotoInput.value = '';
+    passPhotoInput.click();
+  }
+};
+
+window.pendingPassPhotoBase64 = null;
+
 function setupPassHandlers() {
   const passPhotoInput = document.getElementById('passPhotoFileInput');
   if (passPhotoInput) {
@@ -10559,13 +10292,37 @@ function setupPassHandlers() {
           }
           saveLocalData();
           generateIdPass(currentViewingPassMemberId);
-          showToast('📸 Pass photo updated!');
-          syncToGas('ADD_MEMBER', m);
+          showToast(`📸 Photo of ${m.name} updated successfully!`);
+          if (typeof syncToGas === 'function') syncToGas('ADD_MEMBER', m);
         }
       };
       reader.readAsDataURL(file);
     });
   }
+
+  // Inside Modal Photo Picker
+  const modalPhotoInput = document.getElementById('editPassModalPhotoInput');
+  if (modalPhotoInput) {
+    modalPhotoInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        window.pendingPassPhotoBase64 = evt.target.result;
+        const preview = document.getElementById('editPassPhotoPreview');
+        if (preview) preview.src = window.pendingPassPhotoBase64;
+        showToast('📷 Photo loaded in preview! Click Save to apply.');
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  window.resetEditPassPhoto = function() {
+    window.pendingPassPhotoBase64 = window.DBYC_DEFAULT_AVATAR || 'assets/logo.png';
+    const preview = document.getElementById('editPassPhotoPreview');
+    if (preview) preview.src = window.pendingPassPhotoBase64;
+    showToast('🗑️ Photo reset to default. Click Save to apply.');
+  };
 
   const editPassModal = document.getElementById('editPassModal');
   document.getElementById('closeEditPassBtn')?.addEventListener('click', () => {
@@ -10582,24 +10339,57 @@ function setupPassHandlers() {
 
     const m = appState.members.find(mem => mem.id === currentViewingPassMemberId);
     if (m) {
-      m.mobile = document.getElementById('editPassMobile').value.trim();
-      m.group = document.getElementById('editPassGroup').value;
-      m.activities = document.getElementById('editPassActivities').value.trim();
-      m.bloodGroup = document.getElementById('editPassBlood').value;
+      const nameVal = document.getElementById('editPassName')?.value.trim();
+      if (nameVal) m.name = nameVal;
+
+      const groupVal = document.getElementById('editPassGroup')?.value;
+      if (groupVal) m.group = groupVal;
+
+      const yearsVal = document.getElementById('editPassYears')?.value.trim();
+      if (yearsVal) m.yearsInDbyc = yearsVal;
+
+      m.mobile = document.getElementById('editPassMobile')?.value.trim() || '';
+      m.bloodGroup = document.getElementById('editPassBlood')?.value || m.bloodGroup;
+      
+      const dobVal = document.getElementById('editPassDob')?.value;
+      if (dobVal) m.dob = dobVal;
+
+      const addrVal = document.getElementById('editPassAddress')?.value.trim();
+      if (addrVal !== undefined) {
+        m.homeAddress = addrVal;
+        m.address = addrVal;
+      }
+
+      const actsVal = document.getElementById('editPassActivities')?.value.trim();
+      if (actsVal !== undefined) {
+        m.activities = actsVal;
+      }
+
+      if (window.pendingPassPhotoBase64) {
+        m.photo = window.pendingPassPhotoBase64;
+        window.pendingPassPhotoBase64 = null;
+      }
 
       if (appState.currentUser && appState.currentUser.id === m.id) {
-        appState.currentUser.mobile = m.mobile;
+        appState.currentUser.name = m.name;
         appState.currentUser.group = m.group;
-        appState.currentUser.activities = m.activities;
+        appState.currentUser.yearsInDbyc = m.yearsInDbyc;
+        appState.currentUser.mobile = m.mobile;
         appState.currentUser.bloodGroup = m.bloodGroup;
+        appState.currentUser.dob = m.dob;
+        appState.currentUser.homeAddress = m.homeAddress;
+        appState.currentUser.address = m.address;
+        appState.currentUser.activities = m.activities;
+        if (m.photo) appState.currentUser.photo = m.photo;
         localStorage.setItem(DBYC_USER, JSON.stringify(appState.currentUser));
       }
 
       saveLocalData();
       editPassModal.style.display = 'none';
       generateIdPass(currentViewingPassMemberId);
-      showToast('✅ Pass details updated!');
-      syncToGas('ADD_MEMBER', m);
+      if (typeof renderMemberPassSelector === 'function') renderMemberPassSelector();
+      showToast(`✅ Pass details and photo for ${m.name} updated successfully!`);
+      if (typeof syncToGas === 'function') syncToGas('ADD_MEMBER', m);
     }
   });
 }
@@ -10705,12 +10495,13 @@ function generateIdPass(memberId) {
             </div>
           </div>
 
-          <!-- RIGHT: Image / Candidate Photo (Bigger) -->
+          <!-- RIGHT: Image / Candidate Photo (Bigger, Directly Editable) -->
           <div style="display:flex; flex-direction:column; align-items:center; flex:1;">
-            <div style="position:relative; display:inline-block;">
-              <img src="${photoSrc}" alt="${member.name}" class="id-pass-candidate-photo" style="width:135px; height:145px; border-radius:12px; object-fit:cover; border:2.5px solid #004b98; outline:2px solid #fde047; box-shadow:0 4px 12px rgba(0,0,0,0.18);">
-              ${(typeof window.canEdit === 'function' && window.canEdit('passes')) ? `<button class="avatar-upload-btn" title="Change Photo" onclick="document.getElementById('passPhotoFileInput').click()" style="position:absolute; bottom:-4px; right:-4px; background:#004b98; color:#fff; border:1.5px solid #fff; border-radius:50%; width:28px; height:28px; font-size:0.85rem; cursor:pointer; display:flex; align-items:center; justify-content:center;">📷</button>` : ''}
+            <div style="position:relative; display:inline-block; cursor:pointer;" onclick="window.triggerPassPhotoUpload('${member.id}')" title="Click directly to change photo of ${member.name}">
+              <img src="${photoSrc}" alt="${member.name}" class="id-pass-candidate-photo" onclick="window.triggerPassPhotoUpload('${member.id}')" style="width:135px; height:145px; border-radius:12px; object-fit:cover; border:2.5px solid #004b98; outline:2px solid #fde047; box-shadow:0 4px 12px rgba(0,0,0,0.18); cursor:pointer;">
+              <button type="button" class="avatar-upload-btn" title="Click to Change Photo" onclick="event.stopPropagation(); window.triggerPassPhotoUpload('${member.id}')" style="position:absolute; bottom:-4px; right:-4px; background:#004b98; color:#fff; border:1.8px solid #fff; border-radius:50%; width:32px; height:32px; font-size:0.95rem; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 8px rgba(0,0,0,0.3); z-index:3;">📷</button>
             </div>
+            <div style="font-size:0.75rem; color:#004b98; font-weight:800; margin-top:3px; cursor:pointer; text-decoration:underline;" onclick="window.triggerPassPhotoUpload('${member.id}')" title="Change member photo">📷 Change Photo</div>
           </div>
         </div>
 
@@ -10773,8 +10564,18 @@ function generateIdPass(memberId) {
       </div>
     </div>
 
+    <!-- Direct Pass Editing & Photo Action Bar -->
+    <div style="display:flex; gap:10px; width:100%; max-width:460px; margin:14px auto 0;">
+      <button type="button" class="btn-dbyc-primary" style="flex:1; background:#ea580c; font-size:0.92rem; font-weight:900; padding:11px; border-radius:10px; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 3px 8px rgba(234,88,12,0.3); cursor:pointer;" onclick="window.openEditPassModal('${member.id}')">
+        ✏️ Edit Pass Directly (அட்டை திருத்து)
+      </button>
+      <button type="button" class="btn-dbyc-primary" style="flex:1; background:#004b98; font-size:0.92rem; font-weight:900; padding:11px; border-radius:10px; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 3px 8px rgba(0,75,152,0.3); cursor:pointer;" onclick="window.triggerPassPhotoUpload('${member.id}')">
+        📷 Change Photo (படம் மாற்று)
+      </button>
+    </div>
+
     <!-- 3 Distinct HD Action Buttons (PDF, PNG, Print) -->
-    <div style="display:flex; flex-direction:column; gap:8px; width:100%; max-width:460px; margin:16px auto 0;">
+    <div style="display:flex; flex-direction:column; gap:8px; width:100%; max-width:460px; margin:10px auto 0;">
       <button type="button" class="btn-dbyc-primary" style="background:#059669; font-size:0.92rem; font-weight:800; padding:11px; border-radius:10px; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 3px 8px rgba(5,150,105,0.3); cursor:pointer;" onclick="window.downloadMemberPassPdf('${member.id}')">
         📄 Download HD PDF (PDF பதிவிறக்கம்)
       </button>
@@ -10783,14 +10584,9 @@ function generateIdPass(memberId) {
         🖼️ Download HD PNG (உயர் தர PNG படம்)
       </button>
 
-      <div style="display:flex; gap:8px; width:100%;">
-        <button type="button" class="btn-dbyc-primary" style="flex:1; background:#004b98; font-size:0.86rem; padding:9px; font-weight:800; border-radius:8px; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;" onclick="window.printMemberPassDirect('${member.id}')">
-          🖨️ Direct Card Print (அட்டை அச்சிடு)
-        </button>
-        ${(typeof window.canEdit === 'function' && window.canEdit('passes')) ? `<button type="button" class="btn-dbyc-primary" style="flex:1; background:#ea580c; font-size:0.86rem; padding:9px; font-weight:800; border-radius:8px; cursor:pointer;" onclick="openEditPassModal('${member.id}')">
-          ✏️ Edit Pass
-        </button>` : ''}
-      </div>
+      <button type="button" class="btn-dbyc-primary" style="background:#004b98; font-size:0.92rem; padding:11px; font-weight:800; border-radius:10px; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;" onclick="window.printMemberPassDirect('${member.id}')">
+        🖨️ Direct Card Print (அட்டை அச்சிடு)
+      </button>
     </div>
   `;
 }
@@ -12398,18 +12194,51 @@ window.printApplicationForm = function(memberId) {
 window.downloadApplicationFormPdf = window.printApplicationForm;
 window.openEditPassModal = function(memberId) {
   if (typeof window.closeAllModals === 'function') window.closeAllModals();
-  if (typeof window.canEdit === 'function' && !window.canEdit('passes')) {
-    showToast('🔒 QR Pass editing is currently turned OFF by Rev. Fr. Director.');
+  const targetId = memberId || currentViewingPassMemberId;
+  const m = appState.members.find(mem => mem.id === targetId);
+  if (!m) {
+    if (typeof showToast === 'function') showToast('⚠️ Member record not found to edit pass.');
     return;
   }
-  const m = appState.members.find(mem => mem.id === memberId);
-  if (!m) return;
+  currentViewingPassMemberId = m.id;
 
-  document.getElementById('editPassMobile').value = m.mobile || '';
-  document.getElementById('editPassGroup').value = m.group || 'Sub Juniors Group';
-  document.getElementById('editPassActivities').value = m.activities || '';
-  document.getElementById('editPassBlood').value = m.bloodGroup || 'O+ve';
-  document.getElementById('editPassModal').style.display = 'flex';
+  if (typeof window.canEdit === 'function' && !window.canEdit('passes')) {
+    if (typeof showToast === 'function') showToast('🔒 QR Pass editing requires Rev. Fr. Director permission.');
+    return;
+  }
+
+  const nameEl = document.getElementById('editPassName');
+  if (nameEl) nameEl.value = m.name || '';
+
+  const groupEl = document.getElementById('editPassGroup');
+  if (groupEl) groupEl.value = m.group || 'Sub Juniors Group';
+
+  const yearsEl = document.getElementById('editPassYears');
+  if (yearsEl) yearsEl.value = m.yearsInDbyc || (typeof calculateTenure === 'function' ? calculateTenure(m.joinDate) : '1 Year');
+
+  const mobileEl = document.getElementById('editPassMobile');
+  if (mobileEl) mobileEl.value = m.mobile || '';
+
+  const bloodEl = document.getElementById('editPassBlood');
+  if (bloodEl) bloodEl.value = m.bloodGroup || 'O+ve';
+
+  const dobEl = document.getElementById('editPassDob');
+  if (dobEl) dobEl.value = m.dob || '';
+
+  const addrEl = document.getElementById('editPassAddress');
+  if (addrEl) addrEl.value = m.homeAddress || m.address || '';
+
+  const actsEl = document.getElementById('editPassActivities');
+  if (actsEl) actsEl.value = Array.isArray(m.activities) ? m.activities.join(', ') : (m.activities || '');
+
+  const photoPreview = document.getElementById('editPassPhotoPreview');
+  if (photoPreview) {
+    photoPreview.src = m.photo || window.DBYC_DEFAULT_AVATAR || 'assets/logo.png';
+  }
+  window.pendingPassPhotoBase64 = null;
+
+  const modal = document.getElementById('editPassModal');
+  if (modal) modal.style.display = 'flex';
 };
 
 // ==========================================
@@ -14566,150 +14395,6 @@ window.rejectMinute = window.deleteMinute;
 // ==============================================================================
 // PERMANENT MEMBER & CONTENT DELETION ENGINE (TOMBSTONE-PROTECTED)
 // ==============================================================================
-
-window.deleteMember = function(memberId) {
-  if (!memberId) return;
-  const member = (appState.members || []).find(m => m.id === memberId);
-  const memName = member ? member.name : memberId;
-
-  if (memberId === 'DBYC-DIR-001' || memberId === 'DBYC-DIR-002') {
-    if (typeof showToast === 'function') showToast('⚠️ Director and Assistant Director profiles cannot be deleted.');
-    return;
-  }
-
-  const confirmed = confirm(
-    `Are you sure you want to permanently delete member:\n\n` +
-    `• Name: ${memName}\n` +
-    `• ID: ${memberId}\n\n` +
-    `This will permanently remove their profile, QR pass, and attendance records from this device and Google Drive.`
-  );
-  if (!confirmed) return;
-
-  // 1. Remove from local members array
-  appState.members = (appState.members || []).filter(m => m.id !== memberId);
-
-  // 2. Record in persistent tombstone list so cloud sync NEVER resurrects this member
-  if (!appState.deletedMemberIds) appState.deletedMemberIds = [];
-  if (!appState.deletedMemberIds.includes(memberId)) {
-    appState.deletedMemberIds.push(memberId);
-  }
-
-  // 3. Remove corresponding attendance records
-  if (appState.attendance) {
-    appState.attendance = appState.attendance.filter(a => a.memberId !== memberId);
-  }
-
-  // 4. Remove corresponding certificates
-  if (appState.certificates) {
-    appState.certificates = appState.certificates.filter(c => c.memberId !== memberId);
-  }
-
-  // 5. Persist to localStorage immediately
-  saveLocalData();
-
-  // 6. Push deletion tombstone to Google Drive cloud backend immediately
-  if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
-    window.DbycCloud.pushToCloud(true);
-  }
-
-  // 7. Update UI views
-  if (typeof renderMembersRegistry === 'function') renderMembersRegistry();
-  if (typeof renderTodayAttendanceList === 'function') renderTodayAttendanceList();
-  if (typeof renderQualificationDesk === 'function') renderQualificationDesk();
-  if (typeof updateDashboardStats === 'function') updateDashboardStats();
-
-  if (typeof showToast === 'function') {
-    showToast(`🗑️ Member "${memName}" permanently deleted & synced to cloud.`);
-  }
-};
-
-window.deleteMemberFromModal = function() {
-  const editId = document.getElementById('formEditingMemberId')?.value;
-  if (!editId) {
-    if (typeof showToast === 'function') showToast('⚠️ No member selected to delete.');
-    return;
-  }
-  if (typeof window.closeAddMemberModal === 'function') window.closeAddMemberModal();
-  window.deleteMember(editId);
-};
-
-window.clearAllSampleDemoData = function() {
-  const sampleDemoIds = ['DBYC-2026-SJ01', 'DBYC-2026-JN02', 'DBYC-2026-IN03', 'DBYC-2026-SR04', 'DBYC-2026-SS05', 'DBYC-2026-EL06', 'DBYC-TEST-001'];
-  const sampleDemoNames = ['Michael Raj', 'David Antony', 'Dominic Savio', 'Stephen Paul', 'Joseph Kumar', 'Antony Cruz'];
-
-  const foundDemos = (appState.members || []).filter(m => {
-    if (m.id === 'DBYC-DIR-001' || m.id === 'DBYC-DIR-002') return false;
-    if (sampleDemoIds.includes(m.id)) return true;
-    if (sampleDemoNames.includes(m.name) && (m.id.startsWith('DBYC-2026-') || m.id.startsWith('DBYC-TEST-'))) return true;
-    return false;
-  });
-
-  if (foundDemos.length === 0) {
-    if (typeof showToast === 'function') showToast('ℹ️ No pre-loaded sample demo members found in registry.');
-    return;
-  }
-
-  const confirmed = confirm(
-    `Are you sure you want to remove all pre-loaded sample demo members (${foundDemos.length} members)?\n\n` +
-    `Found: ${foundDemos.map(d => d.name).join(', ')}\n\n` +
-    `Rev. Fr. Director and all real members you registered will be safely kept.`
-  );
-  if (!confirmed) return;
-
-  if (!appState.deletedMemberIds) appState.deletedMemberIds = [];
-
-  foundDemos.forEach(d => {
-    if (!appState.deletedMemberIds.includes(d.id)) {
-      appState.deletedMemberIds.push(d.id);
-    }
-  });
-
-  appState.members = (appState.members || []).filter(m => !foundDemos.some(d => d.id === m.id));
-
-  // Purge sample demo attendance
-  if (appState.attendance) {
-    appState.attendance = appState.attendance.filter(a => !foundDemos.some(d => d.id === a.memberId));
-  }
-
-  saveLocalData();
-
-  if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
-    window.DbycCloud.pushToCloud(true);
-  }
-
-  if (typeof renderMembersRegistry === 'function') renderMembersRegistry();
-  if (typeof renderTodayAttendanceList === 'function') renderTodayAttendanceList();
-  if (typeof updateDashboardStats === 'function') updateDashboardStats();
-
-  if (typeof showToast === 'function') {
-    showToast(`🧹 Purged ${foundDemos.length} demo members! Registry is now clean & cloud-synced.`);
-  }
-};
-
-window.deleteMinute = function(minuteId) {
-  if (!minuteId) return;
-  const item = (appState.minutes || []).find(x => x.id === minuteId);
-  const title = item ? item.title : minuteId;
-
-  if (!confirm(`Are you sure you want to delete meeting minute:\n\n"${title}"?`)) return;
-
-  const idx = (appState.minutes || []).findIndex(x => x.id === minuteId);
-  if (idx !== -1) {
-    appState.minutes.splice(idx, 1);
-    if (!appState.deletedMinuteIds) appState.deletedMinuteIds = [];
-    if (!appState.deletedMinuteIds.includes(minuteId)) {
-      appState.deletedMinuteIds.push(minuteId);
-    }
-    saveLocalData();
-    if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
-      window.DbycCloud.pushToCloud(false);
-    }
-    if (typeof showToast === 'function') showToast(`🗑️ Minute record removed: "${title}"`);
-    if (typeof renderQualificationDesk === 'function') renderQualificationDesk();
-    if (typeof renderMinutesList === 'function') renderMinutesList();
-  }
-};
-window.rejectMinute = window.deleteMinute;
 
 // 5. BIRTHDAY CELEBRATIONS VIEW RENDERER
 function renderBirthdays() {
@@ -17061,6 +16746,7 @@ window.DbycGoogleDriveServerStorage = {
     // Zero-overhead conditional short-circuit:
     // If incoming cloud data has an updatedAt timestamp matching our last applied snapshot,
     // skip CPU-intensive array iterations and Map reconstructions completely!
+    if (typeof window.purgeAllDemoData === 'function') window.purgeAllDemoData();
     if (cloudData.updatedAt && this.lastAppliedCloudUpdatedAt && cloudData.updatedAt === this.lastAppliedCloudUpdatedAt) {
       return;
     }
@@ -17992,7 +17678,6 @@ window.directRoleLogin = function(roleType) {
     loginTime: Date.now()
   }));
 
-  showToast('✅ Welcome, ' + member.name + ' (' + member.role + ')!');
   showMainApp();
 };
 
@@ -18148,7 +17833,6 @@ window.enterAppAs = function(roleType) {
     loginTime: Date.now()
   }));
 
-  showToast('✅ Welcome, ' + member.name + ' (' + member.role + ')!');
   showMainApp();
 };
 
@@ -18183,7 +17867,6 @@ window.enterWithPin = function() {
     appState.currentUser = matched;
     localStorage.setItem(DBYC_USER, JSON.stringify(matched));
     localStorage.setItem('dbyc_active_session', JSON.stringify({ userId: matched.id, role: matched.role, loginTime: Date.now() }));
-    showToast('✅ Welcome, ' + matched.name);
     showMainApp();
     return;
   }
@@ -18311,7 +17994,6 @@ window.simpleLoginSubmit = function() {
     loginTime: Date.now()
   }));
 
-  showToast('✅ Welcome, ' + member.name + ' (' + member.role + ')!');
   showMainApp();
 };
 
@@ -18608,7 +18290,6 @@ window.simpleRoleLoginSubmit = function() {
     }));
     if (window.loginTransitionTimer) clearTimeout(window.loginTransitionTimer);
     window.loginTransitionTimer = setTimeout(() => {
-      showToast(`✅ Welcome ${matchedMember.name}!`);
       showMainApp();
     }, 350);
     return;
@@ -18647,7 +18328,6 @@ window.simpleRoleLoginSubmit = function() {
     }
     if (window.loginTransitionTimer) clearTimeout(window.loginTransitionTimer);
     window.loginTransitionTimer = setTimeout(() => {
-      showToast(`✅ Welcome Father Director!`);
       showMainApp();
     }, 350);
     return;
@@ -18684,7 +18364,6 @@ window.simpleRoleLoginSubmit = function() {
     }
     if (window.loginTransitionTimer) clearTimeout(window.loginTransitionTimer);
     window.loginTransitionTimer = setTimeout(() => {
-      showToast(`✅ Welcome Father Assistant Director!`);
       showMainApp();
     }, 350);
     return;
@@ -18717,7 +18396,6 @@ window.simpleRoleLoginSubmit = function() {
 
   if (window.loginTransitionTimer) clearTimeout(window.loginTransitionTimer);
   window.loginTransitionTimer = setTimeout(() => {
-    showToast(`✅ Welcome, ${targetUser.name} (${targetUser.role})!`);
     showMainApp();
   }, 350);
 };
@@ -18944,7 +18622,6 @@ window.verifyMobileOtpSubmit = function() {
   }));
 
   setTimeout(() => {
-    showToast('✅ OTP Verified: Welcome ' + member.name + '!');
     showMainApp();
   }, 350);
 };

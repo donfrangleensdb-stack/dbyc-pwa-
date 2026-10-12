@@ -6616,23 +6616,54 @@ const DBYC_RULES = [
 // DBYC MASTER TOAST NOTIFICATION SYSTEM
 // ==========================================
 
-window.calculateTenure = function(joinDateOrYears) {
-  if (!joinDateOrYears) return '1 Year';
-  if (typeof joinDateOrYears === 'number') {
-    return joinDateOrYears + (joinDateOrYears === 1 ? ' Year' : ' Years');
+window.getMemberTenureString = function(member) {
+  if (!member) return '1 Year';
+  if (typeof member === 'string' || typeof member === 'number') {
+    const s = String(member).trim();
+    if (s.toLowerCase().includes('year')) return s;
+    const n = parseInt(s, 10);
+    if (!isNaN(n) && n > 0) return `${n} ${n === 1 ? 'Year' : 'Years'}`;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
+      const diff = Math.max(1, new Date().getFullYear() - new Date(s).getFullYear());
+      return `${diff} ${diff === 1 ? 'Year' : 'Years'}`;
+    }
+    return s || '1 Year';
   }
-  const str = String(joinDateOrYears).trim();
-  if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
-    const startYear = new Date(str).getFullYear();
-    const currentYear = new Date().getFullYear();
-    const diff = Math.max(1, currentYear - startYear);
-    return diff + (diff === 1 ? ' Year' : ' Years');
+  // Explicit yearsInDbyc takes absolute priority over auto-default joinDate
+  const rawYears = (member.yearsInDbyc !== undefined && member.yearsInDbyc !== null && String(member.yearsInDbyc).trim() !== '')
+    ? member.yearsInDbyc
+    : null;
+  if (rawYears !== null) {
+    const str = String(rawYears).trim();
+    if (str.toLowerCase().includes('year')) return str;
+    const num = parseInt(str, 10);
+    if (!isNaN(num)) {
+      if (num <= 0) return '< 1 Year';
+      return `${num} ${num === 1 ? 'Year' : 'Years'}`;
+    }
+    return str;
   }
-  const num = parseInt(str, 10);
-  if (!isNaN(num) && num > 0) {
-    return num + (num === 1 ? ' Year' : ' Years');
+  if (member.joinDate) {
+    const str = String(member.joinDate).trim();
+    if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
+      const startYear = new Date(str).getFullYear();
+      if (!isNaN(startYear)) {
+        const diff = Math.max(1, new Date().getFullYear() - startYear);
+        return `${diff} ${diff === 1 ? 'Year' : 'Years'}`;
+      }
+    }
   }
   return '1 Year';
+};
+
+window.calculateTenure = function(joinDateOrYears, optionalYears) {
+  if (joinDateOrYears && typeof joinDateOrYears === 'object') {
+    return window.getMemberTenureString(joinDateOrYears);
+  }
+  if (optionalYears !== undefined && optionalYears !== null && String(optionalYears).trim() !== '') {
+    return window.getMemberTenureString({ yearsInDbyc: optionalYears });
+  }
+  return window.getMemberTenureString(joinDateOrYears);
 };
 
 let lastToastText = '';
@@ -10286,13 +10317,20 @@ function setupPassHandlers() {
         const m = appState.members.find(mem => mem.id === currentViewingPassMemberId);
         if (m) {
           m.photo = base64;
+          m.updatedAt = new Date().toISOString();
           if (appState.currentUser && appState.currentUser.id === m.id) {
             appState.currentUser.photo = base64;
+            appState.currentUser.updatedAt = m.updatedAt;
             localStorage.setItem(DBYC_USER, JSON.stringify(appState.currentUser));
           }
           saveLocalData();
+          if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+            window.DbycCloud.pushToCloud(false);
+          }
           generateIdPass(currentViewingPassMemberId);
-          showToast(`📸 Photo of ${m.name} updated successfully!`);
+          if (typeof renderMembersRegistry === 'function') renderMembersRegistry();
+          if (typeof renderMemberPassSelector === 'function') renderMemberPassSelector();
+          showToast(`📸 Photo of ${m.name} updated and saved successfully!`);
           if (typeof syncToGas === 'function') syncToGas('ADD_MEMBER', m);
         }
       };
@@ -10346,10 +10384,23 @@ function setupPassHandlers() {
       if (groupVal) m.group = groupVal;
 
       const yearsVal = document.getElementById('editPassYears')?.value.trim();
-      if (yearsVal) m.yearsInDbyc = yearsVal;
+      if (yearsVal !== undefined && yearsVal !== '') {
+        m.yearsInDbyc = yearsVal;
+        const yNum = parseInt(yearsVal, 10);
+        if (!isNaN(yNum) && yNum > 0) {
+          const derivedYear = new Date().getFullYear() - yNum;
+          m.joinDate = `${derivedYear}-01-01`;
+        }
+      }
 
-      m.mobile = document.getElementById('editPassMobile')?.value.trim() || '';
-      m.bloodGroup = document.getElementById('editPassBlood')?.value || m.bloodGroup;
+      const mobileVal = document.getElementById('editPassMobile')?.value.trim() || '';
+      m.mobile = mobileVal;
+      m.phone = mobileVal;
+      m.contactNumber = mobileVal;
+
+      const bloodVal = document.getElementById('editPassBlood')?.value || m.bloodGroup || 'O+ve';
+      m.bloodGroup = bloodVal;
+      m.blood = bloodVal;
       
       const dobVal = document.getElementById('editPassDob')?.value;
       if (dobVal) m.dob = dobVal;
@@ -10363,6 +10414,7 @@ function setupPassHandlers() {
       const actsVal = document.getElementById('editPassActivities')?.value.trim();
       if (actsVal !== undefined) {
         m.activities = actsVal;
+        m.specialActivities = actsVal;
       }
 
       if (window.pendingPassPhotoBase64) {
@@ -10370,56 +10422,69 @@ function setupPassHandlers() {
         window.pendingPassPhotoBase64 = null;
       }
 
+      m.updatedAt = new Date().toISOString();
+
       if (appState.currentUser && appState.currentUser.id === m.id) {
         appState.currentUser.name = m.name;
         appState.currentUser.group = m.group;
         appState.currentUser.yearsInDbyc = m.yearsInDbyc;
         appState.currentUser.mobile = m.mobile;
+        appState.currentUser.phone = m.phone;
+        appState.currentUser.contactNumber = m.contactNumber;
         appState.currentUser.bloodGroup = m.bloodGroup;
+        appState.currentUser.blood = m.blood;
         appState.currentUser.dob = m.dob;
         appState.currentUser.homeAddress = m.homeAddress;
         appState.currentUser.address = m.address;
         appState.currentUser.activities = m.activities;
         if (m.photo) appState.currentUser.photo = m.photo;
+        appState.currentUser.updatedAt = m.updatedAt;
         localStorage.setItem(DBYC_USER, JSON.stringify(appState.currentUser));
       }
 
       saveLocalData();
+      if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+        window.DbycCloud.pushToCloud(false);
+      }
       editPassModal.style.display = 'none';
       generateIdPass(currentViewingPassMemberId);
+      if (typeof renderMembersRegistry === 'function') renderMembersRegistry();
       if (typeof renderMemberPassSelector === 'function') renderMemberPassSelector();
-      showToast(`✅ Pass details and photo for ${m.name} updated successfully!`);
+      showToast(`✅ Pass details and photo for ${m.name} updated and saved successfully!`);
       if (typeof syncToGas === 'function') syncToGas('ADD_MEMBER', m);
     }
   });
 }
 
-function renderMemberPassSelector() {
+function renderMemberPassSelector(preferMemberId) {
   const select = document.getElementById('passMemberSelect');
   if (!select) return;
 
   const roleType = getUserRoleType();
-  let availableMembers = appState.members;
+  let availableMembers = appState.members || [];
 
   if (roleType === 'MEMBER' && appState.currentUser) {
-    availableMembers = appState.members.filter(m => m.id === appState.currentUser.id);
+    availableMembers = availableMembers.filter(m => m.id === appState.currentUser.id);
   }
 
   select.innerHTML = availableMembers.map(m => `
     <option value="${m.id}">${m.name} (${m.group} - ${m.id})</option>
   `).join('');
 
-  select.addEventListener('change', () => {
+  select.onchange = () => {
     generateIdPass(select.value);
-  });
+  };
 
-  const initialId = (appState.currentUser && appState.currentUser.id !== 'DBYC-GUEST') 
-    ? appState.currentUser.id 
-    : (availableMembers[0] ? availableMembers[0].id : '');
+  const activeId = preferMemberId || currentViewingPassMemberId;
+  const targetId = (activeId && availableMembers.some(m => m.id === activeId))
+    ? activeId
+    : (appState.currentUser && appState.currentUser.id !== 'DBYC-GUEST' && availableMembers.some(m => m.id === appState.currentUser.id))
+      ? appState.currentUser.id
+      : (availableMembers[0] ? availableMembers[0].id : '');
     
-  if (initialId) {
-    select.value = initialId;
-    generateIdPass(initialId);
+  if (targetId) {
+    select.value = targetId;
+    generateIdPass(targetId);
   }
 }
 
@@ -10438,9 +10503,9 @@ function generateIdPass(memberId) {
 
   currentViewingPassMemberId = memberId;
   const card = document.getElementById('idPassCardContainer');
-  const tenure = (typeof calculateTenure === 'function') 
-    ? calculateTenure(member.joinDate || member.yearsInDbyc) 
-    : (member.yearsInDbyc ? member.yearsInDbyc + ' Years' : '1 Year');
+  const tenure = (typeof window.getMemberTenureString === 'function')
+    ? window.getMemberTenureString(member)
+    : (member.yearsInDbyc ? (String(member.yearsInDbyc).toLowerCase().includes('year') ? member.yearsInDbyc : member.yearsInDbyc + ' Years') : '1 Year');
 
   let cardDob = 'N/A';
   if (member.dob) {
@@ -10458,6 +10523,8 @@ function generateIdPass(memberId) {
   const qrUrl = (typeof window.generateOfflineQrDataUrl === 'function' ? window.generateOfflineQrDataUrl(rawQrText) : '') || `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(rawQrText)}`;
 
   const photoSrc = member.photo || DBYC_DEFAULT_AVATAR;
+  const cardMobile = member.mobile || member.phone || member.contactNumber || 'N/A';
+  const cardBlood = member.bloodGroup || member.blood || 'N/A';
 
   const cleanGroup = String(member.group || 'Youth').replace(/\bgroup\b/gi, '').trim() || 'Youth';
 
@@ -10520,12 +10587,12 @@ function generateIdPass(memberId) {
           <tr style="border-bottom:1.5px dashed #cbd5e1;">
             <td style="width:34px; font-size:27px; padding:6px 2px; text-align:center; vertical-align:middle;">📞</td>
             <td class="label" style="font-size:26px; font-weight:900; color:#0f172a; padding:6px 6px; white-space:nowrap;">CN:</td>
-            <td class="val" style="font-size:26px; font-weight:900; color:#0f172a; padding:6px 6px;">${member.mobile || 'N/A'}</td>
+            <td class="val" style="font-size:26px; font-weight:900; color:#0f172a; padding:6px 6px;">${cardMobile}</td>
           </tr>
           <tr style="border-bottom:1.5px dashed #cbd5e1;">
             <td style="width:34px; font-size:27px; padding:6px 2px; text-align:center; vertical-align:middle;">🩸</td>
             <td class="label" style="font-size:26px; font-weight:900; color:#0f172a; padding:6px 6px; white-space:nowrap;">BG:</td>
-            <td class="val" style="font-size:26px; font-weight:900; color:#dc2626; padding:6px 6px;">${member.bloodGroup || 'N/A'}</td>
+            <td class="val" style="font-size:26px; font-weight:900; color:#dc2626; padding:6px 6px;">${cardBlood}</td>
           </tr>
           <tr style="border-bottom:1.5px dashed #cbd5e1;">
             <td style="width:34px; font-size:27px; padding:6px 2px; text-align:center; vertical-align:middle;">🎂</td>
@@ -11139,9 +11206,9 @@ window.drawOfficial56x86PassToCanvas = async function(m, scale) {
   cvs.height = 86 * scale; // 1720
   var ctx = cvs.getContext('2d');
 
-  var tenure = (typeof calculateTenure === 'function') 
-    ? calculateTenure(member.joinDate || member.yearsInDbyc) 
-    : (member.yearsInDbyc ? member.yearsInDbyc + ' Years' : '1 Year');
+  var tenure = (typeof window.getMemberTenureString === 'function')
+    ? window.getMemberTenureString(member)
+    : (member.yearsInDbyc ? (String(member.yearsInDbyc).toLowerCase().includes('year') ? member.yearsInDbyc : member.yearsInDbyc + ' Years') : '1 Year');
 
   var cardDob = 'N/A';
   if (member.dob) {
@@ -11308,8 +11375,8 @@ window.drawOfficial56x86PassToCanvas = async function(m, scale) {
   var rows = [
     { icon: '🪪', label: 'ID:', val: member.id || 'N/A', color: '#004b98', boldVal: true, valFont: '900 52px sans-serif' },
     { icon: '⏳', label: 'Years:', val: tenure, color: '#b45309', boldVal: true, valFont: '900 52px sans-serif' },
-    { icon: '📞', label: 'CN:', val: member.mobile || 'N/A', color: '#0f172a', boldVal: true, valFont: '900 52px sans-serif' },
-    { icon: '🩸', label: 'BG:', val: member.bloodGroup || 'N/A', color: '#dc2626', boldVal: true, valFont: '900 54px sans-serif' },
+    { icon: '📞', label: 'CN:', val: (member.mobile || member.phone || member.contactNumber || 'N/A'), color: '#0f172a', boldVal: true, valFont: '900 52px sans-serif' },
+    { icon: '🩸', label: 'BG:', val: (member.bloodGroup || member.blood || 'N/A'), color: '#dc2626', boldVal: true, valFont: '900 54px sans-serif' },
     { icon: '🎂', label: 'DOB:', val: cardDob, color: '#0f172a', boldVal: true, valFont: '900 52px sans-serif' },
     { icon: '📍', label: 'ADD:', val: cardAddress, color: '#1e293b', boldVal: true, multiline: true, valFont: '900 46px sans-serif' },
     { icon: '🎯', label: 'ACTS:', val: cardActivities, color: '#004b98', boldVal: true, multiline: true, valFont: '900 46px sans-serif' }
@@ -12214,22 +12281,29 @@ window.openEditPassModal = function(memberId) {
   if (groupEl) groupEl.value = m.group || 'Sub Juniors Group';
 
   const yearsEl = document.getElementById('editPassYears');
-  if (yearsEl) yearsEl.value = m.yearsInDbyc || (typeof calculateTenure === 'function' ? calculateTenure(m.joinDate) : '1 Year');
+  if (yearsEl) yearsEl.value = (typeof window.getMemberTenureString === 'function') ? window.getMemberTenureString(m) : (m.yearsInDbyc || '1 Year');
 
   const mobileEl = document.getElementById('editPassMobile');
-  if (mobileEl) mobileEl.value = m.mobile || '';
+  if (mobileEl) mobileEl.value = m.mobile || m.phone || m.contactNumber || '';
 
   const bloodEl = document.getElementById('editPassBlood');
-  if (bloodEl) bloodEl.value = m.bloodGroup || 'O+ve';
+  if (bloodEl) bloodEl.value = m.bloodGroup || m.blood || 'O+ve';
 
   const dobEl = document.getElementById('editPassDob');
-  if (dobEl) dobEl.value = m.dob || '';
+  if (dobEl) {
+    let dVal = m.dob || '';
+    if (dVal && dVal.includes('/')) {
+      const parts = dVal.split('/');
+      if (parts.length === 3 && parts[2].length === 4) dVal = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+    }
+    dobEl.value = dVal;
+  }
 
   const addrEl = document.getElementById('editPassAddress');
   if (addrEl) addrEl.value = m.homeAddress || m.address || '';
 
   const actsEl = document.getElementById('editPassActivities');
-  if (actsEl) actsEl.value = Array.isArray(m.activities) ? m.activities.join(', ') : (m.activities || '');
+  if (actsEl) actsEl.value = Array.isArray(m.activities) ? m.activities.join(', ') : (m.activities || m.specialActivities || '');
 
   const photoPreview = document.getElementById('editPassPhotoPreview');
   if (photoPreview) {
@@ -13794,20 +13868,30 @@ window.openAddMemberModal = function(memberId) {
     document.getElementById('formWorkAddress').value = m.workAddress || '';
     document.getElementById('formReligion').value = m.religion || 'Christian';
     document.getElementById('formMaritalStatus').value = m.maritalStatus || 'திருமணமாகாதவர் (Unmarried)';
-    document.getElementById('formHomeAddress').value = m.homeAddress || '';
-    document.getElementById('formMobile').value = m.mobile || '';
+    document.getElementById('formHomeAddress').value = m.homeAddress || m.address || '';
+    document.getElementById('formMobile').value = m.mobile || m.phone || m.contactNumber || '';
     document.getElementById('formSecurityPin').value = m.securityPin || '1234';
     document.getElementById('formEmail').value = m.email || '';
     document.getElementById('formInstaId').value = m.instaId || '';
     document.getElementById('formFatherName').value = m.fatherName || '';
     document.getElementById('formMotherName').value = m.motherName || '';
-    document.getElementById('formYearsInDbyc').value = m.yearsInDbyc || 1;
+    
+    // Years in DBYC: Extract number from yearsInDbyc or calculate from joinDate
+    let yrVal = 1;
+    if (m.yearsInDbyc !== undefined && m.yearsInDbyc !== null && String(m.yearsInDbyc).trim() !== '') {
+      yrVal = parseInt(String(m.yearsInDbyc).replace(/\D/g, ''), 10) || 1;
+    } else if (m.joinDate) {
+      const startYear = new Date(m.joinDate).getFullYear();
+      if (!isNaN(startYear)) yrVal = Math.max(1, new Date().getFullYear() - startYear);
+    }
+    document.getElementById('formYearsInDbyc').value = yrVal;
+
     document.getElementById('formBrothersCount').value = m.brothersCount || 0;
     document.getElementById('formSistersCount').value = m.sistersCount || 0;
     document.getElementById('formBrothersInDbyc').value = m.brothersInDbyc || '';
     document.getElementById('formJoiningPurpose').value = m.joiningPurpose || '';
     document.getElementById('formFutureAmbition').value = m.futureAmbition || '';
-    document.getElementById('formBloodGroup').value = m.bloodGroup || 'O+ve';
+    document.getElementById('formBloodGroup').value = m.bloodGroup || m.blood || 'O+ve';
     document.getElementById('formGroup').value = m.group || 'Sub Juniors Group';
     document.getElementById('formRole').value = m.role || 'Member';
     document.getElementById('formJoinDate').value = m.joinDate || '';
@@ -13920,6 +14004,15 @@ window.saveMemberRegistrationFormDirect = function(event) {
     checkedActivities.push(cb.value);
   });
 
+  const parsedYears = parseInt(document.getElementById('formYearsInDbyc')?.value || '1', 10) || 1;
+  const homeAddr = (document.getElementById('formHomeAddress')?.value || '').trim();
+  const rawJoinDate = document.getElementById('formJoinDate')?.value || new Date().toISOString().split('T')[0];
+  let finalJoinDate = rawJoinDate;
+  if (parsedYears > 0 && (!rawJoinDate || rawJoinDate === new Date().toISOString().split('T')[0])) {
+    finalJoinDate = `${new Date().getFullYear() - parsedYears}-01-01`;
+  }
+  const bloodVal = document.getElementById('formBloodGroup')?.value || 'O+ve';
+
   const memberData = {
     name,
     dob: document.getElementById('formDob')?.value || '',
@@ -13929,30 +14022,36 @@ window.saveMemberRegistrationFormDirect = function(event) {
     workAddress: document.getElementById('formWorkAddress')?.value || '',
     religion: document.getElementById('formReligion')?.value || 'Christian',
     maritalStatus: document.getElementById('formMaritalStatus')?.value || 'திருமணமாகாதவர் (Unmarried)',
-    homeAddress: document.getElementById('formHomeAddress')?.value || '',
+    homeAddress: homeAddr,
+    address: homeAddr,
     mobile,
+    phone: mobile,
+    contactNumber: mobile,
     securityPin: (document.getElementById('formSecurityPin')?.value || '').trim() || '1234',
     pin: (document.getElementById('formSecurityPin')?.value || '').trim() || '1234',
     email: document.getElementById('formEmail')?.value || '',
     instaId: document.getElementById('formInstaId')?.value || '',
     fatherName: document.getElementById('formFatherName')?.value || '',
     motherName: document.getElementById('formMotherName')?.value || '',
-    yearsInDbyc: parseInt(document.getElementById('formYearsInDbyc')?.value || '1', 10),
+    yearsInDbyc: parsedYears,
     brothersCount: parseInt(document.getElementById('formBrothersCount')?.value || '0', 10),
     sistersCount: parseInt(document.getElementById('formSistersCount')?.value || '0', 10),
     brothersInDbyc: document.getElementById('formBrothersInDbyc')?.value || '',
     joiningPurpose: document.getElementById('formJoiningPurpose')?.value || 'Sports, fellowship and leadership',
-    activities: checkedActivities,
+    activities: checkedActivities.length > 0 ? checkedActivities : ['Football, Gym, Leadership'],
+    specialActivities: checkedActivities.join(', '),
     futureAmbition: document.getElementById('formFutureAmbition')?.value || '',
-    bloodGroup: document.getElementById('formBloodGroup')?.value || 'O+ve',
+    bloodGroup: bloodVal,
+    blood: bloodVal,
     group,
     role: document.getElementById('formRole')?.value || 'Member',
-    joinDate: document.getElementById('formJoinDate')?.value || new Date().toISOString().split('T')[0],
-    renewalDate: document.getElementById('formRenewalDate')?.value || document.getElementById('formJoinDate')?.value || new Date().toISOString().split('T')[0],
+    joinDate: finalJoinDate,
+    renewalDate: document.getElementById('formRenewalDate')?.value || finalJoinDate,
     expiryDate: document.getElementById('formExpiryDate')?.value || '',
     team: document.getElementById('formTeam')?.value || 'TEAM-1',
     notes: document.getElementById('formNotes')?.value || '',
-    photo: window.capturedMemberPhotoBase64 || ''
+    photo: window.capturedMemberPhotoBase64 || '',
+    updatedAt: new Date().toISOString()
   };
 
   if (!memberData.expiryDate) {
@@ -14038,11 +14137,25 @@ window.saveMemberRegistrationFormDirect = function(event) {
     appState.members.unshift(memberData);
   }
 
-  // 1. Instantaneous UI Feedback (Zero Main-Thread Blocking)
+  // 1. Instantaneous UI Feedback
   window.closeAddMemberModal();
-  showToast(editId ? '⚡ Member details updated instantly!' : '⚡ New member registered instantly!');
+  showToast(editId ? '⚡ Member details & QR Pass updated instantly!' : '⚡ New member registered & QR Pass created!');
 
-  // 2. Render primary members registry immediately
+  // 2. Immediate synchronous local persistence
+  saveLocalData();
+
+  // 3. Immediately refresh QR pass and member selector if active
+  if (savedMemberId) {
+    currentViewingPassMemberId = savedMemberId;
+    if (typeof generateIdPass === 'function') {
+      generateIdPass(savedMemberId);
+    }
+    if (typeof renderMemberPassSelector === 'function') {
+      renderMemberPassSelector();
+    }
+  }
+
+  // 4. Render members registry and dashboard stats immediately
   if (typeof renderMembersRegistry === 'function') {
     renderMembersRegistry();
   }
@@ -14050,10 +14163,13 @@ window.saveMemberRegistrationFormDirect = function(event) {
     updateDashboardStats();
   }
 
-  // 3. Asynchronously persist to localStorage and sync cloud/other views in the background
-  setTimeout(() => {
-    saveLocalData();
+  // 5. Immediate cloud synchronization
+  if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+    window.DbycCloud.pushToCloud(false);
+  }
 
+  // 6. Auxiliary view syncs
+  setTimeout(() => {
     if (typeof window.syncLeadersWithMembers === 'function') {
       window.syncLeadersWithMembers();
     }
@@ -14065,11 +14181,6 @@ window.saveMemberRegistrationFormDirect = function(event) {
     }
     if (typeof renderQualificationDesk === 'function') {
       renderQualificationDesk();
-    }
-
-    // Debounced asynchronous cloud push (zero UI freezing)
-    if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
-      window.DbycCloud.pushToCloud(false);
     }
   }, 25);
 
@@ -16789,7 +16900,10 @@ window.DbycGoogleDriveServerStorage = {
             const wasApproved = localMem.approvalStatus === 'APPROVED' || localMem.status === 'APPROVED' || localMem.status === 'Active' ||
                                 cm.approvalStatus === 'APPROVED' || cm.status === 'APPROVED' || cm.status === 'Active';
 
-            if (cloudTs > localTs) {
+            // Anti-Overwrite Guard: If member was edited locally in the last 45 seconds, local ALWAYS wins!
+            const isLocalRecent = (Date.now() - localTs) < 45000;
+
+            if (cloudTs > localTs && !isLocalRecent) {
               const merged = Object.assign({}, localMem, cm);
               if (wasApproved) {
                 merged.approvalStatus = 'APPROVED';
@@ -16799,10 +16913,21 @@ window.DbycGoogleDriveServerStorage = {
               }
               memberMap.set(cm.id, merged);
               hasChanges = true;
-            } else if (wasApproved && (localMem.approvalStatus !== 'APPROVED' || localMem.status !== 'APPROVED')) {
-              localMem.approvalStatus = 'APPROVED';
-              localMem.status = 'APPROVED';
-              hasChanges = true;
+            } else {
+              // Local is newer or actively edited locally! Retain localMem
+              if (wasApproved && (localMem.approvalStatus !== 'APPROVED' || localMem.status !== 'APPROVED')) {
+                localMem.approvalStatus = 'APPROVED';
+                localMem.status = 'APPROVED';
+                hasChanges = true;
+              }
+              // Push local record to cloud so Google Drive updates with latest edits
+              if (localTs > cloudTs && window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function' && !this.isPushScheduled) {
+                this.isPushScheduled = true;
+                setTimeout(() => {
+                  this.isPushScheduled = false;
+                  if (window.DbycCloud && window.DbycCloud.pushToCloud) window.DbycCloud.pushToCloud(false);
+                }, 2000);
+              }
             }
           }
         }
@@ -18909,6 +19034,7 @@ window.saveQuickPhoto = function() {
     const m = (window.appState.members || []).find(x => x.id === memberId);
     if (m) {
       m.photo = newPhoto;
+      m.updatedAt = new Date().toISOString();
       updated = true;
     }
   }
@@ -18917,6 +19043,7 @@ window.saveQuickPhoto = function() {
     const l = (window.appState.leaders || []).find(x => x.id === leaderId);
     if (l) {
       l.photo = newPhoto;
+      l.updatedAt = new Date().toISOString();
       updated = true;
     }
   }
@@ -19885,9 +20012,9 @@ window.renderOfficialIdCardHtml = function(member) {
   const rawQrText = `DBYC:${member.id}:${member.name}:${member.group}`;
   const qrUrl = (typeof window.generateOfflineQrDataUrl === 'function' ? window.generateOfflineQrDataUrl(rawQrText) : '') || `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(rawQrText)}`;
 
-  const tenure = (typeof calculateTenure === 'function') 
-    ? calculateTenure(member.joinDate || member.yearsInDbyc) 
-    : (member.yearsInDbyc ? member.yearsInDbyc + ' Years' : '1 Year');
+  const tenure = (typeof window.getMemberTenureString === 'function')
+    ? window.getMemberTenureString(member)
+    : (member.yearsInDbyc ? (String(member.yearsInDbyc).toLowerCase().includes('year') ? member.yearsInDbyc : member.yearsInDbyc + ' Years') : '1 Year');
 
   let cardDob = 'N/A';
   if (member.dob) {

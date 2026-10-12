@@ -1138,7 +1138,7 @@ body {
 
 .id-pass-details-table {
   width: 100%;
-  font-size: 25px;
+  font-size: 26px;
   border-collapse: collapse;
   margin-top: 4px;
 }
@@ -1152,13 +1152,13 @@ body {
   font-weight: 900;
   color: #0f172a;
   width: 44%;
-  font-size: 25px;
+  font-size: 26px;
 }
 
 .id-pass-details-table td.val {
   font-weight: 900;
   color: #0f172a;
-  font-size: 25px;
+  font-size: 26px;
 }
 
 .id-pass-footer-ribbon {
@@ -10679,8 +10679,8 @@ function generateIdPass(memberId) {
       <div class="id-pass-header" style="background:linear-gradient(135deg, #00264d 0%, #004b98 100%); padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:8px; border-bottom:2.5px solid #fde047; flex-shrink:0;">
         <img src="${window.DON_BOSCO_PORTRAIT || DBYC_OFFICIAL_LOGO}" alt="Don Bosco" class="id-pass-header-logo" style="width:44px; height:44px; border-radius:50%; object-fit:cover; border:2px solid #fde047; box-shadow:0 0 6px rgba(253,224,71,0.6);" title="Don Bosco Youth Centre">
         <div style="text-align:center; flex:1; line-height:1.2;">
-          <h3 style="font-size:1.15rem; font-weight:900; letter-spacing:0.3px; color:#ffffff; margin:0; text-transform:uppercase;">DON BOSCO YOUTH CENTRE</h3>
-          <p style="font-size:0.88rem; color:#fde047; font-weight:800; margin:2px 0 0;">Basin Bridge, Chennai - 600 012</p>
+          <h3 style="font-size:14pt; font-weight:900; letter-spacing:0.3px; color:#ffffff; margin:0; text-transform:uppercase;">DON BOSCO YOUTH CENTRE</h3>
+          <p style="font-size:11pt; color:#fde047; font-weight:800; margin:2px 0 0;">Basin Bridge, Chennai - 600 012</p>
         </div>
         <img src="${DBYC_OFFICIAL_LOGO}" alt="DBYC Crest" class="id-pass-header-logo" style="width:44px; height:44px; border-radius:50%; object-fit:cover; border:2px solid #fde047; background:#ffffff;" title="Don Bosco Youth Centre Crest">
       </div>
@@ -10689,9 +10689,9 @@ function generateIdPass(memberId) {
       <div class="id-pass-body" style="padding:10px 14px; display:flex; flex-direction:column; align-items:center; gap:4px; flex:1; background:rgba(255, 255, 255, 0.92);">
         
         <!-- Member Name & Group Badge (Bold!) -->
-        <h4 style="font-size:1.45rem; font-weight:900; color:#00264d; margin:2px 0 0; text-transform:uppercase; letter-spacing:0.3px; text-align:center;">${member.name}</h4>
+        <h4 style="font-size:14pt; font-weight:900; color:#00264d; margin:2px 0 0; text-transform:uppercase; letter-spacing:0.3px; text-align:center;">${member.name}</h4>
         
-        <span style="background:#fee2e2; color:#b91c1c; font-weight:900; font-size:0.92rem; padding:4px 16px; border-radius:100px; border:1px solid #fca5a5; display:inline-block; margin-bottom:4px;">
+        <span style="background:#fee2e2; color:#b91c1c; font-weight:900; font-size:12pt; padding:4px 16px; border-radius:100px; border:1px solid #fca5a5; display:inline-block; margin-bottom:4px;">
           ★ ${cleanGroup.toUpperCase()} ★
         </span>
 
@@ -10714,47 +10714,47 @@ function generateIdPass(memberId) {
           </div>
         </div>
 
-        <!-- All-Bold Details Table: Font Size 25px with Short Labels (ID, Group, Years, CN, BG, DOB, ADD, ACTS) -->
-        <table class="id-pass-details-table" style="width:100%; border-collapse:collapse; margin-top:4px; font-size:25px;">
+        <!-- All-Bold Details Table: Font Size 26px with Short Labels (ID, Group, Years, CN, BG, DOB, ADD, ACTS) -->
+        <table class="id-pass-details-table" style="width:100%; border-collapse:collapse; margin-top:4px; font-size:26px;">
           <tr style="border-bottom:1.5px dashed #cbd5e1;">
-            <td style="width:34px; font-size:26px; padding:6px 2px; text-align:center; vertical-align:middle;">🪪</td>
-            <td class="label" style="font-size:25px; font-weight:900; color:#0f172a; padding:6px 6px; width:28%; white-space:nowrap;">ID:</td>
-            <td class="val" style="font-size:25px; font-weight:900; color:#004b98; padding:6px 6px;">${member.id}</td>
+            <td style="width:34px; font-size:27px; padding:6px 2px; text-align:center; vertical-align:middle;">🪪</td>
+            <td class="label" style="font-size:26px; font-weight:900; color:#0f172a; padding:6px 6px; width:28%; white-space:nowrap;">ID:</td>
+            <td class="val" style="font-size:26px; font-weight:900; color:#004b98; padding:6px 6px;">${member.id}</td>
           </tr>
           <tr style="border-bottom:1.5px dashed #cbd5e1;">
-            <td style="width:34px; font-size:26px; padding:6px 2px; text-align:center; vertical-align:middle;">👥</td>
-            <td class="label" style="font-size:25px; font-weight:900; color:#0f172a; padding:6px 6px; white-space:nowrap;">Group:</td>
-            <td class="val" style="font-size:25px; font-weight:900; color:#0f172a; padding:6px 6px;">${cleanGroup}</td>
+            <td style="width:34px; font-size:27px; padding:6px 2px; text-align:center; vertical-align:middle;">👥</td>
+            <td class="label" style="font-size:26px; font-weight:900; color:#0f172a; padding:6px 6px; white-space:nowrap;">Group:</td>
+            <td class="val" style="font-size:26px; font-weight:900; color:#0f172a; padding:6px 6px;">${cleanGroup}</td>
           </tr>
           <tr style="border-bottom:1.5px dashed #cbd5e1;">
-            <td style="width:34px; font-size:26px; padding:6px 2px; text-align:center; vertical-align:middle;">⏳</td>
-            <td class="label" style="font-size:25px; font-weight:900; color:#0f172a; padding:6px 6px; white-space:nowrap;">Years:</td>
-            <td class="val" style="font-size:25px; font-weight:900; color:#b45309; padding:6px 6px;">${tenure}</td>
+            <td style="width:34px; font-size:27px; padding:6px 2px; text-align:center; vertical-align:middle;">⏳</td>
+            <td class="label" style="font-size:26px; font-weight:900; color:#0f172a; padding:6px 6px; white-space:nowrap;">Years:</td>
+            <td class="val" style="font-size:26px; font-weight:900; color:#b45309; padding:6px 6px;">${tenure}</td>
           </tr>
           <tr style="border-bottom:1.5px dashed #cbd5e1;">
-            <td style="width:34px; font-size:26px; padding:6px 2px; text-align:center; vertical-align:middle;">📞</td>
-            <td class="label" style="font-size:25px; font-weight:900; color:#0f172a; padding:6px 6px; white-space:nowrap;">CN:</td>
-            <td class="val" style="font-size:25px; font-weight:900; color:#0f172a; padding:6px 6px;">${member.mobile || 'N/A'}</td>
+            <td style="width:34px; font-size:27px; padding:6px 2px; text-align:center; vertical-align:middle;">📞</td>
+            <td class="label" style="font-size:26px; font-weight:900; color:#0f172a; padding:6px 6px; white-space:nowrap;">CN:</td>
+            <td class="val" style="font-size:26px; font-weight:900; color:#0f172a; padding:6px 6px;">${member.mobile || 'N/A'}</td>
           </tr>
           <tr style="border-bottom:1.5px dashed #cbd5e1;">
-            <td style="width:34px; font-size:26px; padding:6px 2px; text-align:center; vertical-align:middle;">🩸</td>
-            <td class="label" style="font-size:25px; font-weight:900; color:#0f172a; padding:6px 6px; white-space:nowrap;">BG:</td>
-            <td class="val" style="font-size:25px; font-weight:900; color:#dc2626; padding:6px 6px;">${member.bloodGroup || 'N/A'}</td>
+            <td style="width:34px; font-size:27px; padding:6px 2px; text-align:center; vertical-align:middle;">🩸</td>
+            <td class="label" style="font-size:26px; font-weight:900; color:#0f172a; padding:6px 6px; white-space:nowrap;">BG:</td>
+            <td class="val" style="font-size:26px; font-weight:900; color:#dc2626; padding:6px 6px;">${member.bloodGroup || 'N/A'}</td>
           </tr>
           <tr style="border-bottom:1.5px dashed #cbd5e1;">
-            <td style="width:34px; font-size:26px; padding:6px 2px; text-align:center; vertical-align:middle;">🎂</td>
-            <td class="label" style="font-size:25px; font-weight:900; color:#0f172a; padding:6px 6px; white-space:nowrap;">DOB:</td>
-            <td class="val" style="font-size:25px; font-weight:900; color:#0f172a; padding:6px 6px;">${cardDob}</td>
+            <td style="width:34px; font-size:27px; padding:6px 2px; text-align:center; vertical-align:middle;">🎂</td>
+            <td class="label" style="font-size:26px; font-weight:900; color:#0f172a; padding:6px 6px; white-space:nowrap;">DOB:</td>
+            <td class="val" style="font-size:26px; font-weight:900; color:#0f172a; padding:6px 6px;">${cardDob}</td>
           </tr>
           <tr style="border-bottom:1.5px dashed #cbd5e1;">
-            <td style="width:34px; font-size:26px; padding:6px 2px; text-align:center; vertical-align:top;">📍</td>
-            <td class="label" style="font-size:25px; font-weight:900; color:#0f172a; padding:6px 6px; vertical-align:top; white-space:nowrap;">ADD:</td>
-            <td class="val" style="font-size:25px; font-weight:900; color:#1e293b; padding:6px 6px; line-height:1.25;">${cardAddress}</td>
+            <td style="width:34px; font-size:27px; padding:6px 2px; text-align:center; vertical-align:top;">📍</td>
+            <td class="label" style="font-size:26px; font-weight:900; color:#0f172a; padding:6px 6px; vertical-align:top; white-space:nowrap;">ADD:</td>
+            <td class="val" style="font-size:26px; font-weight:900; color:#1e293b; padding:6px 6px; line-height:1.25;">${cardAddress}</td>
           </tr>
           <tr>
-            <td style="width:34px; font-size:26px; padding:6px 2px; text-align:center; vertical-align:top;">🎯</td>
-            <td class="label" style="font-size:25px; font-weight:900; color:#0f172a; padding:6px 6px; vertical-align:top; white-space:nowrap;">ACTS:</td>
-            <td class="val" style="font-size:25px; font-weight:900; color:#004b98; padding:6px 6px; line-height:1.25;">${cardActivities}</td>
+            <td style="width:34px; font-size:27px; padding:6px 2px; text-align:center; vertical-align:top;">🎯</td>
+            <td class="label" style="font-size:26px; font-weight:900; color:#0f172a; padding:6px 6px; vertical-align:top; white-space:nowrap;">ACTS:</td>
+            <td class="val" style="font-size:26px; font-weight:900; color:#004b98; padding:6px 6px; line-height:1.25;">${cardActivities}</td>
           </tr>
         </table>
       </div>
@@ -10764,7 +10764,7 @@ function generateIdPass(memberId) {
         <!-- Left: Director Official Signature + "The Director" strictly below it -->
         <div style="text-align:left; display:flex; flex-direction:column; align-items:flex-start;">
           <img src="${window.DBYC_DIRECTOR_SIGNATURE || 'assets/director_signature.png'}" alt="Director Signature" style="width:96px; height:auto; max-height:44px; object-fit:contain; display:block; filter:contrast(1.2);">
-          <div style="font-size:22px; font-weight:900; color:#0f172a; margin-top:3px; letter-spacing:0.5px;">The Director</div>
+          <div style="font-size:12pt; font-weight:900; color:#0f172a; margin-top:3px; letter-spacing:0.5px;">The Director</div>
         </div>
         <!-- Right: Official DBYC Seal -->
         <div style="text-align:right;">
@@ -10774,7 +10774,7 @@ function generateIdPass(memberId) {
 
       <!-- Footer Ribbon -->
       <div class="id-pass-footer-ribbon" style="background:#0f172a; color:#ffffff; padding:8px 14px; text-align:center; border-top:2px solid #fde047; font-weight:800; flex-shrink:0;">
-        <span style="font-size:16px; color:#fde047; font-weight:900; letter-spacing:0.3px;">DBYC Basin Bridge, Chennai - 600 012</span>
+        <span style="font-size:12pt; color:#fde047; font-weight:900; letter-spacing:0.3px;">DBYC Basin Bridge, Chennai - 600 012</span>
       </div>
     </div>
 
@@ -11433,34 +11433,34 @@ window.drawOfficial56x86PassToCanvas = async function(m, scale) {
     ctx.stroke();
   }
 
-  // Header Typography
+  // Header Typography (14pt & 11pt proportional in HD Canvas)
   ctx.textAlign = 'center';
   ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 34px sans-serif';
+  ctx.font = 'bold 45px sans-serif';
   ctx.fillText('DON BOSCO YOUTH CENTRE', cvs.width / 2, 88);
 
   ctx.fillStyle = '#fde047';
-  ctx.font = 'bold 23px sans-serif';
-  ctx.fillText('Basin Bridge, Chennai - 600 012', cvs.width / 2, 136);
+  ctx.font = 'bold 35px sans-serif';
+  ctx.fillText('Basin Bridge, Chennai - 600 012', cvs.width / 2, 138);
 
-  // 4. Member Name & Group Badge (Header level)
+  // 4. Member Name & Group Badge (14pt & 12pt proportional in HD Canvas)
   ctx.fillStyle = '#00264d';
-  ctx.font = 'bold 44px sans-serif';
+  ctx.font = 'bold 45px sans-serif';
   var upperName = (member.name || 'MEMBER').toUpperCase();
   ctx.fillText(upperName, cvs.width / 2, 245);
 
   var cleanGroup = String(member.group || 'Youth').replace(/\bgroup\b/gi, '').trim() || 'Youth';
   var groupName = cleanGroup.toUpperCase();
   var groupText = '★ ' + groupName + ' ★';
-  ctx.font = 'bold 24px sans-serif';
+  ctx.font = 'bold 38px sans-serif';
   var groupW = ctx.measureText(groupText).width + 36;
   ctx.fillStyle = '#fee2e2';
-  ctx.fillRect(cvs.width / 2 - groupW / 2, 260, groupW, 34);
+  ctx.fillRect(cvs.width / 2 - groupW / 2, 258, groupW, 46);
   ctx.strokeStyle = '#fca5a5';
   ctx.lineWidth = 2;
-  ctx.strokeRect(cvs.width / 2 - groupW / 2, 260, groupW, 34);
+  ctx.strokeRect(cvs.width / 2 - groupW / 2, 258, groupW, 46);
   ctx.fillStyle = '#b91c1c';
-  ctx.fillText(groupText, cvs.width / 2, 285);
+  ctx.fillText(groupText, cvs.width / 2, 294);
 
   // 5. SIDE-BY-SIDE: QR Code on LEFT & Member Photo on RIGHT (Both Bigger, Captions Removed)
   var rawQr = 'DBYC:' + member.id + ':' + member.name + ':' + (member.group || 'Youth');
@@ -11502,7 +11502,7 @@ window.drawOfficial56x86PassToCanvas = async function(m, scale) {
     ctx.drawImage(candPhoto, photoX + 6, photoY + 6, photoW - 12, photoH - 12);
   }
 
-  // 6. Details Table: Translucent White, Font Size 25 (scaled to 48px-50px bold in HD Canvas)
+  // 6. Details Table: Translucent White, Font Size 26 (scaled to 52px bold in HD Canvas)
   var tblX = 35;
   var tblY = 675;
   var tblW = cvs.width - 70;
@@ -11515,14 +11515,14 @@ window.drawOfficial56x86PassToCanvas = async function(m, scale) {
   ctx.strokeRect(tblX, tblY, tblW, tblH);
 
   var rows = [
-    { icon: '🪪', label: 'ID:', val: member.id || 'N/A', color: '#004b98', boldVal: true, valFont: '900 48px sans-serif' },
-    { icon: '👥', label: 'Group:', val: cleanGroup, color: '#0f172a', boldVal: true, valFont: '900 48px sans-serif' },
-    { icon: '⏳', label: 'Years:', val: tenure, color: '#b45309', boldVal: true, valFont: '900 48px sans-serif' },
-    { icon: '📞', label: 'CN:', val: member.mobile || 'N/A', color: '#0f172a', boldVal: true, valFont: '900 48px sans-serif' },
-    { icon: '🩸', label: 'BG:', val: member.bloodGroup || 'N/A', color: '#dc2626', boldVal: true, valFont: '900 50px sans-serif' },
-    { icon: '🎂', label: 'DOB:', val: cardDob, color: '#0f172a', boldVal: true, valFont: '900 48px sans-serif' },
-    { icon: '📍', label: 'ADD:', val: cardAddress, color: '#1e293b', boldVal: true, multiline: true, valFont: '900 42px sans-serif' },
-    { icon: '🎯', label: 'ACTS:', val: cardActivities, color: '#004b98', boldVal: true, multiline: true, valFont: '900 42px sans-serif' }
+    { icon: '🪪', label: 'ID:', val: member.id || 'N/A', color: '#004b98', boldVal: true, valFont: '900 52px sans-serif' },
+    { icon: '👥', label: 'Group:', val: cleanGroup, color: '#0f172a', boldVal: true, valFont: '900 52px sans-serif' },
+    { icon: '⏳', label: 'Years:', val: tenure, color: '#b45309', boldVal: true, valFont: '900 52px sans-serif' },
+    { icon: '📞', label: 'CN:', val: member.mobile || 'N/A', color: '#0f172a', boldVal: true, valFont: '900 52px sans-serif' },
+    { icon: '🩸', label: 'BG:', val: member.bloodGroup || 'N/A', color: '#dc2626', boldVal: true, valFont: '900 54px sans-serif' },
+    { icon: '🎂', label: 'DOB:', val: cardDob, color: '#0f172a', boldVal: true, valFont: '900 52px sans-serif' },
+    { icon: '📍', label: 'ADD:', val: cardAddress, color: '#1e293b', boldVal: true, multiline: true, valFont: '900 46px sans-serif' },
+    { icon: '🎯', label: 'ACTS:', val: cardActivities, color: '#004b98', boldVal: true, multiline: true, valFont: '900 46px sans-serif' }
   ];
 
   var curY = tblY + 58;
@@ -11537,14 +11537,14 @@ window.drawOfficial56x86PassToCanvas = async function(m, scale) {
     ctx.textAlign = 'left';
     ctx.fillText(r.icon, tblX + 20, curY);
 
-    // Draw Bold Legible Label (Font size 25 scaled)
+    // Draw Bold Legible Label (Font size 26 scaled)
     ctx.fillStyle = '#0f172a';
-    ctx.font = '900 48px sans-serif';
+    ctx.font = '900 52px sans-serif';
     ctx.fillText(r.label, tblX + 72, curY);
 
-    // Draw Bold Legible Value (Font size 25 scaled)
+    // Draw Bold Legible Value (Font size 26 scaled)
     ctx.fillStyle = r.color;
-    ctx.font = r.valFont || '900 48px sans-serif';
+    ctx.font = r.valFont || '900 52px sans-serif';
 
     if (r.multiline) {
       var words = String(r.val || '').split(' ');
@@ -11587,7 +11587,7 @@ window.drawOfficial56x86PassToCanvas = async function(m, scale) {
     }
   }
 
-  // 7. Official Director Signature & Seal: Below the sign keep ONLY the words The Director
+  // 7. Official Director Signature & Seal: Below the sign keep ONLY the words The Director (12pt proportional)
   var footerY = 1640;
   var sigImg = await window.loadImageForCanvas(window.DBYC_DIRECTOR_SIGNATURE || 'assets/director_signature.png');
   if (sigImg) {
@@ -11599,7 +11599,7 @@ window.drawOfficial56x86PassToCanvas = async function(m, scale) {
   // Below the sign keep ONLY the words The Director
   ctx.textAlign = 'left';
   ctx.fillStyle = '#0f172a';
-  ctx.font = 'bold 34px sans-serif';
+  ctx.font = 'bold 38px sans-serif';
   ctx.fillText('The Director', 50, footerY - 10);
 
   // Official DBYC Rubber Stamp / Seal on Right
@@ -11611,7 +11611,7 @@ window.drawOfficial56x86PassToCanvas = async function(m, scale) {
     ctx.drawImage(sealImg, sealX, sealY, sealSize, sealSize);
   }
 
-  // 8. Footer Ribbon: Below the sign keeps only the words The Director
+  // 8. Footer Ribbon: Below the sign keeps only the words The Director (12pt proportional)
   ctx.fillStyle = '#0f172a';
   ctx.fillRect(20, footerY, cvs.width - 40, cvs.height - footerY - 20);
 
@@ -11620,7 +11620,7 @@ window.drawOfficial56x86PassToCanvas = async function(m, scale) {
 
   ctx.textAlign = 'center';
   ctx.fillStyle = '#fde047';
-  ctx.font = 'bold 28px sans-serif';
+  ctx.font = 'bold 38px sans-serif';
   ctx.fillText('DBYC Basin Bridge, Chennai - 600 012', cvs.width / 2, footerY + 38);
 
   return cvs;

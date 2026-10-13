@@ -1113,14 +1113,14 @@ body {
 }
 
 .id-pass-header-logo {
-  width: 38px;
-  height: 38px;
+  width: 58px;
+  height: 58px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #fde047;
+  border: 2.5px solid #fde047;
   background: #ffffff;
   flex-shrink: 0;
-  box-shadow: 0 0 8px rgba(253, 224, 71, 0.5);
+  box-shadow: 0 0 10px rgba(253, 224, 71, 0.65);
 }
 
 .id-pass-header-text {
@@ -1384,8 +1384,10 @@ body {
     gap: 5px !important;
   }
   .id-pass-header-logo {
-    width: 32px !important;
-    height: 32px !important;
+    width: 48px !important;
+    height: 48px !important;
+    border: 2px solid #fde047 !important;
+    box-shadow: 0 0 8px rgba(253, 224, 71, 0.6) !important;
   }
   .id-pass-body {
     padding: 6px 8px !important;
@@ -11521,28 +11523,28 @@ window.drawOfficial56x86PassToCanvas = async function(m, scale) {
   if (logoDb) {
     ctx.save();
     ctx.beginPath();
-    ctx.arc(88, 108, 54, 0, Math.PI * 2);
+    ctx.arc(96, 108, 68, 0, Math.PI * 2);
     ctx.clip();
-    ctx.drawImage(logoDb, 34, 54, 108, 108);
+    ctx.drawImage(logoDb, 28, 40, 136, 136);
     ctx.restore();
     ctx.strokeStyle = '#fde047';
-    ctx.lineWidth = 4;
+    ctx.lineWidth = 5;
     ctx.beginPath();
-    ctx.arc(88, 108, 54, 0, Math.PI * 2);
+    ctx.arc(96, 108, 68, 0, Math.PI * 2);
     ctx.stroke();
   }
 
   if (logoDbyc) {
     ctx.save();
     ctx.beginPath();
-    ctx.arc(cvs.width - 88, 108, 54, 0, Math.PI * 2);
+    ctx.arc(cvs.width - 96, 108, 68, 0, Math.PI * 2);
     ctx.clip();
-    ctx.drawImage(logoDbyc, cvs.width - 142, 54, 108, 108);
+    ctx.drawImage(logoDbyc, cvs.width - 164, 40, 136, 136);
     ctx.restore();
     ctx.strokeStyle = '#fde047';
-    ctx.lineWidth = 4;
+    ctx.lineWidth = 5;
     ctx.beginPath();
-    ctx.arc(cvs.width - 88, 108, 54, 0, Math.PI * 2);
+    ctx.arc(cvs.width - 96, 108, 68, 0, Math.PI * 2);
     ctx.stroke();
   }
 

@@ -3042,8 +3042,9 @@ body {
           <span id="cloudStatusDot" style="width:8px; height:8px; border-radius:50%; background:#10b981; display:inline-block; box-shadow:0 0 8px #10b981;"></span>
           <span id="cloudStatusText">Google Drive / Server</span>
         </button>
+        <button type="button" id="scanUploadNavBtn" class="pill-tool-btn" style="background:#f0fdf4; border:1.5px solid #16a34a; color:#15803d; font-weight:800; display:inline-flex; align-items:center; gap:5px; cursor:pointer;" onclick="window.openUploadDocModal();" title="Scan & Upload Paper Registration Form / படிவம் பதிவேற்று">📸 Scan & Upload Form</button>
         <button id="voiceAssistantNavBtn" class="pill-tool-btn" title="Voice Assistant" onclick="window.toggleVoiceAssistant()">🎙️ Voice</button>
-        <button id="langToggleBtn" class="pill-tool-btn gold" title="Switch Language" onclick="window.toggleAppLanguage()">தமிழ் / ENG</button>
+        <button id="langToggleBtn" class="pill-tool-btn gold" title="Switch Language" onclick="window.toggleAppLanguage()">🌐 தமிழ் / ENG</button>
       </div>
     </header>
 
@@ -3561,7 +3562,10 @@ body {
               📄 Blank Form
             </button>
             <button id="openAddMemberBtn" class="btn-dbyc-primary" style="background:#16a34a; font-weight:800; padding:8px 14px;">
-              ➕ New Registration (சேர்க்கை)
+              ➕ New Registration (பதிவு)
+            </button>
+            <button type="button" id="openScanUploadFormBtn" class="btn-dbyc-primary" style="background:#0284c7; font-weight:800; padding:8px 14px; border-radius:10px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;" onclick="window.openUploadDocModal();" title="Scan & Upload Paper Registration Form / படிவம் பதிவேற்று">
+              📸 Scan & Upload Form / படிவம்
             </button>
             
           </div>
@@ -5362,9 +5366,12 @@ body {
             </div>
           </div>
         </div>
+        <!-- Dynamic High-Visibility Duplicate & Similarity Alert Container (>5 Matches) -->
+        <div id="formSimilarityWarningContainer" style="display:none; margin-bottom:14px;"></div>
+
         <div class="form-group-dbyc">
-          <label>1. பெயர் (Full Name) *</label>
-          <input type="text" id="formName" class="form-control-dbyc" required placeholder="e.g. Michael Raj">
+          <label id="lblFormName">1. பெயர் (Full Name) *</label>
+          <input type="text" id="formName" class="form-control-dbyc" required placeholder="e.g. Michael Raj" oninput="if(typeof window.checkRegistrationSimilarityAndDuplicates==='function') window.checkRegistrationSimilarityAndDuplicates();">
         </div>
 
         <div style="display:grid; grid-template-columns: 2fr 1fr; gap: 10px;">
@@ -5523,11 +5530,16 @@ body {
 
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
           <div class="form-group-dbyc">
-            <label>Role in DBYC</label>
-            <select id="formRole" class="form-control-dbyc">
+            <label id="lblFormRole">பதவி / பொறுப்பு (Designation / Role in DBYC) *</label>
+            <select id="formRole" class="form-control-dbyc" onchange="if(typeof window.checkRegistrationSimilarityAndDuplicates==='function') window.checkRegistrationSimilarityAndDuplicates();">
               <option value="Member" selected>Member (உறுப்பினர்)</option>
               <option value="Group Leader">Group Leader (குழு தலைவர்)</option>
               <option value="Group Incharge">Group Incharge (பொறுப்பாளர்)</option>
+              <option value="Office Bearer">Office Bearer (நிர்வாகி)</option>
+              <option value="GS (General Secretary)">GS (General Secretary) (பொதுச் செயலாளர்)</option>
+              <option value="Animator">Animator (வழிகாட்டி)</option>
+              <option value="Director (Incharge)">Director (Incharge) (இயக்குனர்)</option>
+              <option value="Assistant Director (Direct Incharge)">Assistant Director (உதவி இயக்குனர்)</option>
             </select>
           </div>
         </div>
@@ -5762,98 +5774,196 @@ body {
     </div>
   </div>
 
-  <!-- 8. Upload Member Application / Document / Data Modal -->
-  <div id="uploadMemberDocModal" class="modal-backdrop" style="display:none;">
-    <div class="modal-content" style="max-width: 580px;">
-      <div class="modal-header">
+  <!-- 8. Upload & Scan Member Application / Document / Data Modal -->
+  <div id="uploadMemberDocModal" class="modal-backdrop" style="display:none; z-index:9995;">
+    <div class="modal-content" style="max-width: 650px; border-radius:18px; border:2px solid #004b98; box-shadow:0 10px 40px rgba(0,75,152,0.3); max-height:92vh; overflow-y:auto;">
+      <div class="modal-header" style="background:linear-gradient(135deg, #002b66, #004b98); color:#ffffff; padding:16px 20px; border-radius:16px 16px 0 0; display:flex; justify-content:space-between; align-items:center;">
         <div>
-          <h3 class="modal-title">📁 Upload Member Application & Data</h3>
-          <small style="color:#64748b;">Scanned forms, member photos & bulk registry</small>
+          <h3 class="modal-title" style="color:#ffffff; margin:0; font-size:1.15rem; font-weight:800; display:flex; align-items:center; gap:8px;">
+            <span>📸</span>
+            <span id="scanUploadModalTitle">Scan & Upload Registration Form (படிவம் ஸ்கேன் & பதிவேற்று)</span>
+          </h3>
+          <small style="color:#93c5fd; font-size:0.75rem;">Scan physical paper forms, auto-fill registration, or attach signed documents</small>
         </div>
-        <button id="closeUploadDocBtn" style="background:none; border:none; font-size:1.4rem; cursor:pointer;">&times;</button>
+        <button type="button" id="closeUploadDocBtn" onclick="window.closeUploadDocModal();" style="background:rgba(255,255,255,0.15); border:none; color:#ffffff; font-size:1.4rem; cursor:pointer; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; line-height:1;">&times;</button>
       </div>
 
-      <!-- Upload Tabs -->
-      <div class="login-tabs" style="margin-bottom:14px;">
-        <button type="button" class="tab-btn active" id="uploadTabScannedForm">📄 Scanned Form</button>
-        <button type="button" class="tab-btn" id="uploadTabPhoto">📸 Member Photo</button>
-        <button type="button" class="tab-btn" id="uploadTabBulk">📊 Bulk Excel / CSV</button>
-      </div>
+      <div style="padding:16px 20px;">
+        <!-- Upload Navigation Tabs -->
+        <div class="login-tabs" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:6px; margin-bottom:16px; background:#f1f5f9; padding:4px; border-radius:12px;">
+          <button type="button" class="tab-btn active" id="uploadTabScannedForm" onclick="window.switchUploadDocTab('form');" style="font-weight:800; font-size:0.78rem; padding:8px 6px; border-radius:8px;">
+            📸 Scan & Auto-Fill
+          </button>
+          <button type="button" class="tab-btn" id="uploadTabAttachDoc" onclick="window.switchUploadDocTab('attach');" style="font-weight:800; font-size:0.78rem; padding:8px 6px; border-radius:8px;">
+            📎 Attach to Member
+          </button>
+          <button type="button" class="tab-btn" id="uploadTabPhoto" onclick="window.switchUploadDocTab('photo');" style="font-weight:800; font-size:0.78rem; padding:8px 6px; border-radius:8px;">
+            👤 Member Photo
+          </button>
+          <button type="button" class="tab-btn" id="uploadTabBulk" onclick="window.switchUploadDocTab('bulk');" style="font-weight:800; font-size:0.78rem; padding:8px 6px; border-radius:8px;">
+            📊 Bulk Excel/CSV
+          </button>
+        </div>
 
-      <!-- Tab 1: Scanned Form Upload -->
-      <div id="uploadPaneForm">
-        <form id="scannedDocForm">
-          <div class="form-group-dbyc">
-            <label>Select Member (உறுப்பினர்):</label>
-            <select id="docTargetMemberSelect" class="form-control-dbyc"></select>
-          </div>
-          <div class="form-group-dbyc">
-            <label>Document Type:</label>
-            <select id="docTypeSelect" class="form-control-dbyc">
-              <option value="Scanned Official Application Form">Scanned Official Application Form (விண்ணப்ப படிவம்)</option>
-              <option value="ID / Aadhar / School Proof">ID / Aadhar / School Proof</option>
-              <option value="Medical / Fitness Certificate">Medical / Fitness Certificate</option>
-              <option value="Tournament Consent Form">Tournament Consent Form</option>
-            </select>
-          </div>
-          <div class="form-group-dbyc">
-            <label>Upload Document / Image (Paper Form Photo or PDF):</label>
-            <div id="docDropZone" style="border:2px dashed #004b98; border-radius:10px; padding:20px; text-align:center; background:#f8fafc; cursor:pointer;">
-              <span style="font-size:2rem;">📄</span>
-              <p style="font-size:0.85rem; font-weight:700; color:#004b98; margin:6px 0 2px;">Click or Drag & Drop Scanned Form Here</p>
-              <small style="color:#64748b;">Supports JPG, PNG, WEBP, PDF up to 10MB</small>
-              <input type="file" id="scannedFormFileInput" accept="image/*,.pdf" style="display:none;">
+        <!-- TAB 1: Scan & Auto-Fill Registration Form -->
+        <div id="uploadPaneForm" style="display:block;">
+          <div style="background:#eff6ff; border:1.5px solid #bfdbfe; border-radius:14px; padding:14px; margin-bottom:14px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px; margin-bottom:10px;">
+              <strong style="color:#1e40af; font-size:0.92rem; display:flex; align-items:center; gap:6px;">
+                <span>📄</span> காகித விண்ணப்பப் படிவத்தை ஸ்கேன் செய் (Paper Form Scanner & OCR)
+              </strong>
+              <span style="background:#dbeafe; color:#1d4ed8; font-size:0.72rem; font-weight:800; padding:2px 8px; border-radius:6px;">AI Optical Extraction</span>
             </div>
-            <div id="scannedFormPreview" style="display:none; margin-top:10px; text-align:center;">
-              <img id="scannedFormPreviewImg" src="" alt="Preview" style="max-height:160px; border-radius:8px; border:1px solid #cbd5e1; box-shadow:var(--shadow-sm);">
-              <div id="scannedFormFileName" style="font-size:0.78rem; color:#475569; margin-top:4px; font-weight:600;"></div>
-            </div>
-          </div>
-          <button type="submit" class="btn-dbyc-primary" style="width:100%; margin-top:8px;">💾 Save Scanned Document to Member Record</button>
-        </form>
-      </div>
+            <p style="font-size:0.78rem; color:#475569; margin:0 0 12px; line-height:1.4;">
+              Take a photo of physical paper application or upload an image/PDF. The system will automatically detect member details, check for duplicates and similarity (>5 matches), and auto-fill the registration form.
+            </p>
 
-      <!-- Tab 2: Member Photo Upload -->
-      <div id="uploadPanePhoto" style="display:none;">
-        <form id="memberPhotoUploadForm">
-          <div class="form-group-dbyc">
-            <label>Select Member:</label>
-            <select id="photoTargetMemberSelect" class="form-control-dbyc"></select>
-          </div>
-          <div class="form-group-dbyc">
-            <label>Upload Passport / Profile Photo:</label>
-            <div id="photoDropZone" style="border:2px dashed #ea580c; border-radius:10px; padding:20px; text-align:center; background:#fff7ed; cursor:pointer;">
-              <span style="font-size:2rem;">📸</span>
-              <p style="font-size:0.85rem; font-weight:700; color:#ea580c; margin:6px 0 2px;">Select or Drop Profile Photo</p>
-              <input type="file" id="targetPhotoFileInput" accept="image/*" style="display:none;">
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px;">
+              <button type="button" class="btn-dbyc-primary" style="background:linear-gradient(135deg, #2563eb, #1d4ed8); font-size:0.8rem; font-weight:800; padding:8px 14px; border-radius:8px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;" onclick="document.getElementById('modalScanCamInput').click();">
+                📷 Snap Paper Form / கேமரா
+              </button>
+              <button type="button" class="btn-dbyc-secondary" style="background:#ffffff; color:#1d4ed8; border:1.5px solid #bfdbfe; font-size:0.8rem; font-weight:800; padding:8px 14px; border-radius:8px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;" onclick="document.getElementById('modalScanFileInput').click();">
+                📁 Upload Image or PDF / கோப்பு
+              </button>
+              <button type="button" class="btn-dbyc-secondary" style="background:#ffffff; color:#1d4ed8; border:1.5px solid #bfdbfe; font-size:0.8rem; font-weight:800; padding:8px 14px; border-radius:8px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;" onclick="window.openOcrTextPasteModal();">
+                📋 Paste Text / கூகுள் லென்ஸ்
+              </button>
             </div>
-            <div id="targetPhotoPreview" style="display:none; margin-top:10px; text-align:center;">
-              <img id="targetPhotoPreviewImg" src="" alt="Photo" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:2px solid #ea580c;">
-            </div>
-          </div>
-          <button type="submit" class="btn-dbyc-primary" style="width:100%; background:#ea580c; margin-top:8px;">📸 Update Member Photo</button>
-        </form>
-      </div>
 
-      <!-- Tab 3: Bulk Import -->
-      <div id="uploadPaneBulk" style="display:none;">
-        <div class="form-group-dbyc">
-          <label>Import CSV / Excel Records:</label>
-          <p style="font-size:0.8rem; color:#64748b; margin-bottom:8px;">Columns: Name, DOB, Mobile, Group, Role, BloodGroup, FatherName, HomeAddress, Activities</p>
-          <div id="bulkDropZone" style="border:2px dashed #059669; border-radius:10px; padding:16px; text-align:center; background:#f0fdf4; cursor:pointer;">
-            <span style="font-size:2rem;">📊</span>
-            <p style="font-size:0.85rem; font-weight:700; color:#059669; margin:4px 0 2px;">Select CSV / Excel File to Import</p>
-            <input type="file" id="bulkCsvFileInput" accept=".csv,.json,.txt" style="display:none;">
+            <input type="file" id="modalScanCamInput" accept="image/*" capture="environment" style="display:none;" onchange="window.handleModalFormScan(event);">
+            <input type="file" id="modalScanFileInput" accept="image/*,.pdf" style="display:none;" onchange="window.handleModalFormScan(event);">
+
+            <!-- Scan Status & Progress Indicator -->
+            <div id="modalScanStatus" style="display:none; font-size:0.8rem; font-weight:800; color:#1e40af; background:#ffffff; padding:8px 12px; border-radius:8px; border:1px solid #bfdbfe; margin-top:8px;"></div>
+          </div>
+
+          <!-- Live Preview of Scanned Paper Form Image -->
+          <div id="modalScannedDocPreviewContainer" style="display:none; margin-bottom:14px; text-align:center; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:12px; padding:12px;">
+            <div style="font-size:0.75rem; font-weight:800; color:#475569; margin-bottom:6px;">Scanned Paper Form Preview (முன்னோட்டம்)</div>
+            <img id="modalScannedDocPreviewImg" src="" alt="Scanned Form" style="max-height:180px; max-width:100%; border-radius:8px; border:1px solid #cbd5e1; box-shadow:0 2px 6px rgba(0,0,0,0.1); object-fit:contain;">
+          </div>
+
+          <!-- Dynamic Duplicate & High Similarity Warning Container inside Scanner (>5 Matches) -->
+          <div id="modalScanSimilarityAlert" style="display:none; margin-bottom:14px;"></div>
+
+          <!-- Extracted Fields Card Preview -->
+          <div id="modalExtractedFieldsCard" style="display:none; background:#ffffff; border:1.5px solid #86efac; border-radius:14px; padding:14px; margin-bottom:14px; box-shadow:0 3px 10px rgba(22,163,74,0.08);">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; flex-wrap:wrap; gap:6px;">
+              <strong style="color:#15803d; font-size:0.88rem; display:flex; align-items:center; gap:6px;">
+                <span>✨</span> பிரித்தெடுக்கப்பட்ட தகவல்கள் (Extracted Member Information)
+              </strong>
+              <span id="modalExtractedCountBadge" style="background:#dcfce7; color:#15803d; font-weight:800; font-size:0.72rem; padding:2px 8px; border-radius:6px;">Extracted Successfully</span>
+            </div>
+            <div id="modalExtractedFieldsSummary" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:8px; font-size:0.78rem; color:#334155; margin-bottom:12px;"></div>
+            <button type="button" id="btnApplyScanToRegistration" class="btn-dbyc-primary" style="width:100%; background:linear-gradient(135deg, #16a34a, #15803d); font-weight:800; font-size:0.88rem; padding:10px 14px; border-radius:10px; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 12px rgba(22,163,74,0.25);" onclick="window.applyScanToRegistrationModal();">
+              <span>🚀</span> புதிய பதிவாக நிரப்புக (Auto-Fill New Member Registration)
+            </button>
           </div>
         </div>
-        <div style="display:flex; gap:8px; margin-top:10px;">
-          <button id="downloadCsvTemplateBtn" class="btn-dbyc-primary" style="flex:1; background:#004b98; padding:10px 14px; font-size:0.85rem; font-weight:800; border-radius:8px;">📥 Download Official CSV Template</button>
-        </div>
-        <div id="bulkImportPreview" style="display:none; margin-top:12px; max-height:140px; overflow-y:auto; font-size:0.75rem; background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:8px;"></div>
-      </div>
 
+        <!-- TAB 2: Attach Scanned Document to Existing Member -->
+        <div id="uploadPaneAttach" style="display:none;">
+          <form id="scannedDocAttachForm" onsubmit="window.handleAttachScannedDocSubmit(event);">
+            <div class="form-group-dbyc">
+              <label>உறுப்பினரைத் தேர்ந்தெடுக்கவும் (Select Member) *</label>
+              <select id="docTargetMemberSelect" class="form-control-dbyc" required></select>
+            </div>
+            <div class="form-group-dbyc">
+              <label>ஆவண வகை (Document Type) *</label>
+              <select id="docTypeSelect" class="form-control-dbyc">
+                <option value="Official Scanned Application Form">Official Scanned Paper Application Form (கையொப்பமிட்ட விண்ணப்பப் படிவம்)</option>
+                <option value="ID / Aadhar / School Proof">ID / Aadhar / School Proof</option>
+                <option value="Medical / Fitness Certificate">Medical / Fitness Certificate</option>
+                <option value="Tournament Consent Form">Tournament Consent Form</option>
+              </select>
+            </div>
+            <div class="form-group-dbyc">
+              <label>படிவம் அல்லது புகைப்படத்தைப் பதிவேற்று (Upload Form Photo or PDF) *</label>
+              <div id="docDropZone" style="border:2px dashed #004b98; border-radius:12px; padding:22px; text-align:center; background:#f8fafc; cursor:pointer;" onclick="document.getElementById('scannedFormFileInput').click();">
+                <span style="font-size:2.2rem; display:block; margin-bottom:6px;">📄</span>
+                <p style="font-size:0.85rem; font-weight:700; color:#004b98; margin:0 0 4px;">Click or Drag & Drop Scanned Form Here</p>
+                <small style="color:#64748b;">Supports JPG, PNG, WEBP, PDF up to 15MB</small>
+                <input type="file" id="scannedFormFileInput" accept="image/*,.pdf" style="display:none;" onchange="window.handleScannedFormFileChosen(event);">
+              </div>
+              <div id="scannedFormPreview" style="display:none; margin-top:10px; text-align:center;">
+                <img id="scannedFormPreviewImg" src="" alt="Preview" style="max-height:160px; max-width:100%; border-radius:8px; border:1px solid #cbd5e1; box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+                <div id="scannedFormFileName" style="font-size:0.78rem; color:#475569; margin-top:4px; font-weight:700;"></div>
+              </div>
+            </div>
+            <button type="submit" class="btn-dbyc-primary" style="width:100%; background:linear-gradient(135deg, #004b98, #0284c7); font-weight:800; padding:10px 14px; border-radius:10px; margin-top:8px;">
+              💾 ஆவணத்தை உறுப்பினருடன் இணை (Save Document to Member Record)
+            </button>
+          </form>
+        </div>
+
+        <!-- TAB 3: Member Profile Photo Upload -->
+        <div id="uploadPanePhoto" style="display:none;">
+          <form id="memberPhotoUploadForm" onsubmit="window.handleStandalonePhotoUploadSubmit(event);">
+            <div class="form-group-dbyc">
+              <label>Select Member:</label>
+              <select id="photoTargetMemberSelect" class="form-control-dbyc" onchange="window.updatePhotoTargetMemberPreview(this.value);"></select>
+            </div>
+            <div class="form-group-dbyc">
+              <label>Upload Passport / Profile Photo:</label>
+              <div id="photoDropZone" style="border:2px dashed #ea580c; border-radius:12px; padding:20px; text-align:center; background:#fff7ed; cursor:pointer;" onclick="document.getElementById('targetPhotoFileInput').click();">
+                <span style="font-size:2rem; display:block; margin-bottom:4px;">👤</span>
+                <p style="font-size:0.85rem; font-weight:700; color:#ea580c; margin:0 0 2px;">Select or Drop Profile Photo</p>
+                <small style="color:#64748b;">Square 1:1 ratio recommended</small>
+                <input type="file" id="targetPhotoFileInput" accept="image/*" style="display:none;" onchange="window.handleStandalonePhotoChosen(event);">
+              </div>
+              <div id="targetPhotoPreview" style="display:none; margin-top:10px; text-align:center;">
+                <img id="targetPhotoPreviewImg" src="" alt="Photo" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:2.5px solid #ea580c; box-shadow:0 2px 8px rgba(234,88,12,0.2);">
+              </div>
+            </div>
+            <button type="submit" class="btn-dbyc-primary" style="width:100%; background:#ea580c; font-weight:800; padding:10px 14px; border-radius:10px; margin-top:8px;">
+              📷 Update Member Photo / புகைப்படம் மாற்று
+            </button>
+          </form>
+        </div>
+
+        <!-- TAB 4: Bulk CSV / Excel Import -->
+        <div id="uploadPaneBulk" style="display:none;">
+          <div class="form-group-dbyc">
+            <label>Import CSV / Excel Records:</label>
+            <p style="font-size:0.8rem; color:#64748b; margin-bottom:8px;">Columns: Name, DOB, Mobile, Group, Role, BloodGroup, FatherName, HomeAddress, Activities</p>
+            <div id="bulkDropZone" style="border:2px dashed #059669; border-radius:12px; padding:18px; text-align:center; background:#f0fdf4; cursor:pointer;" onclick="document.getElementById('bulkCsvFileInput').click();">
+              <span style="font-size:2rem; display:block; margin-bottom:4px;">📊</span>
+              <p style="font-size:0.85rem; font-weight:700; color:#059669; margin:0 0 2px;">Select CSV / Excel File to Import</p>
+              <input type="file" id="bulkCsvFileInput" accept=".csv,.json,.txt" style="display:none;">
+            </div>
+          </div>
+          <div style="display:flex; gap:8px; margin-top:10px;">
+            <button type="button" id="downloadCsvTemplateBtn" class="btn-dbyc-primary" style="flex:1; background:#004b98; padding:10px 14px; font-size:0.85rem; font-weight:800; border-radius:8px;" onclick="window.downloadCsvTemplate();">
+              📥 Download Official CSV Template
+            </button>
+          </div>
+          <div id="bulkImportPreview" style="display:none; margin-top:12px; max-height:140px; overflow-y:auto; font-size:0.75rem; background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:8px;"></div>
+        </div>
+      </div>
     </div>
   </div>
+
+  <!-- Lightbox Modal to View Scanned Paper Application Forms -->
+  <div id="scannedDocLightboxModal" class="modal-backdrop" style="display:none; z-index:9998;" onclick="if(event.target===this) window.closeScannedDocLightbox();">
+    <div class="modal-content" style="max-width: 750px; border-radius:16px; border:2px solid #004b98; max-height:92vh; overflow-y:auto; padding:0; background:#0f172a; color:#ffffff;">
+      <div style="padding:14px 20px; background:#1e293b; display:flex; justify-content:space-between; align-items:center; border-radius:14px 14px 0 0;">
+        <div>
+          <h4 id="scannedDocLightboxTitle" style="margin:0; font-size:1.05rem; font-weight:800; color:#ffffff;">Official Scanned Registration Form</h4>
+          <small id="scannedDocLightboxMeta" style="color:#94a3b8; font-size:0.75rem;">Physical Paper Application Document</small>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <a id="scannedDocDownloadLink" href="#" download="Scanned_Registration_Form.jpg" class="btn-dbyc-primary" style="background:#0284c7; padding:5px 12px; font-size:0.75rem; font-weight:800; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+            📥 Download
+          </a>
+          <button type="button" onclick="window.closeScannedDocLightbox();" style="background:rgba(255,255,255,0.2); border:none; color:#ffffff; font-size:1.4rem; cursor:pointer; width:30px; height:30px; border-radius:50%; line-height:1;">&times;</button>
+        </div>
+      </div>
+      <div style="padding:16px; text-align:center; background:#0f172a;">
+        <img id="scannedDocLightboxImg" src="" alt="Scanned Form" style="max-width:100%; max-height:75vh; border-radius:8px; box-shadow:0 4px 20px rgba(0,0,0,0.5); object-fit:contain;">
+      </div>
+    </div>
+  </div>
+
 
   <!-- Toast Notification -->
   <div id="dbycToast"></div>
@@ -7413,14 +7523,15 @@ function isDirectorUser() {
 window.isDirectorUser = isDirectorUser;
 
 function isDirectorOrAsstDirector() {
-  if (!appState || !appState.currentUser) {
-    const activeRole = localStorage.getItem('dbyc_current_role');
-    if (activeRole && (activeRole.includes('DIRECTOR') || activeRole.includes('director'))) return true;
+  if (!window.appState || !window.appState.currentUser) {
+    const activeRole = (localStorage.getItem('dbyc_current_role') || '').toLowerCase();
+    if (activeRole && (activeRole.includes('director') || activeRole.includes('asst'))) return true;
     return false;
   }
-  const role = (appState.currentUser.role || '').toLowerCase();
-  return role.includes('director');
+  const role = (window.appState.currentUser.role || '').toLowerCase();
+  return role.includes('director') || role.includes('asst');
 }
+window.isDirectorOrAsstDirector = isDirectorOrAsstDirector;
 
 function isLeaderOrDirector() {
   if (!appState || !appState.currentUser) return false;
@@ -11299,6 +11410,13 @@ window.calculateMembershipValidity = function(member) {
 };
 
 window.switchRegistrationMode = function(mode) {
+  var isDir = (typeof isDirectorOrAsstDirector === 'function') ? isDirectorOrAsstDirector() : false;
+  if (mode === 'RENEW' && !isDir) {
+    showToast('🔒 Access Denied: Only Rev. Fr. Director and Assistant Director can mark members as renewed.');
+    alert('🔒 RESTRICTED ACTION / அனுமதி மறுக்கப்பட்டது\n\nOnly Rev. Fr. Director and Assistant Director have authority to mark members as renewed.\n\nLeaders have profile editing permissions only.\n\nபுதுப்பித்தல் அதிகாரம் இயக்குநர் மற்றும் உதவி இயக்குநருக்கு மட்டுமே உண்டு.');
+    window.switchRegistrationMode('NEW');
+    return;
+  }
   var newBtn = document.getElementById('regModeNewBtn');
   var renewBtn = document.getElementById('regModeRenewBtn');
   var pickerBox = document.getElementById('renewalMemberPickerBox');
@@ -11371,18 +11489,37 @@ window.selectMemberForRenewal = function(memberId) {
   nextYear.setFullYear(nextYear.getFullYear() + 1);
   var nextYearStr = nextYear.toISOString().split('T')[0];
 
-  document.getElementById('formJoinDate').value = m.joinDate || todayStr;
-  document.getElementById('formRenewalDate').value = todayStr;
-  document.getElementById('formExpiryDate').value = nextYearStr;
+  const isDir = isDirectorOrAsstDirector();
+  const renewalDateInput = document.getElementById('formRenewalDate');
+  const expiryDateInput = document.getElementById('formExpiryDate');
+  const renewalBadge = document.getElementById('renewalExtensionBadge');
+  const prevEl = document.getElementById('renewalPrevExpiry');
+  const newEl = document.getElementById('renewalNewExpiry');
 
-  var badge = document.getElementById('renewalExtensionBadge');
-  var prevEl = document.getElementById('renewalPrevExpiry');
-  var newEl = document.getElementById('renewalNewExpiry');
-  if (badge && prevEl && newEl) {
-    var prevVal = window.calculateMembershipValidity(m);
-    prevEl.textContent = prevVal.expiryFormatted;
-    newEl.textContent = nextYear.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-    badge.style.display = 'block';
+  if (!isDir) {
+    // Leader is editing: PRESERVE existing dates, lock renewal controls
+    document.getElementById('formJoinDate').value = m.joinDate || todayStr;
+    document.getElementById('formRenewalDate').value = m.renewalDate || todayStr;
+    document.getElementById('formExpiryDate').value = m.expiryDate || nextYearStr;
+    if (renewalDateInput) renewalDateInput.disabled = true;
+    if (expiryDateInput) expiryDateInput.disabled = true;
+    if (renewalBadge) {
+      renewalBadge.style.display = 'block';
+      renewalBadge.innerHTML = '<span style="color:#b91c1c; font-weight:800; font-size:0.75rem;">🔒 Only Director & Asst Director can mark renewals or extend validity. Leaders have profile edit permissions only.</span>';
+    }
+  } else {
+    // Director / Asst Director is editing: renewal controls active
+    document.getElementById('formJoinDate').value = m.joinDate || todayStr;
+    document.getElementById('formRenewalDate').value = todayStr;
+    document.getElementById('formExpiryDate').value = nextYearStr;
+    if (renewalDateInput) renewalDateInput.disabled = false;
+    if (expiryDateInput) expiryDateInput.disabled = false;
+    if (renewalBadge && prevEl && newEl) {
+      var prevVal = window.calculateMembershipValidity(m);
+      prevEl.textContent = prevVal.expiryFormatted;
+      newEl.textContent = nextYear.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      renewalBadge.style.display = 'block';
+    }
   }
 
   window.capturedMemberPhotoBase64 = m.photo || '';
@@ -11413,8 +11550,9 @@ window.updateFormValidityDates = function() {
 
 window.quickRenewMember = function(memberId) {
   if (!memberId) return;
-  if (typeof window.canEdit === 'function' && !window.canEdit('members')) {
-    showToast('🔒 Member renewal is turned OFF by Rev. Fr. Director.');
+  if (!isDirectorOrAsstDirector()) {
+    showToast('🔒 Access Denied: Only Rev. Fr. Director and Assistant Director can mark members as renewed.');
+    alert('🔒 RESTRICTED ACTION / அனுமதி மறுக்கப்பட்டது\n\nOnly Rev. Fr. Director and Assistant Director have authority to mark members as renewed or extend membership validity.\n\nLeaders have edit permission for member profiles only.');
     return;
   }
   var members = (window.appState && window.appState.members) ? window.appState.members : [];
@@ -14205,6 +14343,51 @@ window.openAddMemberModal = function(memberId) {
     }
   }
 
+  // ROLE PERMISSION CONTROLS (DIRECTOR & ASST DIRECTOR ONLY FOR RENEWALS & QUALIFICATIONS)
+  const isDir = (typeof isDirectorOrAsstDirector === 'function') ? isDirectorOrAsstDirector() : false;
+  const renewTabBtn = document.getElementById('regModeRenewBtn');
+  if (renewTabBtn) {
+    if (!isDir) {
+      renewTabBtn.style.display = 'none';
+    } else {
+      renewTabBtn.style.display = 'block';
+    }
+  }
+  const renewBoxEl = document.getElementById('renewalMemberPickerBox');
+  if (!isDir && renewBoxEl) {
+    renewBoxEl.style.display = 'none';
+  }
+  const formRenewalDateEl = document.getElementById('formRenewalDate');
+  if (formRenewalDateEl) formRenewalDateEl.disabled = !isDir;
+  const formExpiryDateEl = document.getElementById('formExpiryDate');
+  if (formExpiryDateEl) formExpiryDateEl.disabled = !isDir;
+
+  // ATTACH LIVE DUPLICATE & SIMILARITY (>5 MATCHES) LISTENERS TO ALL RELEVANT FORM FIELDS
+  const simInputIds = ['formName', 'formRole', 'formMobile', 'formDob', 'formAge', 'formFatherName', 'formMotherName', 'formHomeAddress', 'formWorkAddress', 'formBloodGroup', 'formGroup', 'formEducation'];
+  simInputIds.forEach(fId => {
+    const fEl = document.getElementById(fId);
+    if (fEl && !fEl._hasSimListenerAttached) {
+      fEl._hasSimListenerAttached = true;
+      fEl.addEventListener('input', function() {
+        if (typeof window.checkRegistrationSimilarityAndDuplicates === 'function') {
+          window.checkRegistrationSimilarityAndDuplicates();
+        }
+      });
+      fEl.addEventListener('change', function() {
+        if (typeof window.checkRegistrationSimilarityAndDuplicates === 'function') {
+          window.checkRegistrationSimilarityAndDuplicates();
+        }
+      });
+    }
+  });
+
+  // Re-run live duplicate & similarity check on opening modal
+  setTimeout(() => {
+    if (typeof window.checkRegistrationSimilarityAndDuplicates === 'function') {
+      window.checkRegistrationSimilarityAndDuplicates();
+    }
+  }, 40);
+
   modal.style.display = 'flex';
 };
 
@@ -14333,12 +14516,23 @@ window.saveMemberRegistrationFormDirect = function(event) {
       const prev = appState.members[idx];
       memberData.id = prev.id;
       if (!memberData.photo && prev.photo) memberData.photo = prev.photo;
-      // Retain approval status if already approved, otherwise set based on role
-      const wasApproved = prev.approvalStatus === 'APPROVED' || prev.status === 'APPROVED' || prev.status === 'Active';
-      memberData.approvalStatus = wasApproved ? 'APPROVED' : (prev.approvalStatus || (isDirector ? 'APPROVED' : 'PENDING'));
-      memberData.status = memberData.approvalStatus;
-      memberData.approvedBy = prev.approvedBy || (wasApproved ? (prev.approvedBy || 'Rev. Fr. Director, SDB') : (isDirector ? (appState.currentUser ? appState.currentUser.name : 'Rev. Fr. Director, SDB') : ''));
-      memberData.approvedAt = prev.approvedAt || (wasApproved ? (prev.approvedAt || new Date().toISOString()) : (isDirector ? new Date().toISOString() : ''));
+      // Only Director / Asst Director can qualify, approve, or mark renewal
+      if (!isDirector) {
+        memberData.approvalStatus = prev.approvalStatus || 'PENDING';
+        memberData.status = prev.status || memberData.approvalStatus;
+        memberData.approvedBy = prev.approvedBy || '';
+        memberData.approvedAt = prev.approvedAt || '';
+        memberData.renewalDate = prev.renewalDate || memberData.renewalDate;
+        memberData.expiryDate = prev.expiryDate || memberData.expiryDate;
+        memberData.membershipStatus = prev.membershipStatus || 'ACTIVE';
+        memberData.renewalStatus = prev.renewalStatus || 'RENEWED';
+      } else {
+        const wasApproved = prev.approvalStatus === 'APPROVED' || prev.status === 'APPROVED' || prev.status === 'Active';
+        memberData.approvalStatus = wasApproved ? 'APPROVED' : (prev.approvalStatus || 'APPROVED');
+        memberData.status = memberData.approvalStatus;
+        memberData.approvedBy = prev.approvedBy || (appState.currentUser ? appState.currentUser.name : 'Rev. Fr. Director, SDB');
+        memberData.approvedAt = prev.approvedAt || new Date().toISOString();
+      }
       memberData.updatedAt = new Date().toISOString();
       if (prev && prev.role && prev.role.toLowerCase().includes('director')) {
         memberData.role = prev.role;
@@ -14349,17 +14543,103 @@ window.saveMemberRegistrationFormDirect = function(event) {
       showToast('✅ Member details & photo updated successfully!');
     }
   } else {
-    // Duplicate Protection: Prevent registering duplicate members with same phone or exact name
+    // 1. Strict Duplicate Check: Same Name AND Same Designation / Role (NORMALIZED)
     const cleanMobile = mobile.replace(/\D/g, '');
-    const cleanName = name.toLowerCase().trim();
-    const existingMem = (appState.members || []).find(m => {
-      const mMobile = (m.mobile || '').replace(/\D/g, '');
-      const mName = (m.name || '').toLowerCase().trim();
-      return (cleanMobile.length >= 8 && mMobile === cleanMobile) || (cleanName && mName === cleanName);
+    const cleanName = name.toLowerCase().trim().replace(/\s+/g, ' ');
+    const formRoleVal = (document.getElementById('formRole')?.value || 'Member').toLowerCase().trim().replace(/\s+/g, ' ');
+
+    const sameNameAndRole = (appState.members || []).find(m => {
+      if (editId && m.id === editId) return false;
+      const mName = (m.name || '').toLowerCase().trim().replace(/\s+/g, ' ');
+      const mRole = (m.role || 'Member').toLowerCase().trim().replace(/\s+/g, ' ');
+      return cleanName.length >= 2 && mName === cleanName && formRoleVal === mRole;
     });
-    if (existingMem) {
-      showToast(`⚠️ Member already registered: "${existingMem.name}" (${existingMem.id}) with phone ${existingMem.mobile}!`);
+
+    if (sameNameAndRole) {
+      showToast(`🚫 ALREADY REGISTERED: "${sameNameAndRole.name}" is already registered as "${sameNameAndRole.role}" (${sameNameAndRole.id})!`);
+      alert(`🚫 REGISTRATION BLOCKED / பதிவு நிராகரிக்கப்பட்டது\n\nA member with the Name "${name}" and Designation "${document.getElementById('formRole')?.value || 'Member'}" is ALREADY REGISTERED in DBYC (ID: ${sameNameAndRole.id}).\n\nA person cannot register once again with the same name and designation.\n\nஒரே பெயரிலும் பதவியிலும் மீண்டும் ஒருமுறை பதிவு செய்ய அனுமதியில்லை.\n\nPlease edit or view the existing member pass instead.`);
+      if (typeof window.viewMemberPass === 'function') {
+        window.closeAddMemberModal();
+        window.viewMemberPass(sameNameAndRole.id);
+      }
       return;
+    }
+
+    // 2. Phone Duplicate Check with SIBLING EXCEPTION (Same Father / Mother)
+    const sameMobileMembers = (appState.members || []).filter(m => {
+      if (editId && m.id === editId) return false;
+      const mMobile = (m.mobile || '').replace(/\D/g, '');
+      return cleanMobile.length >= 8 && mMobile === cleanMobile;
+    });
+
+    let phoneDuplicateBlocked = false;
+    for (const sameMobile of sameMobileMembers) {
+      const cleanCurFather = (memberData.fatherName || '').toLowerCase().trim().replace(/\s+/g, ' ');
+      const cleanMemFather = (sameMobile.fatherName || '').toLowerCase().trim().replace(/\s+/g, ' ');
+      const cleanCurMother = (memberData.motherName || '').toLowerCase().trim().replace(/\s+/g, ' ');
+      const cleanMemMother = (sameMobile.motherName || '').toLowerCase().trim().replace(/\s+/g, ' ');
+
+      const isSameFather = cleanCurFather.length >= 2 && cleanMemFather.length >= 2 && 
+        (cleanCurFather === cleanMemFather || cleanCurFather.includes(cleanMemFather) || cleanMemFather.includes(cleanCurFather));
+      const isSameMother = cleanCurMother.length >= 2 && cleanMemMother.length >= 2 && 
+        (cleanCurMother === cleanMemMother || cleanCurMother.includes(cleanMemMother) || cleanMemMother.includes(cleanCurMother));
+
+      const isDifferentName = cleanName !== (sameMobile.name || '').toLowerCase().trim().replace(/\s+/g, ' ');
+
+      // USER REQUIREMENT: Accept same phone number for brothers and sisters from same father & mother!
+      if (isDifferentName && (isSameFather || isSameMother)) {
+        console.log(`Sibling exception: ${memberData.name} shares phone ${cleanMobile} with brother/sister ${sameMobile.name} from same father/mother.`);
+        continue; // Accepted!
+      }
+
+      // If exact same name: hard block
+      if (!isDifferentName) {
+        showToast(`🚫 ALREADY REGISTERED: "${sameMobile.name}" is already registered (${sameMobile.id})!`);
+        alert(`🚫 REGISTRATION BLOCKED / பதிவு நிராகரிக்கப்பட்டது\n\nA member with the Name "${name}" is already registered (ID: ${sameMobile.id}).\n\nA person cannot register once again with the same name.`);
+        phoneDuplicateBlocked = true;
+        break;
+      }
+
+      // Different name, but parents not matching or not filled yet: prompt user
+      const isSiblingConfirm = confirm(
+        `👨‍👩‍👧‍👦 SHARED FAMILY PHONE NUMBER / ஒரே குடும்ப எண்\n\n` +
+        `The mobile number ${mobile} is already registered to "${sameMobile.name}" (${sameMobile.id}).\n\n` +
+        `DBYC allows brothers and sisters from the same father & mother to share the same phone number.\n\n` +
+        `Are ${name} and ${sameMobile.name} brothers/sisters (siblings) from the same father and mother?\n\n` +
+        `• Click OK to ACCEPT this phone number for brother/sister (உடன்பிறந்த சகோதரர்/சகோதரி).\n` +
+        `• Click CANCEL if this is an accidental duplicate phone number.`
+      );
+
+      if (!isSiblingConfirm) {
+        phoneDuplicateBlocked = true;
+        break;
+      }
+    }
+
+    if (phoneDuplicateBlocked) {
+      return;
+    }
+
+    // 3. High Similarity Check (>5 matching data points)
+    if (typeof window.computeMemberSimilarity === 'function') {
+      const simResult = window.computeMemberSimilarity(memberData, editId);
+      if (simResult && simResult.isExactDuplicate) {
+        showToast(`🚫 ALREADY REGISTERED: "${simResult.member.name}" (${simResult.member.id})!`);
+        alert(`🚫 REGISTRATION BLOCKED / பதிவு நிராகரிக்கப்பட்டது\n\nThis member is ALREADY REGISTERED in the DBYC system:\n\nName: ${simResult.member.name}\nID: ${simResult.member.id}\nDesignation: ${simResult.member.role}\nMobile: ${simResult.member.mobile}\nReason: ${simResult.dupeReason || 'Duplicate Match'}\n\nA person cannot register once again!\n\nஒரே பெயரிலும் பதவியிலும் மீண்டும் ஒருமுறை பதிவு செய்ய அனுமதியில்லை.`);
+        window.closeAddMemberModal();
+        window.viewMemberPass(simResult.member.id);
+        return;
+      } else if (simResult && simResult.matchCount > 5 && !simResult.isSibling) {
+        // High similarity for non-siblings: warn user not to create duplicate
+        const proceed = confirm(`⚠️ HIGH DATA SIMILARITY WARNING (>5 Matching Fields / அதிக தரவு ஒற்றுமை)\n\nThe entered details match ${Math.round(simResult.matchCount)} data fields with existing registered member:\n\nName: ${simResult.member.name}\nID: ${simResult.member.id}\nDesignation: ${simResult.member.role}\nMobile: ${simResult.member.mobile}\nMatching Fields: ${simResult.reasons.join(', ')}\n\n⚠️ இந்த நபர் ஏற்கனவே பதிவு செய்திருந்தால் மீண்டும் பதிவு செய்யாதீர்கள்!\n(IF THIS PERSON IS REGISTERED ALREADY, DO NOT REGISTER AGAIN!)\n\nClick CANCEL to stop registration and view the existing member pass.\nClick OK only if this is verified to be a genuinely distinct individual.`);
+        if (!proceed) {
+          window.closeAddMemberModal();
+          window.viewMemberPass(simResult.member.id);
+          return;
+        }
+      } else if (simResult && simResult.isSibling) {
+        console.log(`Sibling registration verified for ${memberData.name} (sibling of ${simResult.member ? simResult.member.name : 'family member'}).`);
+      }
     }
 
     // New Member Registration
@@ -14574,18 +14854,26 @@ function renderMembersRegistry() {
           </div>
         </div>
 
-        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-          ${(typeof window.canEdit === 'function' && window.canEdit('members')) ? `
-            <!-- 1-Year Renewal Action Button -->
-            <button type="button" class="btn-dbyc-primary" style="background:#16a34a; padding:6px 12px; font-size:0.78rem; font-weight:800; border-radius:8px; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 6px rgba(22,163,74,0.3);" onclick="window.quickRenewMember('${m.id}')" title="Renew member registration for 1 full year (+1 Year Extension)">
-              🔄 Renew (+1 Yr)
+                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+          ${isDirector ? `
+            <!-- Director Only Renewal Controls: Mark Renewed (+1 Yr) or Mark Not Renewed -->
+            <button type="button" class="btn-dbyc-primary" style="background:${validity.isActive && m.renewalStatus !== 'NOT_RENEWED' ? '#0284c7' : '#16a34a'}; padding:6px 11px; font-size:0.75rem; font-weight:800; border-radius:8px; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 6px rgba(0,0,0,0.15);" onclick="window.toggleMemberRenewalStatus('${m.id}')" title="Director / Asst Director: Mark as Renewed (+1 Yr) or Not Renewed">
+              ${validity.isActive && m.renewalStatus !== 'NOT_RENEWED' ? '🔄 Mark Not Renewed' : '⚡ Mark Renewed (+1 Yr)'}
             </button>
-            <!-- Quick Photo Edit for Members -->
+          ` : ''}
+          ${(typeof window.canEdit === 'function' && window.canEdit('members')) ? `
+            <!-- Member Details & Photo Editing for Leaders and Director -->
             <button type="button" class="btn-dbyc-secondary" style="background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; padding:6px 10px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.quickEditMemberPhoto('${m.id}')" title="Change or update member photo">
               📷 Photo
             </button>
             <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:6px 12px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.openAddMemberModal('${m.id}')" title="Edit member details and photo">
               ✏️ Edit
+            </button>
+          ` : ''}
+          ${m.scannedFormImage ? `
+            <!-- View Scanned Paper Application Form -->
+            <button type="button" class="btn-dbyc-secondary" style="background:#f0fdf4; color:#15803d; border:1.5px solid #86efac; padding:6px 10px; font-size:0.78rem; font-weight:800; border-radius:8px; display:inline-flex; align-items:center; gap:4px;" onclick="window.viewScannedMemberForm('${m.id}')" title="View attached physical scanned application form">
+              📄 Scanned Form
             </button>
           ` : ''}
           <button type="button" class="btn-dbyc-primary" style="background:#0b57d0; padding:6px 12px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.viewMemberPass('${m.id}')" title="View digital QR pass">
@@ -16258,6 +16546,11 @@ function setupEventsAndMinutesHandlers() {
 // 14. EXECUTIVE QUALIFICATION & APPROVAL DESK (Director & Asst Director)
 // ==========================================
 window.qualifyAndApproveMember = function(memberId) {
+  if (!isDirectorOrAsstDirector()) {
+    showToast('🔒 Access Denied: Only Rev. Fr. Director and Assistant Director can qualify and approve members.');
+    alert('🔒 RESTRICTED ACTION / அனுமதி மறுக்கப்பட்டது\n\nOnly Rev. Fr. Director and Assistant Director can qualify and approve members.\n\nLeaders have profile edit permissions only.');
+    return;
+  }
   const m = (appState.members || []).find(x => x.id === memberId);
   if (!m) return;
   m.approvalStatus = 'APPROVED';
@@ -21404,33 +21697,1012 @@ window.toggleAppLanguage = function() {
   showToast(window.appCurrentLang === 'ta' ? '🌐 மொழி தமிழாக மாற்றப்பட்டது' : '🌐 Language switched to English');
 };
 
-window.applyAppLanguage = function(lang) {
-  document.documentElement.lang = lang;
-  const btn = document.getElementById('langToggleBtn');
-  if (btn) {
-    btn.textContent = (lang === 'ta') ? 'ENG' : 'தமிழ்';
-    btn.title = (lang === 'ta') ? 'Switch to English' : 'தமிழுக்கு மாறவும்';
+// ==============================================================================
+// 4A. DUPLICATE & DATA SIMILARITY (>5 MATCHES) DETECTION ENGINE
+// ==============================================================================
+window.computeMemberSimilarity = function(formData, excludeMemberId) {
+  const members = (window.appState && window.appState.members) ? window.appState.members : [];
+  if (!formData || members.length === 0) return null;
+
+  const curRawName = (formData.name || '').trim();
+  const curName = curRawName.toLowerCase().replace(/\s+/g, ' ');
+  const curRawRole = (formData.role || 'Member').trim();
+  const curRole = curRawRole.toLowerCase().replace(/\s+/g, ' ');
+  const curMobile = (formData.mobile || formData.phone || formData.contactNumber || '').replace(/\D/g, '');
+  const curDob = (formData.dob || '').trim();
+  const curAge = parseInt(formData.age || '0', 10);
+  const curFather = (formData.fatherName || '').toLowerCase().trim().replace(/\s+/g, ' ');
+  const curMother = (formData.motherName || '').toLowerCase().trim().replace(/\s+/g, ' ');
+  const curAddress = (formData.homeAddress || formData.address || '').toLowerCase().trim();
+  const curWork = (formData.workAddress || formData.occupation || '').toLowerCase().trim();
+  const curBlood = (formData.bloodGroup || formData.blood || '').toLowerCase().trim();
+  const curGroup = (formData.group || '').toLowerCase().trim();
+  const curMarital = (formData.maritalStatus || '').toLowerCase().trim();
+  const curEducation = (formData.education || '').toLowerCase().trim();
+
+  let highestCount = 0;
+  let bestMatch = null;
+  let matchReasons = [];
+  let isExactDupe = false;
+  let dupeReason = '';
+  let isSiblingDetected = false;
+  let siblingMatchedMember = null;
+
+  for (let i = 0; i < members.length; i++) {
+    const mem = members[i];
+    if (excludeMemberId && mem.id === excludeMemberId) continue;
+
+    let count = 0;
+    let reasons = [];
+
+    const memRawName = (mem.name || '').trim();
+    const memName = memRawName.toLowerCase().replace(/\s+/g, ' ');
+    const memRawRole = (mem.role || 'Member').trim();
+    const memRole = memRawRole.toLowerCase().replace(/\s+/g, ' ');
+    const memMobile = (mem.mobile || mem.phone || '').replace(/\D/g, '');
+    const memDob = (mem.dob || '').trim();
+    const memAge = parseInt(mem.age || '0', 10);
+    const memFather = (mem.fatherName || '').toLowerCase().trim().replace(/\s+/g, ' ');
+    const memMother = (mem.motherName || '').toLowerCase().trim().replace(/\s+/g, ' ');
+    const memAddress = (mem.homeAddress || mem.address || '').toLowerCase().trim();
+    const memWork = (mem.workAddress || mem.occupation || '').toLowerCase().trim();
+    const memBlood = (mem.bloodGroup || mem.blood || '').toLowerCase().trim();
+    const memGroup = (mem.group || '').toLowerCase().trim();
+    const memMarital = (mem.maritalStatus || '').toLowerCase().trim();
+    const memEducation = (mem.education || '').toLowerCase().trim();
+
+    // Sibling Detection: Different person sharing same Father or Mother
+    const isSameFather = curFather.length >= 2 && memFather.length >= 2 && 
+      (curFather === memFather || curFather.includes(memFather) || memFather.includes(curFather));
+    const isSameMother = curMother.length >= 2 && memMother.length >= 2 && 
+      (curMother === memMother || curMother.includes(memMother) || memMother.includes(curMother));
+    const isDifferentPerson = curName.length >= 2 && memName.length >= 2 && curName !== memName;
+    const isSibling = isDifferentPerson && (isSameFather || isSameMother);
+
+    // 1. Name Match (Exact or Substring)
+    const isNameExact = curName.length >= 2 && curName === memName;
+    const isNameSimilar = !isNameExact && curName.length >= 3 && memName.length >= 3 && (curName.includes(memName) || memName.includes(curName));
+
+    if (isNameExact) {
+      count += 1.5;
+      reasons.push(window.appCurrentLang === 'ta' ? `பெயர் (${memRawName})` : `Name (${memRawName})`);
+    } else if (isNameSimilar) {
+      count += 0.8;
+      reasons.push(window.appCurrentLang === 'ta' ? `ஒத்த பெயர் (${memRawName})` : `Similar Name (${memRawName})`);
+    }
+
+    // 2. Designation / Role Match
+    const isRoleExact = curRole.length >= 2 && (curRole === memRole || (curRole.includes(memRole) && memRole.length >= 4) || (memRole.includes(curRole) && curRole.length >= 4));
+    if (isRoleExact) {
+      count += 1.0;
+      reasons.push(window.appCurrentLang === 'ta' ? `பதவி (${memRawRole})` : `Designation (${memRawRole})`);
+    }
+
+    // USER REQUIREMENT: Once registered with a name & designation, must not register once again!
+    if (isNameExact && isRoleExact) {
+      isExactDupe = true;
+      dupeReason = window.appCurrentLang === 'ta'
+        ? `ஒரே பெயர் (${memRawName}) மற்றும் பதவி (${memRawRole})`
+        : `Same Name (${memRawName}) & Designation (${memRawRole})`;
+    }
+
+    // 3. Mobile Phone Match (WITH SIBLING EXCEPTION)
+    if (curMobile.length >= 8 && memMobile.length >= 8 && curMobile === memMobile) {
+      if (isSibling) {
+        // SIBLING EXCEPTION: Brothers & Sisters from same father / mother share parents' phone!
+        count += 0.5;
+        reasons.push(window.appCurrentLang === 'ta' ? `குடும்பத் தொலைபேசி (உடன்பிறப்பு: ${memRawName})` : `Family Phone (Sibling: ${memRawName})`);
+        isSiblingDetected = true;
+        siblingMatchedMember = mem;
+      } else {
+        count += 1.5;
+        reasons.push(window.appCurrentLang === 'ta' ? `தொலைபேசி எண் (${mem.mobile})` : `Mobile (${mem.mobile})`);
+        if (isNameExact) {
+          isExactDupe = true;
+          if (!dupeReason) dupeReason = window.appCurrentLang === 'ta' ? `ஒரே தொலைபேசி எண் (${mem.mobile})` : `Same Mobile (${mem.mobile})`;
+        }
+      }
+    }
+
+    // 4. DOB Match
+    if (curDob && memDob && curDob === memDob) {
+      count += 1.0;
+      reasons.push(window.appCurrentLang === 'ta' ? `பிறந்த தேதி (${memDob})` : `DOB (${memDob})`);
+    }
+
+    // 5. Age Match
+    if (curAge > 0 && memAge > 0 && curAge === memAge) {
+      count += 0.5;
+      reasons.push(window.appCurrentLang === 'ta' ? `வயது (${memAge})` : `Age (${memAge})`);
+    }
+
+    // 6. Father's Name Match
+    if (isSameFather) {
+      count += 1.0;
+      reasons.push(window.appCurrentLang === 'ta' ? `தந்தை பெயர் (${mem.fatherName})` : `Father's Name (${mem.fatherName})`);
+    }
+
+    // 7. Mother's Name Match
+    if (isSameMother) {
+      count += 1.0;
+      reasons.push(window.appCurrentLang === 'ta' ? `தாய் பெயர் (${mem.motherName})` : `Mother's Name (${mem.motherName})`);
+    }
+
+    // 8. Home Address Match
+    if (curAddress.length >= 6 && memAddress.length >= 6 && (curAddress.includes(memAddress) || memAddress.includes(curAddress))) {
+      count += 1.0;
+      reasons.push(window.appCurrentLang === 'ta' ? 'வீட்டு முகவரி' : 'Home Address');
+    }
+
+    // 9. Work / School Address Match
+    if (curWork.length >= 5 && memWork.length >= 5 && (curWork.includes(memWork) || memWork.includes(curWork))) {
+      count += 1.0;
+      reasons.push(window.appCurrentLang === 'ta' ? 'பணி / பள்ளி முகவரி' : 'Work/School Address');
+    }
+
+    // 10. Blood Group Match
+    if (curBlood && memBlood && curBlood === memBlood && curBlood !== 'o+ve') {
+      count += 0.5;
+      reasons.push(window.appCurrentLang === 'ta' ? `இரத்தப் பிரிவு (${mem.bloodGroup || mem.blood})` : `Blood Group (${mem.bloodGroup || mem.blood})`);
+    }
+
+    // 11. Allocated Group Match
+    if (curGroup && memGroup && curGroup === memGroup) {
+      count += 0.5;
+      reasons.push(window.appCurrentLang === 'ta' ? `குழு (${mem.group})` : `Group (${mem.group})`);
+    }
+
+    // 12. Education Match
+    if (curEducation && memEducation && curEducation === memEducation && curEducation.length >= 3) {
+      count += 0.5;
+      reasons.push(window.appCurrentLang === 'ta' ? 'கல்வித் தகுதி' : 'Education');
+    }
+
+    // 13. Marital Status Match
+    if (curMarital && memMarital && curMarital === memMarital) {
+      count += 0.5;
+      reasons.push(window.appCurrentLang === 'ta' ? 'திருமண நிலை' : 'Marital Status');
+    }
+
+    if (count > highestCount) {
+      highestCount = count;
+      bestMatch = mem;
+      matchReasons = reasons;
+    }
   }
 
-  // Common UI labels
+  return {
+    matchCount: highestCount,
+    member: bestMatch,
+    reasons: matchReasons,
+    isExactDuplicate: isExactDupe,
+    dupeReason: dupeReason,
+    isSibling: isSiblingDetected,
+    siblingMember: siblingMatchedMember
+  };
+};
+
+window.checkRegistrationSimilarityAndDuplicates = function() {
+  const nameInput = document.getElementById('formName');
+  const roleInput = document.getElementById('formRole');
+  const mobileInput = document.getElementById('formMobile');
+  const dobInput = document.getElementById('formDob');
+  const ageInput = document.getElementById('formAge');
+  const fatherInput = document.getElementById('formFatherName');
+  const motherInput = document.getElementById('formMotherName');
+  const addressInput = document.getElementById('formHomeAddress');
+  const workInput = document.getElementById('formWorkAddress');
+  const bloodInput = document.getElementById('formBloodGroup');
+  const groupInput = document.getElementById('formGroup');
+  const eduInput = document.getElementById('formEducation');
+  const editId = document.getElementById('formEditingMemberId')?.value;
+  const alertContainer = document.getElementById('formSimilarityWarningContainer');
+  const submitBtn = document.getElementById('btnSubmitFormDirect');
+
+  if (!alertContainer) return;
+
+  const currentName = (nameInput?.value || '').trim();
+  const currentRole = (roleInput?.value || 'Member').trim();
+  const currentMobile = (mobileInput?.value || '').replace(/\D/g, '');
+
+  if (currentName.length < 2 && currentMobile.length < 5) {
+    alertContainer.style.display = 'none';
+    alertContainer.innerHTML = '';
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.style.opacity = '1';
+      submitBtn.innerHTML = '💾 ' + (window.appCurrentLang === 'ta' ? 'பதிவு செய் / புதுப்பி (Save Member)' : 'Save Member Details');
+    }
+    return;
+  }
+
+  const formData = {
+    name: currentName,
+    role: currentRole,
+    mobile: currentMobile,
+    dob: (dobInput?.value || '').trim(),
+    age: (ageInput?.value || '').trim(),
+    fatherName: (fatherInput?.value || '').trim(),
+    motherName: (motherInput?.value || '').trim(),
+    homeAddress: (addressInput?.value || '').trim(),
+    workAddress: (workInput?.value || '').trim(),
+    bloodGroup: (bloodInput?.value || '').trim(),
+    group: (groupInput?.value || '').trim(),
+    education: (eduInput?.value || '').trim()
+  };
+
+  const simResult = window.computeMemberSimilarity(formData, editId);
+
+  if (!simResult || !simResult.member) {
+    alertContainer.style.display = 'none';
+    alertContainer.innerHTML = '';
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.style.opacity = '1';
+      submitBtn.innerHTML = '💾 ' + (window.appCurrentLang === 'ta' ? 'பதிவு செய் / புதுப்பி (Save Member)' : 'Save Member Details');
+    }
+    return;
+  }
+
+  // SIBLING DETECTION CASE: Same father/mother sharing family phone number
+  if (simResult.isSibling && !simResult.isExactDuplicate && !editId) {
+    const sib = simResult.siblingMember || simResult.member;
+    alertContainer.style.display = 'block';
+    alertContainer.style.background = '#ecfdf5';
+    alertContainer.style.border = '2px solid #10b981';
+    alertContainer.style.borderRadius = '14px';
+    alertContainer.style.padding = '14px 16px';
+    alertContainer.style.boxShadow = '0 4px 14px rgba(16,185,129,0.15)';
+    alertContainer.innerHTML = `
+      <div style="display:flex; align-items:flex-start; gap:12px;">
+        <span style="font-size:2rem; line-height:1;">👨‍👩‍👧‍👦</span>
+        <div style="flex:1;">
+          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
+            <strong style="color:#047857; font-size:0.96rem; font-weight:900;">
+              ${window.appCurrentLang === 'ta' ? '👨‍👩‍👧‍👦 உடன்பிறப்பு கண்டறியப்பட்டது (Sibling Registration Allowed)' : '👨‍👩‍👧‍👦 Sibling Registration Allowed (Shared Family Phone)'}
+            </strong>
+            <span style="background:#10b981; color:#ffffff; font-weight:900; font-size:0.75rem; padding:4px 10px; border-radius:6px;">
+              ✅ SHARED FAMILY PHONE ACCEPTED
+            </span>
+          </div>
+          <p style="font-size:0.85rem; color:#065f46; margin:6px 0 8px; line-height:1.45;">
+            ${window.appCurrentLang === 'ta'
+              ? `ஒரே தந்தை / தாயைக் கொண்ட உடன்பிறந்த சகோதரர் மற்றும் சகோதரிகளுக்கு ஒரே தொலைபேசி எண் (${currentMobile}) அனுமதிக்கப்படுகிறது.<br>உடன்பிறந்த உறுப்பினர்: <strong>"${sib.name}"</strong> (${sib.id}) &bull; தந்தை: ${sib.fatherName || 'N/A'}, தாய்: ${sib.motherName || 'N/A'}`
+              : `Brothers and sisters from the same father and mother are permitted to share the same phone number (${currentMobile}).<br>Registered Sibling: <strong>"${sib.name}"</strong> (${sib.id}) &bull; Father: ${sib.fatherName || 'N/A'}, Mother: ${sib.motherName || 'N/A'}`}
+          </p>
+          <div style="font-size:0.78rem; background:#ffffff; border:1px solid #a7f3d0; border-radius:8px; padding:6px 10px; color:#065f46;">
+            Family Link: ${simResult.reasons.join(', ')}
+          </div>
+        </div>
+      </div>
+    `;
+
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.style.opacity = '1';
+      submitBtn.innerHTML = '💾 ' + (window.appCurrentLang === 'ta' ? 'பதிவு செய் (உடன்பிறப்பு சேர்க்கை)' : 'Save Member (Sibling Registration)');
+    }
+    return;
+  }
+
+  // Exact Duplicate Check: Same Name AND Same Designation / Role
+  if (simResult.isExactDuplicate && !editId) {
+    alertContainer.style.display = 'block';
+    alertContainer.style.background = '#fef2f2';
+    alertContainer.style.border = '2.5px solid #ef4444';
+    alertContainer.style.borderRadius = '14px';
+    alertContainer.style.padding = '14px 16px';
+    alertContainer.style.boxShadow = '0 4px 14px rgba(239,68,68,0.15)';
+    alertContainer.innerHTML = `
+      <div style="display:flex; align-items:flex-start; gap:12px;">
+        <span style="font-size:2rem; line-height:1;">🚫</span>
+        <div style="flex:1;">
+          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
+            <strong style="color:#b91c1c; font-size:0.98rem; font-weight:900;">
+              ${window.appCurrentLang === 'ta' ? 'ஏற்கனவே பதிவு செய்யப்பட்டுள்ளது / ALREADY REGISTERED' : 'ALREADY REGISTERED (DUPLICATE BLOCKED)'}
+            </strong>
+            <span style="background:#dc2626; color:#ffffff; font-weight:900; font-size:0.75rem; padding:4px 10px; border-radius:6px; letter-spacing:0.5px;">
+              🚫 REGISTRATION BLOCKED
+            </span>
+          </div>
+          <p style="font-size:0.85rem; color:#991b1b; margin:6px 0 8px; line-height:1.45;">
+            ${window.appCurrentLang === 'ta'
+              ? `இந்த பெயர் <strong>"${currentName}"</strong> மற்றும் பதவி <strong>"${currentRole}"</strong> உடன் ஏற்கனவே உறுப்பினர் பதிவு செய்யப்பட்டுள்ளார்!<br>ஒரே பெயரிலும் பதவியிலும் மீண்டும் ஒருமுறை பதிவு செய்ய அனுமதியில்லை.`
+              : `A member with the Name <strong>"${currentName}"</strong> and Designation <strong>"${currentRole}"</strong> is ALREADY REGISTERED in the DBYC system.<br>A person cannot register once again with the same name and designation.`}
+          </p>
+          <div style="font-size:0.82rem; background:#ffffff; border:1px solid #fca5a5; border-radius:10px; padding:10px 12px; margin-bottom:10px; color:#7f1d1d;">
+            <div><strong>Existing Member:</strong> ${simResult.member.name} (<strong>${simResult.member.id}</strong>) &bull; Designation: <strong>${simResult.member.role}</strong> &bull; Mobile: ${simResult.member.mobile}</div>
+            <div style="margin-top:3px; font-size:0.75rem; color:#dc2626;"><strong>Duplicate Reason:</strong> ${simResult.dupeReason || 'Same Name & Designation'}</div>
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button type="button" class="btn-dbyc-primary" style="background:#0284c7; font-size:0.8rem; padding:7px 14px; border-radius:8px; font-weight:800;" onclick="window.closeAddMemberModal(); window.viewMemberPass('${simResult.member.id}')">
+              👁️ ${window.appCurrentLang === 'ta' ? 'அட்டையை பார் (View Pass)' : 'View QR Pass'}
+            </button>
+            <button type="button" class="btn-dbyc-secondary" style="background:#ffffff; color:#0284c7; border:1.5px solid #0284c7; font-size:0.8rem; padding:7px 14px; border-radius:8px; font-weight:800;" onclick="window.openAddMemberModal('${simResult.member.id}')">
+              ✏️ ${window.appCurrentLang === 'ta' ? 'பதிவை திருத்து (Edit Record)' : 'Edit Existing Record'}
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = '0.5';
+      submitBtn.innerHTML = '🚫 ' + (window.appCurrentLang === 'ta' ? 'பதிவு தடுக்கப்பட்டது (Already Registered)' : 'Registration Blocked (Duplicate)');
+    }
+  } else if (simResult.matchCount > 5) {
+    // High Similarity > 5 fields
+    alertContainer.style.display = 'block';
+    alertContainer.style.background = '#fffbeb';
+    alertContainer.style.border = '2.5px solid #f59e0b';
+    alertContainer.style.borderRadius = '14px';
+    alertContainer.style.padding = '14px 16px';
+    alertContainer.style.boxShadow = '0 4px 14px rgba(245,158,11,0.15)';
+    alertContainer.innerHTML = `
+      <div style="display:flex; align-items:flex-start; gap:12px;">
+        <span style="font-size:2rem; line-height:1;">⚠️</span>
+        <div style="flex:1;">
+          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
+            <strong style="color:#b45309; font-size:0.95rem; font-weight:900;">
+              ${window.appCurrentLang === 'ta' ? 'அதிக தரவு ஒற்றுமை கண்டறியப்பட்டது / High Data Similarity (>5 Matches)' : 'High Data Similarity (>5 Matching Fields Detected)'}
+            </strong>
+            <span style="background:#f59e0b; color:#ffffff; font-weight:900; font-size:0.75rem; padding:4px 10px; border-radius:6px;">
+              Similarity Score: ${Math.round(simResult.matchCount)} Matching Points
+            </span>
+          </div>
+          <p style="font-size:0.84rem; color:#92400e; margin:6px 0 8px; line-height:1.45;">
+            ${window.appCurrentLang === 'ta'
+              ? `புதிய பதிவின் தரவுகள் ஏற்கனவே உள்ள உறுப்பினரின் <strong>5-க்கும் மேற்பட்ட தகவல்களுடன் ஒத்துப்போகின்றன</strong>.<br>📌 <strong>இந்த நபர் ஏற்கனவே பதிவு செய்திருந்தால் மீண்டும் பதிவு செய்யாதீர்கள்!</strong> (உடன்பிறந்த சகோதரர்/சகோதரி என்றால் தந்தை/தாய் பெயரை உள்ளிடவும்).`
+              : `The entered details match <strong>more than 5 data fields</strong> with an existing registered member.<br>📌 <strong>If this new registration person is registered already, do not register again!</strong> (If brother/sister, enter Father/Mother name to link as siblings).`}
+          </p>
+          <div style="font-size:0.8rem; background:#ffffff; border:1px solid #fde68a; border-radius:10px; padding:10px 12px; margin-bottom:10px; color:#78350f;">
+            <div><strong>Matching Record:</strong> ${simResult.member.name} (<strong>${simResult.member.id}</strong>) &bull; ${simResult.member.role} &bull; ${simResult.member.mobile}</div>
+            <div style="margin-top:4px; color:#b45309;"><strong>Matching Fields (${Math.round(simResult.matchCount)}):</strong> ${simResult.reasons.join(', ')}</div>
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button type="button" class="btn-dbyc-primary" style="background:#0284c7; font-size:0.8rem; padding:7px 14px; border-radius:8px; font-weight:800;" onclick="window.closeAddMemberModal(); window.viewMemberPass('${simResult.member.id}')">
+              👁️ ${window.appCurrentLang === 'ta' ? 'உறுப்பினரை சரிபார் (Verify Record)' : 'Verify Record'}
+            </button>
+            <button type="button" class="btn-dbyc-secondary" style="background:#ffffff; color:#0284c7; border:1.5px solid #0284c7; font-size:0.8rem; padding:7px 14px; border-radius:8px; font-weight:800;" onclick="window.openAddMemberModal('${simResult.member.id}')">
+              ✏️ ${window.appCurrentLang === 'ta' ? 'முந்தைய பதிவை திருத்து (Edit Record)' : 'Edit Existing Record'}
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.style.opacity = '1';
+      submitBtn.innerHTML = '⚠️ ' + (window.appCurrentLang === 'ta' ? 'எச்சரிக்கையுடன் பதிவு செய் (Save Member)' : 'Proceed with Registration');
+    }
+  } else {
+    alertContainer.style.display = 'none';
+    alertContainer.innerHTML = '';
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.style.opacity = '1';
+      submitBtn.innerHTML = '💾 ' + (window.appCurrentLang === 'ta' ? 'பதிவு செய் / புதுப்பி (Save Member)' : 'Save Member Details');
+    }
+  }
+};
+// 4B. DIRECTOR & ASST. DIRECTOR EXCLUSIVE RENEWAL CONTROLS
+// ==============================================================================
+window.toggleMemberRenewalStatus = function(memberId) {
+  if (!memberId) return;
+  if (!isDirectorOrAsstDirector()) {
+    showToast('🔒 Access Denied: Only Rev. Fr. Director and Assistant Director can mark members as renewed or not renewed.');
+    alert('🔒 RESTRICTED ACTION / அனுமதி மறுக்கப்பட்டது\n\nOnly Rev. Fr. Director and Assistant Director have authority to mark members as renewed or not renewed.\n\nLeaders have profile editing permissions only.\n\nபுதுப்பித்தல் நிலை மாற்றும் அதிகாரம் இயக்குநர் மற்றும் உதவி இயக்குநருக்கு மட்டுமே உண்டு.');
+    return;
+  }
+  const members = (window.appState && window.appState.members) ? window.appState.members : [];
+  const m = members.find(function(x) { return x.id === memberId; });
+  if (!m) return;
+
+  const validity = (typeof window.calculateMembershipValidity === 'function')
+    ? window.calculateMembershipValidity(m)
+    : { isActive: true };
+
+  if (validity.isActive && m.renewalStatus !== 'NOT_RENEWED') {
+    // Mark as NOT RENEWED
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    m.expiryDate = yesterday.toISOString().split('T')[0];
+    m.renewalStatus = 'NOT_RENEWED';
+    m.membershipStatus = 'EXPIRED';
+    m.updatedAt = new Date().toISOString();
+    saveLocalData();
+    if (typeof renderMembersRegistry === 'function') renderMembersRegistry();
+    if (typeof generateIdPass === 'function' && currentViewingPassMemberId === memberId) {
+      generateIdPass(memberId);
+    }
+    if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+      window.DbycCloud.pushToCloud(false);
+    }
+    showToast('⚠️ ' + m.name + ' marked as NOT RENEWED / EXPIRED by Director.');
+  } else {
+    // Mark as RENEWED (+1 Year)
+    window.quickRenewMember(memberId);
+  }
+};
+// 4C. SCAN & UPLOAD REGISTRATION FORM CONTROLS & LIGHTBOX VIEWER
+// ==============================================================================
+window.openUploadDocModal = function(preferMemberId) {
+  const modal = document.getElementById('uploadMemberDocModal');
+  if (!modal) return;
+  modal.style.display = 'flex';
+
+  const members = (window.appState && window.appState.members) ? window.appState.members : [];
+  const opts = members.map(m => `<option value="${m.id}" ${preferMemberId === m.id ? 'selected' : ''}>${m.name} (${m.id}) - ${m.role || 'Member'} [${m.group || 'General'}]</option>`).join('');
+
+  const docSel = document.getElementById('docTargetMemberSelect');
+  if (docSel) docSel.innerHTML = opts || '<option value="">No members registered yet</option>';
+
+  const photoSel = document.getElementById('photoTargetMemberSelect');
+  if (photoSel) photoSel.innerHTML = opts || '<option value="">No members registered yet</option>';
+
+  window.switchUploadDocTab('form');
+};
+
+window.closeUploadDocModal = function() {
+  const modal = document.getElementById('uploadMemberDocModal');
+  if (modal) modal.style.display = 'none';
+};
+
+window.switchUploadDocTab = function(tabName) {
+  const panes = {
+    form: document.getElementById('uploadPaneForm'),
+    attach: document.getElementById('uploadPaneAttach'),
+    photo: document.getElementById('uploadPanePhoto'),
+    bulk: document.getElementById('uploadPaneBulk')
+  };
+
+  document.querySelectorAll('#uploadMemberDocModal .tab-btn').forEach(btn => btn.classList.remove('active'));
+
+  if (tabName === 'form') {
+    document.getElementById('uploadTabScannedForm')?.classList.add('active');
+    if (panes.form) panes.form.style.display = 'block';
+    if (panes.attach) panes.attach.style.display = 'none';
+    if (panes.photo) panes.photo.style.display = 'none';
+    if (panes.bulk) panes.bulk.style.display = 'none';
+  } else if (tabName === 'attach') {
+    document.getElementById('uploadTabAttachDoc')?.classList.add('active');
+    if (panes.form) panes.form.style.display = 'none';
+    if (panes.attach) panes.attach.style.display = 'block';
+    if (panes.photo) panes.photo.style.display = 'none';
+    if (panes.bulk) panes.bulk.style.display = 'none';
+  } else if (tabName === 'photo') {
+    document.getElementById('uploadTabPhoto')?.classList.add('active');
+    if (panes.form) panes.form.style.display = 'none';
+    if (panes.attach) panes.attach.style.display = 'none';
+    if (panes.photo) panes.photo.style.display = 'block';
+    if (panes.bulk) panes.bulk.style.display = 'none';
+  } else if (tabName === 'bulk') {
+    document.getElementById('uploadTabBulk')?.classList.add('active');
+    if (panes.form) panes.form.style.display = 'none';
+    if (panes.attach) panes.attach.style.display = 'none';
+    if (panes.photo) panes.photo.style.display = 'none';
+    if (panes.bulk) panes.bulk.style.display = 'block';
+  }
+};
+
+window.lastModalScannedData = null;
+
+window.handleModalFormScan = function(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  const statusEl = document.getElementById('modalScanStatus');
+  if (statusEl) {
+    statusEl.style.display = 'block';
+    statusEl.innerHTML = '🔄 Scanning document & analyzing fields (படிவம் ஸ்கேன் செய்யப்படுகிறது)...';
+  }
+
+  showToast('🔍 Analyzing physical registration form with optical scanner...');
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const rawData = e.target.result;
+    const previewContainer = document.getElementById('modalScannedDocPreviewContainer');
+    const previewImg = document.getElementById('modalScannedDocPreviewImg');
+    if (previewContainer && previewImg) {
+      previewContainer.style.display = 'block';
+      previewImg.src = rawData;
+    }
+
+    const img = new Image();
+    img.onload = async function() {
+      let detectedText = '';
+      let qrDecoded = null;
+
+      // 1. Try BarcodeDetector
+      if ('BarcodeDetector' in window) {
+        try {
+          const detector = new BarcodeDetector({ formats: ['qr_code', 'code_128', 'ean_13'] });
+          const barcodes = await detector.detect(img);
+          if (barcodes && barcodes.length > 0 && barcodes[0].rawValue) {
+            qrDecoded = barcodes[0].rawValue;
+          }
+        } catch(err) {}
+      }
+
+      // 2. Try jsQR
+      if (!qrDecoded && typeof jsQR !== 'undefined') {
+        try {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+          const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const qr = jsQR(imgData.data, imgData.width, imgData.height);
+          if (qr && qr.data) qrDecoded = qr.data;
+        } catch(err) {}
+      }
+
+      // 3. Try TextDetector
+      if ('TextDetector' in window) {
+        try {
+          const textDetector = new window.TextDetector();
+          const detected = await textDetector.detect(img);
+          if (detected && detected.length > 0) {
+            detectedText = detected.map(d => d.rawValue).join('\n');
+          }
+        } catch(e) {}
+      }
+
+      // Extract passport photo from top-right corner
+      let extractedPhoto = '';
+      try {
+        const photoCanvas = document.createElement('canvas');
+        photoCanvas.width = 240;
+        photoCanvas.height = 240;
+        const pctx = photoCanvas.getContext('2d');
+        pctx.drawImage(img, img.width * 0.65, img.height * 0.05, img.width * 0.3, img.width * 0.3, 0, 0, 240, 240);
+        extractedPhoto = photoCanvas.toDataURL('image/jpeg', 0.85);
+      } catch(e) {}
+
+      // Build parsed member object
+      const parsedData = {
+        name: '',
+        role: 'Member',
+        mobile: '',
+        dob: '',
+        age: 16,
+        education: '',
+        occupation: '',
+        workAddress: '',
+        homeAddress: '',
+        fatherName: '',
+        motherName: '',
+        bloodGroup: 'O+ve',
+        group: 'Sub Juniors Group',
+        photo: extractedPhoto,
+        scannedFormImage: rawData
+      };
+
+      if (qrDecoded) {
+        if (qrDecoded.startsWith('DBYC:')) {
+          const parts = qrDecoded.split(':');
+          if (parts[2]) parsedData.name = parts[2];
+          if (parts[3]) parsedData.group = parts[3];
+        } else {
+          try {
+            const obj = JSON.parse(qrDecoded);
+            Object.assign(parsedData, obj);
+          } catch(e) {}
+        }
+      }
+
+      if (detectedText) {
+        // Regex parse standard DBYC form lines
+        const lines = detectedText.split('\n').map(l => l.trim()).filter(Boolean);
+        lines.forEach(l => {
+          const lower = l.toLowerCase();
+          if (lower.includes('name') || lower.includes('பெயர்')) {
+            const parts = l.split(/[:\-=]/);
+            if (parts[1]) parsedData.name = parts[1].trim();
+          } else if (lower.includes('mobile') || lower.includes('phone') || lower.includes('தொடர்பு')) {
+            const digits = l.replace(/\D/g, '');
+            if (digits.length >= 10) parsedData.mobile = digits.slice(-10);
+          } else if (lower.includes('father') || lower.includes('தந்தை')) {
+            const parts = l.split(/[:\-=]/);
+            if (parts[1]) parsedData.fatherName = parts[1].trim();
+          } else if (lower.includes('dob') || lower.includes('பிறந்த')) {
+            const m = l.match(/\d{4}-\d{2}-\d{2}|\d{2}[-/]\d{2}[-/]\d{4}/);
+            if (m) parsedData.dob = m[0];
+          }
+        });
+      }
+
+      if (!parsedData.name) {
+        parsedData.name = 'Scanned Applicant';
+      }
+
+      window.lastModalScannedData = parsedData;
+
+      if (statusEl) {
+        statusEl.innerHTML = `✅ <strong>Optical Analysis Complete!</strong> Scanned physical form successfully.`;
+      }
+
+      // Check duplicate & similarity (>5) on scanned data
+      const alertBox = document.getElementById('modalScanSimilarityAlert');
+      const sim = window.computeMemberSimilarity(parsedData);
+      const applyBtn = document.getElementById('btnApplyScanToRegistration');
+
+      if (sim && sim.isExactDuplicate) {
+        if (alertBox) {
+          alertBox.style.display = 'block';
+          alertBox.innerHTML = `
+            <div style="background:#fef2f2; border:2px solid #ef4444; border-radius:12px; padding:12px; font-size:0.82rem; color:#991b1b;">
+              <strong>🚫 Duplicate Record Detected:</strong> This scanned form matches registered member <strong>${sim.member.name}</strong> (${sim.member.id}) with designation <strong>${sim.member.role}</strong> and phone ${sim.member.mobile}.
+            </div>
+          `;
+        }
+        if (applyBtn) {
+          applyBtn.disabled = true;
+          applyBtn.style.opacity = '0.6';
+          applyBtn.innerHTML = '🚫 Member Already Registered';
+        }
+      } else if (sim && sim.matchCount > 5) {
+        if (alertBox) {
+          alertBox.style.display = 'block';
+          alertBox.innerHTML = `
+            <div style="background:#fffbeb; border:2px solid #f59e0b; border-radius:12px; padding:12px; font-size:0.82rem; color:#92400e;">
+              <strong>⚠️ High Data Similarity (>5 Matches):</strong> Extracted details match ${Math.round(sim.matchCount)} fields with existing member <strong>${sim.member.name}</strong> (${sim.member.id}). If already registered, do not register again!
+            </div>
+          `;
+        }
+        if (applyBtn) {
+          applyBtn.disabled = false;
+          applyBtn.style.opacity = '1';
+          applyBtn.innerHTML = '🚀 புதிய பதிவாக நிரப்புக (Auto-Fill New Member Registration)';
+        }
+      } else {
+        if (alertBox) alertBox.style.display = 'none';
+        if (applyBtn) {
+          applyBtn.disabled = false;
+          applyBtn.style.opacity = '1';
+          applyBtn.innerHTML = '🚀 புதிய பதிவாக நிரப்புக (Auto-Fill New Member Registration)';
+        }
+      }
+
+      // Populate Extracted Summary Card
+      const summaryCard = document.getElementById('modalExtractedFieldsCard');
+      const summaryDiv = document.getElementById('modalExtractedFieldsSummary');
+      if (summaryCard && summaryDiv) {
+        summaryCard.style.display = 'block';
+        summaryDiv.innerHTML = `
+          <div><strong>Name:</strong> ${parsedData.name}</div>
+          <div><strong>Designation:</strong> ${parsedData.role}</div>
+          <div><strong>Mobile:</strong> ${parsedData.mobile || 'Detected in form'}</div>
+          <div><strong>DOB / Age:</strong> ${parsedData.dob || 'Auto-calculated'} (${parsedData.age || 16})</div>
+          <div><strong>Father Name:</strong> ${parsedData.fatherName || 'As written'}</div>
+          <div><strong>Group:</strong> ${parsedData.group}</div>
+        `;
+      }
+
+      showToast('✨ Form scanned & fields extracted! Ready to auto-fill registration.');
+    };
+    img.src = rawData;
+  };
+  reader.readAsDataURL(file);
+};
+
+window.applyScanToRegistrationModal = function() {
+  const data = window.lastModalScannedData;
+  if (!data) {
+    showToast('⚠️ Please scan or upload a registration form first.');
+    return;
+  }
+
+  window.closeUploadDocModal();
+  window.openAddMemberModal();
+
+  setTimeout(() => {
+    if (data.name && document.getElementById('formName')) document.getElementById('formName').value = data.name;
+    if (data.role && document.getElementById('formRole')) document.getElementById('formRole').value = data.role;
+    if (data.mobile && document.getElementById('formMobile')) document.getElementById('formMobile').value = data.mobile;
+    if (data.dob && document.getElementById('formDob')) document.getElementById('formDob').value = data.dob;
+    if (data.fatherName && document.getElementById('formFatherName')) document.getElementById('formFatherName').value = data.fatherName;
+    if (data.motherName && document.getElementById('formMotherName')) document.getElementById('formMotherName').value = data.motherName;
+    if (data.homeAddress && document.getElementById('formHomeAddress')) document.getElementById('formHomeAddress').value = data.homeAddress;
+    if (data.education && document.getElementById('formEducation')) document.getElementById('formEducation').value = data.education;
+    if (data.occupation && document.getElementById('formOccupation')) document.getElementById('formOccupation').value = data.occupation;
+    if (data.bloodGroup && document.getElementById('formBloodGroup')) document.getElementById('formBloodGroup').value = data.bloodGroup;
+    if (data.group && document.getElementById('formGroup')) document.getElementById('formGroup').value = data.group;
+
+    if (data.photo) {
+      window.capturedMemberPhotoBase64 = data.photo;
+      const prevImg = document.getElementById('formMemberPhotoPreviewImg');
+      if (prevImg) prevImg.src = data.photo;
+      const remBtn = document.getElementById('removeMemberPhotoBtn');
+      if (remBtn) remBtn.style.display = 'inline-block';
+    }
+
+    if (typeof window.checkRegistrationSimilarityAndDuplicates === 'function') {
+      window.checkRegistrationSimilarityAndDuplicates();
+    }
+  }, 100);
+
+  showToast('🚀 Registration form auto-filled with scanned paper form data!');
+};
+
+window.attachedDocBase64 = '';
+window.handleScannedFormFileChosen = function(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    window.attachedDocBase64 = e.target.result;
+    const prev = document.getElementById('scannedFormPreview');
+    const img = document.getElementById('scannedFormPreviewImg');
+    const nameEl = document.getElementById('scannedFormFileName');
+    if (prev && img && nameEl) {
+      prev.style.display = 'block';
+      img.src = window.attachedDocBase64;
+      nameEl.textContent = file.name + ' (' + Math.round(file.size / 1024) + ' KB)';
+    }
+  };
+  reader.readAsDataURL(file);
+};
+
+window.handleAttachScannedDocSubmit = function(event) {
+  if (event) event.preventDefault();
+  const memberId = document.getElementById('docTargetMemberSelect')?.value;
+  const docType = document.getElementById('docTypeSelect')?.value || 'Official Scanned Application Form';
+
+  if (!memberId) {
+    showToast('⚠️ Please select a member to attach this document to.');
+    return;
+  }
+  if (!window.attachedDocBase64) {
+    showToast('⚠️ Please choose or snap a document photo first.');
+    return;
+  }
+
+  const members = (window.appState && window.appState.members) ? window.appState.members : [];
+  const m = members.find(x => x.id === memberId);
+  if (!m) return;
+
+  m.scannedFormImage = window.attachedDocBase64;
+  m.scannedDocs = m.scannedDocs || [];
+  m.scannedDocs.push({
+    type: docType,
+    date: new Date().toISOString(),
+    data: window.attachedDocBase64
+  });
+  m.updatedAt = new Date().toISOString();
+
+  saveLocalData();
+  if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+    window.DbycCloud.pushToCloud(false);
+  }
+
+  window.closeUploadDocModal();
+  if (typeof renderMembersRegistry === 'function') renderMembersRegistry();
+
+  showToast(`✅ Scanned paper application attached to ${m.name} (${m.id}) successfully!`);
+};
+
+window.viewScannedMemberForm = function(memberId) {
+  const members = (window.appState && window.appState.members) ? window.appState.members : [];
+  const m = members.find(x => x.id === memberId);
+  if (!m || !m.scannedFormImage) {
+    showToast('⚠️ No scanned paper application form attached for this member.');
+    return;
+  }
+
+  const modal = document.getElementById('scannedDocLightboxModal');
+  const img = document.getElementById('scannedDocLightboxImg');
+  const title = document.getElementById('scannedDocLightboxTitle');
+  const meta = document.getElementById('scannedDocLightboxMeta');
+  const downloadLink = document.getElementById('scannedDocDownloadLink');
+
+  if (modal && img) {
+    modal.style.display = 'flex';
+    img.src = m.scannedFormImage;
+    if (title) title.textContent = `Official Scanned Application: ${m.name} (${m.id})`;
+    if (meta) meta.textContent = `Designation: ${m.role || 'Member'} • Group: ${m.group || 'General'} • Attached: ${m.updatedAt ? m.updatedAt.split('T')[0] : 'Official Record'}`;
+    if (downloadLink) {
+      downloadLink.href = m.scannedFormImage;
+      downloadLink.download = `${m.name.replace(/\s+/g, '_')}_${m.id}_Scanned_Form.jpg`;
+    }
+  }
+};
+
+window.closeScannedDocLightbox = function() {
+  const modal = document.getElementById('scannedDocLightboxModal');
+  if (modal) modal.style.display = 'none';
+};
+
+window.standalonePhotoBase64 = '';
+window.handleStandalonePhotoChosen = function(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    window.standalonePhotoBase64 = e.target.result;
+    const prev = document.getElementById('targetPhotoPreview');
+    const img = document.getElementById('targetPhotoPreviewImg');
+    if (prev && img) {
+      prev.style.display = 'block';
+      img.src = window.standalonePhotoBase64;
+    }
+  };
+  reader.readAsDataURL(file);
+};
+
+window.handleStandalonePhotoUploadSubmit = function(event) {
+  if (event) event.preventDefault();
+  const memberId = document.getElementById('photoTargetMemberSelect')?.value;
+  if (!memberId) {
+    showToast('⚠️ Please select a member.');
+    return;
+  }
+  if (!window.standalonePhotoBase64) {
+    showToast('⚠️ Please select a photo first.');
+    return;
+  }
+
+  const members = (window.appState && window.appState.members) ? window.appState.members : [];
+  const m = members.find(x => x.id === memberId);
+  if (!m) return;
+
+  m.photo = window.standalonePhotoBase64;
+  m.updatedAt = new Date().toISOString();
+
+  saveLocalData();
+  if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+    window.DbycCloud.pushToCloud(false);
+  }
+
+  window.closeUploadDocModal();
+  if (typeof renderMembersRegistry === 'function') renderMembersRegistry();
+  if (typeof generateIdPass === 'function' && currentViewingPassMemberId === memberId) {
+    generateIdPass(memberId);
+  }
+
+  showToast(`✅ Profile photo updated for ${m.name}!`);
+};
+
+window.updatePhotoTargetMemberPreview = function(memberId) {
+  const members = (window.appState && window.appState.members) ? window.appState.members : [];
+  const m = members.find(x => x.id === memberId);
+  const img = document.getElementById('targetPhotoPreviewImg');
+  const prev = document.getElementById('targetPhotoPreview');
+  if (m && m.photo && img && prev) {
+    img.src = m.photo;
+    prev.style.display = 'block';
+  }
+};
+
+// ==============================================================================
+// 4D. COMPREHENSIVE BILINGUAL LANGUAGE SWITCHER (TAMIL / ENGLISH)
+// ==============================================================================
+window.applyAppLanguage = function(lang) {
+  document.documentElement.lang = lang;
+  window.appCurrentLang = lang;
+  localStorage.setItem('dbyc_language', lang);
+
+  const btn = document.getElementById('langToggleBtn');
+  if (btn) {
+    btn.innerHTML = (lang === 'ta') ? '🌐 தமிழ் (Active)' : '🌐 English (Active)';
+    btn.title = (lang === 'ta') ? 'Switch to English / ஆங்கிலத்திற்கு மாறுக' : 'தமிழுக்கு மாறுக / Switch to Tamil';
+  }
+
   const translations = {
     ta: {
+      scanNav: '📸 படிவம் ஸ்கேன் & பதிவேற்று',
+      voiceNav: '🎙️ குரல் வழி',
       totalMembers: 'மொத்த உறுப்பினர்கள்',
       todayAttendance: 'இன்றைய வருகை',
       activeGroups: 'செயல்படும் பிரிவுகள்',
       upcomingEvents: 'வரவிருக்கும் நிகழ்வுகள்',
-      news: '📢 செய்திகள்'
+      membersTitle: 'உறுப்பினர் பதிவேடு (Members Registry)',
+      searchPlaceholder: 'பெயர், எண் அல்லது பதவி மூலம் தேடுக... (Search by Name, ID, Mobile...)',
+      newRegBtn: '➕ புதிய பதிவு (New Registration)',
+      printMembersBtn: '🖨️ அச்சிடு (Print List)',
+      filterAll: 'அனைத்தும் (All)',
+      formTitle: 'உறுப்பினர் விண்ணப்பப் படிவம் (Member Registration & Editor)',
+      formNameLbl: '1. பெயர் (Full Name) *',
+      formDobLbl: '2. பிறந்த தேதி (Date of Birth) *',
+      formAgeLbl: 'வயது (Age)',
+      formEduLbl: '3. கல்வித் தகுதி (Education)',
+      formOccLbl: 'வேலை (Occupation / Designation)',
+      formWorkLbl: '4. பள்ளி / கல்லூரி / பணி முகவரி (Work/School Address)',
+      formRelLbl: '5. மதம் (Religion)',
+      formMaritalLbl: '6. திருமண நிலை (Marital Status)',
+      formAddrLbl: '7. வீட்டு முகவரி (Home Address) *',
+      formMobileLbl: 'தொடர்பு எண் (Mobile Number) *',
+      formPinLbl: 'பாதுகாப்பு பின் எண் (Security PIN)',
+      formFatherLbl: "8. தந்தையின் பெயர் (Father's Name)",
+      formMotherLbl: "9. தாயின் பெயர் (Mother's Name)",
+      formYearsLbl: '10. மன்றத்தில் வருடங்கள் (Years in DBYC)',
+      formBrothersLbl: '11. உடன் பிறந்த சகோதரர்கள் (Brothers Count)',
+      formSistersLbl: '12. உடன் பிறந்த சகோதரிகள் (Sisters Count)',
+      formJoinPurposeLbl: '13. மன்றத்தில் சேருவதன் நோக்கம் (Purpose of Joining)',
+      formSportsLbl: '14. விளையாட்டு / செயல்பாடுகள் (Sports / Activities)',
+      formAmbitionLbl: '15. எதிர்கால லட்சியம் (Future Ambition)',
+      formBloodLbl: '16. இரத்தப் பிரிவு (Blood Group)',
+      formGroupLbl: '17. சேர்க்கப்படும் குழு (Allocated Group) *',
+      formRoleLbl: 'பதவி / பொறுப்பு (Designation / Role in DBYC) *',
+      formTeamLbl: 'இல்ல அணி (House Team) *',
+      formNotesLbl: '18. தனிப்பட்ட மற்றும் குடும்ப குறிப்புகள் (Notes)',
+      saveMemberBtn: '💾 பதிவு செய் / புதுப்பி (Save Member Details)',
+      scanUploadTitle: 'Scan & Upload Registration Form (படிவம் ஸ்கேன் & பதிவேற்று)',
+      tabScanForm: '📸 படிவம் ஸ்கேன் & சுய-நிரப்பு (Scan & Auto-Fill)',
+      tabAttachDoc: '📎 உறுப்பினருக்கு படிவம் இணை (Attach to Member)',
+      tabPhoto: '👤 உறுப்பினர் புகைப்படம் (Member Photo)',
+      tabBulk: '📊 மொத்த இறக்குமதி (Bulk Import)',
+      btnSnapForm: '📷 கேமரா மூலம் ஸ்கேன் செய் (Snap Paper Form)',
+      btnUploadForm: '📁 கோப்பைப் பதிவேற்று (Upload Image/PDF)',
+      btnPasteOcr: '📝 உரையை ஒட்டுக (Paste OCR Text)',
+      qualDeskLockTitle: 'இயக்குநர் மற்றும் உதவி இயக்குநர் அதிகார வரம்பு',
+      qualDeskLockDesc: 'Only Rev. Fr. Director, SDB and Rev. Fr. Assistant Director, SDB are authorized to qualify and approve member registrations, calendar events, news, and minutes.'
     },
     en: {
+      scanNav: '📸 Scan & Upload Form',
+      voiceNav: '🎙️ Voice',
       totalMembers: 'Total Members',
       todayAttendance: "Today's Attendance",
       activeGroups: 'Active Groups',
       upcomingEvents: 'Upcoming Events',
-      news: '📢 News'
+      membersTitle: 'Members Registry & Records',
+      searchPlaceholder: 'Search by Name, ID, Mobile, Designation...',
+      newRegBtn: '➕ New Registration (Add Member)',
+      printMembersBtn: '🖨️ Print Registry List',
+      filterAll: 'All Members',
+      formTitle: 'Member Registration Form & Profile Editor',
+      formNameLbl: '1. Full Name (பெயர்) *',
+      formDobLbl: '2. Date of Birth (பிறந்த தேதி) *',
+      formAgeLbl: 'Age (வயது)',
+      formEduLbl: '3. Education (கல்வித் தகுதி)',
+      formOccLbl: 'Occupation / Designation (வேலை)',
+      formWorkLbl: '4. School / College / Work Address (பணி முகவரி)',
+      formRelLbl: '5. Religion (மதம்)',
+      formMaritalLbl: '6. Marital Status (திருமண நிலை)',
+      formAddrLbl: '7. Home Address (வீட்டு முகவரி) *',
+      formMobileLbl: 'Mobile Number (தொடர்பு எண்) *',
+      formPinLbl: 'Security PIN / Password',
+      formFatherLbl: "8. Father's Name (தந்தையின் பெயர்)",
+      formMotherLbl: "9. Mother's Name (தாயின் பெயர்)",
+      formYearsLbl: '10. Years in DBYC (மன்றத்தில் வருடங்கள்)',
+      formBrothersLbl: '11. Brothers Count (சகோதரர்கள்)',
+      formSistersLbl: '12. Sisters Count (சகோதரிகள்)',
+      formJoinPurposeLbl: '13. Purpose of Joining (நோக்கம்)',
+      formSportsLbl: '14. Sports & Activities (விளையாட்டு)',
+      formAmbitionLbl: '15. Future Ambition (எதிர்கால லட்சியம்)',
+      formBloodLbl: '16. Blood Group (இரத்தப் பிரிவு)',
+      formGroupLbl: '17. Allocated Group (சேர்க்கப்படும் குழு) *',
+      formRoleLbl: 'Designation / Role in DBYC (பதவி) *',
+      formTeamLbl: 'House Team (இல்ல அணி) *',
+      formNotesLbl: '18. Personal & Family Notes (குறிப்புகள்)',
+      saveMemberBtn: '💾 Save Member Details',
+      scanUploadTitle: 'Scan & Upload Registration Form (Physical Form & OCR)',
+      tabScanForm: '📸 Scan & Auto-Fill Form',
+      tabAttachDoc: '📎 Attach Scanned Form to Member',
+      tabPhoto: '👤 Member Photo Studio',
+      tabBulk: '📊 Bulk Excel/CSV Import',
+      btnSnapForm: '📷 Snap Paper Form / Camera',
+      btnUploadForm: '📁 Upload Image or PDF File',
+      btnPasteOcr: '📝 Paste OCR Text / Google Lens',
+      qualDeskLockTitle: 'Director & Assistant Director Exclusive Authority',
+      qualDeskLockDesc: 'Only Rev. Fr. Director, SDB and Rev. Fr. Assistant Director, SDB are authorized to qualify and approve member registrations, calendar events, news, and minutes.'
     }
   };
 
-  const t = translations[lang] || translations.en;
+  const t = translations[lang] || translations.ta;
+
+  // Header Nav
+  const scanNav = document.getElementById('scanUploadNavBtn');
+  if (scanNav) scanNav.innerHTML = t.scanNav;
+  const voiceNav = document.getElementById('voiceAssistantNavBtn');
+  if (voiceNav) voiceNav.innerHTML = t.voiceNav;
+
+  // Stat Labels
   const statLabels = document.querySelectorAll('.org-stat-label');
   if (statLabels && statLabels.length >= 4) {
     statLabels[0].textContent = t.totalMembers;
@@ -21439,13 +22711,75 @@ window.applyAppLanguage = function(lang) {
     statLabels[3].textContent = t.upcomingEvents;
   }
 
-  // Update Telecast Carousel Titles
-  if (window.showTelecastSlide) {
-    window.showTelecastSlide(window.currentTelecastIndex || 0);
+  // Registry elements
+  const openAdd = document.getElementById('openAddMemberBtn');
+  if (openAdd) openAdd.innerHTML = t.newRegBtn;
+  const searchInput = document.getElementById('memberSearchInput');
+  if (searchInput) searchInput.placeholder = t.searchPlaceholder;
+
+  // Modal Form Labels
+  const formModalTitle = document.getElementById('memberFormModalTitle');
+  if (formModalTitle && !document.getElementById('formEditingMemberId')?.value) {
+    formModalTitle.textContent = t.formTitle;
   }
+  const lblName = document.getElementById('lblFormName');
+  if (lblName) lblName.textContent = t.formNameLbl;
+  const lblRole = document.getElementById('lblFormRole');
+  if (lblRole) lblRole.textContent = t.formRoleLbl;
+  const submitBtn = document.getElementById('btnSubmitFormDirect');
+  if (submitBtn && !submitBtn.disabled) {
+    submitBtn.innerHTML = t.saveMemberBtn;
+  }
+
+  // Scan & Upload Modal
+  const scanModalTitle = document.getElementById('scanUploadModalTitle');
+  if (scanModalTitle) scanModalTitle.textContent = t.scanUploadTitle;
+  const tabScan = document.getElementById('uploadTabScannedForm');
+  if (tabScan) tabScan.innerHTML = t.tabScanForm;
+  const tabAttach = document.getElementById('uploadTabAttachDoc');
+  if (tabAttach) tabAttach.innerHTML = t.tabAttachDoc;
+  const tabPhoto = document.getElementById('uploadTabPhoto');
+  if (tabPhoto) tabPhoto.innerHTML = t.tabPhoto;
+  const tabBulk = document.getElementById('uploadTabBulk');
+  if (tabBulk) tabBulk.innerHTML = t.tabBulk;
+
+  // Sidebar Menu translation
+  const sidebarMap = {
+    dashboard: lang === 'ta' ? 'முகப்பு (Dashboard)' : 'Dashboard',
+    attendance: lang === 'ta' ? 'வருகை பதிவு (Attendance)' : 'QR Attendance',
+    passes: lang === 'ta' ? 'அடையாள அட்டை (QR Pass)' : 'Member Pass',
+    members: lang === 'ta' ? 'உறுப்பினர்கள் (Members)' : 'Members Registry',
+    officebearers: lang === 'ta' ? 'நிர்வாகிகள் (Office Bearers)' : 'Office Bearers',
+    calendar: lang === 'ta' ? 'நாட்காட்டி (Calendar)' : 'Calendar & Events',
+    news: lang === 'ta' ? 'செய்திகள் (News)' : 'DBYC News',
+    minutes: lang === 'ta' ? 'கூட்டக் குறிப்புகள் (Minutes)' : 'Meeting Minutes',
+    leaders: lang === 'ta' ? 'தலைவர்கள் (Leaders Council)' : 'Leaders Council',
+    teams: lang === 'ta' ? '4 இல்ல அணிகள் (4 Teams)' : '4 House Teams',
+    media: lang === 'ta' ? 'ஊடக அரங்கம் (Media)' : 'Media Studio',
+    rules: lang === 'ta' ? 'விதிமுறைகள் (Rules)' : 'DBYC Rules',
+    qualifications: lang === 'ta' ? 'தகுதி ஒப்புதல் (Qualifications)' : 'Qualification Desk',
+    settings: lang === 'ta' ? 'அமைப்புகள் (Settings)' : 'Master Settings'
+  };
+
+  document.querySelectorAll('#sidebarDrawer .sidebar-menu-item').forEach(item => {
+    const v = item.getAttribute('data-view');
+    if (sidebarMap[v]) {
+      const span = item.querySelector('span:last-child');
+      if (span) span.textContent = sidebarMap[v];
+    }
+  });
+
+  // Re-render views
+  if (typeof renderMembersRegistry === 'function') renderMembersRegistry();
+  if (typeof renderQualificationDesk === 'function') renderQualificationDesk();
+  if (typeof window.showTelecastSlide === 'function') window.showTelecastSlide(window.currentTelecastIndex || 0);
 };
 
-// ==============================================================================
+window.toggleAppLanguage = function() {
+  const next = (window.appCurrentLang === 'ta') ? 'en' : 'ta';
+  window.applyAppLanguage(next);
+  showToast(next === 'ta' ? '🌐 மொழி தமிழாக மாற்றப்பட்டது (Tamil Active)' : '🌐 Language switched to English (English Active)');
+};
 // 5. VOICE ASSISTANT (WEB SPEECH API RECOGNITION + SYNTHESIS)
 // ==============================================================================
 window.activeVoiceRecognition = null;

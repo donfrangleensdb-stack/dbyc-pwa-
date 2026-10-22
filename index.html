@@ -3042,7 +3042,7 @@ body {
           <span id="cloudStatusDot" style="width:8px; height:8px; border-radius:50%; background:#10b981; display:inline-block; box-shadow:0 0 8px #10b981;"></span>
           <span id="cloudStatusText">Google Drive / Server</span>
         </button>
-        <button type="button" id="scanUploadNavBtn" class="pill-tool-btn" style="background:#f0fdf4; border:1.5px solid #16a34a; color:#15803d; font-weight:800; display:inline-flex; align-items:center; gap:5px; cursor:pointer;" onclick="window.openUploadDocModal();" title="Scan & Upload Paper Registration Form / படிவம் பதிவேற்று">📸 Scan & Upload Form</button>
+
         <button id="voiceAssistantNavBtn" class="pill-tool-btn" title="Voice Assistant" onclick="window.toggleVoiceAssistant()">🎙️ Voice</button>
         <button id="langToggleBtn" class="pill-tool-btn gold" title="Switch Language" onclick="window.toggleAppLanguage()">🌐 தமிழ் / ENG</button>
       </div>
@@ -3564,9 +3564,7 @@ body {
             <button id="openAddMemberBtn" class="btn-dbyc-primary" style="background:#16a34a; font-weight:800; padding:8px 14px;">
               ➕ New Registration (பதிவு)
             </button>
-            <button type="button" id="openScanUploadFormBtn" class="btn-dbyc-primary" style="background:#0284c7; font-weight:800; padding:8px 14px; border-radius:10px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;" onclick="window.openUploadDocModal();" title="Scan & Upload Paper Registration Form / படிவம் பதிவேற்று">
-              📸 Scan & Upload Form / படிவம்
-            </button>
+
             
           </div>
         </div>
@@ -5181,7 +5179,7 @@ body {
 
           <!-- Years / Tenure -->
           <div class="form-group-dbyc" style="margin:0;">
-            <label style="font-weight:800; font-size:0.85rem; color:#0f172a; display:block; margin-bottom:4px;">Years in DBYC (ஆண்டுகள்)</label>
+            <label style="font-weight:800; font-size:0.85rem; color:#0f172a; display:block; margin-bottom:4px;">DBYC Membership Tenure (மைய உறுப்பினர் காலம்)</label>
             <input type="text" id="editPassYears" class="form-control-dbyc" placeholder="e.g. 11 Years" style="width:100%; box-sizing:border-box;">
           </div>
         </div>
@@ -5319,27 +5317,34 @@ body {
         </div>
 
         <!-- Physical Registration Form & ID Card Optical Scanner / Auto-Fill Box -->
-        <div class="form-ocr-scanner-box" style="background:linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border:1.5px dashed #2563eb; border-radius:14px; padding:12px 14px; margin-bottom:14px;">
-          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+        <div class="form-ocr-scanner-box" style="background:linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border:1.8px dashed #2563eb; border-radius:14px; padding:14px 16px; margin-bottom:16px; box-shadow:0 4px 12px rgba(37,99,235,0.08);">
+          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
             <div>
-              <strong style="color:#1e40af; font-size:0.9rem;">📸 விண்ணப்பப் படிவம் ஸ்கேனர் (Form Scanner / OCR Auto-Fill)</strong>
-              <div style="font-size:0.75rem; color:#3b82f6;">Snap photo of physical paper application or member ID card to auto-fill this form</div>
+              <strong style="color:#1e40af; font-size:0.94rem; display:flex; align-items:center; gap:6px;">
+                <span>📸</span> விண்ணப்பப் படிவம் ஸ்கேன் & பதிவேற்றம் (Scan & Upload Paper Form)
+              </strong>
+              <div style="font-size:0.76rem; color:#1d4ed8; margin-top:2px;">
+                Snap physical paper form or ID card to auto-fill details, or upload documents directly into DBYC records.
+              </div>
             </div>
             <div style="display:flex; gap:6px; flex-wrap:wrap;">
-              <button type="button" class="btn-dbyc-primary" style="background:#2563eb; font-size:0.78rem; font-weight:800; padding:6px 12px; border-radius:8px;" onclick="document.getElementById('formOcrCamInput').click();">
+              <button type="button" class="btn-dbyc-primary" style="background:#2563eb; font-size:0.78rem; font-weight:800; padding:7px 12px; border-radius:8px; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 6px rgba(37,99,235,0.25);" onclick="document.getElementById('formOcrCamInput').click();" title="Capture paper form using camera">
                 📷 Snap Paper Form / அட்டை
               </button>
-              <button type="button" class="btn-dbyc-secondary" style="background:#fff; color:#1e40af; border:1px solid #bfdbfe; font-size:0.78rem; font-weight:800; padding:6px 12px; border-radius:8px;" onclick="document.getElementById('formOcrFileInput').click();">
+              <button type="button" class="btn-dbyc-secondary" style="background:#fff; color:#1e40af; border:1.5px solid #93c5fd; font-size:0.78rem; font-weight:800; padding:7px 12px; border-radius:8px; display:inline-flex; align-items:center; gap:4px;" onclick="document.getElementById('formOcrFileInput').click();" title="Upload paper form photo or scanned image">
                 📁 Upload Image / கோப்பு
               </button>
-              <button type="button" class="btn-dbyc-secondary" style="background:#fff; color:#1e40af; border:1px solid #bfdbfe; font-size:0.78rem; font-weight:800; padding:6px 12px; border-radius:8px;" onclick="window.openOcrTextPasteModal();">
-                📝 Paste Text / Google Lens
+              <button type="button" class="btn-dbyc-secondary" style="background:#fff; color:#1e40af; border:1.5px solid #93c5fd; font-size:0.78rem; font-weight:800; padding:7px 12px; border-radius:8px; display:inline-flex; align-items:center; gap:4px;" onclick="window.openOcrTextPasteModal();" title="Paste text copied from Google Lens or scan">
+                📝 Paste Text / OCR
+              </button>
+              <button type="button" class="btn-dbyc-secondary" style="background:#fef3c7; color:#92400e; border:1.5px solid #fde68a; font-size:0.78rem; font-weight:800; padding:7px 12px; border-radius:8px; display:inline-flex; align-items:center; gap:4px;" onclick="window.openUploadDocModal(document.getElementById('formEditingMemberId')?.value || '');" title="Attach physical documents to this member record">
+                📑 Attach Paper Doc / ஆவணம்
               </button>
             </div>
           </div>
           <input type="file" id="formOcrCamInput" accept="image/*" capture="environment" style="display:none;" onchange="window.handleFormOcrScan(event);">
           <input type="file" id="formOcrFileInput" accept="image/*" style="display:none;" onchange="window.handleFormOcrScan(event);">
-          <div id="formOcrStatus" style="display:none; margin-top:8px; font-size:0.78rem; font-weight:800; color:#1e40af; background:#fff; padding:6px 10px; border-radius:8px; border:1px solid #bfdbfe;"></div>
+          <div id="formOcrStatus" style="display:none; margin-top:10px; font-size:0.8rem; font-weight:800; color:#1e40af; background:#fff; padding:8px 12px; border-radius:8px; border:1px solid #bfdbfe;"></div>
         </div>
         <!-- Member Photo Upload & Live Camera Capture Box (Full Edit & Removal Enabled) -->
         <div class="avatar-preview-box" style="display:flex; align-items:center; gap:16px; background:#f0f7ff; border:1.5px dashed #0284c7; border-radius:14px; padding:12px 14px; margin-bottom:14px;">
@@ -7213,7 +7218,20 @@ function loadLocalData() {
       if (parsed.editPermissions) appState.editPermissions = parsed.editPermissions;
 
       const deletedMems = new Set(appState.deletedMemberIds);
-      appState.members = (parsed.members || []).filter(m => !deletedMems.has(m.id));
+      const demoMemberIds = new Set([
+        'DBYC-2026-SJ01', 'DBYC-2026-JN02', 'DBYC-2026-IN03', 'DBYC-2026-SR04', 'DBYC-2026-SS05', 'DBYC-2026-EL06', 'DBYC-TEST-001'
+      ]);
+      const seenMemberIds = new Set();
+      const uniqueMembers = [];
+      for (const m of (parsed.members || [])) {
+        if (!m || !m.id) continue;
+        if (demoMemberIds.has(m.id)) continue;
+        if (!seenMemberIds.has(m.id)) {
+          seenMemberIds.add(m.id);
+          uniqueMembers.push(m);
+        }
+      }
+      appState.members = uniqueMembers.filter(m => !deletedMems.has(m.id));
       (appState.members || []).forEach(m => {
         if (m && (m.approvalStatus === 'APPROVED' || m.approvedBy || m.membershipStatus === 'ACTIVE' || m.status === 'Active')) {
           m.approvalStatus = 'APPROVED';
@@ -7724,17 +7742,30 @@ function setupMemberFormAutoCalculation() {
       const m = today.getMonth() - birth.getMonth();
       if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
 
-      if (ageInput) ageInput.value = age;
+      if (ageInput && age >= 0) ageInput.value = age;
 
-      let allocatedGroup = 'Sub Juniors Group';
-      if (age >= 6 && age <= 14) allocatedGroup = 'Sub Juniors Group';
-      else if (age >= 15 && age <= 18) allocatedGroup = 'Junior Group';
-      else if (age >= 19 && age <= 25) allocatedGroup = 'Inters Group';
-      else if (age > 25 && age <= 34) allocatedGroup = 'Senior Group';
-      else if (age > 34 && age <= 55) allocatedGroup = 'Super Seniors Group';
-      else if (age >= 56) allocatedGroup = 'Elders Group';
+      // Only auto-suggest group if group has not been explicitly chosen or is default
+      if (groupSelect && (!groupSelect.value || groupSelect.value === 'Sub Juniors Group')) {
+        let allocatedGroup = 'Sub Juniors Group';
+        if (age >= 6 && age <= 14) allocatedGroup = 'Sub Juniors Group';
+        else if (age >= 15 && age <= 18) allocatedGroup = 'Junior Group';
+        else if (age >= 19 && age <= 25) allocatedGroup = 'Inters Group';
+        else if (age > 25 && age <= 34) allocatedGroup = 'Senior Group';
+        else if (age > 34 && age <= 55) allocatedGroup = 'Super Seniors Group';
+        else if (age >= 56) allocatedGroup = 'Elders Group';
+        groupSelect.value = allocatedGroup;
+      }
+    });
+  }
 
-      if (groupSelect) groupSelect.value = allocatedGroup;
+  // If age is entered manually, compute approximate birth year if DOB is empty
+  if (ageInput) {
+    ageInput.addEventListener('input', () => {
+      const ageVal = parseInt(ageInput.value, 10);
+      if (!isNaN(ageVal) && ageVal > 0 && dobInput && !dobInput.value) {
+        const approxYear = new Date().getFullYear() - ageVal;
+        dobInput.value = `${approxYear}-01-01`;
+      }
     });
   }
 }
@@ -10762,9 +10793,15 @@ function setupPassHandlers() {
       }
 
       const mobileVal = document.getElementById('editPassMobile')?.value.trim() || '';
-      m.mobile = mobileVal;
-      m.phone = mobileVal;
-      m.contactNumber = mobileVal;
+      if (mobileVal && !window.isValidPhoneNumber(mobileVal)) {
+        showToast('⚠️ Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9');
+        alert('⚠️ INVALID PHONE NUMBER / தவறான மொபைல் எண்\n\nPlease enter a valid 10-digit Indian mobile number (starting with 6, 7, 8, or 9).\n\nதயவுசெய்து உண்மையான 10 இலக்க மொபைல் எண்ணை உள்ளிடவும்.');
+        return;
+      }
+      const cleanMobileVal = window.cleanPhoneNumber(mobileVal);
+      m.mobile = cleanMobileVal;
+      m.phone = cleanMobileVal;
+      m.contactNumber = cleanMobileVal;
 
       const bloodVal = document.getElementById('editPassBlood')?.value || m.bloodGroup || 'O+ve';
       m.bloodGroup = bloodVal;
@@ -10949,7 +10986,7 @@ function generateIdPass(memberId) {
           </tr>
           <tr>
             <td class="icon-col">⏳</td>
-            <td class="label">Years:</td>
+            <td class="label">DBYC:</td>
             <td class="val val-tenure">${tenure}</td>
           </tr>
           <tr>
@@ -10964,8 +11001,8 @@ function generateIdPass(memberId) {
           </tr>
           <tr>
             <td class="icon-col">🎂</td>
-            <td class="label">DOB:</td>
-            <td class="val val-dob">${cardDob}</td>
+            <td class="label">DOB/Age:</td>
+            <td class="val val-dob">${cardDob}${member.age ? ' (' + member.age + ' Yrs)' : ''}</td>
           </tr>
           <tr>
             <td class="icon-col" style="vertical-align:top;">📍</td>
@@ -11769,10 +11806,10 @@ window.drawOfficial56x86PassToCanvas = async function(m, scale) {
 
   var rows = [
     { icon: '🪪', label: 'ID:', val: member.id || 'N/A', color: '#004b98', boldVal: true, valFont: '900 52px sans-serif' },
-    { icon: '⏳', label: 'Years:', val: tenure, color: '#b45309', boldVal: true, valFont: '900 52px sans-serif' },
+    { icon: '⏳', label: 'DBYC:', val: tenure, color: '#b45309', boldVal: true, valFont: '900 52px sans-serif' },
     { icon: '📞', label: 'CN:', val: (member.mobile || member.phone || member.contactNumber || 'N/A'), color: '#0f172a', boldVal: true, valFont: '900 52px sans-serif' },
     { icon: '🩸', label: 'BG:', val: (member.bloodGroup || member.blood || 'N/A'), color: '#dc2626', boldVal: true, valFont: '900 54px sans-serif' },
-    { icon: '🎂', label: 'DOB:', val: cardDob, color: '#0f172a', boldVal: true, valFont: '900 52px sans-serif' },
+    { icon: '🎂', label: 'DOB/Age:', val: cardDob + (member.age ? ' (' + member.age + ' Yrs)' : ''), color: '#0f172a', boldVal: true, valFont: '900 52px sans-serif' },
     { icon: '📍', label: 'ADD:', val: cardAddress, color: '#1e293b', boldVal: true, multiline: true, valFont: '900 46px sans-serif' },
     { icon: '🎯', label: 'ACTS:', val: cardActivities, color: '#004b98', boldVal: true, multiline: true, valFont: '900 46px sans-serif' }
   ];
@@ -14397,7 +14434,33 @@ window.closeAddMemberModal = function() {
 };
 
 // 3. SAVE MEMBER REGISTRATION FORM DIRECTLY (WITH DIRECTOR APPROVAL)
-window.saveMemberRegistrationFormDirect = function(event) {
+window.
+// ==========================================
+// STRICT TELECOM PHONE NUMBER VALIDATION ENGINE
+// Accept only genuine 10-digit Indian numbers starting with 6,7,8,9
+// Reject dummy sequences, repetitive digits, incomplete numbers
+// ==========================================
+window.cleanPhoneNumber = function(val) {
+  if (!val) return '';
+  let cleaned = String(val).trim().replace(/[^\d+]/g, '');
+  if (cleaned.startsWith('+91')) cleaned = cleaned.slice(3);
+  else if (cleaned.startsWith('91') && cleaned.length === 12) cleaned = cleaned.slice(2);
+  else if (cleaned.startsWith('0') && cleaned.length === 11) cleaned = cleaned.slice(1);
+  return cleaned.replace(/\D/g, '');
+};
+
+window.isValidPhoneNumber = function(val) {
+  const cleaned = window.cleanPhoneNumber(val);
+  // Valid Indian mobile: exactly 10 digits starting with 6, 7, 8, or 9
+  if (!/^[6-9]\d{9}$/.test(cleaned)) return false;
+  // Reject all repetitive dummy digits e.g. 0000000000, 1111111111, 9999999999
+  if (/^(\d)\1{9}$/.test(cleaned)) return false;
+  // Reject common dummy sequences
+  if (cleaned === '1234567890' || cleaned === '0123456789' || cleaned === '9876543219') return false;
+  return true;
+};
+
+saveMemberRegistrationFormDirect = function(event) {
   if (event) event.preventDefault();
 
   const submitBtn = document.getElementById('btnSubmitFormDirect');
@@ -14429,8 +14492,10 @@ window.saveMemberRegistrationFormDirect = function(event) {
     document.getElementById('formName')?.focus();
     return;
   }
-  if (!mobile || mobile.length < 8) {
-    showToast('⚠️ Please enter valid mobile number (தொடர்பு எண்)');
+  const cleanMobile = window.cleanPhoneNumber(mobile);
+  if (!mobile || !window.isValidPhoneNumber(mobile)) {
+    showToast('⚠️ செல்லுபடியாகும் 10 இலக்க மொபைல் எண்ணை உள்ளிடவும் (Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9)');
+    alert('⚠️ INVALID PHONE NUMBER / தவறான மொபைல் எண்\n\nPlease enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9.\n\nIncomplete, dummy, or repetitive numbers (e.g. 1111111111, 9999999999, 1234567890) are strictly rejected.\n\nதயவுசெய்து உண்மையான 10 இலக்க மொபைல் எண்ணை உள்ளிடவும்.');
     document.getElementById('formMobile')?.focus();
     return;
   }
@@ -14856,9 +14921,12 @@ function renderMembersRegistry() {
 
                 <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
           ${isDirector ? `
-            <!-- Director Only Renewal Controls: Mark Renewed (+1 Yr) or Mark Not Renewed -->
-            <button type="button" class="btn-dbyc-primary" style="background:${validity.isActive && m.renewalStatus !== 'NOT_RENEWED' ? '#0284c7' : '#16a34a'}; padding:6px 11px; font-size:0.75rem; font-weight:800; border-radius:8px; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 6px rgba(0,0,0,0.15);" onclick="window.toggleMemberRenewalStatus('${m.id}')" title="Director / Asst Director: Mark as Renewed (+1 Yr) or Not Renewed">
-              ${validity.isActive && m.renewalStatus !== 'NOT_RENEWED' ? '🔄 Mark Not Renewed' : '⚡ Mark Renewed (+1 Yr)'}
+            <!-- Director & Asst Director: Both Renewal Options Side-by-Side -->
+            <button type="button" class="btn-dbyc-primary" style="background:${validity.isActive && m.renewalStatus !== 'NOT_RENEWED' ? '#15803d' : '#22c55e'}; color:#ffffff; padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:8px; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 6px rgba(0,0,0,0.15); border:${validity.isActive && m.renewalStatus !== 'NOT_RENEWED' ? '2px solid #86efac' : 'none'}; cursor:pointer;" onclick="window.markMemberAsRenewed('${m.id}')" title="Director / Asst Director: Mark as Renewed (+1 Yr) / புதுப்பிக்கப்பட்டது">
+              ⚡ ${validity.isActive && m.renewalStatus !== 'NOT_RENEWED' ? '✓ Renewed (+1 Yr)' : 'Mark Renewed (+1 Yr)'}
+            </button>
+            <button type="button" class="btn-dbyc-secondary" style="background:${!validity.isActive || m.renewalStatus === 'NOT_RENEWED' ? '#b91c1c' : '#ffffff'}; color:${!validity.isActive || m.renewalStatus === 'NOT_RENEWED' ? '#ffffff' : '#b91c1c'}; border:1.5px solid #dc2626; padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:8px; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 6px rgba(0,0,0,0.1); border:${!validity.isActive || m.renewalStatus === 'NOT_RENEWED' ? '2px solid #fca5a5' : '1.5px solid #dc2626'}; cursor:pointer;" onclick="window.markMemberAsNotRenewed('${m.id}')" title="Director / Asst Director: Mark as Not Renewed / Expired / புதுப்பிக்கப்படவில்லை">
+              🔴 ${!validity.isActive || m.renewalStatus === 'NOT_RENEWED' ? '✓ Not Renewed (Expired)' : 'Mark Not Renewed'}
             </button>
           ` : ''}
           ${(typeof window.canEdit === 'function' && window.canEdit('members')) ? `
@@ -22089,41 +22157,93 @@ window.checkRegistrationSimilarityAndDuplicates = function() {
 };
 // 4B. DIRECTOR & ASST. DIRECTOR EXCLUSIVE RENEWAL CONTROLS
 // ==============================================================================
-window.toggleMemberRenewalStatus = function(memberId) {
+window.markMemberAsRenewed = function(memberId) {
   if (!memberId) return;
   if (!isDirectorOrAsstDirector()) {
-    showToast('🔒 Access Denied: Only Rev. Fr. Director and Assistant Director can mark members as renewed or not renewed.');
-    alert('🔒 RESTRICTED ACTION / அனுமதி மறுக்கப்பட்டது\n\nOnly Rev. Fr. Director and Assistant Director have authority to mark members as renewed or not renewed.\n\nLeaders have profile editing permissions only.\n\nபுதுப்பித்தல் நிலை மாற்றும் அதிகாரம் இயக்குநர் மற்றும் உதவி இயக்குநருக்கு மட்டுமே உண்டு.');
+    showToast('🔒 Access Denied: Only Rev. Fr. Director and Assistant Director can mark members as renewed.');
+    alert('🔒 RESTRICTED ACTION / அனுமதி மறுக்கப்பட்டது\n\nOnly Rev. Fr. Director and Assistant Director have authority to mark members as renewed or extend membership validity.\n\nLeaders have profile editing permissions only.\n\nபுதுப்பித்தல் அதிகாரம் இயக்குநர் மற்றும் உதவி இயக்குநருக்கு மட்டுமே உண்டு.');
     return;
   }
   const members = (window.appState && window.appState.members) ? window.appState.members : [];
   const m = members.find(function(x) { return x.id === memberId; });
   if (!m) return;
 
+  const today = new Date();
+  const todayStr = today.toISOString().split('T')[0];
+  const nextYear = new Date(today);
+  nextYear.setFullYear(nextYear.getFullYear() + 1);
+  const nextYearStr = nextYear.toISOString().split('T')[0];
+
+  m.renewalDate = todayStr;
+  m.expiryDate = nextYearStr;
+  m.membershipStatus = 'ACTIVE';
+  m.renewalStatus = 'RENEWED';
+  m.approvalStatus = 'APPROVED';
+  m.status = 'APPROVED';
+  m.approvedBy = (window.appState.currentUser ? window.appState.currentUser.name : 'Rev. Fr. Director, SDB');
+  m.approvedAt = new Date().toISOString();
+  m.yearsInDbyc = (parseInt(m.yearsInDbyc, 10) || 1) + 1;
+  m.updatedAt = new Date().toISOString();
+
+  saveLocalData();
+  if (typeof renderMembersRegistry === 'function') renderMembersRegistry();
+  if (typeof generateIdPass === 'function' && currentViewingPassMemberId === memberId) {
+    generateIdPass(memberId);
+  }
+  if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+    window.DbycCloud.pushToCloud(false);
+  }
+
+  const expFormatted = nextYear.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  showToast(`🎉 ${m.name} உறுப்பினர் பதிவு ${expFormatted} வரை (+1 வருடம்) வெற்றிகரமாக புதுப்பிக்கப்பட்டது!`);
+  alert(`⚡ MEMBERSHIP RENEWED / உறுப்பினர் பதிவு புதுப்பிக்கப்பட்டது\n\nMember: ${m.name} (${m.id})\nStatus: ACTIVE / RENEWED (+1 Year)\nNew Expiry Date: ${expFormatted}\nAuthorized by: Rev. Fr. Director, SDB`);
+};
+
+window.markMemberAsNotRenewed = function(memberId) {
+  if (!memberId) return;
+  if (!isDirectorOrAsstDirector()) {
+    showToast('🔒 Access Denied: Only Rev. Fr. Director and Assistant Director can mark members as not renewed.');
+    alert('🔒 RESTRICTED ACTION / அனுமதி மறுக்கப்பட்டது\n\nOnly Rev. Fr. Director and Assistant Director have authority to mark members as not renewed.\n\nLeaders have profile editing permissions only.\n\nபுதுப்பித்தல் நிலை மாற்றும் அதிகாரம் இயக்குநர் மற்றும் உதவி இயக்குநருக்கு மட்டுமே உண்டு.');
+    return;
+  }
+  const members = (window.appState && window.appState.members) ? window.appState.members : [];
+  const m = members.find(function(x) { return x.id === memberId; });
+  if (!m) return;
+
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+  m.expiryDate = yesterdayStr;
+  m.renewalStatus = 'NOT_RENEWED';
+  m.membershipStatus = 'EXPIRED';
+  m.updatedAt = new Date().toISOString();
+
+  saveLocalData();
+  if (typeof renderMembersRegistry === 'function') renderMembersRegistry();
+  if (typeof generateIdPass === 'function' && currentViewingPassMemberId === memberId) {
+    generateIdPass(memberId);
+  }
+  if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+    window.DbycCloud.pushToCloud(false);
+  }
+  showToast(`⚠️ ${m.name} marked as NOT RENEWED / EXPIRED by Director.`);
+  alert(`🔴 MEMBERSHIP NOT RENEWED / புதுப்பிக்கப்படவில்லை\n\nMember: ${m.name} (${m.id})\nStatus: EXPIRED / NOT RENEWED\nExpiry Date: ${yesterdayStr}\nAuthorized by: Rev. Fr. Director, SDB`);
+};
+
+window.toggleMemberRenewalStatus = function(memberId) {
+  if (!memberId) return;
+  const members = (window.appState && window.appState.members) ? window.appState.members : [];
+  const m = members.find(function(x) { return x.id === memberId; });
+  if (!m) return;
   const validity = (typeof window.calculateMembershipValidity === 'function')
     ? window.calculateMembershipValidity(m)
     : { isActive: true };
 
   if (validity.isActive && m.renewalStatus !== 'NOT_RENEWED') {
-    // Mark as NOT RENEWED
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    m.expiryDate = yesterday.toISOString().split('T')[0];
-    m.renewalStatus = 'NOT_RENEWED';
-    m.membershipStatus = 'EXPIRED';
-    m.updatedAt = new Date().toISOString();
-    saveLocalData();
-    if (typeof renderMembersRegistry === 'function') renderMembersRegistry();
-    if (typeof generateIdPass === 'function' && currentViewingPassMemberId === memberId) {
-      generateIdPass(memberId);
-    }
-    if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
-      window.DbycCloud.pushToCloud(false);
-    }
-    showToast('⚠️ ' + m.name + ' marked as NOT RENEWED / EXPIRED by Director.');
+    window.markMemberAsNotRenewed(memberId);
   } else {
-    // Mark as RENEWED (+1 Year)
-    window.quickRenewMember(memberId);
+    window.markMemberAsRenewed(memberId);
   }
 };
 // 4C. SCAN & UPLOAD REGISTRATION FORM CONTROLS & LIGHTBOX VIEWER

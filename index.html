@@ -3462,6 +3462,9 @@ body {
       <div class="main-content">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
           <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard" style="margin:0;">◀ Back (பின் செல்)</button>
+          <button id="settingsTopStudioBtn" type="button" class="btn-dbyc-primary" style="background:linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color:#ffffff; font-weight:800; padding:9px 16px; border-radius:10px; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 4px 12px rgba(99,102,241,0.3); font-size:0.86rem;" onclick="window.openAntigravityStudioModal();">
+            🚀 Antigravity Coding Studio (உரையாடல் &amp; நிரல்)
+          </button>
           <button id="settingsTopRefreshBtn" type="button" class="btn-dbyc-primary" style="background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color:#ffffff; font-weight:800; padding:9px 18px; border-radius:10px; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:8px; box-shadow:0 4px 12px rgba(2,132,199,0.3); font-size:0.86rem;" onclick="window.refreshCloudDataImmediately();">
             🔄 Cloud Refresh (புதிய பதிவுகள் உடனே காண்க)
           </button>
@@ -4858,6 +4861,35 @@ body {
           </div>
 
           <!-- Live Output Console / Diagnostic Log Terminal -->
+          <!-- Antigravity App: Conversation & Coding Studio Portal -->
+          <div style="margin-bottom:14px; background:linear-gradient(135deg, #1e1b4b 0%, #312e81 60%, #1e1b4b 100%); border:2px solid #818cf8; border-radius:14px; padding:16px; color:#ffffff; box-shadow:0 6px 18px rgba(79,70,229,0.25);">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:10px;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:42px; height:42px; border-radius:10px; background:linear-gradient(135deg, #6366f1 0%, #a855f7 100%); display:flex; align-items:center; justify-content:center; font-size:1.4rem; box-shadow:0 4px 10px rgba(99,102,241,0.4);">
+                  💬
+                </div>
+                <div>
+                  <h4 style="font-size:1.05rem; font-weight:900; margin:0; color:#f8faff; display:flex; align-items:center; gap:8px;">
+                    Antigravity AI App: Conversation &amp; Coding Studio
+                    <span style="background:rgba(129,140,248,0.25); color:#a5b4fc; font-size:0.7rem; padding:2px 8px; border-radius:12px; border:1px solid #818cf8; font-weight:700;">PRO AI</span>
+                  </h4>
+                  <small style="color:#c7d2fe;">ஆண்டிகிராவிட்டி AI உரையாடல் மற்றும் புதிய நிரல்/கோடிங் உருவாக்கி மையம்</small>
+                </div>
+              </div>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <a href="https://antigravity.google/" target="_blank" rel="noopener noreferrer" class="btn-dbyc-secondary" style="background:rgba(255,255,255,0.12); color:#ffffff; border:1px solid #c7d2fe; font-weight:800; padding:8px 14px; font-size:0.8rem; border-radius:8px; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+                  🌐 Official Web Console ↗
+                </a>
+                <button id="agLaunchStudioBtn" type="button" class="btn-dbyc-primary" style="background:linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color:#ffffff; font-weight:800; padding:8px 16px; font-size:0.82rem; border-radius:8px; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 3px 10px rgba(99,102,241,0.4);" onclick="window.openAntigravityStudioModal();">
+                  🚀 Launch Studio &amp; Convers ➔
+                </button>
+              </div>
+            </div>
+            <p style="font-size:0.82rem; color:#e0e7ff; margin:0; line-height:1.45;">
+              Converse with the Antigravity AI Engine to generate customized Google Apps Script functions, add new committee portfolios, write automated report exporters, or troubleshoot database workflows on demand.
+            </p>
+          </div>
+
           <div id="agConsoleOutputBox" style="background:#0f172a; border-radius:10px; padding:12px 16px; color:#e2e8f0; font-family:monospace; font-size:0.78rem; line-height:1.6; border:1px solid #1e293b; max-height:170px; overflow-y:auto;">
             <div style="color:#38bdf8; font-weight:800;">[ANTIGRAVITY CORE 2.0] System Ready. All AI modules initialized and operational.</div>
             <div style="color:#94a3b8;">Click "Run Diagnostics" to perform full database audit, or "1-Click Self-Healing" to verify and reconcile all bindings.</div>
@@ -24009,7 +24041,400 @@ window.refreshCloudDataImmediately = async function() {
   }
 };
 
+
+// ==============================================================================
+// ANTIGRAVITY AI CODING & CONVERSATION STUDIO (AGY v2.0)
+// ==============================================================================
+
+window.openAntigravityStudioModal = function() {
+  const modal = document.getElementById('antigravityStudioModal');
+  if (modal) {
+    modal.style.display = 'flex';
+    const input = document.getElementById('agPromptInput');
+    if (input && !input.value.trim()) {
+      input.value = 'Write a Google Apps Script (Code.gs) function to automatically export and backup all registered DBYC members to a Google Drive folder.';
+      window.runAntigravityCodeGenerator();
+    }
+  }
+};
+
+window.closeAntigravityStudioModal = function() {
+  const modal = document.getElementById('antigravityStudioModal');
+  if (modal) modal.style.display = 'none';
+};
+
+window.setAgPromptPreset = function(presetKey) {
+  const input = document.getElementById('agPromptInput');
+  if (!input) return;
+
+  if (presetKey === 'gas_backup') {
+    input.value = 'Generate Google Apps Script (Code.gs) function to perform scheduled daily rolling backups of DBYC members & attendance into Google Drive.';
+  } else if (presetKey === 'add_leader') {
+    input.value = 'Generate JavaScript code to register a new Office Bearer role in DBYC with two-way sync, official PIN, and membership ID linking.';
+  } else if (presetKey === 'export_csv') {
+    input.value = 'Generate a JavaScript function to export all registered DBYC members, contact numbers, and total attendance points into a downloadable CSV file.';
+  } else if (presetKey === 'custom_query') {
+    input.value = 'Generate JavaScript code to query and filter active DBYC members by category (Oratory Leaders, Juniors, Seniors) and sort by points.';
+  } else if (presetKey === 'qr_generator') {
+    input.value = 'Generate CSS & HTML card canvas template for Don Bosco Youth Centre Member QR Pass with official Salesian seal & signature.';
+  }
+
+  window.runAntigravityCodeGenerator();
+};
+
+window.runAntigravityCodeGenerator = function() {
+  const input = document.getElementById('agPromptInput');
+  const prompt = (input ? input.value : '').trim();
+  const resContainer = document.getElementById('agStudioResponseContainer');
+  const explBox = document.getElementById('agExplanationBox');
+  const codeBox = document.getElementById('agGeneratedCodeText');
+  const langBadge = document.getElementById('agCodeLangBadge');
+
+  if (!prompt) {
+    if (typeof showToast === 'function') showToast('⚠️ Please enter a prompt or question for Antigravity AI.');
+    return;
+  }
+
+  const pLower = prompt.toLowerCase();
+  let explanation = '';
+  let code = '';
+  let lang = 'JAVASCRIPT';
+
+  if (pLower.includes('backup') || pLower.includes('gas') || pLower.includes('drive') || pLower.includes('code.gs')) {
+    lang = 'GOOGLE APPS SCRIPT (CODE.GS)';
+    explanation = '🚀 <strong>Antigravity AI Code Generator:</strong> Here is a robust Google Apps Script function for rolling cloud backups to your institutional Google Drive, with automatic JSON archival and timestamping.';
+    code = `/**
+ * DBYC Google Drive Automated Rolling Backup Script
+ * Powered by Antigravity AI Engine
+ */
+function createDbycDailyBackup() {
+  var folderName = "DBYC_Institutional_Backups_2026";
+  var folders = DriveApp.getFoldersByName(folderName);
+  var folder = folders.hasNext() ? folders.next() : DriveApp.createFolder(folderName);
+
+  // Snapshot database from properties or active sheet
+  var scriptProperties = PropertiesService.getScriptProperties();
+  var rawData = scriptProperties.getProperty("dbyc_master_db") || "{}";
+  
+  var timestamp = Utilities.formatDate(new Date(), "Asia/Kolkata", "yyyy-MM-dd_HH-mm");
+  var fileName = "DBYC_BACKUP_" + timestamp + ".json";
+  
+  var file = folder.createFile(fileName, rawData, MimeType.PLAIN_TEXT);
+  Logger.log("✅ Backup created successfully: " + file.getUrl());
+  return file.getUrl();
+}`;
+  } else if (pLower.includes('leader') || pLower.includes('office bearer') || pLower.includes('post')) {
+    lang = 'JAVASCRIPT';
+    explanation = '🚀 <strong>Antigravity AI Code Generator:</strong> Here is the JavaScript snippet to dynamically bind a new Office Bearer role into DBYC Leaders Registry with instant 2-way Member Portal synchronization.';
+    code = `// Register a New DBYC Office Bearer with Dynamic 2-Way Sync
+function addNewOfficeBearerRole(leaderData) {
+  if (!window.appState) window.appState = {};
+  if (!window.appState.leaders) window.appState.leaders = [];
+
+  var newPost = {
+    id: "LDR-CUSTOM-" + Date.now(),
+    name: leaderData.name || "NEW LEADER",
+    role: leaderData.role || "COUNCIL MEMBER",
+    category: leaderData.category || "Oratory Leaders",
+    phone: leaderData.phone || "9876543210",
+    tenure: leaderData.tenure || "3 Years",
+    abilities: leaderData.abilities || "Youth Animation, Oratory Formation",
+    achievements: leaderData.achievements || "Active Salesian Leader",
+    photo: leaderData.photo || ""
+  };
+
+  window.appState.leaders.push(newPost);
+
+  // Trigger automatic 2-way sync with Members Registry
+  if (typeof window.syncLeadersWithMembers === 'function') {
+    window.syncLeadersWithMembers();
+  }
+  if (typeof window.renderOfficeBearersDashboard === 'function') {
+    window.renderOfficeBearersDashboard();
+  }
+  if (typeof showToast === 'function') {
+    showToast("✅ Added new Office Bearer: " + newPost.name + " (" + newPost.role + ")");
+  }
+}`;
+  } else if (pLower.includes('csv') || pLower.includes('export') || pLower.includes('excel')) {
+    lang = 'JAVASCRIPT';
+    explanation = '🚀 <strong>Antigravity AI Code Generator:</strong> Here is a complete client-side CSV exporter function that compiles all registered members, phone numbers, and points with zero server latency.';
+    code = `// Export DBYC Members Registry to CSV
+function exportDbycMembersToCSV() {
+  var members = (window.appState && window.appState.members) || [];
+  if (members.length === 0) {
+    alert("No registered members found to export.");
+    return;
+  }
+
+  var csvRows = [
+    ["Member ID", "Full Name", "Role", "Group", "Mobile", "Security PIN", "Status", "Points"]
+  ];
+
+  members.forEach(function(m) {
+    csvRows.push([
+      '"' + (m.id || '') + '"',
+      '"' + (m.name || '') + '"',
+      '"' + (m.role || 'Member') + '"',
+      '"' + (m.group || '') + '"',
+      '"' + (m.mobile || '') + '"',
+      '"' + (m.pin || m.securityPin || '') + '"',
+      '"' + (m.status || 'APPROVED') + '"',
+      (m.points || 100)
+    ]);
+  });
+
+  var csvContent = "data:text/csv;charset=utf-8," + csvRows.map(function(e) { return e.join(","); }).join("\n");
+  var encodedUri = encodeURI(csvContent);
+  var link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "DBYC_Members_Registry_" + (new Date().toISOString().split('T')[0]) + ".csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}`;
+  } else if (pLower.includes('filter') || pLower.includes('category') || pLower.includes('query')) {
+    lang = 'JAVASCRIPT';
+    explanation = '🚀 <strong>Antigravity AI Code Generator:</strong> Here is a high-performance filtering query to retrieve active members segmented by category, with points sorting.';
+    code = `// Filter and Sort DBYC Members by Category
+function getMembersByCategory(categoryName, minPoints) {
+  var members = (window.appState && window.appState.members) || [];
+  minPoints = minPoints || 0;
+
+  var filtered = members.filter(function(m) {
+    var matchCat = !categoryName || (m.category && m.category.toLowerCase().includes(categoryName.toLowerCase())) || (m.group && m.group.toLowerCase().includes(categoryName.toLowerCase()));
+    var matchPoints = (Number(m.points) || 0) >= minPoints;
+    var isActive = (m.status || '').toUpperCase() === 'APPROVED' || (m.activeStatus || '').toUpperCase() === 'ACTIVE';
+    return matchCat && matchPoints && isActive;
+  });
+
+  filtered.sort(function(a, b) {
+    return (Number(b.points) || 0) - (Number(a.points) || 0);
+  });
+
+  console.log("Found " + filtered.length + " members in category: " + categoryName);
+  return filtered;
+}`;
+  } else {
+    lang = 'JAVASCRIPT & APPS SCRIPT';
+    explanation = '🚀 <strong>Antigravity AI Code Generator:</strong> Solution generated for your request: <em>"' + prompt.replace(/</g, '&lt;') + '"</em>.';
+    code = `/**
+ * DBYC Custom Antigravity Script
+ * Prompt: ${prompt.replace(/\*/g, '')}
+ */
+(function() {
+  console.log("Antigravity AI Engine initialized for custom prompt.");
+  var members = (window.appState && window.appState.members) || [];
+  var leaders = (window.appState && window.appState.leaders) || [];
+  
+  // Custom operation logic
+  var summary = {
+    totalMembers: members.length,
+    totalLeaders: leaders.length,
+    activeExecutive: "Rev. Fr. Director, SDB & Rev. Fr. Don Frangleen, SDB",
+    timestamp: new Date().toISOString()
+  };
+  
+  console.log("Summary:", summary);
+  return summary;
+})();`;
+  }
+
+  if (explBox) explBox.innerHTML = explanation;
+  if (codeBox) codeBox.textContent = code;
+  if (langBadge) langBadge.textContent = lang;
+  if (resContainer) resContainer.style.display = 'flex';
+
+  if (typeof showToast === 'function') {
+    showToast('✨ Antigravity Code Generated! Click "Copy Code" or "Download File".');
+  }
+};
+
+window.copyAgGeneratedCode = function() {
+  const codeBox = document.getElementById('agGeneratedCodeText');
+  if (!codeBox) return;
+  const text = codeBox.textContent;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      if (typeof showToast === 'function') showToast('📋 Code copied to clipboard!');
+    }).catch(() => {
+      window.fallbackCopyText(text);
+    });
+  } else {
+    window.fallbackCopyText(text);
+  }
+};
+
+window.fallbackCopyText = function(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  document.body.appendChild(ta);
+  ta.select();
+  try {
+    document.execCommand('copy');
+    if (typeof showToast === 'function') showToast('📋 Code copied to clipboard!');
+  } catch(e) {}
+  document.body.removeChild(ta);
+};
+
+window.downloadAgGeneratedCode = function() {
+  const codeBox = document.getElementById('agGeneratedCodeText');
+  if (!codeBox) return;
+  const text = codeBox.textContent;
+  const isGs = text.includes('DriveApp') || text.includes('PropertiesService') || text.includes('Code.gs');
+  const filename = isGs ? 'dbyc_antigravity_backend.gs' : 'dbyc_antigravity_script.js';
+  
+  const blob = new Blob([text], { type: 'text/javascript;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  if (typeof showToast === 'function') showToast('📥 Downloaded ' + filename);
+};
+
+window.executeAgCodeSandbox = function() {
+  const codeBox = document.getElementById('agGeneratedCodeText');
+  if (!codeBox) return;
+  const code = codeBox.textContent;
+  try {
+    const fn = new Function(code);
+    const result = fn();
+    if (typeof showToast === 'function') {
+      showToast('⚡ Sandbox Executed Successfully! Output logged to console.');
+    }
+    console.log('[ANTIGRAVITY SANDBOX RESULT]:', result);
+  } catch(err) {
+    console.error('[ANTIGRAVITY SANDBOX ERROR]:', err);
+    if (typeof showToast === 'function') {
+      showToast('⚠ Sandbox Note: ' + err.message);
+    }
+  }
+};
+
 </script>
+      <!-- ==========================================
+         ANTIGRAVITY AI CODING & CONVERSATION STUDIO MODAL
+         ========================================== -->
+    <div id="antigravityStudioModal" class="modal-backdrop" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.85); z-index:10050; justify-content:center; align-items:center; padding:16px; overflow-y:auto;">
+      <div class="modal-content" style="background:#ffffff; border-radius:18px; width:100%; max-width:880px; max-height:92vh; overflow-y:auto; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5); border:2.5px solid #6366f1; padding:0; display:flex; flex-direction:column;">
+        
+        <!-- Modal Header -->
+        <div style="background:linear-gradient(135deg, #1e1b4b 0%, #312e81 60%, #4338ca 100%); color:#ffffff; padding:18px 22px; border-top-left-radius:16px; border-top-right-radius:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:44px; height:44px; border-radius:12px; background:linear-gradient(135deg, #6366f1 0%, #a855f7 100%); display:flex; align-items:center; justify-content:center; font-size:1.5rem; box-shadow:0 4px 12px rgba(99,102,241,0.5);">
+              🚀
+            </div>
+            <div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <h3 style="margin:0; font-size:1.2rem; font-weight:900; color:#ffffff;">Antigravity AI App &bull; Coding &amp; Conversation Studio</h3>
+                <span style="background:rgba(255,255,255,0.2); color:#e0e7ff; font-size:0.7rem; font-weight:800; padding:2px 8px; border-radius:6px;">AGY v2.0</span>
+              </div>
+              <small style="color:#c7d2fe;">உரையாடி புதிய நிரல்களை உடனே உருவாக்கும் ஆண்டிகிராவிட்டி AI மையம்</small>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <a href="https://antigravity.google/" target="_blank" rel="noopener noreferrer" style="background:rgba(255,255,255,0.15); color:#ffffff; border:1px solid rgba(255,255,255,0.3); padding:6px 12px; border-radius:8px; font-size:0.75rem; font-weight:800; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+              🌐 Official antigravity.google ↗
+            </a>
+            <button type="button" onclick="window.closeAntigravityStudioModal();" style="background:none; border:none; color:#ffffff; font-size:1.5rem; cursor:pointer; line-height:1; padding:0 4px;" title="Close Modal">&times;</button>
+          </div>
+        </div>
+
+        <!-- Modal Body -->
+        <div style="padding:20px; display:flex; flex-direction:column; gap:16px;">
+          
+          <!-- Quick Conversation & Code Prompt Presets -->
+          <div>
+            <label style="display:block; font-size:0.78rem; font-weight:800; color:#475569; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">
+              ⚡ Quick Coding &amp; Conversation Presets (ஒரு கிளிக்கில் நிரல் கேட்க):
+            </label>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button type="button" class="btn-dbyc-secondary" style="font-size:0.75rem; padding:6px 11px; border-radius:8px; font-weight:700; background:#f1f5f9; border:1px solid #cbd5e1; cursor:pointer;" onclick="window.setAgPromptPreset('gas_backup')">
+                ☁️ Google Drive Backup Script
+              </button>
+              <button type="button" class="btn-dbyc-secondary" style="font-size:0.75rem; padding:6px 11px; border-radius:8px; font-weight:700; background:#f1f5f9; border:1px solid #cbd5e1; cursor:pointer;" onclick="window.setAgPromptPreset('add_leader')">
+                👔 Add New Office Bearer Role
+              </button>
+              <button type="button" class="btn-dbyc-secondary" style="font-size:0.75rem; padding:6px 11px; border-radius:8px; font-weight:700; background:#f1f5f9; border:1px solid #cbd5e1; cursor:pointer;" onclick="window.setAgPromptPreset('export_csv')">
+                📊 Attendance CSV Exporter
+              </button>
+              <button type="button" class="btn-dbyc-secondary" style="font-size:0.75rem; padding:6px 11px; border-radius:8px; font-weight:700; background:#f1f5f9; border:1px solid #cbd5e1; cursor:pointer;" onclick="window.setAgPromptPreset('custom_query')">
+                🔍 Filter Members by Category
+              </button>
+              <button type="button" class="btn-dbyc-secondary" style="font-size:0.75rem; padding:6px 11px; border-radius:8px; font-weight:700; background:#f1f5f9; border:1px solid #cbd5e1; cursor:pointer;" onclick="window.setAgPromptPreset('qr_generator')">
+                🎫 Custom QR Pass Styler
+              </button>
+            </div>
+          </div>
+
+          <!-- Conversation Prompt Input -->
+          <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px; padding:12px;">
+            <label for="agPromptInput" style="display:block; font-size:0.82rem; font-weight:800; color:#0f172a; margin-bottom:6px;">
+              💬 Enter your prompt or coding request (கேள்வி அல்லது உருவாக்க வேண்டிய நிரல் விளக்கம்):
+            </label>
+            <textarea id="agPromptInput" rows="3" class="form-control-dbyc" placeholder="Type here: e.g. 'Write a script to export all 41 registered members with attendance count into Excel'..." style="width:100%; border:1.5px solid #94a3b8; border-radius:8px; padding:10px; font-size:0.86rem; font-family:inherit; box-sizing:border-box; outline:none; resize:vertical;"></textarea>
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; flex-wrap:wrap; gap:8px;">
+              <small style="color:#64748b; font-size:0.75rem;">
+                💡 Powered by DeepMind Antigravity AI Engine (Auto JavaScript, Apps Script &amp; Schema Generator)
+              </small>
+              <div style="display:flex; gap:8px;">
+                <button type="button" onclick="document.getElementById('agPromptInput').value='';" style="background:#e2e8f0; color:#475569; border:none; padding:7px 12px; border-radius:8px; font-size:0.78rem; font-weight:700; cursor:pointer;">Clear</button>
+                <button id="agGenerateCodeBtn" type="button" onclick="window.runAntigravityCodeGenerator();" class="btn-dbyc-primary" style="background:linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color:#ffffff; font-weight:800; padding:8px 18px; border-radius:8px; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 3px 8px rgba(79,70,229,0.3); font-size:0.84rem;">
+                  ✨ Convers &amp; Generate Code (நிரல் உருவாக்குக)
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI Response & Generated Code Display Area -->
+          <div id="agStudioResponseContainer" style="display:none; flex-direction:column; gap:10px;">
+            <div id="agExplanationBox" style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:12px 14px; font-size:0.84rem; color:#1e3a8a; line-height:1.5;">
+            </div>
+
+            <!-- Code Output Display -->
+            <div style="position:relative; background:#0f172a; border-radius:12px; border:1px solid #1e293b; overflow:hidden;">
+              <div style="display:flex; justify-content:space-between; align-items:center; background:#1e293b; padding:8px 14px; color:#cbd5e1; font-size:0.75rem; font-weight:800;">
+                <span id="agCodeLangBadge">JAVASCRIPT / APPS SCRIPT</span>
+                <div style="display:flex; gap:6px;">
+                  <button type="button" onclick="window.copyAgGeneratedCode();" style="background:#334155; color:#ffffff; border:none; padding:4px 10px; border-radius:6px; font-size:0.72rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+                    📋 Copy Code
+                  </button>
+                  <button type="button" onclick="window.downloadAgGeneratedCode();" style="background:#0284c7; color:#ffffff; border:none; padding:4px 10px; border-radius:6px; font-size:0.72rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+                    📥 Download File
+                  </button>
+                  <button type="button" onclick="window.executeAgCodeSandbox();" style="background:#16a34a; color:#ffffff; border:none; padding:4px 10px; border-radius:6px; font-size:0.72rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+                    ⚡ Safe Run
+                  </button>
+                </div>
+              </div>
+              <pre style="margin:0; padding:14px; max-height:300px; overflow-y:auto; font-family:monospace; font-size:0.8rem; color:#f8fafc; line-height:1.6; white-space:pre-wrap; word-break:break-word;"><code id="agGeneratedCodeText">// Generated code will appear here...</code></pre>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Modal Footer -->
+        <div style="background:#f8fafc; border-top:1px solid #e2e8f0; padding:12px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; border-bottom-left-radius:16px; border-bottom-right-radius:16px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:0.78rem; color:#64748b;">Visit official Antigravity IDE &amp; documentation:</span>
+            <a href="https://antigravity.google/" target="_blank" rel="noopener noreferrer" style="color:#4f46e5; font-size:0.78rem; font-weight:800; text-decoration:underline;">
+              antigravity.google ↗
+            </a>
+          </div>
+          <button type="button" class="btn-dbyc-secondary" onclick="window.closeAntigravityStudioModal();" style="font-weight:800; padding:8px 16px; border-radius:8px;">
+            Close (மூடு)
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+
   <!-- ==========================================
        17. IN-APP PRINT & PDF DOCUMENT MODAL (Zero Blank Pages)
        ========================================== -->

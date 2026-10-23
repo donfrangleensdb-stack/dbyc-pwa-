@@ -2799,7 +2799,7 @@ body {
                   <div style="font-size:0.68rem; color:#64748b; font-weight:600;">உதவி இயக்குநர்</div>
                 </div>
               </div>
-              <div style="font-size:0.69rem; color:#475569; font-weight:700;">Rev. Fr. Asst. Dir, SDB</div>
+              <div style="font-size:0.69rem; color:#475569; font-weight:700;">Rev. Fr. Don Frangleen, SDB</div>
               <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px; font-size:0.68rem;">
                 
                 <span class="role-check-mark" style="display:none; color:#0284c7; font-weight:900;">✓</span>
@@ -2842,7 +2842,7 @@ body {
           <!-- Role Select Dropdown (Syncs with Persona Cards) -->
           <select id="loginRoleSelect" onchange="window.selectLoginPersona(this.value);" style="width:100%; padding:9px 12px; border:1.5px solid #cbd5e1; border-radius:10px; font-size:0.84rem; font-weight:700; color:#0f172a; background:#f8fafc; outline:none; box-sizing:border-box; cursor:pointer; margin-bottom:12px;">
             <option value="DIRECTOR" selected>🛡️ Rev. Fr. Director, SDB &bull; Master Administration</option>
-            <option value="ASST_DIRECTOR">👔 Rev. Fr. Asst. Director, SDB &bull; Office & Operations</option>
+            <option value="ASST_DIRECTOR">👔 Rev. Fr. Don Frangleen, SDB &bull; Assistant Director</option>
             <option value="LEADER">⚡ Youth Leaders / Staff In-Charge &bull; Attendance & Groups</option>
             <option value="MEMBER">👤 DBYC Youth Member &bull; ID Pass & Activities</option>
           </select>
@@ -3939,7 +3939,7 @@ body {
             </div>
             <div>
               <label style="font-size:0.75rem; font-weight:700; color:#475569;">Asst. Director Signatory:</label>
-              <input type="text" id="liveCertAsstDirector" class="form-control-dbyc" value="Rev. Fr. Asst. Director, SDB">
+              <input type="text" id="liveCertAsstDirector" class="form-control-dbyc" value="Rev. Fr. Don Frangleen, SDB">
             </div>
           </div>
         </div>
@@ -4396,9 +4396,6 @@ body {
               <div style="display:flex; align-items:center; gap:8px;">
                 <h3 style="font-size:1.25rem; font-weight:900;">⭐ இயக்குநர் & உதவி இயக்குநர் ஒப்புதல் மையம்</h3>
                 <span id="qualPendingHeaderBadge" class="qualification-badge-pending" style="background:#ffffff; color:#c2410c;">0 PENDING</span>
-                <button type="button" id="btnLiveRefreshQualDesk" onclick="window.refreshQualificationDeskLive(this);" style="background:rgba(255,255,255,0.25); border:1.5px solid rgba(255,255,255,0.6); color:#fff; font-weight:800; font-size:0.75rem; padding:4px 10px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; margin-left:8px;">
-                  <span>🔄</span> <span>Live Sync</span>
-                </button>
               </div>
               <p style="font-size:0.85rem; opacity:0.95; margin-top:4px;">
                 Review and qualify member-submitted News, Minutes, Videos & Photos before publishing.
@@ -4954,7 +4951,7 @@ body {
               </div>
               <div class="form-group-dbyc">
                 <label style="font-size:0.82rem; font-weight:800;">Assistant Director Name</label>
-                <input type="text" id="settingAsstDirectorName" class="form-control-dbyc" value="Rev. Fr. Asst. Director, SDB">
+                <input type="text" id="settingAsstDirectorName" class="form-control-dbyc" value="Rev. Fr. Don Frangleen, SDB">
               </div>
               <div class="form-group-dbyc">
                 <label style="font-size:0.82rem; font-weight:800;">Center Contact Helpline</label>
@@ -5619,9 +5616,13 @@ body {
             <label id="lblFormRole">பதவி / பொறுப்பு (Designation / Role in DBYC) *</label>
             <select id="formRole" class="form-control-dbyc" onchange="if(typeof window.checkRegistrationSimilarityAndDuplicates==='function') window.checkRegistrationSimilarityAndDuplicates();">
               <option value="Member" selected>Member (உறுப்பினர்)</option>
-              <option value="Youth Leader">Youth Leader (இளைஞர் தலைவர்)</option>
               <option value="Group Leader">Group Leader (குழு தலைவர்)</option>
-              <option value="Group Incharge">Group Incharge (குழு பொறுப்பாளர்)</option>
+              <option value="Group Incharge">Group Incharge (பொறுப்பாளர்)</option>
+              <option value="Office Bearer">Office Bearer (நிர்வாகி)</option>
+              <option value="GS (General Secretary)">GS (General Secretary) (பொதுச் செயலாளர்)</option>
+              <option value="Animator">Animator (வழிகாட்டி)</option>
+              <option value="Director (Incharge)">Director (Incharge) (இயக்குனர்)</option>
+              <option value="Assistant Director (Direct Incharge)">Assistant Director (உதவி இயக்குனர்)</option>
             </select>
           </div>
         </div>
@@ -6087,7 +6088,22 @@ body {
       </div>
       <form id="editLeaderForm" onsubmit="event.preventDefault(); window.saveLeaderProfileSubmit(event);">
         <input type="hidden" id="editLeaderId">
-        
+        <input type="hidden" id="editLeaderMemberId">
+
+        <!-- Member Selector for Post Assignment & Rotation -->
+        <div style="background:#eff6ff; border:1.5px solid #0284c7; border-radius:14px; padding:12px; margin-bottom:14px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+            <strong style="color:#002b66; font-size:0.88rem;">🔄 Assign / Rotate Person for this Post</strong>
+            <span style="background:#0284c7; color:#fff; font-size:0.7rem; font-weight:800; padding:2px 7px; border-radius:6px;">Auto-Fill</span>
+          </div>
+          <p style="font-size:0.75rem; color:#0369a1; margin:0 0 8px;">
+            Select a registered member to automatically load their Photo, Mobile, Address, and Abilities:
+          </p>
+          <select id="editLeaderMemberSelect" class="form-control-dbyc" onchange="window.onOfficeBearerMemberSelected(this.value)" style="background:#fff; font-weight:700; border-color:#0284c7;">
+            <option value="">-- Choose Registered Member (உறுப்பினரைத் தேர்ந்தெடுக்கவும்) --</option>
+          </select>
+        </div>
+
         <!-- Leader Photo Upload Box -->
         <div style="display:flex; align-items:center; gap:14px; background:#f0f7ff; border:1.5px dashed #0284c7; border-radius:14px; padding:12px 14px; margin-bottom:14px;">
           <img id="leaderPhotoPreviewImg" src="assets/logo.png" style="width:68px; height:68px; border-radius:50%; object-fit:cover; border:2.5px solid #004b98; background:#fff; flex-shrink:0;">
@@ -6106,7 +6122,7 @@ body {
         <div style="display:grid; grid-template-columns: 2fr 1fr; gap:10px;">
           <div class="form-group-dbyc">
             <label>Leader Name (பெயர்) *</label>
-            <input type="text" id="editLeaderName" class="form-control-dbyc" required placeholder="e.g. RAJA">
+            <input type="text" id="editLeaderName" class="form-control-dbyc" required placeholder="e.g. RAJA" oninput="window.onLeaderNameInput(this.value)">
           </div>
           <div class="form-group-dbyc">
             <label>Designation (பதவி) *</label>
@@ -7224,6 +7240,176 @@ document.addEventListener('DOMContentLoaded', () => {
   initApp();
 });
 
+window.DBYC_OFFICIAL_LEADERS_SEED = [{"id": "LDR-ORAT-01", "name": "RAJA", "role": "GS (General Secretary)", "category": "Oratory Leaders", "phone": "9551235550", "tenure": "6 Years", "photo": "", "achievements": "DBYC Outstanding General Secretary 2025; Annual Membership Day Director; Youth Council Founder.", "abilities": "Youth Animation, Public Speaking, Football Captaincy, Council Governance, Event Planning"}, {"id": "LDR-ORAT-02", "name": "YUKENDIRAN", "role": "AGS (Asst. General Secretary)", "category": "Oratory Leaders", "phone": "8778945864", "tenure": "5 Years", "photo": "", "achievements": "Inter-House Sports Festival Coordinator; Oratory General Assembly Lead 2025.", "abilities": "Council Administration, Operations Logistics, Volleyball, Youth Counseling"}, {"id": "LDR-ORAT-03", "name": "MADHAN", "role": "SPORTS SECRETARY", "category": "Oratory Leaders", "phone": "9677044211", "tenure": "5 Years", "photo": "", "achievements": "Chennai Salesian Cup Football Gold Medalist; Turf Ground Infrastructure Lead.", "abilities": "Football Forward, Athletics, Physical Fitness Coaching, Tournament Management"}, {"id": "LDR-ORAT-04", "name": "SURYA", "role": "CULTURAL SECRETARY", "category": "Oratory Leaders", "phone": "6382319639", "tenure": "4 Years", "photo": "", "achievements": "Don Bosco Feast Cultural Director; Christmas Carol Gala Grand Champion.", "abilities": "Stage Production, Choral Singing, Drama Direction, Creative Sound & Lights"}, {"id": "LDR-ORAT-05", "name": "KAVIYARASAN", "role": "SOCIAL & SPIRITUAL SECRETARY", "category": "Oratory Leaders", "phone": "8668119379", "tenure": "4 Years", "photo": "", "achievements": "Marian Pilgrimage & Feast Coordinator; Basin Bridge Slum Outreach Lead.", "abilities": "Marian Devotions, Choir Conducting, Social Relief Drives, Youth Mentorship"}, {"id": "LDR-SUB-01", "name": "AJAI", "role": "PRESIDENT", "category": "Sub-Junior Leaders", "phone": "9840112201", "tenure": "3 Years", "photo": "", "achievements": "Best Sub-Junior Leader 2025; Junior Oratory Cup Winner.", "abilities": "Team Guidance, Carrom, Relay Running, Peer Motivation"}, {"id": "LDR-SUB-02", "name": "RATHIKAN", "role": "VICE PRESIDENT", "category": "Sub-Junior Leaders", "phone": "9840112202", "tenure": "3 Years", "photo": "", "achievements": "Sub-Junior Championship Runners-up; Discipline Star Award.", "abilities": "Football Defense, Morning Prayer Lead, Group Coordination"}, {"id": "LDR-SUB-03", "name": "ASHWIN", "role": "CULTURAL SECRETARY", "category": "Sub-Junior Leaders", "phone": "9840112203", "tenure": "2 Years", "photo": "", "achievements": "Children's Day Fine Arts Gold; Oratory Skit Lead Performer.", "abilities": "Singing, Drawing, Stage Drama, Creative Writing"}, {"id": "LDR-SUB-04", "name": "SUBASH", "role": "SPORTS SECRETARY", "category": "Sub-Junior Leaders", "phone": "9840112204", "tenure": "3 Years", "photo": "", "achievements": "Sub-Junior Table Tennis Gold; 100m Sprint Champion.", "abilities": "Table Tennis, Football, Track & Field, Sportsmanship"}, {"id": "LDR-SUB-05", "name": "ABI", "role": "SOCIAL & SPIRITUAL SECRETARY", "category": "Sub-Junior Leaders", "phone": "9840112205", "tenure": "2 Years", "photo": "", "achievements": "100% Attendance Excellence 2025; Altar Boy Leader.", "abilities": "Altar Service, Prayer Leadership, Clean Campus Volunteer"}, {"id": "LDR-JUN-01", "name": "RUBESH", "role": "PRESIDENT", "category": "Junior Leaders", "phone": "9840223301", "tenure": "4 Years", "photo": "", "achievements": "Junior Leadership Shield 2025; 7-a-side Football Champions.", "abilities": "Junior Animation, Public Address, Football Playmaker, Event Marshal"}, {"id": "LDR-JUN-02", "name": "DAVID", "role": "SECRETARY", "category": "Junior Leaders", "phone": "9840223302", "tenure": "3 Years", "photo": "", "achievements": "Junior Council Minutes Keeper; Oratory Summer Camp Captain.", "abilities": "Volleyball, Meeting Documentation, Attendance Coordination"}, {"id": "LDR-JUN-03", "name": "THANIGAVEL", "role": "SPORTS SECRETARY", "category": "Junior Leaders", "phone": "9840223303", "tenure": "4 Years", "photo": "", "achievements": "Junior Football Golden Boot Winner; Inter-Oratory Striker.", "abilities": "Football Striker, Cricket, Fast Bowling, Team Spirit"}, {"id": "LDR-JUN-04", "name": "ASHWIN", "role": "CULTURAL SECRETARY", "category": "Junior Leaders", "phone": "9840223304", "tenure": "3 Years", "photo": "", "achievements": "State-level Youth Talent Solo Dance Winner; Cultural Emcee.", "abilities": "Folk & Western Dance, Anchoring, Mime, Creative Choreography"}, {"id": "LDR-JUN-05", "name": "MENDOSA", "role": "SOCIAL & SPIRITUAL SECRETARY", "category": "Junior Leaders", "phone": "9840223305", "tenure": "3 Years", "photo": "", "achievements": "Salesian Youth Spirituality Award; Feast Day Altar Incharge.", "abilities": "Liturgy Preparation, Choir Harmonies, Marian Devotions"}, {"id": "LDR-INT-01", "name": "ARUN", "role": "PRESIDENT", "category": "Inter Leaders", "phone": "9840334401", "tenure": "5 Years", "photo": "", "achievements": "Inter-Category Trophy Winner 2025; Oratory Night Tournament Lead.", "abilities": "Team Strategy, Tournament Management, Motivational Speaking"}, {"id": "LDR-INT-02", "name": "RUBESH", "role": "SECRETARY", "category": "Inter Leaders", "phone": "9840334402", "tenure": "4 Years", "photo": "", "achievements": "Inter-House Points Review Lead; Youth Camp Logistics Officer.", "abilities": "Documentation, Social Media Updates, Equipment Management"}, {"id": "LDR-INT-03", "name": "BALAJI", "role": "SPORTS SECRETARY", "category": "Inter Leaders", "phone": "9840334403", "tenure": "5 Years", "photo": "", "achievements": "DBYC Cricket Championship Best All-Rounder; Turf Incharge.", "abilities": "Cricket Captaincy, Football Midfield, Gym Training"}, {"id": "LDR-INT-04", "name": "VICKY", "role": "CULTURAL SECRETARY", "category": "Inter Leaders", "phone": "9840334404", "tenure": "4 Years", "photo": "", "achievements": "Christmas Gala Stage Director; Street Theatre Social Awareness.", "abilities": "Street Theatre, Sound & Lighting, Event Coordination, Music"}, {"id": "LDR-INT-05", "name": "VISWA", "role": "SPIRITUAL & SOCIAL SECRETARY", "category": "Inter Leaders", "phone": "9840334405", "tenure": "4 Years", "photo": "", "achievements": "Community Food Distribution Convener; Youth Rosary Leader.", "abilities": "Social Welfare, Food Drives, Marian Devotions, Community Service"}, {"id": "LDR-SEN-01", "name": "AKASH", "role": "PRESIDENT", "category": "Senior Leaders", "phone": "9094630476", "tenure": "7 Years", "photo": "", "achievements": "Senior Leader of the Year 2025; Don Bosco Centenary Youth Leader.", "abilities": "Executive Leadership, Conflict Resolution, Football, Oratory Management"}, {"id": "LDR-SEN-02", "name": "MANI", "role": "SECRETARY", "category": "Senior Leaders", "phone": "8939750703", "tenure": "6 Years", "photo": "", "achievements": "Official DBYC Executive Council Minutes Scribe; Budget Committee.", "abilities": "Official Correspondence, Financial Record Keeping, Youth Guidance"}, {"id": "LDR-SEN-03", "name": "UGESH", "role": "CULTURAL SECRETARY", "category": "Senior Leaders", "phone": "9566135801", "tenure": "6 Years", "photo": "", "achievements": "Salesian Centenary Cultural Gold Director; Annual Mega Drama.", "abilities": "Major Stage Direction, Scriptwriting, Choreography, Stage Art"}, {"id": "LDR-SEN-04", "name": "ANAND", "role": "SPORTS SECRETARY", "category": "Senior Leaders", "phone": "9710035426", "tenure": "7 Years", "photo": "", "achievements": "State-level Oratory Football Convener; Senior Turf Incharge.", "abilities": "Football Coaching, Certified Refereeing, Ground Architecture"}, {"id": "LDR-SEN-05", "name": "RAJASEKAR", "role": "SPIRITUAL SECRETARY", "category": "Senior Leaders", "phone": "9003212827", "tenure": "6 Years", "photo": "", "achievements": "Don Bosco Annual Youth Retreat Director; Sacristy Council Head.", "abilities": "Spiritual Counseling, Retreat Directing, Liturgical Ceremonies"}, {"id": "LDR-SSEN-01", "name": "SANKAR", "role": "PRESIDENT", "category": "Super Senior Leaders", "phone": "9790811866", "tenure": "12 Years", "photo": "", "achievements": "DBYC Pillar of Excellence 2025; Senior Council Founding Member.", "abilities": "Senior Council Direction, Mentorship, Heritage Preservation, Mediation"}, {"id": "LDR-SSEN-02", "name": "BALAMURUGAN", "role": "SECRETARY", "category": "Super Senior Leaders", "phone": "7904391626", "tenure": "11 Years", "photo": "", "achievements": "Past Pupils & Alumni Network Lead; Super Senior Tournament Head.", "abilities": "Alumni Fellowship, Event Management, Career Mentoring"}, {"id": "LDR-SSEN-03", "name": "LOGANATHAN", "role": "SPORTS SECRETARY", "category": "Super Senior Leaders", "phone": "8667862801", "tenure": "10 Years", "photo": "", "achievements": "Veteran Cup Championship Trophy; Stadium Floodlights Renovation.", "abilities": "Veteran Football, Ground Maintenance, Sports Infrastructure"}, {"id": "LDR-SSEN-04", "name": "THIRUNAVUKARASU", "role": "CULTURAL SECRETARY", "category": "Super Senior Leaders", "phone": "8610839980", "tenure": "10 Years", "photo": "", "achievements": "Traditional Tamil Heritage Arts Recognition; Stage Architecture.", "abilities": "Folk Arts, Tamil Eloquence, Traditional Music, Stage Craft"}, {"id": "LDR-SSEN-05", "name": "ARUNKUMAR", "role": "SPIRITUAL & SOCIAL SECRETARY", "category": "Super Senior Leaders", "phone": "9841256566", "tenure": "12 Years", "photo": "", "achievements": "Basin Bridge Medical & Blood Donation Camp Lead; Flood Relief 2023.", "abilities": "Social Welfare, Disaster Relief, Community Medical Drives"}, {"id": "LDR-SSEN-06", "name": "SAMSON", "role": "TREASURER", "category": "Super Senior Leaders", "phone": "7550286169", "tenure": "11 Years", "photo": "", "achievements": "DBYC Audit & Transparency Shield; Capital Projects Treasurer.", "abilities": "Financial Auditing, Budget Planning, Asset Custodianship"}, {"id": "LDR-ELD-01", "name": "ULAGANATHAN", "role": "PRESIDENT", "category": "Elders", "phone": "8148631022", "tenure": "20+ Years", "photo": "", "achievements": "Lifetime Oratory Dedication Award; 25 Years Council Trustee.", "abilities": "Oratory Patronage, Salesian Preventive System, Civic Advisory"}, {"id": "LDR-ELD-02", "name": "JOHN BERKMENS", "role": "SECRETARY", "category": "Elders", "phone": "8072289913", "tenure": "18+ Years", "photo": "", "achievements": "Golden Jubilee History Chronicler; DBYC Heritage Archivist.", "abilities": "Historical Documentation, Legal Advisory, Community Guidance"}, {"id": "LDR-ELD-03", "name": "ARUMUGAM", "role": "TREASURER", "category": "Elders", "phone": "9841276605", "tenure": "19+ Years", "photo": "", "achievements": "Distinguished Elders Service Medal; Trust Fund Custodian.", "abilities": "Benevolent Fund Governance, Elder Fellowship, Ethical Advisory"}, {"id": "LDR-COM-01", "name": "MATHIVANAN", "role": "COMMITTEE MEMBER", "category": "Committee Members", "phone": "9444281207", "tenure": "15 Years", "photo": "", "achievements": "Senior Advisory Board Member; Youth Sponsorship Trustee.", "abilities": "Civic Liaison, Youth Welfare Sponsorship, Community Relations"}, {"id": "LDR-COM-02", "name": "DEVENDRAN", "role": "COMMITTEE MEMBER", "category": "Committee Members", "phone": "9566084070", "tenure": "14 Years", "photo": "", "achievements": "Campus Renovation Committee Lead; Sports Complex Expansion.", "abilities": "Civil Infrastructure, Power & Electricals, Campus Safety"}, {"id": "LDR-COM-03", "name": "MALARMANNAN", "role": "COMMITTEE MEMBER", "category": "Committee Members", "phone": "9444454799", "tenure": "16 Years", "photo": "", "achievements": "Youth Educational Scholarship Trustee; Legal Consultation Lead.", "abilities": "Legal Consultation, Education Grants, Higher Studies Mentoring"}, {"id": "LDR-COM-04", "name": "SRINIVASAN", "role": "COMMITTEE MEMBER", "category": "Committee Members", "phone": "9840094477", "tenure": "15 Years", "photo": "", "achievements": "Basin Bridge Sports Promoter Award; Tournament Chief Patron.", "abilities": "Sports Sponsorship, Equipment Procurement, Inter-Club Liaison"}, {"id": "LDR-COM-05", "name": "SATHISH KUMAR", "role": "COMMITTEE MEMBER", "category": "Committee Members", "phone": "9840795014", "tenure": "12 Years", "photo": "", "achievements": "Youth Career & Employment Guidance Director; IT Facilities Lead.", "abilities": "IT Infrastructure, Youth Career Placement, Digital Media"}];
+
+
+// =====================================================================
+// MASTER SYNCHRONIZATION: LEADERS & MEMBERS (2-WAY PERSISTENT LINK)
+// =====================================================================
+function syncLeadersWithMembers() {
+  if (!window.appState) return;
+
+  // Clean out any directors from office bearers
+  if (typeof window.purgeDirectorsFromLeaders === 'function') {
+    window.purgeDirectorsFromLeaders();
+  }
+
+  // Sanitize: Exactly 1 Director and 1 Assistant Director, NO Lourdu Merrady
+  if (window.appState.members && Array.isArray(window.appState.members)) {
+    window.appState.members.forEach(m => {
+      if (!m) return;
+      const r = (m.role || '').toLowerCase();
+      const n = (m.name || '').toLowerCase();
+      // Remove Lourdu Merrady from Director post
+      if (r.includes('director') && !r.includes('asst')) {
+        if (n.includes('lourdu') || n.includes('merrady') || n.includes('merredy')) {
+          m.name = 'Rev. Fr. Director, SDB';
+        }
+      }
+      // Ensure Assistant Director is Don Frangleen only
+      if (m.id === 'DBYC-DIR-002' || (r.includes('asst') && r.includes('director'))) {
+        m.name = 'Rev. Fr. Don Frangleen, SDB';
+        m.role = 'Assistant Director';
+      }
+    });
+  }
+
+  if (!window.appState.leaders || window.appState.leaders.length === 0) {
+    window.appState.leaders = JSON.parse(JSON.stringify(window.DBYC_OFFICIAL_LEADERS_SEED || []));
+  }
+  if (!window.appState.members) window.appState.members = [];
+  const members = window.appState.members;
+  const leaders = window.appState.leaders;
+
+  const mapCatToGroup = (cat) => {
+    cat = (cat || '').toLowerCase();
+    if (cat.includes('sub-junior') || cat.includes('sub junior')) return 'Sub Juniors Group';
+    if (cat.includes('junior')) return 'Juniors Group';
+    if (cat.includes('inter')) return 'Inters Group';
+    if (cat.includes('super senior')) return 'Super Seniors Group';
+    if (cat.includes('senior')) return 'Seniors Group';
+    if (cat.includes('elder') || cat.includes('committee')) return 'Elders Group';
+    return 'Oratory Group';
+  };
+
+  // 1. AUTO-SYNCHRONIZE ALL OFFICIAL LEADERS INTO MEMBERS REGISTRY
+  // "all the office bearers detials should also must be in the members portal with the datas it has to be automatically apear in the registerd member"
+  leaders.forEach(ldr => {
+    const ldrPhoneClean = (ldr.phone || '').replace(/\D/g, '');
+    const ldrNameNorm = (ldr.name || '').trim().toLowerCase();
+    const ldrIdNorm = (ldr.id || '').trim().toUpperCase();
+
+    let matchedMem = members.find(m => {
+      if (ldr.memberId && m.id === ldr.memberId) return true;
+      if (m.id && m.id.toUpperCase() === ldrIdNorm) return true;
+      const mPhoneClean = (m.mobile || '').replace(/\D/g, '');
+      if (ldrPhoneClean && mPhoneClean && (ldrPhoneClean === mPhoneClean || mPhoneClean.endsWith(ldrPhoneClean) || ldrPhoneClean.endsWith(mPhoneClean))) return true;
+      if (ldrNameNorm && (m.name || '').trim().toLowerCase() === ldrNameNorm) return true;
+      return false;
+    });
+
+    if (!matchedMem) {
+      matchedMem = {
+        id: ldr.memberId || ldr.id || ('DBYC-LDR-' + ldr.name.replace(/[^A-Za-z0-9]/g, '').toUpperCase()),
+        name: ldr.name,
+        role: ldr.role || 'Youth Leader',
+        roles: [ldr.role || 'Youth Leader'],
+        group: mapCatToGroup(ldr.category),
+        category: ldr.category || 'Oratory Leaders',
+        mobile: ldr.phone || '',
+        phone: ldr.phone || '',
+        pin: ldr.pin || '1234',
+        securityPin: ldr.pin || '1234',
+        yearsInDbyc: parseInt(ldr.tenure) || 3,
+        joinDate: '2021-01-01',
+        renewalDate: '2026-01-01',
+        expiryDate: '2027-01-01',
+        membershipYear: '2026 - 2027',
+        bloodGroup: 'O+ve',
+        homeAddress: 'Don Bosco, Basin Bridge, Chennai - 600 012',
+        address: 'Don Bosco, Basin Bridge, Chennai - 600 012',
+        activities: ldr.abilities || 'Youth Animation, Oratory Formation',
+        futureAmbition: ldr.achievements || 'Active Leader of DBYC',
+        photo: ldr.photo || '',
+        status: 'Active',
+        approvalStatus: 'APPROVED',
+        membershipStatus: 'ACTIVE',
+        createdAt: ldr.createdAt || '2026-01-01T00:00:00.000Z'
+      };
+      members.push(matchedMem);
+      ldr.memberId = matchedMem.id;
+    } else {
+      // 2-Way Sync
+      ldr.memberId = matchedMem.id;
+      if (matchedMem.photo) ldr.photo = matchedMem.photo;
+      else if (ldr.photo) matchedMem.photo = ldr.photo;
+
+      if (matchedMem.mobile) ldr.phone = matchedMem.mobile;
+      else if (ldr.phone) matchedMem.mobile = ldr.phone;
+
+      // Multi-post holding: "one person also can hold two three posts"
+      if (!matchedMem.roles) matchedMem.roles = [matchedMem.role || 'Youth Leader'];
+      if (!matchedMem.roles.includes(ldr.role)) matchedMem.roles.push(ldr.role);
+      const cleanRoles1 = [...new Set(matchedMem.roles.flatMap(r => (r || '').split(' & ').map(x => x.trim())).filter(Boolean))];
+      matchedMem.roles = cleanRoles1;
+      matchedMem.role = cleanRoles1.join(' & ');
+
+      if (matchedMem.homeAddress) ldr.address = matchedMem.homeAddress;
+      if (matchedMem.activities && !ldr.abilities) ldr.abilities = Array.isArray(matchedMem.activities) ? matchedMem.activities.join(', ') : matchedMem.activities;
+    }
+  });
+
+  // 2. Automatically pull any registered member with leadership role into leaders if not already there
+  const leadershipRoles = [
+    'president', 'secretary', 'general secretary', 'gs', 'ags', 'treasurer', 'joint secretary',
+    'vice president', 'animator', 'leader', 'incharge', 'group incharge',
+    'captain', 'councillor', 'council', 'committee', 'choir', 'sports', 'media'
+  ];
+
+  members.forEach(m => {
+    const roleLower = (m.role || '').toLowerCase();
+    const groupLower = (m.group || '').toLowerCase();
+    const catLower = (m.category || '').toLowerCase();
+    const mNameNorm = (m.name || '').trim().toLowerCase();
+
+    // NEVER import Director or Assistant Director into Youth Office Bearers!
+    if (roleLower.includes('director') || mNameNorm.includes('director') || mNameNorm.includes('frangleen')) {
+      return;
+    }
+
+    const isLeaderRole = leadershipRoles.some(r => roleLower.includes(r));
+    const isLeaderCat = catLower.includes('leader') || groupLower.includes('leader') || catLower.includes('committee') || catLower.includes('elder');
+
+    if (isLeaderRole || isLeaderCat) {
+      const existing = leaders.find(l => {
+        if (l.memberId && l.memberId === m.id) return true;
+        const lPhone = (l.phone || '').replace(/\D/g, '');
+        const mPhone = (m.mobile || '').replace(/\D/g, '');
+        if (lPhone && mPhone && lPhone === mPhone) return true;
+        if ((l.name || '').trim().toLowerCase() === mNameNorm) return true;
+        return false;
+      });
+
+      if (!existing) {
+        leaders.push({
+          id: 'LDR-DYN-' + m.id,
+          memberId: m.id,
+          name: m.name,
+          role: m.role || 'Youth Leader',
+          category: m.category || mapCatToGroup(m.group),
+          phone: m.mobile || '',
+          tenure: m.yearsInDbyc ? (m.yearsInDbyc + ' Years') : '1+ Year',
+          photo: m.photo || '',
+          achievements: m.futureAmbition || 'Active Member of DBYC',
+          abilities: Array.isArray(m.activities) ? m.activities.join(', ') : (m.activities || m.joiningPurpose || 'Youth animation and service')
+        });
+      }
+    }
+  });
+}
+window.syncLeadersWithMembers = syncLeadersWithMembers;
+
+
 function initApp() {
   const entLogo = document.getElementById('loginViewLogoImg');
   if (entLogo && window.DBYC_OFFICIAL_LOGO) {
@@ -7318,9 +7504,8 @@ function loadLocalData() {
           name: 'Rev. Fr. Director, SDB',
           dob: '1980-01-15',
           age: 46,
-          mobile: '7305948101',
-          secondaryMobile: '9876543210',
-          pin: '9894',
+          mobile: '9876543210',
+          pin: '1888',
           group: 'Elders Group',
           teamId: 'TEAM-1',
           role: 'Director (Incharge)',
@@ -7344,9 +7529,8 @@ function loadLocalData() {
           name: 'Rev. Fr. Asst. Director, SDB',
           dob: '1988-08-24',
           age: 38,
-          mobile: '7305948101',
-          secondaryMobile: '9876543211',
-          pin: '9894',
+          mobile: '9876543211',
+          pin: '1934',
           group: 'Super Seniors Group',
           role: 'Assistant Director (Direct Incharge)',
           joinDate: '2019-06-01',
@@ -7363,21 +7547,23 @@ function loadLocalData() {
       }
 
       (appState.members || []).forEach(m => {
-        if (m && (m.approvalStatus === 'APPROVED' || m.approvedBy || m.membershipStatus === 'ACTIVE' || m.status === 'Active')) {
+        if (!m) return;
+        if (m.id === 'DBYC-DIR-001' || (m.role && m.role.toLowerCase().includes('director') && !m.role.toLowerCase().includes('asst'))) {
+          m.name = 'Rev. Fr. Director, SDB';
+          m.role = 'Director (Incharge)';
+          m.mobile = '7305948101';
+          m.pin = '9894';
+        }
+        if (m.id === 'DBYC-DIR-002' || (m.role && m.role.toLowerCase().includes('asst'))) {
+          m.name = 'Rev. Fr. Don Frangleen, SDB';
+          m.role = 'Assistant Director';
+          m.mobile = '7305948101';
+          m.pin = '9894';
+        }
+        if (m.approvalStatus === 'APPROVED' || m.approvedBy || m.membershipStatus === 'ACTIVE' || m.status === 'Active') {
           m.approvalStatus = 'APPROVED';
           m.status = 'APPROVED';
           m.membershipStatus = 'ACTIVE';
-        }
-        // Ensure Director and Asst Director always recognize 7305948101 and 9894
-        if (m && (m.id === 'DBYC-DIR-001' || (m.role && m.role.toLowerCase().includes('director') && !m.role.toLowerCase().includes('asst')))) {
-          if (!m.mobile || m.mobile === '9876543210') m.mobile = '7305948101';
-          m.secondaryMobile = '9876543210';
-          m.pin = '9894';
-        }
-        if (m && (m.id === 'DBYC-DIR-002' || (m.role && m.role.toLowerCase().includes('asst')))) {
-          if (!m.mobile || m.mobile === '9876543211') m.mobile = '7305948101';
-          m.secondaryMobile = '9876543211';
-          m.pin = '9894';
         }
       });
 
@@ -7416,6 +7602,11 @@ function loadLocalData() {
       
       // Auto-purge any demo data immediately
       window.purgeAllDemoData();
+
+      // Guarantee all 39+ official leaders are in appState.members
+      if (typeof window.syncLeadersWithMembers === 'function') {
+        window.syncLeadersWithMembers();
+      }
     } catch (e) {
       seedBasinBridgeData();
     }
@@ -7515,7 +7706,7 @@ function seedBasinBridgeData() {
     },
     {
       id: 'DBYC-DIR-002',
-      name: 'Rev. Fr. Asst. Director, SDB',
+      name: 'Rev. Fr. Don Frangleen, SDB',
       dob: '1988-08-24',
       age: 38,
       mobile: '7305948101',
@@ -7575,6 +7766,11 @@ function seedBasinBridgeData() {
 
   if (!appState.leaders || appState.leaders.length === 0) {
     appState.leaders = JSON.parse(JSON.stringify(window.DBYC_OFFICIAL_LEADERS_SEED || []));
+  }
+
+  // Auto-sync all 39+ official leaders into appState.members
+  if (typeof window.syncLeadersWithMembers === 'function') {
+    window.syncLeadersWithMembers();
   }
 
   // CRITICAL: skipCloudPush = true on startup load to prevent fresh laptop from overwriting cloud!
@@ -9508,14 +9704,7 @@ function switchView(viewName) {
     }
   }
   if (cleanName === 'profile') renderMyProfile();
-  if (cleanName === 'members') {
-    renderMembersRegistry();
-    if (window.DbycCloud && typeof window.DbycCloud.pullLatestFromCloud === 'function') {
-      window.DbycCloud.pullLatestFromCloud(true).then(() => {
-        if (typeof renderMembersRegistry === 'function') renderMembersRegistry();
-      });
-    }
-  }
+  if (cleanName === 'members') renderMembersRegistry();
   if (cleanName === 'attendance') renderTodayAttendance();
   if (cleanName === 'passes') renderMemberPassSelector();
   if (cleanName === 'certificates') renderCertificateStudio();
@@ -9525,14 +9714,7 @@ function switchView(viewName) {
   if (cleanName === 'news') renderNewsList();
   if (cleanName === 'livescore') renderLiveScores();
   if (cleanName === 'media') renderMediaStudio();
-  if (cleanName === 'qualifications' || cleanName === 'qualification') {
-    renderQualificationDesk();
-    if (window.DbycCloud && typeof window.DbycCloud.pullLatestFromCloud === 'function') {
-      window.DbycCloud.pullLatestFromCloud(true).then(() => {
-        if (typeof renderQualificationDesk === 'function') renderQualificationDesk();
-      });
-    }
-  }
+  if (cleanName === 'qualifications') renderQualificationDesk();
   if (cleanName === 'rules') renderDbycRules();
   if (cleanName === 'settings') renderSettingsView();
   if (cleanName === 'teams') renderTeamsView();
@@ -11677,17 +11859,7 @@ window.selectMemberForRenewal = function(memberId) {
   document.getElementById('formYearsInDbyc').value = (parseInt(m.yearsInDbyc, 10) || 1) + 1;
   document.getElementById('formBloodGroup').value = m.bloodGroup || 'O+ve';
   document.getElementById('formGroup').value = m.group || 'Sub Juniors Group';
-  const roleSel = document.getElementById('formRole');
-    if (roleSel && m.role) {
-      const exists = Array.from(roleSel.options).some(o => o.value === m.role);
-      if (!exists) {
-        const opt = document.createElement('option');
-        opt.value = m.role;
-        opt.textContent = m.role + ' (Official Role)';
-        roleSel.appendChild(opt);
-      }
-      roleSel.value = m.role;
-    }
+  document.getElementById('formRole').value = m.role || 'Member';
   document.getElementById('formTeam').value = m.team || 'TEAM-1';
   document.getElementById('formNotes').value = m.notes || '';
 
@@ -12290,7 +12462,7 @@ window.drawCertToCanvas = async function() {
   ctx.fillStyle = '#004b98';
   ctx.font = 'italic bold 32px cursive';
   ctx.fillText((window.certCustomState && window.certCustomState.directorName) || 'Rev. Fr. Director, SDB', 380, cvs.height - 180);
-  ctx.fillText((window.certCustomState && window.certCustomState.asstDirectorName) || 'Rev. Fr. Asst. Director, SDB', cvs.width - 380, cvs.height - 180);
+  ctx.fillText((window.certCustomState && window.certCustomState.asstDirectorName) || 'Rev. Fr. Don Frangleen, SDB', cvs.width - 380, cvs.height - 180);
 
   ctx.fillStyle = '#0f172a';
   ctx.font = 'bold 20px sans-serif';
@@ -12929,7 +13101,7 @@ let certCustomState = {
   bodyText: '',
   issueDate: '',
   directorName: 'Rev. Fr. Director, SDB',
-  asstDirectorName: 'Rev. Fr. Asst. Director, SDB'
+  asstDirectorName: 'Rev. Fr. Don Frangleen, SDB'
 };
 
 function setupCertificateHandlers() {
@@ -14739,7 +14911,7 @@ saveMemberRegistrationFormDirect = function(event) {
   var baseD = new Date(memberData.renewalDate || memberData.joinDate);
   var expD = new Date(memberData.expiryDate);
   memberData.membershipYear = baseD.getFullYear() + ' - ' + expD.getFullYear();
-  memberData.membershipStatus = isDirector ? 'ACTIVE' : 'PENDING';
+  memberData.membershipStatus = 'ACTIVE';
 
   if (!appState.members) appState.members = [];
 
@@ -14775,6 +14947,23 @@ saveMemberRegistrationFormDirect = function(event) {
       }
 
       appState.members[idx] = Object.assign({}, prev, memberData);
+
+      // 2-Way Sync: Update any office bearer posts held by this member
+      if (window.appState && Array.isArray(window.appState.leaders)) {
+        window.appState.leaders.forEach(l => {
+          const isMatch = (l.memberId && l.memberId === prev.id) ||
+            (memberData.mobile && l.phone && l.phone.replace(/\D/g, '') === memberData.mobile.replace(/\D/g, '')) ||
+            (l.name && memberData.name && l.name.trim().toLowerCase() === memberData.name.trim().toLowerCase());
+          if (isMatch) {
+            l.memberId = prev.id;
+            l.name = memberData.name;
+            l.phone = memberData.mobile;
+            if (memberData.photo) l.photo = memberData.photo;
+            if (memberData.activities) l.abilities = Array.isArray(memberData.activities) ? memberData.activities.join(', ') : memberData.activities;
+            if (memberData.futureAmbition) l.achievements = memberData.futureAmbition;
+          }
+        });
+      }
       savedMemberId = prev.id;
       showToast('✅ Member details & photo updated successfully!');
     }
@@ -14896,14 +15085,12 @@ saveMemberRegistrationFormDirect = function(event) {
     if (isDirector) {
       memberData.approvalStatus = 'APPROVED';
       memberData.status = 'APPROVED';
-      memberData.membershipStatus = 'ACTIVE';
       memberData.approvedBy = appState.currentUser ? appState.currentUser.name : 'Rev. Fr. Director, SDB';
       memberData.approvedAt = new Date().toISOString();
       showToast('✅ Member registered and approved by Director!');
     } else {
       memberData.approvalStatus = 'PENDING';
       memberData.status = 'PENDING';
-      memberData.membershipStatus = 'PENDING';
       memberData.approvedBy = '';
       memberData.approvedAt = '';
       showToast('⏳ Registration submitted for Director qualification & approval.');
@@ -15516,7 +15703,7 @@ function renderTeamsView() {
   if (historyContainer) {
     const logs = appState.teamPointsLog || [
       { id: 'LOG-001', team: 'Green Warriors', points: 100, reason: 'Attendance Excellence', awardedBy: 'Rev. Fr. Director, SDB', date: '2026-09-20' },
-      { id: 'LOG-002', team: 'Red Dragons', points: 50, reason: 'Football Friendly Match Victory', awardedBy: 'Rev. Fr. Asst. Director, SDB', date: '2026-09-25' }
+      { id: 'LOG-002', team: 'Red Dragons', points: 50, reason: 'Football Friendly Match Victory', awardedBy: 'Rev. Fr. Don Frangleen, SDB', date: '2026-09-25' }
     ];
 
     historyContainer.innerHTML = logs.map(l => `
@@ -15842,7 +16029,7 @@ window.updateMasterEditUI = function() {
 };
 
 // 2. LEADERS COUNCIL (39 OFFICIAL LEADERS FROM MEMBERSHIP DAY 2026 POSTER)
-window.DBYC_OFFICIAL_LEADERS_SEED = [{"id": "LDR-ORAT-01", "name": "RAJA", "role": "GS (General Secretary)", "category": "Oratory Leaders", "phone": "9551235550", "tenure": "6 Years", "photo": "", "achievements": "DBYC Outstanding General Secretary 2025; Annual Membership Day Director; Youth Council Founder.", "abilities": "Youth Animation, Public Speaking, Football Captaincy, Council Governance, Event Planning"}, {"id": "LDR-ORAT-02", "name": "YUKENDIRAN", "role": "AGS (Asst. General Secretary)", "category": "Oratory Leaders", "phone": "8778945864", "tenure": "5 Years", "photo": "", "achievements": "Inter-House Sports Festival Coordinator; Oratory General Assembly Lead 2025.", "abilities": "Council Administration, Operations Logistics, Volleyball, Youth Counseling"}, {"id": "LDR-ORAT-03", "name": "MADHAN", "role": "SPORTS SECRETARY", "category": "Oratory Leaders", "phone": "9677044211", "tenure": "5 Years", "photo": "", "achievements": "Chennai Salesian Cup Football Gold Medalist; Turf Ground Infrastructure Lead.", "abilities": "Football Forward, Athletics, Physical Fitness Coaching, Tournament Management"}, {"id": "LDR-ORAT-04", "name": "SURYA", "role": "CULTURAL SECRETARY", "category": "Oratory Leaders", "phone": "6382319639", "tenure": "4 Years", "photo": "", "achievements": "Don Bosco Feast Cultural Director; Christmas Carol Gala Grand Champion.", "abilities": "Stage Production, Choral Singing, Drama Direction, Creative Sound & Lights"}, {"id": "LDR-ORAT-05", "name": "KAVIYARASAN", "role": "SOCIAL & SPIRITUAL SECRETARY", "category": "Oratory Leaders", "phone": "8668119379", "tenure": "4 Years", "photo": "", "achievements": "Marian Pilgrimage & Feast Coordinator; Basin Bridge Slum Outreach Lead.", "abilities": "Marian Devotions, Choir Conducting, Social Relief Drives, Youth Mentorship"}, {"id": "LDR-SUB-01", "name": "AJAI", "role": "PRESIDENT", "category": "Sub-Junior Leaders", "phone": "9840112201", "tenure": "3 Years", "photo": "", "achievements": "Best Sub-Junior Leader 2025; Junior Oratory Cup Winner.", "abilities": "Team Guidance, Carrom, Relay Running, Peer Motivation"}, {"id": "LDR-SUB-02", "name": "RATHIKAN", "role": "VICE PRESIDENT", "category": "Sub-Junior Leaders", "phone": "9840112202", "tenure": "3 Years", "photo": "", "achievements": "Sub-Junior Championship Runners-up; Discipline Star Award.", "abilities": "Football Defense, Morning Prayer Lead, Group Coordination"}, {"id": "LDR-SUB-03", "name": "ASHWIN", "role": "CULTURAL SECRETARY", "category": "Sub-Junior Leaders", "phone": "9840112203", "tenure": "2 Years", "photo": "", "achievements": "Children's Day Fine Arts Gold; Oratory Skit Lead Performer.", "abilities": "Singing, Drawing, Stage Drama, Creative Writing"}, {"id": "LDR-SUB-04", "name": "SUBASH", "role": "SPORTS SECRETARY", "category": "Sub-Junior Leaders", "phone": "9840112204", "tenure": "3 Years", "photo": "", "achievements": "Sub-Junior Table Tennis Gold; 100m Sprint Champion.", "abilities": "Table Tennis, Football, Track & Field, Sportsmanship"}, {"id": "LDR-SUB-05", "name": "ABI", "role": "SOCIAL & SPIRITUAL SECRETARY", "category": "Sub-Junior Leaders", "phone": "9840112205", "tenure": "2 Years", "photo": "", "achievements": "100% Attendance Excellence 2025; Altar Boy Leader.", "abilities": "Altar Service, Prayer Leadership, Clean Campus Volunteer"}, {"id": "LDR-JUN-01", "name": "RUBESH", "role": "PRESIDENT", "category": "Junior Leaders", "phone": "9840223301", "tenure": "4 Years", "photo": "", "achievements": "Junior Leadership Shield 2025; 7-a-side Football Champions.", "abilities": "Junior Animation, Public Address, Football Playmaker, Event Marshal"}, {"id": "LDR-JUN-02", "name": "DAVID", "role": "SECRETARY", "category": "Junior Leaders", "phone": "9840223302", "tenure": "3 Years", "photo": "", "achievements": "Junior Council Minutes Keeper; Oratory Summer Camp Captain.", "abilities": "Volleyball, Meeting Documentation, Attendance Coordination"}, {"id": "LDR-JUN-03", "name": "THANIGAVEL", "role": "SPORTS SECRETARY", "category": "Junior Leaders", "phone": "9840223303", "tenure": "4 Years", "photo": "", "achievements": "Junior Football Golden Boot Winner; Inter-Oratory Striker.", "abilities": "Football Striker, Cricket, Fast Bowling, Team Spirit"}, {"id": "LDR-JUN-04", "name": "ASHWIN", "role": "CULTURAL SECRETARY", "category": "Junior Leaders", "phone": "9840223304", "tenure": "3 Years", "photo": "", "achievements": "State-level Youth Talent Solo Dance Winner; Cultural Emcee.", "abilities": "Folk & Western Dance, Anchoring, Mime, Creative Choreography"}, {"id": "LDR-JUN-05", "name": "MENDOSA", "role": "SOCIAL & SPIRITUAL SECRETARY", "category": "Junior Leaders", "phone": "9840223305", "tenure": "3 Years", "photo": "", "achievements": "Salesian Youth Spirituality Award; Feast Day Altar Incharge.", "abilities": "Liturgy Preparation, Choir Harmonies, Marian Devotions"}, {"id": "LDR-INT-01", "name": "ARUN", "role": "PRESIDENT", "category": "Inter Leaders", "phone": "9840334401", "tenure": "5 Years", "photo": "", "achievements": "Inter-Category Trophy Winner 2025; Oratory Night Tournament Lead.", "abilities": "Team Strategy, Tournament Management, Motivational Speaking"}, {"id": "LDR-INT-02", "name": "RUBESH", "role": "SECRETARY", "category": "Inter Leaders", "phone": "9840334402", "tenure": "4 Years", "photo": "", "achievements": "Inter-House Points Review Lead; Youth Camp Logistics Officer.", "abilities": "Documentation, Social Media Updates, Equipment Management"}, {"id": "LDR-INT-03", "name": "BALAJI", "role": "SPORTS SECRETARY", "category": "Inter Leaders", "phone": "9840334403", "tenure": "5 Years", "photo": "", "achievements": "DBYC Cricket Championship Best All-Rounder; Turf Incharge.", "abilities": "Cricket Captaincy, Football Midfield, Gym Training"}, {"id": "LDR-INT-04", "name": "VICKY", "role": "CULTURAL SECRETARY", "category": "Inter Leaders", "phone": "9840334404", "tenure": "4 Years", "photo": "", "achievements": "Christmas Gala Stage Director; Street Theatre Social Awareness.", "abilities": "Street Theatre, Sound & Lighting, Event Coordination, Music"}, {"id": "LDR-INT-05", "name": "VISWA", "role": "SPIRITUAL & SOCIAL SECRETARY", "category": "Inter Leaders", "phone": "9840334405", "tenure": "4 Years", "photo": "", "achievements": "Community Food Distribution Convener; Youth Rosary Leader.", "abilities": "Social Welfare, Food Drives, Marian Devotions, Community Service"}, {"id": "LDR-SEN-01", "name": "AKASH", "role": "PRESIDENT", "category": "Senior Leaders", "phone": "9094630476", "tenure": "7 Years", "photo": "", "achievements": "Senior Leader of the Year 2025; Don Bosco Centenary Youth Leader.", "abilities": "Executive Leadership, Conflict Resolution, Football, Oratory Management"}, {"id": "LDR-SEN-02", "name": "MANI", "role": "SECRETARY", "category": "Senior Leaders", "phone": "8939750703", "tenure": "6 Years", "photo": "", "achievements": "Official DBYC Executive Council Minutes Scribe; Budget Committee.", "abilities": "Official Correspondence, Financial Record Keeping, Youth Guidance"}, {"id": "LDR-SEN-03", "name": "UGESH", "role": "CULTURAL SECRETARY", "category": "Senior Leaders", "phone": "9566135801", "tenure": "6 Years", "photo": "", "achievements": "Salesian Centenary Cultural Gold Director; Annual Mega Drama.", "abilities": "Major Stage Direction, Scriptwriting, Choreography, Stage Art"}, {"id": "LDR-SEN-04", "name": "ANAND", "role": "SPORTS SECRETARY", "category": "Senior Leaders", "phone": "9710035426", "tenure": "7 Years", "photo": "", "achievements": "State-level Oratory Football Convener; Senior Turf Incharge.", "abilities": "Football Coaching, Certified Refereeing, Ground Architecture"}, {"id": "LDR-SEN-05", "name": "RAJASEKAR", "role": "SPIRITUAL SECRETARY", "category": "Senior Leaders", "phone": "9003212827", "tenure": "6 Years", "photo": "", "achievements": "Don Bosco Annual Youth Retreat Director; Sacristy Council Head.", "abilities": "Spiritual Counseling, Retreat Directing, Liturgical Ceremonies"}, {"id": "LDR-SSEN-01", "name": "SANKAR", "role": "PRESIDENT", "category": "Super Senior Leaders", "phone": "9790811866", "tenure": "12 Years", "photo": "", "achievements": "DBYC Pillar of Excellence 2025; Senior Council Founding Member.", "abilities": "Senior Council Direction, Mentorship, Heritage Preservation, Mediation"}, {"id": "LDR-SSEN-02", "name": "BALAMURUGAN", "role": "SECRETARY", "category": "Super Senior Leaders", "phone": "7904391626", "tenure": "11 Years", "photo": "", "achievements": "Past Pupils & Alumni Network Lead; Super Senior Tournament Head.", "abilities": "Alumni Fellowship, Event Management, Career Mentoring"}, {"id": "LDR-SSEN-03", "name": "LOGANATHAN", "role": "SPORTS SECRETARY", "category": "Super Senior Leaders", "phone": "8667862801", "tenure": "10 Years", "photo": "", "achievements": "Veteran Cup Championship Trophy; Stadium Floodlights Renovation.", "abilities": "Veteran Football, Ground Maintenance, Sports Infrastructure"}, {"id": "LDR-SSEN-04", "name": "THIRUNAVUKARASU", "role": "CULTURAL SECRETARY", "category": "Super Senior Leaders", "phone": "8610839980", "tenure": "10 Years", "photo": "", "achievements": "Traditional Tamil Heritage Arts Recognition; Stage Architecture.", "abilities": "Folk Arts, Tamil Eloquence, Traditional Music, Stage Craft"}, {"id": "LDR-SSEN-05", "name": "ARUNKUMAR", "role": "SPIRITUAL & SOCIAL SECRETARY", "category": "Super Senior Leaders", "phone": "9841256566", "tenure": "12 Years", "photo": "", "achievements": "Basin Bridge Medical & Blood Donation Camp Lead; Flood Relief 2023.", "abilities": "Social Welfare, Disaster Relief, Community Medical Drives"}, {"id": "LDR-SSEN-06", "name": "SAMSON", "role": "TREASURER", "category": "Super Senior Leaders", "phone": "7550286169", "tenure": "11 Years", "photo": "", "achievements": "DBYC Audit & Transparency Shield; Capital Projects Treasurer.", "abilities": "Financial Auditing, Budget Planning, Asset Custodianship"}, {"id": "LDR-ELD-01", "name": "ULAGANATHAN", "role": "PRESIDENT", "category": "Elders", "phone": "8148631022", "tenure": "20+ Years", "photo": "", "achievements": "Lifetime Oratory Dedication Award; 25 Years Council Trustee.", "abilities": "Oratory Patronage, Salesian Preventive System, Civic Advisory"}, {"id": "LDR-ELD-02", "name": "JOHN BERKMENS", "role": "SECRETARY", "category": "Elders", "phone": "8072289913", "tenure": "18+ Years", "photo": "", "achievements": "Golden Jubilee History Chronicler; DBYC Heritage Archivist.", "abilities": "Historical Documentation, Legal Advisory, Community Guidance"}, {"id": "LDR-ELD-03", "name": "ARUMUGAM", "role": "TREASURER", "category": "Elders", "phone": "9841276605", "tenure": "19+ Years", "photo": "", "achievements": "Distinguished Elders Service Medal; Trust Fund Custodian.", "abilities": "Benevolent Fund Governance, Elder Fellowship, Ethical Advisory"}, {"id": "LDR-COM-01", "name": "MATHIVANAN", "role": "COMMITTEE MEMBER", "category": "Committee Members", "phone": "9444281207", "tenure": "15 Years", "photo": "", "achievements": "Senior Advisory Board Member; Youth Sponsorship Trustee.", "abilities": "Civic Liaison, Youth Welfare Sponsorship, Community Relations"}, {"id": "LDR-COM-02", "name": "DEVENDRAN", "role": "COMMITTEE MEMBER", "category": "Committee Members", "phone": "9566084070", "tenure": "14 Years", "photo": "", "achievements": "Campus Renovation Committee Lead; Sports Complex Expansion.", "abilities": "Civil Infrastructure, Power & Electricals, Campus Safety"}, {"id": "LDR-COM-03", "name": "MALARMANNAN", "role": "COMMITTEE MEMBER", "category": "Committee Members", "phone": "9444454799", "tenure": "16 Years", "photo": "", "achievements": "Youth Educational Scholarship Trustee; Legal Consultation Lead.", "abilities": "Legal Consultation, Education Grants, Higher Studies Mentoring"}, {"id": "LDR-COM-04", "name": "SRINIVASAN", "role": "COMMITTEE MEMBER", "category": "Committee Members", "phone": "9840094477", "tenure": "15 Years", "photo": "", "achievements": "Basin Bridge Sports Promoter Award; Tournament Chief Patron.", "abilities": "Sports Sponsorship, Equipment Procurement, Inter-Club Liaison"}, {"id": "LDR-COM-05", "name": "SATHISH KUMAR", "role": "COMMITTEE MEMBER", "category": "Committee Members", "phone": "9840795014", "tenure": "12 Years", "photo": "", "achievements": "Youth Career & Employment Guidance Director; IT Facilities Lead.", "abilities": "IT Infrastructure, Youth Career Placement, Digital Media"}];
+/* window.DBYC_OFFICIAL_LEADERS_SEED defined early before initApp */
 
 if (!window.appState.leaders || window.appState.leaders.length === 0) {
   window.appState.leaders = JSON.parse(JSON.stringify(window.DBYC_OFFICIAL_LEADERS_SEED));
@@ -16092,6 +16279,64 @@ function renderLeadersDashboard() {
   }).join('');
 }
 
+window.onOfficeBearerMemberSelected = function(memberId) {
+  if (!memberId) return;
+  const members = (window.appState && window.appState.members) || [];
+  const m = members.find(x => x.id === memberId);
+  if (!m) return;
+
+  const idIn = document.getElementById('editLeaderMemberId');
+  const nameIn = document.getElementById('editLeaderName');
+  const phoneIn = document.getElementById('editLeaderPhone');
+  const tenureIn = document.getElementById('editLeaderTenure');
+  const achieveIn = document.getElementById('editLeaderAchievements');
+  const abilityIn = document.getElementById('editLeaderAbilities');
+  const previewImg = document.getElementById('leaderPhotoPreviewImg');
+  const removeBtn = document.getElementById('removeLeaderPhotoBtn');
+  const catSelect = document.getElementById('editLeaderCategory');
+
+  if (idIn) idIn.value = m.id;
+  if (nameIn) nameIn.value = m.name || '';
+  if (phoneIn) phoneIn.value = m.mobile || m.phone || '';
+  if (tenureIn) tenureIn.value = m.yearsInDbyc ? (m.yearsInDbyc + ' Years') : (m.tenure || '2 Years');
+  if (achieveIn) achieveIn.value = m.futureAmbition || m.achievements || 'Active Member of DBYC';
+  if (abilityIn) abilityIn.value = Array.isArray(m.activities) ? m.activities.join(', ') : (m.activities || m.joiningPurpose || 'Leadership & Youth Formation');
+
+  window.capturedLeaderPhotoBase64 = m.photo || '';
+  if (previewImg) previewImg.src = m.photo || window.DBYC_OFFICIAL_LOGO || 'assets/logo.png';
+  if (removeBtn) removeBtn.style.display = m.photo ? 'inline-block' : 'none';
+
+  if (catSelect && m.group) {
+    const g = m.group.toLowerCase();
+    if (g.includes('sub-junior') || g.includes('sub junior')) catSelect.value = 'Sub-Junior Leaders';
+    else if (g.includes('junior')) catSelect.value = 'Junior Leaders';
+    else if (g.includes('inter')) catSelect.value = 'Inter Leaders';
+    else if (g.includes('super senior')) catSelect.value = 'Super Senior Leaders';
+    else if (g.includes('senior')) catSelect.value = 'Senior Leaders';
+    else if (g.includes('elder') || g.includes('committee')) catSelect.value = 'Elders';
+    else catSelect.value = 'Oratory Leaders';
+  }
+
+  showToast(`✨ Auto-filled data for "${m.name}"! Photo & contact linked.`);
+};
+
+window.onLeaderNameInput = function(typedName) {
+  if (!typedName || typedName.trim().length < 2) return;
+  const cleanTyped = typedName.trim().toLowerCase();
+  const members = (window.appState && window.appState.members) || [];
+  const matched = members.find(m => {
+    const mName = (m.name || '').trim().toLowerCase();
+    return mName === cleanTyped || mName.startsWith(cleanTyped);
+  });
+  if (matched) {
+    const sel = document.getElementById('editLeaderMemberSelect');
+    if (sel && sel.value !== matched.id) {
+      sel.value = matched.id;
+      window.onOfficeBearerMemberSelected(matched.id);
+    }
+  }
+};
+
 window.openEditLeaderModal = function(leaderId) {
   if (typeof window.closeAllModals === 'function') window.closeAllModals();
   if (typeof window.canEdit === 'function' && !window.canEdit('officebearers')) {
@@ -16105,12 +16350,29 @@ window.openEditLeaderModal = function(leaderId) {
   const titleEl = document.getElementById('editLeaderModalTitle');
   const previewImg = document.getElementById('leaderPhotoPreviewImg');
   const removeBtn = document.getElementById('removeLeaderPhotoBtn');
+  const memSelect = document.getElementById('editLeaderMemberSelect');
+  const idIn = document.getElementById('editLeaderMemberId');
+
+  // Populate Member Select dropdown from appState.members
+  if (memSelect) {
+    let opts = '<option value="">-- Choose Registered Member (உறுப்பினரைத் தேர்ந்தெடுக்கவும்) --</option>';
+    const members = (window.appState && window.appState.members) || [];
+    members.forEach(m => {
+      const r = (m.role || '').toLowerCase();
+      // Exclude Directors from youth office bearer dropdown
+      if (r.includes('director') && !r.includes('leader')) return;
+      opts += `<option value="${m.id}">${m.name} (${m.group || m.role || 'Member'}) - ${m.mobile || 'No Phone'}</option>`;
+    });
+    memSelect.innerHTML = opts;
+  }
 
   if (leaderId) {
     const l = (window.appState.leaders || []).find(x => x.id === leaderId);
     if (!l) return;
     document.getElementById('editLeaderId').value = l.id;
-    if (titleEl) titleEl.textContent = `✏️ Edit Leader: ${l.name} (${l.role})`;
+    if (idIn) idIn.value = l.memberId || '';
+    if (memSelect && l.memberId) memSelect.value = l.memberId;
+    if (titleEl) titleEl.textContent = `✏️ Edit Post / Office Bearer: ${l.role} (${l.name})`;
     document.getElementById('editLeaderName').value = l.name || '';
     document.getElementById('editLeaderRole').value = l.role || '';
     document.getElementById('editLeaderCategory').value = l.category || 'Oratory Leaders';
@@ -16125,7 +16387,9 @@ window.openEditLeaderModal = function(leaderId) {
   } else {
     document.getElementById('editLeaderForm')?.reset();
     document.getElementById('editLeaderId').value = '';
-    if (titleEl) titleEl.textContent = '➕ Add New Leader Profile';
+    if (idIn) idIn.value = '';
+    if (memSelect) memSelect.value = '';
+    if (titleEl) titleEl.textContent = '➕ Add New Office Bearer / Post';
     window.capturedLeaderPhotoBase64 = '';
     if (previewImg) previewImg.src = window.DBYC_OFFICIAL_LOGO || 'assets/logo.png';
     if (removeBtn) removeBtn.style.display = 'none';
@@ -16235,19 +16499,97 @@ window.saveLeaderProfileSubmit = function(event) {
   }
 
   const editId = document.getElementById('editLeaderId')?.value;
+  const chosenMemberId = document.getElementById('editLeaderMemberId')?.value || document.getElementById('editLeaderMemberSelect')?.value;
   const category = document.getElementById('editLeaderCategory')?.value || 'Oratory Leaders';
   const phone = document.getElementById('editLeaderPhone')?.value.trim() || '';
   const tenure = document.getElementById('editLeaderTenure')?.value.trim() || '';
   const achievements = document.getElementById('editLeaderAchievements')?.value.trim() || '';
   const abilities = document.getElementById('editLeaderAbilities')?.value.trim() || '';
+  const photo = window.capturedLeaderPhotoBase64 || '';
 
   if (!window.appState.leaders) window.appState.leaders = [];
+  if (!window.appState.members) window.appState.members = [];
+
+  let matchedMem = window.appState.members.find(m => {
+    if (chosenMemberId && m.id === chosenMemberId) return true;
+    const mPhone = (m.mobile || '').replace(/\D/g, '');
+    const lPhone = phone.replace(/\D/g, '');
+    if (lPhone.length >= 8 && mPhone === lPhone) return true;
+    if ((m.name || '').trim().toLowerCase() === name.toLowerCase()) return true;
+    return false;
+  });
+
+  // If member does not exist in members registry, auto-register them immediately!
+  if (!matchedMem) {
+    let grp = 'Oratory Group';
+    if (category.includes('Sub-Junior')) grp = 'Sub Juniors Group';
+    else if (category.includes('Junior')) grp = 'Juniors Group';
+    else if (category.includes('Inter')) grp = 'Inters Group';
+    else if (category.includes('Super Senior')) grp = 'Super Seniors Group';
+    else if (category.includes('Senior')) grp = 'Seniors Group';
+    else if (category.includes('Elder') || category.includes('Committee')) grp = 'Elders Group';
+
+    matchedMem = {
+      id: chosenMemberId || ('DBYC-LDR-' + name.replace(/[^A-Za-z0-9]/g, '').toUpperCase()),
+      name: name,
+      role: role,
+      roles: [role],
+      group: grp,
+      category: category,
+      mobile: phone,
+      phone: phone,
+      pin: '1234',
+      securityPin: '1234',
+      yearsInDbyc: parseInt(tenure) || 3,
+      joinDate: '2021-01-01',
+      renewalDate: '2026-01-01',
+      expiryDate: '2027-01-01',
+      membershipYear: '2026 - 2027',
+      bloodGroup: 'O+ve',
+      homeAddress: 'Don Bosco, Basin Bridge, Chennai - 600 012',
+      address: 'Don Bosco, Basin Bridge, Chennai - 600 012',
+      activities: abilities || 'Youth Animation',
+      futureAmbition: achievements || 'Active Leader of DBYC',
+      photo: photo,
+      status: 'Active',
+      approvalStatus: 'APPROVED',
+      membershipStatus: 'ACTIVE',
+      createdAt: new Date().toISOString()
+    };
+    window.appState.members.push(matchedMem);
+  } else {
+    // 2-Way Sync to member record
+    matchedMem.name = name;
+    if (phone) matchedMem.mobile = phone;
+    if (photo) matchedMem.photo = photo;
+    if (abilities) matchedMem.activities = abilities;
+    if (achievements) matchedMem.futureAmbition = achievements;
+
+    // Multi-post holding: "one person also can hold two three posts"
+    if (!matchedMem.roles) matchedMem.roles = [matchedMem.role || 'Youth Leader'];
+    if (!matchedMem.roles.includes(role)) matchedMem.roles.push(role);
+    const cleanRoles2 = [...new Set(matchedMem.roles.flatMap(r => (r || '').split(' & ').map(x => x.trim())).filter(Boolean))];
+    matchedMem.roles = cleanRoles2;
+    matchedMem.role = cleanRoles2.join(' & ');
+  }
+
+  const finalMemberId = matchedMem.id;
 
   if (editId) {
     const idx = window.appState.leaders.findIndex(x => x.id === editId);
     if (idx !== -1) {
       const prev = window.appState.leaders[idx];
+      // If person changed (rotation / exchange)
+      if (prev.memberId && prev.memberId !== finalMemberId) {
+        const prevMem = window.appState.members.find(m => m.id === prev.memberId);
+        if (prevMem && Array.isArray(prevMem.roles)) {
+          prevMem.roles = prevMem.roles.filter(r => r !== prev.role);
+          prevMem.role = prevMem.roles.length > 0 ? prevMem.roles.join(' & ') : 'Member';
+        }
+      }
+
       window.appState.leaders[idx] = Object.assign({}, prev, {
+        memberId: finalMemberId,
         name,
         role,
         category,
@@ -16255,14 +16597,15 @@ window.saveLeaderProfileSubmit = function(event) {
         tenure,
         achievements,
         abilities,
-        photo: window.capturedLeaderPhotoBase64 || prev.photo || '',
+        photo: photo || prev.photo || matchedMem.photo || '',
         updatedAt: new Date().toISOString()
       });
-      showToast(`✅ Leader "${name}" profile updated!`);
+      showToast(`✅ Office Bearer post "${role}" updated with ${name}!`);
     }
   } else {
     const newLeader = {
       id: 'LDR-' + Date.now(),
+      memberId: finalMemberId,
       name,
       role,
       category,
@@ -16270,11 +16613,11 @@ window.saveLeaderProfileSubmit = function(event) {
       tenure,
       achievements,
       abilities,
-      photo: window.capturedLeaderPhotoBase64 || '',
+      photo: photo || matchedMem.photo || '',
       createdAt: new Date().toISOString()
     };
     window.appState.leaders.unshift(newLeader);
-    showToast(`✅ Leader "${name}" registered!`);
+    showToast(`✅ New Office Bearer post registered for ${name}!`);
   }
 
   saveLocalData();
@@ -16282,28 +16625,12 @@ window.saveLeaderProfileSubmit = function(event) {
     window.DbycCloud.pushToCloud();
   }
 
-  // Synchronize back to appState.members
-  if (window.appState.members) {
-    const memIdx = window.appState.members.findIndex(m => m.id === editId || (phone && m.mobile === phone));
-    if (memIdx !== -1) {
-      window.appState.members[memIdx].name = name;
-      window.appState.members[memIdx].role = role;
-      window.appState.members[memIdx].category = category;
-      window.appState.members[memIdx].group = category;
-      window.appState.members[memIdx].mobile = phone;
-      if (window.capturedLeaderPhotoBase64) window.appState.members[memIdx].photo = window.capturedLeaderPhotoBase64;
-    }
-  }
-
   const modal = document.getElementById('editLeaderModal');
   if (modal) modal.style.display = 'none';
-  renderLeadersDashboard();
-  if (typeof window.renderOfficeBearersDashboard === 'function') {
-    window.renderOfficeBearersDashboard();
-  }
-  if (typeof renderMembersRegistry === 'function') {
-    renderMembersRegistry();
-  }
+
+  if (typeof renderLeadersDashboard === 'function') renderLeadersDashboard();
+  if (typeof window.renderOfficeBearersDashboard === 'function') window.renderOfficeBearersDashboard();
+  if (typeof renderMembersRegistry === 'function') renderMembersRegistry();
 };
 
 // 3. TEAM LOGO UPLOAD & EDIT HANDLERS
@@ -16532,7 +16859,7 @@ function renderTeamsView() {
   if (historyContainer) {
     const logs = window.appState.teamPointsLog || [
       { id: 'LOG-001', team: 'Green Warriors', points: 100, reason: 'Attendance Excellence', awardedBy: 'Rev. Fr. Director, SDB', date: '2026-09-20' },
-      { id: 'LOG-002', team: 'Red Dragons', points: 50, reason: 'Football Friendly Match Victory', awardedBy: 'Rev. Fr. Asst. Director, SDB', date: '2026-09-25' }
+      { id: 'LOG-002', team: 'Red Dragons', points: 50, reason: 'Football Friendly Match Victory', awardedBy: 'Rev. Fr. Don Frangleen, SDB', date: '2026-09-25' }
     ];
 
     historyContainer.innerHTML = logs.map(l => `
@@ -16942,13 +17269,8 @@ function renderQualificationDesk(filter = 'ALL') {
   }
 
   // Gather pending items across all required streams (Strictly unapproved items)
-  const isMemberApproved = (m) => {
-    if (!m) return false;
-    if (m.approvalStatus === 'PENDING' || m.status === 'PENDING' || m.membershipStatus === 'PENDING') return false;
-    if (m.id === 'DBYC-DIR-001' || m.id === 'DBYC-DIR-002') return true;
-    return (m.approvalStatus === 'APPROVED' || m.status === 'APPROVED') && (m.approvedBy || m.membershipStatus === 'ACTIVE');
-  };
-  const pendingMembers = (appState.members || []).filter(m => !isMemberApproved(m) && (m.status === 'PENDING' || m.approvalStatus === 'PENDING' || m.membershipStatus === 'PENDING' || !m.approvalStatus)).map(m => ({ ...m, itemType: 'MEMBERS' }));
+  const isMemberApproved = (m) => (m.approvalStatus === 'APPROVED' || m.status === 'APPROVED' || m.status === 'Active' || m.membershipStatus === 'ACTIVE');
+  const pendingMembers = (appState.members || []).filter(m => !isMemberApproved(m) && (m.status === 'PENDING' || m.approvalStatus === 'PENDING' || !m.approvalStatus)).map(m => ({ ...m, itemType: 'MEMBERS' }));
   const pendingEvents = (appState.events || []).filter(e => !(e.approvalStatus === 'APPROVED' || e.status === 'APPROVED') && (e.status === 'PENDING' || e.approvalStatus === 'PENDING')).map(e => ({ ...e, itemType: 'CALENDAR' }));
   const pendingNews = (appState.news || []).filter(n => !(n.approvalStatus === 'APPROVED' || n.status === 'APPROVED') && (n.status === 'PENDING' || n.approvalStatus === 'PENDING')).map(n => ({ ...n, itemType: 'NEWS' }));
   const pendingMinutes = (appState.minutes || []).filter(m => !(m.approvalStatus === 'APPROVED' || m.status === 'APPROVED') && (m.status === 'PENDING' || m.approvalStatus === 'PENDING')).map(m => ({ ...m, itemType: 'MINUTES' }));
@@ -17358,17 +17680,18 @@ window.DbycGoogleDriveServerStorage = {
   _coordinationListenersAttached: false,
 
   getAdaptiveInterval: function() {
-    const isDir = (typeof isDirectorOnly === 'function' && isDirectorOnly()) || (typeof isDirectorUser === 'function' && isDirectorUser()) || (typeof isDirectorOrAsstDirector === 'function' && isDirectorOrAsstDirector());
+    const isDir = (typeof isDirectorOnly === 'function' && isDirectorOnly()) || (typeof isDirectorUser === 'function' && isDirectorUser());
     const isLeader = (typeof isLeaderOnly === 'function' && isLeaderOnly()) || (window.appState && (window.appState.currentRole === 'UNIT_LEADER' || window.appState.currentRole === 'OFFICE_BEARER'));
-    // Ultra-fast role-adaptive sync cadence:
-    // Directors / Assistant Directors: 3.5s (instant real-time view of approvals, registrations & live edits)
-    // Unit Leaders: 5s (instant feedback for attendance & matches)
-    // General Youth Members & Front Home: 7s
-    let base = 7000;
-    if (isDir) base = 3500;
-    else if (isLeader) base = 5000;
-    const jitter = Math.floor((Math.random() - 0.5) * 1000);
-    return Math.max(2500, base + jitter);
+    // Role-adaptive polling cadence:
+    // Directors / Admins: 20s (need rapid updates for approvals and event management)
+    // Unit Leaders: 25s (need quick feedback for attendance & matches)
+    // General Youth Members: 85s (cuts ~85% of traffic, avoids cloud congestion)
+    let base = 85000;
+    if (isDir) base = 20000;
+    else if (isLeader) base = 25000;
+    // Add ±3000ms random jitter so devices don't hit the server at the exact same split-second
+    const jitter = Math.floor((Math.random() - 0.5) * 6000);
+    return Math.max(10000, base + jitter);
   },
 
   scheduleNextAdaptivePoll: function() {
@@ -17520,23 +17843,7 @@ window.DbycGoogleDriveServerStorage = {
     const payload = {
       updatedAt: new Date().toISOString(),
       updatedBy: (window.appState && window.appState.currentUser) ? window.appState.currentUser.name : 'DBYC Device',
-      // Efficient member text data: strips empty blank text fields to use less cloud storage, leaves member photos 100% untouched
-      members: ((window.appState && window.appState.members) || []).map(m => {
-        if (!m || typeof m !== 'object') return m;
-        const clean = {};
-        for (const [k, v] of Object.entries(m)) {
-          // Member photo is kept 100% untouched exactly as is
-          if (k === 'photo') {
-            if (v) clean[k] = v;
-            continue;
-          }
-          // For text/data fields: omit blank empty strings, null, undefined, or empty arrays to use less cloud storage
-          if (v === '' || v === null || v === undefined) continue;
-          if (Array.isArray(v) && v.length === 0) continue;
-          clean[k] = v;
-        }
-        return clean;
-      }),
+      members: (window.appState && window.appState.members) || [],
       deletedMemberIds: (window.appState && window.appState.deletedMemberIds) || [],
       deletedNewsIds: (window.appState && window.appState.deletedNewsIds) || [],
       deletedMinuteIds: (window.appState && window.appState.deletedMinuteIds) || [],
@@ -17992,13 +18299,6 @@ window.DbycGoogleDriveServerStorage = {
       if (typeof saveLocalData === 'function') {
         saveLocalData(true);
       }
-      // Real-time instant refresh of Qualification Desk and Registries
-      if (typeof renderQualificationDesk === 'function') {
-        renderQualificationDesk();
-      }
-      if (typeof updateDashboardStats === 'function') {
-        updateDashboardStats();
-      }
 
       // Non-disruptive UI render:
       // Do NOT interrupt the user if they are currently typing in an input or have a modal open!
@@ -18110,166 +18410,7 @@ window.filterOfficeBearers = function(cat) {
 // ==========================================
 // DYNAMIC TWO-WAY SYNC: OFFICE BEARERS & MEMBERS REGISTRY
 // ==========================================
-window.syncLeadersWithMembers = function() {
-  if (!window.appState) return;
-  if (!window.appState.leaders || window.appState.leaders.length === 0) {
-    window.appState.leaders = JSON.parse(JSON.stringify(window.DBYC_OFFICIAL_LEADERS_SEED || []));
-  }
-  if (!window.appState.members) window.appState.members = [];
-  const members = window.appState.members;
-  const leaders = window.appState.leaders;
-
-  // 1. Auto-synchronize all official leaders into members list so they can log in and be edited
-  leaders.forEach(ldr => {
-    const ldrPhoneClean = (ldr.phone || '').replace(/\D/g, '');
-    const ldrNameNorm = (ldr.name || '').trim().toUpperCase();
-    const ldrIdNorm = (ldr.id || '').trim().toUpperCase();
-
-    let matchedMem = members.find(m => {
-      if (m.id && m.id.toUpperCase() === ldrIdNorm) return true;
-      const mPhoneClean = (m.mobile || '').replace(/\D/g, '');
-      if (ldrPhoneClean && mPhoneClean && (ldrPhoneClean === mPhoneClean || mPhoneClean.endsWith(ldrPhoneClean))) return true;
-      if (ldrNameNorm && (m.name || '').trim().toUpperCase() === ldrNameNorm) return true;
-      return false;
-    });
-
-    if (!matchedMem) {
-      matchedMem = {
-        id: ldr.id || ('DBYC-LDR-' + ldr.name),
-        name: ldr.name,
-        role: ldr.role || 'Youth Leader',
-        group: ldr.category || 'Office Bearers',
-        category: ldr.category || 'Office Bearers',
-        mobile: ldr.phone || '',
-        pin: ldr.pin || '1234',
-        securityPin: ldr.pin || '1234',
-        yearsInDbyc: parseInt(ldr.tenure) || 5,
-        joinDate: '2021-01-01',
-        bloodGroup: 'O+ve',
-        homeAddress: 'Basin Bridge, Chennai - 600 012',
-        activities: ldr.abilities || 'Leadership & Oratory Formation',
-        photo: ldr.photo || '',
-        status: 'Active',
-        approvalStatus: 'APPROVED'
-      };
-      members.push(matchedMem);
-    }
-  });
-
-  // 2. Sync existing leaders from matched member records
-  leaders.forEach(ldr => {
-    const ldrPhoneClean = (ldr.phone || '').replace(/\D/g, '');
-    const ldrNameNorm = (ldr.name || '').trim().toLowerCase();
-
-    const matchedMem = members.find(m => {
-      if (ldr.memberId && m.id === ldr.memberId) return true;
-      const mPhoneClean = (m.mobile || '').replace(/\D/g, '');
-      if (ldrPhoneClean && mPhoneClean && (ldrPhoneClean === mPhoneClean || mPhoneClean.endsWith(ldrPhoneClean) || ldrPhoneClean.endsWith(mPhoneClean))) return true;
-      if (ldrNameNorm && (m.name || '').trim().toLowerCase() === ldrNameNorm) return true;
-      return false;
-    });
-
-    if (matchedMem) {
-      ldr.memberId = matchedMem.id;
-      if (matchedMem.photo) ldr.photo = matchedMem.photo;
-      if (matchedMem.mobile) ldr.phone = matchedMem.mobile;
-      if (matchedMem.role && matchedMem.role !== 'Member' && matchedMem.role !== 'Youth Member') {
-        ldr.role = matchedMem.role;
-      }
-      if (matchedMem.category) {
-        ldr.category = matchedMem.category;
-      }
-      if (matchedMem.joiningPurpose && !ldr.abilities) {
-        ldr.abilities = matchedMem.joiningPurpose;
-      }
-      if (matchedMem.pin || matchedMem.securityPin) {
-        ldr.pin = matchedMem.pin || matchedMem.securityPin;
-      }
-    }
-  });
-
-  // 2. Automatically import newly registered members with leadership roles or categories
-  const leadershipRoles = [
-    'president', 'secretary', 'general secretary', 'gs', 'ags', 'treasurer',
-    'sports secretary', 'cultural secretary', 'spiritual secretary',
-    'leader', 'incharge', 'council', 'committee',
-    'vice president', 'joint secretary'
-  ];
-
-  const leadershipCategories = [
-    'oratory leaders', 'senior leaders', 'sub-junior leaders', 'junior leaders',
-    'inter leaders', 'super senior leaders', 'elders', 'committee members', 'council members'
-  ];
-
-  members.forEach(m => {
-    const roleLower = (m.role || '').toLowerCase();
-    const groupLower = (m.group || '').toLowerCase();
-    const catLower = (m.category || '').toLowerCase();
-    const mNameNorm = (m.name || '').trim().toLowerCase();
-
-    // NEVER import Director or Assistant Director into Office Bearers!
-    if (roleLower.includes('director') || mNameNorm.includes('director') || mNameNorm.includes('frangleen')) {
-      return;
-    }
-
-    const isLeaderRole = leadershipRoles.some(r => roleLower.includes(r));
-    const isLeaderCat = leadershipCategories.some(c => catLower.includes(c) || groupLower.includes(c));
-
-    if (isLeaderRole || isLeaderCat) {
-      const mPhoneClean = (m.mobile || '').replace(/\D/g, '');
-
-      const existingLeader = leaders.find(l => {
-        if (l.memberId && l.memberId === m.id) return true;
-        const lPhoneClean = (l.phone || '').replace(/\D/g, '');
-        if (lPhoneClean && mPhoneClean && lPhoneClean === mPhoneClean) return true;
-        if ((l.name || '').trim().toLowerCase() === mNameNorm) return true;
-        return false;
-      });
-
-      if (!existingLeader) {
-        let assignedCat = m.category || 'Senior Leaders';
-        if (groupLower.includes('sub junior') || groupLower.includes('sub-junior')) assignedCat = 'Sub-Junior Leaders';
-        else if (groupLower.includes('junior')) assignedCat = 'Junior Leaders';
-        else if (groupLower.includes('inter')) assignedCat = 'Inter Leaders';
-        else if (groupLower.includes('super')) assignedCat = 'Super Senior Leaders';
-        else if (groupLower.includes('elder')) assignedCat = 'Elders';
-        else if (groupLower.includes('oratory')) assignedCat = 'Oratory Leaders';
-        else if (roleLower.includes('committee')) assignedCat = 'Committee Members';
-
-        leaders.push({
-          id: `LEAD-${m.id}`,
-          memberId: m.id,
-          name: m.name,
-          role: m.role || 'Leader',
-          category: assignedCat,
-          phone: m.mobile || '',
-          photo: m.photo || '',
-          tenure: '2026 - Present',
-          duties: m.joiningPurpose || 'Youth Guidance, Oratory Formation & Centre Activities',
-          abilities: Array.isArray(m.activities) ? m.activities.join(', ') : (m.activities || 'Leadership & Sports'),
-          achievements: 'Dedicated DBYC Active Bearer of Responsibility',
-          pin: m.securityPin || m.pin || '1234'
-        });
-      }
-    }
-  });
-
-  const validLeaders = leaders.filter(l => {
-    const r = (l.role || '').toLowerCase();
-    const n = (l.name || '').toLowerCase();
-    return !r.includes('director') && !n.includes('director') && !n.includes('frangleen');
-  });
-
-  const countBadge = document.getElementById('obHeaderCountBadge');
-  if (countBadge) {
-    countBadge.textContent = `${validLeaders.length} Bearers of Responsibility • Basin Bridge, Chennai - 12`;
-  }
-  const ldrCountBadge = document.getElementById('leadersHeaderCountBadge');
-  if (ldrCountBadge) {
-    ldrCountBadge.textContent = `${validLeaders.length} Bearers of Responsibility • Basin Bridge, Chennai - 12`;
-  }
-};
-
+/* Old syncLeadersWithMembers removed */
 window.renderOfficeBearersDashboard = function() {
   const container = document.getElementById('officeBearersListContainer');
   if (!container) return;
@@ -18983,7 +19124,7 @@ window.DBYC_OFFICIAL_LOGO_URI = window.DBYC_OFFICIAL_LOGO;
 const DBYC_ROLE_PASSWORDS = {
   DIRECTOR: {
     default: '1815',
-    valid: ['1815', 'dir1815', 'director1815', 'father', 'dbyc-admin-2026', 'dbyc2026', 'admin', '1888', '9894', '1234', '0000'],
+    valid: ['1815', 'dir1815', 'director1815', 'father', 'dbyc-admin-2026', 'dbyc2026', 'admin', '1888'],
     title: 'Rev. Fr. Director, SDB',
     roleName: 'Director',
     tamil: 'இயக்குநர்',
@@ -18992,8 +19133,8 @@ const DBYC_ROLE_PASSWORDS = {
   },
   ASST_DIRECTOR: {
     default: '1934',
-    valid: ['1934', '1888', '1815', '1234', '0000', 'admin', 'asst', 'assistant', 'asstdirector', 'assistantdirector', 'asst1934', 'dbyc', 'dbyc2026', '2026', 'dbyc-asst-2026', '9894'],
-    title: 'Rev. Fr. Asst. Director, SDB',
+    valid: ['1934', '1888', '1815', '1234', '0000', 'admin', 'asst', 'assistant', 'asstdirector', 'assistantdirector', 'asst1934', 'dbyc', 'dbyc2026', '2026', 'dbyc-asst-2026'],
+    title: 'Rev. Fr. Don Frangleen, SDB',
     roleName: 'Assistant Director',
     tamil: 'உதவி இயக்குநர்',
     icon: '👔',
@@ -19134,37 +19275,6 @@ window.updateLoginDbCountBadge = function() {
   const badge = document.getElementById('loginDbCountBadge');
   if (badge && window.appState && window.appState.members) {
     badge.innerHTML = `📦 Registered Members: <strong>${window.appState.members.length}</strong>`;
-  }
-};
-
-window.refreshQualificationDeskLive = async function(btn) {
-  const orig = btn ? btn.innerHTML : '🔄 Live Sync';
-  if (btn) {
-    btn.disabled = true;
-    btn.innerHTML = '⏳ Syncing...';
-    btn.style.opacity = '0.75';
-  }
-  try {
-    if (window.DbycCloud && typeof window.DbycCloud.pullLatestFromCloud === 'function') {
-      await window.DbycCloud.pullLatestFromCloud(false);
-    }
-    if (typeof renderQualificationDesk === 'function') {
-      renderQualificationDesk();
-    }
-    if (typeof showToast === 'function') {
-      showToast('✅ Qualification desk synchronized with cloud!');
-    }
-    if (btn) btn.innerHTML = '✓ Synced';
-  } catch(e) {
-    if (btn) btn.innerHTML = '⚠️ Retry';
-  } finally {
-    setTimeout(() => {
-      if (btn) {
-        btn.disabled = false;
-        btn.innerHTML = orig;
-        btn.style.opacity = '1';
-      }
-    }, 2000);
   }
 };
 
@@ -19318,10 +19428,10 @@ window.simpleRoleLoginSubmit = async function() {
     const isAsstAlias = normId.includes('asst') || normId.includes('assistant');
     const isDirAlias = !isAsstAlias && (normId.includes('director') || normId === 'admin' || normId === 'father' || normId === 'fr');
 
-    if (isAsstAlias || (role === 'ASST_DIRECTOR' && (phoneClean === '7305948101' || phoneClean === '9876543211'))) {
+    if (isAsstAlias) {
       return members.find(m => (m.role || '').toLowerCase().includes('asst')) || members.find(m => m.id === 'DBYC-DIR-002');
     }
-    if (isDirAlias || (role === 'DIRECTOR' && (phoneClean === '7305948101' || phoneClean === '9876543210'))) {
+    if (isDirAlias) {
       return members.find(m => (m.role || '').toLowerCase().includes('director') && !(m.role || '').toLowerCase().includes('asst')) || members.find(m => m.id === 'DBYC-DIR-001');
     }
 
@@ -19409,8 +19519,7 @@ window.simpleRoleLoginSubmit = async function() {
     const isDirectorAuth = (pwd === '1815' || pwd === '1888' || (customDirPin && pwd === customDirPin) || (DBYC_ROLE_PASSWORDS.DIRECTOR.valid && DBYC_ROLE_PASSWORDS.DIRECTOR.valid.includes(pwd)));
     const isAsstAuth = (pwd === '1934' || (pwd === '1888' && role === 'ASST_DIRECTOR') || (pwd === '1815' && role === 'ASST_DIRECTOR') || pwd === 'admin' || pwd === 'assistant' || (DBYC_ROLE_PASSWORDS.ASST_DIRECTOR && DBYC_ROLE_PASSWORDS.ASST_DIRECTOR.valid && DBYC_ROLE_PASSWORDS.ASST_DIRECTOR.valid.includes(pwd)));
 
-    // If 9894 or authorized PIN entered for Director
-    if ((role === 'DIRECTOR' || !role) && (isDirectorAuth || pwd === '9894')) {
+    if (role === 'DIRECTOR' && isDirectorAuth) {
       const members = appState.members || [];
       let dirMember = members.find(m => (m.role || '').toLowerCase().includes('director') && !(m.role || '').toLowerCase().includes('asst'));
       if (!dirMember) {
@@ -19435,8 +19544,7 @@ window.simpleRoleLoginSubmit = async function() {
       return;
     }
 
-    // If 9894 or authorized PIN entered for Asst Director
-    if (role === 'ASST_DIRECTOR' && (isAsstAuth || pwd === '9894' || pwd === '1934')) {
+    if (role === 'ASST_DIRECTOR' && isAsstAuth) {
       const members = appState.members || [];
       let asstMember = members.find(m => (m.role || '').toLowerCase().includes('asst')) || members.find(m => m.id === 'DBYC-DIR-002');
       if (!asstMember) {
@@ -19530,31 +19638,15 @@ window.simpleRoleLoginSubmit = async function() {
     }
   }
 
-  // Verify matched member PIN with full Director, Asst Director, and 9894 support
+  // Verify matched member PIN
   const memPin = String(matchedMember.pin || matchedMember.securityPin || '').trim().toLowerCase();
   const memPwd = String(matchedMember.password || '').trim().toLowerCase();
-  const phoneClean = (enteredId || '').replace(/\D/g, '');
-  let isAsstMember = (matchedMember.id === 'DBYC-DIR-002' || (matchedMember.role && matchedMember.role.toLowerCase().includes('asst')));
-  let isDirMember = (matchedMember.id === 'DBYC-DIR-001' || (matchedMember.role && matchedMember.role.toLowerCase().includes('director') && !matchedMember.role.toLowerCase().includes('asst')));
-  const customDirPin = (localStorage.getItem('dbyc_director_password') || '').trim().toLowerCase();
-
-  // If user selected Asst Director persona card and entered Director/Asst phone (7305948101):
-  if (role === 'ASST_DIRECTOR' && (isAsstMember || isDirMember || phoneClean === '7305948101' || phoneClean === '9876543211')) {
-    let asstMember = (appState.members || []).find(m => (m.role || '').toLowerCase().includes('asst')) || (appState.members || []).find(m => m.id === 'DBYC-DIR-002');
-    if (!asstMember) {
-      asstMember = { id: 'DBYC-DIR-002', name: 'Rev. Fr. Asst. Director, SDB', role: 'Assistant Director (Direct Incharge)', group: 'Super Seniors Group', mobile: '7305948101', pin: '9894' };
-    }
-    matchedMember = asstMember;
-    isAsstMember = true;
-    isDirMember = false;
-  }
-
+  const isAsstMember = (matchedMember.id === 'DBYC-DIR-002' || (matchedMember.role && matchedMember.role.toLowerCase().includes('asst')));
+  const isDirMember = (matchedMember.id === 'DBYC-DIR-001' || (matchedMember.role && matchedMember.role.toLowerCase().includes('director') && !matchedMember.role.toLowerCase().includes('asst')));
   const isPinMatch = (memPin && pwd === memPin) || (memPwd && pwd === memPwd) || 
     (pwd === '1234' || pwd === '0000') ||
-    (pwd === '9894') || // Authorized security PIN entered by Rev. Fr. Director / Staff
-    (isDirMember && (pwd === '1815' || pwd === '1888' || pwd === '9894' || pwd === 'admin' || (customDirPin && pwd === customDirPin))) ||
-    (isAsstMember && (pwd === '1934' || pwd === '1888' || pwd === '1815' || pwd === '9894' || pwd === 'admin' || pwd === 'assistant' || pwd === 'asstdirector')) ||
-    (phoneClean === '7305948101' && (pwd === '9894' || pwd === '1815' || pwd === '1888' || pwd === '1934' || pwd === '1234'));
+    (isDirMember && (pwd === '1815' || pwd === '1888' || pwd === 'admin')) ||
+    (isAsstMember && (pwd === '1934' || pwd === '1888' || pwd === '1815' || pwd === 'admin' || pwd === 'assistant' || pwd === 'asstdirector'));
 
   if (!isPinMatch) {
     if (errEl) {
@@ -19577,12 +19669,7 @@ window.simpleRoleLoginSubmit = async function() {
   }
   appState.currentUser = matchedMember;
   localStorage.setItem(DBYC_USER, JSON.stringify(matchedMember));
-  let activeRoleCode = 'MEMBER';
-  const rLower = (matchedMember.role || '').toLowerCase();
-  if (rLower.includes('asst')) activeRoleCode = 'ASST_DIRECTOR';
-  else if (rLower.includes('director')) activeRoleCode = 'DIRECTOR';
-  else if (rLower.includes('leader') || rLower.includes('incharge') || rLower.includes('bearer')) activeRoleCode = 'LEADER';
-  localStorage.setItem('dbyc_current_role', activeRoleCode);
+  localStorage.setItem('dbyc_current_role', (matchedMember.role && matchedMember.role.toLowerCase().includes('leader')) ? 'LEADER' : 'MEMBER');
   localStorage.setItem('dbyc_active_session', JSON.stringify({
     userId: matchedMember.id,
     role: matchedMember.role || 'Member',
@@ -20896,128 +20983,7 @@ window.openNewMemberRegistrationFromLogin = function() {
   }
 };
 
-window.syncLeadersWithMembers = function() {
-  if (!window.appState) return;
-
-  // Clean out any directors from office bearers
-  if (typeof window.purgeDirectorsFromLeaders === 'function') {
-    window.purgeDirectorsFromLeaders();
-  }
-
-  if (!window.appState.leaders || window.appState.leaders.length === 0) {
-    window.appState.leaders = JSON.parse(JSON.stringify(window.DBYC_OFFICIAL_LEADERS_SEED || []));
-  }
-  const members = window.appState.members || [];
-  const leaders = window.appState.leaders;
-
-  // 1. Update existing leaders with fresh data & photo from matched member records
-  leaders.forEach(ldr => {
-    const ldrPhoneClean = (ldr.phone || '').replace(/\D/g, '');
-    const ldrNameNorm = (ldr.name || '').trim().toLowerCase();
-
-    const matchedMem = members.find(m => {
-      if (ldr.memberId && m.id === ldr.memberId) return true;
-      const mPhoneClean = (m.mobile || '').replace(/\D/g, '');
-      if (ldrPhoneClean && mPhoneClean && (ldrPhoneClean === mPhoneClean || mPhoneClean.endsWith(ldrPhoneClean) || ldrPhoneClean.endsWith(mPhoneClean))) return true;
-      if (ldrNameNorm && (m.name || '').trim().toLowerCase() === ldrNameNorm) return true;
-      return false;
-    });
-
-    if (matchedMem) {
-      ldr.memberId = matchedMem.id;
-      if (matchedMem.photo) ldr.photo = matchedMem.photo;
-      if (matchedMem.mobile) ldr.phone = matchedMem.mobile;
-      if (matchedMem.role && matchedMem.role !== 'Member' && matchedMem.role !== 'Youth Member') {
-        ldr.role = matchedMem.role;
-      }
-      if (matchedMem.category) {
-        ldr.category = matchedMem.category;
-      }
-      if (matchedMem.joiningPurpose && !ldr.abilities) {
-        ldr.abilities = matchedMem.joiningPurpose;
-      }
-      if (matchedMem.pin || matchedMem.securityPin) {
-        ldr.pin = matchedMem.pin || matchedMem.securityPin;
-      }
-    }
-  });
-
-  // 2. Automatically pull ALL registered members with an Office Bearer category or leadership role
-  const leadershipRoles = [
-    'president', 'secretary', 'general secretary', 'treasurer', 'joint secretary',
-    'vice president', 'animator', 'leader', 'incharge',
-    'captain', 'councillor', 'council', 'committee', 'choir', 'sports', 'media'
-  ];
-
-  members.forEach(m => {
-    const roleLower = (m.role || '').toLowerCase();
-    const groupLower = (m.group || '').toLowerCase();
-    const catLower = (m.category || '').toLowerCase();
-    const mNameNorm = (m.name || '').trim().toLowerCase();
-
-    // NEVER import Director or Assistant Director into Office Bearers!
-    if (roleLower.includes('director') || mNameNorm.includes('director') || mNameNorm.includes('frangleen')) {
-      return;
-    }
-
-    const isLeaderRole = leadershipRoles.some(r => roleLower.includes(r));
-    const isLeaderCat = catLower.includes('leader') || groupLower.includes('leader') || catLower.includes('committee') || catLower.includes('elder');
-
-    if (isLeaderRole || isLeaderCat) {
-      const mPhoneClean = (m.mobile || '').replace(/\D/g, '');
-
-      const existingLeader = leaders.find(l => {
-        if (l.memberId && l.memberId === m.id) return true;
-        const lPhoneClean = (l.phone || '').replace(/\D/g, '');
-        if (lPhoneClean && mPhoneClean && lPhoneClean === mPhoneClean) return true;
-        if ((l.name || '').trim().toLowerCase() === mNameNorm) return true;
-        return false;
-      });
-
-      if (!existingLeader) {
-        let assignedCat = m.category || 'Senior Leaders';
-        if (groupLower.includes('sub junior')) assignedCat = 'Sub-Junior Leaders';
-        else if (groupLower.includes('junior')) assignedCat = 'Junior Leaders';
-        else if (groupLower.includes('inter')) assignedCat = 'Inter Leaders';
-        else if (groupLower.includes('super')) assignedCat = 'Super Senior Leaders';
-        else if (groupLower.includes('elder')) assignedCat = 'Elders';
-        else if (groupLower.includes('oratory')) assignedCat = 'Oratory Leaders';
-        else if (roleLower.includes('committee')) assignedCat = 'Committee Members';
-
-        leaders.push({
-          id: `LEAD-${m.id}`,
-          memberId: m.id,
-          name: m.name,
-          role: m.role || 'Leader',
-          category: assignedCat,
-          phone: m.mobile || '',
-          photo: m.photo || '',
-          tenure: '2026 - Present',
-          duties: m.joiningPurpose || 'Youth Guidance, Oratory Formation & Centre Activities',
-          abilities: Array.isArray(m.activities) ? m.activities.join(', ') : (m.activities || 'Leadership & Service'),
-          achievements: 'Dedicated DBYC Active Bearer of Responsibility',
-          pin: m.securityPin || m.pin || '1234'
-        });
-      }
-    }
-  });
-
-  const validLeaders = leaders.filter(l => {
-    const r = (l.role || '').toLowerCase();
-    const n = (l.name || '').toLowerCase();
-    return !r.includes('director') && !n.includes('director') && !n.includes('frangleen');
-  });
-
-  const countBadge = document.getElementById('obHeaderCountBadge');
-  if (countBadge) {
-    countBadge.textContent = `${validLeaders.length} Bearers of Responsibility • Basin Bridge, Chennai - 12`;
-  }
-  const ldrCountBadge = document.getElementById('leadersHeaderCountBadge');
-  if (ldrCountBadge) {
-    ldrCountBadge.textContent = `${validLeaders.length} Bearers of Responsibility • Basin Bridge, Chennai - 12`;
-  }
-};
-
+/* Old late syncLeadersWithMembers replaced by master sync */
 
 // 3. EDIT PHOTO FOR ALL MEMBERS (PHOTO PORTAL EDIT OPTION)
 window.quickEditMemberPhoto = function(memberId) {
@@ -21752,38 +21718,23 @@ function doPost(e) {
       }
     }
 
-    // Save/update main database file using compact storage format (zero whitespace overhead)
-    var compactData = JSON.stringify(payload);
+    // Save/update main database file
     if (files.hasNext()) {
       var file = files.next();
-      file.setContent(compactData);
+      file.setContent(JSON.stringify(payload, null, 2));
     } else {
-      folder.createFile(fileName, compactData, MimeType.PLAIN_TEXT);
+      folder.createFile(fileName, JSON.stringify(payload, null, 2), MimeType.PLAIN_TEXT);
     }
 
-    // Automatic rolling daily backup file in Google Drive (compact format)
+    // Automatic rolling daily backup file in Google Drive (e.g. dbyc_database_backup_2026-10-06.json)
     try {
       var backupDate = Utilities.formatDate(new Date(), "GMT+5:30", "yyyy-MM-dd");
       var backupFileName = "dbyc_database_backup_" + backupDate + ".json";
       var bFiles = folder.getFilesByName(backupFileName);
       if (bFiles.hasNext()) {
-        bFiles.next().setContent(compactData);
+        bFiles.next().setContent(JSON.stringify(payload, null, 2));
       } else {
-        folder.createFile(backupFileName, compactData, MimeType.PLAIN_TEXT);
-      }
-
-      // Auto-prune old rolling backups (keeps last 7 days only to preserve cloud storage)
-      var allFiles = folder.getFiles();
-      var nowMillis = new Date().getTime();
-      var sevenDaysMillis = 7 * 24 * 60 * 60 * 1000;
-      while (allFiles.hasNext()) {
-        var oldFile = allFiles.next();
-        var oName = oldFile.getName();
-        if (oName.indexOf("dbyc_database_backup_") === 0) {
-          if (nowMillis - oldFile.getLastUpdated().getTime() > sevenDaysMillis) {
-            oldFile.setTrashed(true);
-          }
-        }
+        folder.createFile(backupFileName, JSON.stringify(payload, null, 2), MimeType.PLAIN_TEXT);
       }
     } catch(bErr) {
       Logger.log("Backup note: " + bErr);

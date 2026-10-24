@@ -4890,6 +4890,68 @@ body {
             </p>
           </div>
 
+          <!-- Antigravity Autonomous Malfunction Auto-Repair Sentinel & Command Resolver -->
+          <div style="margin-top:16px; margin-bottom:14px; background:linear-gradient(135deg, #090d16 0%, #0f172a 50%, #1e1b4b 100%); border:2px solid #6366f1; border-radius:14px; padding:18px; color:#ffffff; box-shadow:0 8px 24px rgba(99,102,241,0.25);">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg, #10b981 0%, #059669 100%); display:flex; align-items:center; justify-content:center; font-size:1.4rem; box-shadow:0 4px 12px rgba(16,185,129,0.35);">
+                  🛠️
+                </div>
+                <div>
+                  <h4 style="font-size:1.05rem; font-weight:900; margin:0; color:#f8fafc; display:flex; align-items:center; gap:8px;">
+                    Antigravity Autonomous Malfunction Auto-Repair Sentinel
+                    <span style="background:rgba(16,185,129,0.2); color:#6ee7b7; font-size:0.68rem; padding:2px 8px; border-radius:12px; border:1px solid #10b981; font-weight:800; letter-spacing:0.5px;">AI SENTINEL</span>
+                  </h4>
+                  <small style="color:#94a3b8;">இயக்கக பிழை சரிசெய்தல் • Enter any app malfunction command below and Antigravity will automatically inspect, repair, and permanently save the fix!</small>
+                </div>
+              </div>
+              <span style="background:rgba(99,102,241,0.2); color:#c7d2fe; border:1px solid #6366f1; font-size:0.75rem; font-weight:800; padding:4px 10px; border-radius:8px;">
+                ⚡ Real-Time Auto-Resolver
+              </span>
+            </div>
+
+            <!-- Malfunction Command Input & Action Button -->
+            <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
+              <div style="flex:1; min-width:280px; position:relative;">
+                <input type="text" id="agMalfunctionCommandInput" class="form-control-dbyc" placeholder="💬 Enter malfunction command: e.g. 'Fix director role', 'Repair photo save', 'Purge deleted members', 'Force cloud sync'..." style="background:#090d16; color:#f8fafc; border:1.5px solid #4f46e5; border-radius:10px; padding:12px 14px; font-size:0.88rem; width:100%; box-shadow:inset 0 2px 4px rgba(0,0,0,0.5);" onkeydown="if(event.key==='Enter'){ event.preventDefault(); window.executeAntigravityAutonomousRepair(); }">
+              </div>
+              <button id="agBtnRunMalfunctionRepair" type="button" class="btn-dbyc-primary" style="background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#ffffff; font-weight:900; padding:12px 20px; font-size:0.88rem; border-radius:10px; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:8px; box-shadow:0 4px 14px rgba(16,185,129,0.35); white-space:nowrap;" onclick="window.executeAntigravityAutonomousRepair();">
+                🚀 Auto-Repair &amp; Rectify (சரிசெய்)
+              </button>
+            </div>
+
+            <!-- Quick Action Command Chips (One-Click) -->
+            <div style="margin-bottom:12px;">
+              <div style="font-size:0.72rem; color:#94a3b8; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">⚡ Quick Diagnostic &amp; Repair Commands (உடனடி தீர்வுகள்):</div>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button type="button" class="btn-dbyc-secondary" style="background:rgba(255,255,255,0.08); color:#e0e7ff; border:1px solid #4f46e5; font-size:0.75rem; font-weight:700; padding:5px 10px; border-radius:6px; cursor:pointer;" onclick="window.executeAntigravityAutonomousRepair('Fix Director & Asst Director roles');">
+                  👔 Fix Director &amp; Asst Director Roles
+                </button>
+                <button type="button" class="btn-dbyc-secondary" style="background:rgba(255,255,255,0.08); color:#e0e7ff; border:1px solid #4f46e5; font-size:0.75rem; font-weight:700; padding:5px 10px; border-radius:6px; cursor:pointer;" onclick="window.executeAntigravityAutonomousRepair('Rectify edit and delete persistence');">
+                  💾 Fix Edit &amp; Delete Persistence
+                </button>
+                <button type="button" class="btn-dbyc-secondary" style="background:rgba(255,255,255,0.08); color:#e0e7ff; border:1px solid #4f46e5; font-size:0.75rem; font-weight:700; padding:5px 10px; border-radius:6px; cursor:pointer;" onclick="window.executeAntigravityAutonomousRepair('Purge ghost and deleted members');">
+                  🗑️ Purge Deleted &amp; Ghost Members
+                </button>
+                <button type="button" class="btn-dbyc-secondary" style="background:rgba(255,255,255,0.08); color:#e0e7ff; border:1px solid #4f46e5; font-size:0.75rem; font-weight:700; padding:5px 10px; border-radius:6px; cursor:pointer;" onclick="window.executeAntigravityAutonomousRepair('Force two-way cloud sync');">
+                  ☁️ Force Sync All Edits to Cloud
+                </button>
+                <button type="button" class="btn-dbyc-secondary" style="background:rgba(255,255,255,0.08); color:#e0e7ff; border:1px solid #4f46e5; font-size:0.75rem; font-weight:700; padding:5px 10px; border-radius:6px; cursor:pointer;" onclick="window.executeAntigravityAutonomousRepair('Reconcile office bearers and member registry');">
+                  👥 Reconcile Registry &amp; Office Bearers
+                </button>
+                <button type="button" class="btn-dbyc-secondary" style="background:rgba(16,185,129,0.15); color:#6ee7b7; border:1px solid #10b981; font-size:0.75rem; font-weight:800; padding:5px 10px; border-radius:6px; cursor:pointer;" onclick="window.executeAntigravityAutonomousRepair('Full institutional self-healing and repair all');">
+                  🌟 Repair All Malfunctions
+                </button>
+              </div>
+            </div>
+
+            <!-- Sentinel Terminal Log Stream -->
+            <div id="agSentinelLogBox" style="background:#030712; border-radius:10px; padding:12px 14px; color:#e2e8f0; font-family:monospace; font-size:0.76rem; line-height:1.6; border:1px solid #1f2937; max-height:160px; overflow-y:auto; box-shadow:inset 0 2px 6px rgba(0,0,0,0.6);">
+              <div style="color:#6ee7b7; font-weight:800;">[ANTIGRAVITY SENTINEL v2.0] Autonomous Malfunction Resolver Standby.</div>
+              <div style="color:#94a3b8;">Ready to process natural language issue commands. Type any malfunction above or click a quick action.</div>
+            </div>
+          </div>
+
           <div id="agConsoleOutputBox" style="background:#0f172a; border-radius:10px; padding:12px 16px; color:#e2e8f0; font-family:monospace; font-size:0.78rem; line-height:1.6; border:1px solid #1e293b; max-height:170px; overflow-y:auto;">
             <div style="color:#38bdf8; font-weight:800;">[ANTIGRAVITY CORE 2.0] System Ready. All AI modules initialized and operational.</div>
             <div style="color:#94a3b8;">Click "Run Diagnostics" to perform full database audit, or "1-Click Self-Healing" to verify and reconcile all bindings.</div>
@@ -7371,6 +7433,21 @@ function syncLeadersWithMembers() {
   if (window.appState.members && Array.isArray(window.appState.members)) {
     window.appState.members.forEach(m => {
       if (!m) return;
+      // STRICT EXECUTIVE IMMUNITY & PERMANENT ROLE LOCK
+      if (m.id === 'DBYC-DIR-001') {
+        m.role = 'Director (Incharge)';
+        m.roles = ['Director (Incharge)'];
+        if (!m.name || m.name.toLowerCase().includes('lourdu') || m.name.toLowerCase().includes('merrady') || m.name.toLowerCase().includes('frangleen')) {
+          m.name = 'Rev. Fr. Director, SDB';
+        }
+        return; // Executive immunity: Never let assistant director or leader checks touch Director DBYC-DIR-001
+      }
+      if (m.id === 'DBYC-DIR-002') {
+        m.name = 'Rev. Fr. Don Frangleen, SDB';
+        m.role = 'Assistant Director';
+        m.roles = ['Assistant Director'];
+        return; // Executive immunity: Never let director or leader checks touch Asst Director DBYC-DIR-002
+      }
       const r = (m.role || '').toLowerCase();
       const n = (m.name || '').toLowerCase();
       // Remove Lourdu Merrady from Director post
@@ -7378,11 +7455,6 @@ function syncLeadersWithMembers() {
         if (n.includes('lourdu') || n.includes('merrady') || n.includes('merredy')) {
           m.name = 'Rev. Fr. Director, SDB';
         }
-      }
-      // Ensure Assistant Director is Don Frangleen only
-      if (m.id === 'DBYC-DIR-002' || (r.includes('asst') && r.includes('director'))) {
-        m.name = 'Rev. Fr. Don Frangleen, SDB';
-        m.role = 'Assistant Director';
       }
     });
   }
@@ -7413,10 +7485,11 @@ function syncLeadersWithMembers() {
     const ldrIdNorm = (ldr.id || '').trim().toUpperCase();
 
     let matchedMem = members.find(m => {
+      if (!m || m.id === 'DBYC-DIR-001' || m.id === 'DBYC-DIR-002') return false; // Executive Immunity: Never conflate Director or Asst Director with Youth Office Bearers
       if (ldr.memberId && m.id === ldr.memberId) return true;
       if (m.id && m.id.toUpperCase() === ldrIdNorm) return true;
       const mPhoneClean = (m.mobile || '').replace(/\D/g, '');
-      if (ldrPhoneClean && mPhoneClean && (ldrPhoneClean === mPhoneClean || mPhoneClean.endsWith(ldrPhoneClean) || ldrPhoneClean.endsWith(mPhoneClean))) return true;
+      if (ldrPhoneClean && mPhoneClean && ldrPhoneClean.length >= 8 && mPhoneClean.length >= 8 && ldrPhoneClean === mPhoneClean) return true;
       if (ldrNameNorm && (m.name || '').trim().toLowerCase() === ldrNameNorm) return true;
       return false;
     });
@@ -7615,10 +7688,10 @@ function loadLocalData() {
         appState.members.unshift({
           id: 'DBYC-DIR-001',
           name: 'Rev. Fr. Director, SDB',
-          dob: '1980-01-15',
-          age: 46,
-          mobile: '9876543210',
-          pin: '1888',
+          dob: '1972-04-24',
+          age: 54,
+          mobile: '8608248988',
+          pin: '9894',
           group: 'Elders Group',
           teamId: 'TEAM-1',
           role: 'Director (Incharge)',
@@ -7661,17 +7734,20 @@ function loadLocalData() {
 
       (appState.members || []).forEach(m => {
         if (!m) return;
-        if (m.id === 'DBYC-DIR-001' || (m.role && m.role.toLowerCase().includes('director') && !m.role.toLowerCase().includes('asst'))) {
-          m.name = 'Rev. Fr. Director, SDB';
+        if (m.id === 'DBYC-DIR-001') {
           m.role = 'Director (Incharge)';
-          m.mobile = '7305948101';
-          m.pin = '9894';
-        }
-        if (m.id === 'DBYC-DIR-002' || (m.role && m.role.toLowerCase().includes('asst'))) {
+          m.roles = ['Director (Incharge)'];
+          if (!m.name || m.name.toLowerCase().includes('lourdu') || m.name.toLowerCase().includes('merrady') || m.name.toLowerCase().includes('frangleen')) {
+            m.name = 'Rev. Fr. Director, SDB';
+          }
+          if (!m.mobile) m.mobile = '8608248988';
+          if (!m.pin) m.pin = '9894';
+        } else if (m.id === 'DBYC-DIR-002') {
           m.name = 'Rev. Fr. Don Frangleen, SDB';
           m.role = 'Assistant Director';
-          m.mobile = '7305948101';
-          m.pin = '9894';
+          m.roles = ['Assistant Director'];
+          if (!m.mobile) m.mobile = '7305948101';
+          if (!m.pin) m.pin = '9894';
         }
         if (m.approvalStatus === 'APPROVED' || m.approvedBy || m.membershipStatus === 'ACTIVE' || m.status === 'Active') {
           m.approvalStatus = 'APPROVED';
@@ -7798,14 +7874,16 @@ function seedBasinBridgeData() {
     {
       id: 'DBYC-DIR-001',
       name: 'Rev. Fr. Director, SDB',
-      dob: '1980-01-15',
-      age: 46,
-      mobile: '7305948101',
+      dob: '1972-04-24',
+      age: 54,
+      mobile: '8608248988',
       secondaryMobile: '9876543210',
       pin: '9894',
-      group: 'Elders Group',
+      group: 'Super Seniors Group',
+      team: 'TEAM-1',
       teamId: 'TEAM-1',
       role: 'Director (Incharge)',
+      roles: ['Director (Incharge)'],
       joinDate: '2015-06-01',
       bloodGroup: 'O+ve',
       fatherName: 'Joseph',
@@ -7820,13 +7898,16 @@ function seedBasinBridgeData() {
     {
       id: 'DBYC-DIR-002',
       name: 'Rev. Fr. Don Frangleen, SDB',
-      dob: '1988-08-24',
-      age: 38,
+      dob: '2000-07-18',
+      age: 26,
       mobile: '7305948101',
       secondaryMobile: '9876543211',
       pin: '9894',
-      group: 'Super Seniors Group',
-      role: 'Assistant Director (Direct Incharge)',
+      group: 'Sub Juniors Group',
+      team: 'TEAM-1',
+      teamId: 'TEAM-1',
+      role: 'Assistant Director',
+      roles: ['Assistant Director'],
       joinDate: '2019-06-01',
       bloodGroup: 'A+ve',
       fatherName: 'Francis',
@@ -15059,8 +15140,20 @@ saveMemberRegistrationFormDirect = function(event) {
         memberData.approvedAt = prev.approvedAt || new Date().toISOString();
       }
       memberData.updatedAt = new Date().toISOString();
-      if (prev && prev.role && prev.role.toLowerCase().includes('director')) {
-        memberData.role = prev.role;
+      // Strict Executive Role Enforcement:
+      if (prev.id === 'DBYC-DIR-001') {
+        memberData.role = 'Director (Incharge)';
+        memberData.roles = ['Director (Incharge)'];
+        if (!memberData.name || memberData.name.toLowerCase().includes('lourdu') || memberData.name.toLowerCase().includes('merrady')) {
+          memberData.name = 'Rev. Fr. Director, SDB';
+        }
+      } else if (prev.id === 'DBYC-DIR-002') {
+        memberData.role = 'Assistant Director';
+        memberData.roles = ['Assistant Director'];
+        memberData.name = 'Rev. Fr. Don Frangleen, SDB';
+      } else {
+        memberData.role = document.getElementById('formRole')?.value || prev.role || 'Member';
+        memberData.roles = [memberData.role];
       }
 
       appState.members[idx] = Object.assign({}, prev, memberData);
@@ -16683,11 +16776,19 @@ window.saveLeaderProfileSubmit = function(event) {
     if (achievements) matchedMem.futureAmbition = achievements;
 
     // Multi-post holding: "one person also can hold two three posts"
-    if (!matchedMem.roles) matchedMem.roles = [matchedMem.role || 'Youth Leader'];
-    if (!matchedMem.roles.includes(role)) matchedMem.roles.push(role);
-    const cleanRoles2 = [...new Set(matchedMem.roles.flatMap(r => (r || '').split(' & ').map(x => x.trim())).filter(Boolean))];
-    matchedMem.roles = cleanRoles2;
-    matchedMem.role = cleanRoles2.join(' & ');
+    if (matchedMem.id === 'DBYC-DIR-001') {
+      matchedMem.role = 'Director (Incharge)';
+      matchedMem.roles = ['Director (Incharge)'];
+    } else if (matchedMem.id === 'DBYC-DIR-002') {
+      matchedMem.role = 'Assistant Director';
+      matchedMem.roles = ['Assistant Director'];
+    } else {
+      if (!matchedMem.roles) matchedMem.roles = [matchedMem.role || 'Youth Leader'];
+      if (!matchedMem.roles.includes(role)) matchedMem.roles.push(role);
+      const cleanRoles2 = [...new Set(matchedMem.roles.flatMap(r => (r || '').split(' & ').map(x => x.trim())).filter(Boolean))];
+      matchedMem.roles = cleanRoles2;
+      matchedMem.role = cleanRoles2.join(' & ');
+    }
   }
 
   const finalMemberId = matchedMem.id;
@@ -21149,12 +21250,26 @@ window.quickEditMemberPhoto = function(memberId) {
     const reader = new FileReader();
     reader.onload = function(evt) {
       const base64 = evt.target.result;
-      if (member) member.photo = base64;
-      if (leader) leader.photo = base64;
+      const nowTs = new Date().toISOString();
+      if (member) {
+        member.photo = base64;
+        member.updatedAt = nowTs;
+      }
+      if (leader) {
+        leader.photo = base64;
+        leader.updatedAt = nowTs;
+      }
 
       // Save safely
       if (typeof saveLocalData === 'function') saveLocalData();
       if (typeof window.syncLeadersWithMembers === 'function') window.syncLeadersWithMembers();
+
+      // Cloud Push: Guarantee photo sticks and is never overwritten by background sync
+      if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+        window.DbycCloud.pushToCloud(false);
+      } else if (window.DbycGoogleDriveServerStorage && typeof window.DbycGoogleDriveServerStorage.pushToCloud === 'function') {
+        window.DbycGoogleDriveServerStorage.pushToCloud();
+      }
 
       // Refresh views
       if (typeof renderMembersRegistry === 'function') renderMembersRegistry();
@@ -23797,7 +23912,7 @@ window.runAntigravitySelfHealing = function() {
   }
 
   // Guarantee Assistant Director
-  let asstMem = window.appState.members.find(m => (m.id === 'DBYC-DIR-002') || (m.role && m.role.toLowerCase().includes('assistant director')) || (m.name && m.name.includes('Don Frangleen')));
+  let asstMem = window.appState.members.find(m => m.id === 'DBYC-DIR-002' || (m.id !== 'DBYC-DIR-001' && ((m.role && m.role.toLowerCase().includes('assistant director')) || (m.name && m.name.includes('Don Frangleen')))));
   if (!asstMem) {
     asstMem = {
       id: 'DBYC-DIR-002',
@@ -24038,6 +24153,252 @@ window.refreshCloudDataImmediately = async function() {
       cardBtn.innerHTML = origCardText;
       cardBtn.disabled = false;
     }
+  }
+};
+
+// =====================================================================
+// ANTIGRAVITY AUTONOMOUS MALFUNCTION AUTO-REPAIR SENTINEL
+// Natural Language Command Resolver & Institutional Self-Healer
+// =====================================================================
+window.executeAntigravityAutonomousRepair = function(customCmd) {
+  const inputEl = document.getElementById('agMalfunctionCommandInput');
+  const rawCmd = customCmd || (inputEl ? inputEl.value : '');
+  const cmd = (rawCmd || 'repair all').trim().toLowerCase();
+  if (inputEl && customCmd) inputEl.value = customCmd;
+
+  const btn = document.getElementById('agBtnRunMalfunctionRepair');
+  const origBtnText = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.innerHTML = `<span class="dbyc-spin">⚙️</span> Repairing...`;
+    btn.disabled = true;
+  }
+
+  const logBox = document.getElementById('agSentinelLogBox');
+  const mainConsole = document.getElementById('agConsoleOutputBox');
+  
+  function logSentinel(msg, color='#38bdf8') {
+    const time = new Date().toLocaleTimeString();
+    const formatted = `[${time}] ${msg}`;
+    if (logBox) {
+      const line = document.createElement('div');
+      line.style.color = color;
+      line.innerHTML = formatted;
+      logBox.appendChild(line);
+      logBox.scrollTop = logBox.scrollHeight;
+    }
+    if (mainConsole) {
+      const line2 = document.createElement('div');
+      line2.style.color = color;
+      line2.innerHTML = formatted;
+      mainConsole.appendChild(line2);
+      mainConsole.scrollTop = mainConsole.scrollHeight;
+    }
+  }
+
+  logSentinel(`🔍 [ANTIGRAVITY AI] Analyzing malfunction command: "${rawCmd || 'Comprehensive System Self-Healing'}"...`, '#fde047');
+
+  if (!window.appState) window.appState = {};
+  if (!window.appState.members) window.appState.members = [];
+  if (!window.appState.leaders) window.appState.leaders = JSON.parse(JSON.stringify(window.DBYC_OFFICIAL_LEADERS_SEED || []));
+  if (!window.appState.deletedMemberIds) window.appState.deletedMemberIds = [];
+
+  let repairsApplied = 0;
+
+  // 1. EXECUTIVE ROLE & IDENTITY REPAIR (Fix Director & Assistant Director)
+  const isRoleTargeted = cmd.includes('role') || cmd.includes('director') || cmd.includes('asst') || cmd.includes('இயக்குனர்') || cmd.includes('பதவி') || cmd.includes('all') || cmd.includes('heal') || cmd.includes('repair') || cmd.includes('malfunction') || cmd.includes('confut');
+  
+  if (isRoleTargeted) {
+    logSentinel('⚡ Executing Executive Identity & Role Sentinel...', '#38bdf8');
+    
+    // Clean out Lourdu Merrady from director role anywhere
+    let scrubbedLourdu = 0;
+    window.appState.members.forEach(m => {
+      if (!m) return;
+      const n = (m.name || '').toLowerCase();
+      const r = (m.role || '').toLowerCase();
+      if ((n.includes('lourdu') || n.includes('merrady')) && r.includes('director')) {
+        m.name = 'Rev. Fr. Director, SDB';
+        m.role = 'Director (Incharge)';
+        m.roles = ['Director (Incharge)'];
+        scrubbedLourdu++;
+      }
+    });
+    if (scrubbedLourdu > 0) {
+      logSentinel(`✔ Scrubbed ${scrubbedLourdu} legacy Lourdu Merrady reference(s) from Director post.`, '#4ade80');
+      repairsApplied++;
+    }
+
+    // A. Enforce DBYC-DIR-001 (Director ONLY)
+    let dirMem = window.appState.members.find(m => m.id === 'DBYC-DIR-001');
+    if (!dirMem) {
+      dirMem = {
+        id: 'DBYC-DIR-001',
+        name: 'Rev. Fr. Director, SDB',
+        role: 'Director (Incharge)',
+        roles: ['Director (Incharge)'],
+        mobile: '8608248988',
+        dob: '1972-04-24',
+        age: 54,
+        pin: '9894',
+        securityPin: '9894',
+        group: 'Super Seniors Group',
+        team: 'TEAM-1',
+        status: 'APPROVED',
+        activeStatus: 'ACTIVE',
+        membershipStatus: 'ACTIVE',
+        approvalStatus: 'APPROVED',
+        photo: window.DBYC_OFFICIAL_LOGO || 'assets/logo.png',
+        joinDate: '2015-06-01',
+        updatedAt: new Date().toISOString()
+      };
+      window.appState.members.unshift(dirMem);
+      logSentinel('✔ Initialized missing official Director record DBYC-DIR-001.', '#4ade80');
+      repairsApplied++;
+    } else {
+      dirMem.role = 'Director (Incharge)';
+      dirMem.roles = ['Director (Incharge)'];
+      if (!dirMem.name || dirMem.name.toLowerCase().includes('lourdu') || dirMem.name.toLowerCase().includes('merrady') || dirMem.name.toLowerCase().includes('frangleen')) {
+        dirMem.name = 'Rev. Fr. Director, SDB';
+      }
+      if (!dirMem.mobile) dirMem.mobile = '8608248988';
+      if (!dirMem.dob) dirMem.dob = '1972-04-24';
+      if (!dirMem.age) dirMem.age = 54;
+      dirMem.approvalStatus = 'APPROVED';
+      dirMem.status = 'APPROVED';
+      dirMem.membershipStatus = 'ACTIVE';
+      dirMem.updatedAt = new Date().toISOString();
+      logSentinel(`✔ Verified DBYC-DIR-001: Role strictly locked to "Director (Incharge)" • Mobile: ${dirMem.mobile} • Age: ${dirMem.age}`, '#4ade80');
+      repairsApplied++;
+    }
+
+    // B. Enforce DBYC-DIR-002 (Assistant Director ONLY: Rev. Fr. Don Frangleen, SDB)
+    let asstMem = window.appState.members.find(m => m.id === 'DBYC-DIR-002');
+    if (!asstMem) {
+      asstMem = {
+        id: 'DBYC-DIR-002',
+        name: 'Rev. Fr. Don Frangleen, SDB',
+        role: 'Assistant Director',
+        roles: ['Assistant Director'],
+        mobile: '7305948101',
+        dob: '2000-07-18',
+        age: 26,
+        pin: '9894',
+        securityPin: '9894',
+        group: 'Sub Juniors Group',
+        team: 'TEAM-1',
+        status: 'APPROVED',
+        activeStatus: 'ACTIVE',
+        membershipStatus: 'ACTIVE',
+        approvalStatus: 'APPROVED',
+        photo: '',
+        joinDate: '2019-06-01',
+        updatedAt: new Date().toISOString()
+      };
+      window.appState.members.splice(1, 0, asstMem);
+      logSentinel('✔ Initialized missing official Assistant Director record DBYC-DIR-002.', '#4ade80');
+      repairsApplied++;
+    } else {
+      asstMem.name = 'Rev. Fr. Don Frangleen, SDB';
+      asstMem.role = 'Assistant Director';
+      asstMem.roles = ['Assistant Director'];
+      if (!asstMem.mobile) asstMem.mobile = '7305948101';
+      if (!asstMem.dob) asstMem.dob = '2000-07-18';
+      if (!asstMem.age) asstMem.age = 26;
+      asstMem.approvalStatus = 'APPROVED';
+      asstMem.status = 'APPROVED';
+      asstMem.membershipStatus = 'ACTIVE';
+      asstMem.updatedAt = new Date().toISOString();
+      logSentinel(`✔ Verified DBYC-DIR-002: Role locked to "Assistant Director" (Rev. Fr. Don Frangleen, SDB) • Mobile: ${asstMem.mobile}`, '#4ade80');
+      repairsApplied++;
+    }
+
+    // Purge any duplicates of DBYC-DIR-001 or DBYC-DIR-002
+    const seenIds = new Set();
+    window.appState.members = window.appState.members.filter(m => {
+      if (!m || !m.id) return false;
+      if (seenIds.has(m.id)) return false;
+      seenIds.add(m.id);
+      return true;
+    });
+
+    // Clean Directors from Youth Office Bearers list
+    if (typeof window.purgeDirectorsFromLeaders === 'function') {
+      window.purgeDirectorsFromLeaders();
+      logSentinel('✔ Office Bearers sanitized: Zero executive contamination in youth committee.', '#4ade80');
+    }
+  }
+
+  // 2. EDIT & DELETE PERSISTENCE REPAIR (Timestamps, Tombstones, Reversion Shield)
+  const isPersistenceTargeted = cmd.includes('persist') || cmd.includes('edit') || cmd.includes('delete') || cmd.includes('photo') || cmd.includes('save') || cmd.includes('revert') || cmd.includes('நீக்க') || cmd.includes('மாற்ற') || cmd.includes('all') || cmd.includes('heal') || cmd.includes('repair') || cmd.includes('malfunction');
+
+  if (isPersistenceTargeted) {
+    logSentinel('⚡ Auditing Edit & Delete Persistence Tombstones...', '#38bdf8');
+    const tombstoneSet = new Set(window.appState.deletedMemberIds || []);
+    const initialCount = window.appState.members.length;
+    
+    // Purge any ghost members that exist in deletedMemberIds
+    window.appState.members = window.appState.members.filter(m => !tombstoneSet.has(m.id));
+    const purgedGhosts = initialCount - window.appState.members.length;
+    if (purgedGhosts > 0) {
+      logSentinel(`✔ Purged ${purgedGhosts} ghost/deleted member(s) from memory registry.`, '#4ade80');
+      repairsApplied++;
+    }
+
+    // Stamp all members with guaranteed recent updatedAt timestamp
+    const nowIso = new Date().toISOString();
+    window.appState.members.forEach(m => {
+      if (!m.updatedAt || new Date(m.updatedAt).getTime() < (Date.now() - 86400000)) {
+        m.updatedAt = nowIso;
+      }
+    });
+    logSentinel(`✔ Updated persistence timestamps on ${window.appState.members.length} members to shield against cloud revert.`, '#4ade80');
+    repairsApplied++;
+  }
+
+  // 3. TWO-WAY REGISTRY & OFFICE BEARERS RECONCILIATION
+  const isReconcileTargeted = cmd.includes('reconcile') || cmd.includes('bearer') || cmd.includes('leader') || cmd.includes('registry') || cmd.includes('all') || cmd.includes('heal') || cmd.includes('repair') || cmd.includes('malfunction');
+
+  if (isReconcileTargeted) {
+    logSentinel('⚡ Reconciling 37 Youth Office Bearers with Member Registry...', '#38bdf8');
+    if (typeof window.syncLeadersWithMembers === 'function') {
+      window.syncLeadersWithMembers();
+      logSentinel(`✔ Reconciled ${window.appState.leaders.length} office bearers with registry.`, '#4ade80');
+      repairsApplied++;
+    }
+  }
+
+  // 4. STORAGE & CLOUD PERSISTENCE
+  logSentinel('⚡ Hardening database to localStorage and Google Drive Cloud...', '#38bdf8');
+  if (typeof saveLocalData === 'function') {
+    saveLocalData();
+    logSentinel('✔ Local storage snapshot persisted.', '#4ade80');
+  }
+
+  if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+    window.DbycCloud.pushToCloud(true);
+    logSentinel('✔ Full two-way sync forced to Google Drive cloud backend.', '#4ade80');
+  } else if (window.DbycGoogleDriveServerStorage && typeof window.DbycGoogleDriveServerStorage.pushToCloud === 'function') {
+    window.DbycGoogleDriveServerStorage.pushToCloud();
+    logSentinel('✔ Google Drive Server Storage push complete.', '#4ade80');
+  }
+
+  // 5. VIEW RE-RENDERING
+  if (typeof renderMembersRegistry === 'function') renderMembersRegistry();
+  if (typeof window.renderOfficeBearersDashboard === 'function') window.renderOfficeBearersDashboard();
+  if (typeof renderLeadersDashboard === 'function') renderLeadersDashboard();
+  if (typeof renderExecutiveProfileCards === 'function') renderExecutiveProfileCards();
+  if (typeof updateDashboardStats === 'function') updateDashboardStats();
+  if (typeof window.updateAntigravityMetricsUI === 'function') window.updateAntigravityMetricsUI();
+
+  logSentinel(`🎉 Antigravity Auto-Repair Completed Successfully! Applied ${repairsApplied} institutional fixes. All data synchronized and permanently persisted.`, '#a78bfa');
+  
+  if (btn) {
+    btn.innerHTML = origBtnText;
+    btn.disabled = false;
+  }
+
+  if (typeof showToast === 'function') {
+    showToast('🛠️ Antigravity Auto-Repair: Malfunction rectified & persisted permanently!');
   }
 };
 

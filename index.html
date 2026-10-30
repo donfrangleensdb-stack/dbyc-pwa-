@@ -3312,7 +3312,7 @@ body {
         <!-- ============================================================== -->
         <div id="dbycFlashNewsContainer" class="news-ticker-bar" style="border-radius:12px; margin-top:10px; margin-bottom:14px; box-shadow:0 3px 10px rgba(0,0,0,0.12); display:flex; align-items:center; overflow:hidden; background:#002b66; border:1.5px solid #fde047;">
           <div id="dbycFlashNewsBadge" class="news-label-badge" style="display:flex; align-items:center; gap:6px; background:#004b98; color:#ffffff; font-weight:800; font-size:0.8rem; padding:0 14px; height:100%;">
-            <span>✨ DON BOSCO</span> <span style="font-size:0.7rem; color:#fde047; margin-left:2px;">▶</span>
+            <span style="font-size:1rem;">⚡</span> <span>FLASH NEWS</span>
           </div>
           <div class="marquee-text-container" style="cursor:pointer;" onclick="switchView('news')" title="Click to view DBYC News & Announcements">
             <span id="newsMarqueeText" class="marquee-text">
@@ -7554,30 +7554,21 @@ function syncLeadersWithMembers() {
     window.purgeDirectorsFromLeaders();
   }
 
-  // Sanitize: Exactly 1 Director and 1 Assistant Director, NO Lourdu Merrady
+  // Sanitize: Director and Assistant Director have permanent executive lock
   if (window.appState.members && Array.isArray(window.appState.members)) {
     window.appState.members.forEach(m => {
       if (!m) return;
-      // STRICT EXECUTIVE IMMUNITY & PERMANENT ROLE LOCK (Preserves user custom edits)
       if (m.id === 'DBYC-DIR-001') {
         if (!m.role) m.role = 'Director (Incharge)';
         if (!m.roles || m.roles.length === 0) m.roles = ['Director (Incharge)'];
         if (!m.name) m.name = 'Rev. Fr. Director, SDB';
-        return; // Executive immunity: Never let assistant director or leader checks touch Director DBYC-DIR-001
+        return;
       }
       if (m.id === 'DBYC-DIR-002') {
         if (!m.name) m.name = 'Rev. Fr. Don Frangleen, SDB';
         if (!m.role) m.role = 'Assistant Director';
         if (!m.roles || m.roles.length === 0) m.roles = ['Assistant Director'];
-        return; // Executive immunity: Never let director or leader checks touch Asst Director DBYC-DIR-002
-      }
-      const r = (m.role || '').toLowerCase();
-      const n = (m.name || '').toLowerCase();
-      // Remove legacy Lourdu Merrady from Director post if present
-      if (r.includes('director') && !r.includes('asst')) {
-        if (n.includes('lourdu') || n.includes('merrady') || n.includes('merredy')) {
-          m.name = 'Rev. Fr. Director, SDB';
-        }
+        return;
       }
     });
   }
@@ -7600,15 +7591,21 @@ function syncLeadersWithMembers() {
     return 'Oratory Group';
   };
 
-  // 1. AUTO-SYNCHRONIZE ALL OFFICIAL LEADERS INTO MEMBERS REGISTRY
-  // "all the office bearers detials should also must be in the members portal with the datas it has to be automatically apear in the registerd member"
+  let hasNewRegistrations = false;
+
+  // =========================================================================
+  // 1. AUTO-REGISTER ALL PRESENT OFFICE BEARERS INTO MEMBERS REGISTRY
+  // "the present office bearers if any body is not registerred auto register in the members."
+  // =========================================================================
   leaders.forEach(ldr => {
+    if (!ldr || !ldr.name) return;
     const ldrPhoneClean = (ldr.phone || '').replace(/\D/g, '');
     const ldrNameNorm = (ldr.name || '').trim().toLowerCase();
     const ldrIdNorm = (ldr.id || '').trim().toUpperCase();
 
+    // Check if this office bearer is already in members registry
     let matchedMem = members.find(m => {
-      if (!m || m.id === 'DBYC-DIR-001' || m.id === 'DBYC-DIR-002') return false; // Executive Immunity: Never conflate Director or Asst Director with Youth Office Bearers
+      if (!m || m.id === 'DBYC-DIR-001' || m.id === 'DBYC-DIR-002') return false;
       if (ldr.memberId && m.id === ldr.memberId) return true;
       if (m.id && m.id.toUpperCase() === ldrIdNorm) return true;
       const mPhoneClean = (m.mobile || '').replace(/\D/g, '');
@@ -7618,8 +7615,9 @@ function syncLeadersWithMembers() {
     });
 
     if (!matchedMem) {
+      // AUTO-REGISTER THIS OFFICE BEARER INTO appState.members
       matchedMem = {
-        id: ldr.memberId || ldr.id || ('DBYC-LDR-' + ldr.name.replace(/[^A-Za-z0-9]/g, '').toUpperCase()),
+        id: ldr.id || ('DBYC-' + (ldr.name || 'LDR').replace(/[^A-Za-z0-9]/g, '').toUpperCase()),
         name: ldr.name,
         role: ldr.role || 'Youth Leader',
         roles: [ldr.role || 'Youth Leader'],
@@ -7647,8 +7645,9 @@ function syncLeadersWithMembers() {
       };
       members.push(matchedMem);
       ldr.memberId = matchedMem.id;
+      hasNewRegistrations = true;
     } else {
-      // 2-Way Sync: Member in registry is the single primary source of truth for personal data
+      // 2-Way Connection: Member in registry is the primary single source of truth
       ldr.memberId = matchedMem.id;
       if (matchedMem.name) ldr.name = matchedMem.name;
       if (matchedMem.photo) ldr.photo = matchedMem.photo;
@@ -7657,8 +7656,10 @@ function syncLeadersWithMembers() {
       if (matchedMem.mobile) ldr.phone = matchedMem.mobile;
       else if (ldr.phone && !matchedMem.mobile) matchedMem.mobile = ldr.phone;
 
-      // Preserve member's assigned role! Never force-revert or append seed roles to member
-      if (!matchedMem.role) matchedMem.role = ldr.role || 'Youth Leader';
+      // Posting sync:
+      if (!matchedMem.role || matchedMem.role === 'Member' || matchedMem.role === 'Youth Member') {
+        matchedMem.role = ldr.role || 'Youth Leader';
+      }
       if (!matchedMem.roles || matchedMem.roles.length === 0) matchedMem.roles = [matchedMem.role];
 
       if (matchedMem.homeAddress) ldr.address = matchedMem.homeAddress;
@@ -7667,21 +7668,26 @@ function syncLeadersWithMembers() {
     }
   });
 
-  // 2. Automatically pull any registered member with leadership role into leaders if not already there
+  // =========================================================================
+  // 2. CONNECT REGISTERED MEMBERS WHO HOLD AN OFFICE BEARER POSTING
+  // "connect those members who are with their posting in the office bearers.
+  //  only those who registered have to be there in the office beares"
+  // =========================================================================
   const leadershipRoles = [
     'president', 'secretary', 'general secretary', 'gs', 'ags', 'treasurer', 'joint secretary',
-    'vice president', 'animator', 'leader', 'incharge', 'group incharge',
-    'captain', 'councillor', 'council', 'committee', 'choir', 'sports', 'media'
+    'vice president', 'animator', 'leader', 'incharge', 'group incharge', 'in-charge',
+    'captain', 'councillor', 'council', 'committee', 'sports', 'cultural', 'social', 'spiritual', 'choir', 'media'
   ];
 
   members.forEach(m => {
+    if (!m) return;
     const roleLower = (m.role || '').toLowerCase();
     const groupLower = (m.group || '').toLowerCase();
     const catLower = (m.category || '').toLowerCase();
     const mNameNorm = (m.name || '').trim().toLowerCase();
 
-    // NEVER import Director or Assistant Director into Youth Office Bearers!
-    if (roleLower.includes('director') || mNameNorm.includes('director') || mNameNorm.includes('frangleen')) {
+    // NEVER import Director or Assistant Director into Youth Office Bearers
+    if (roleLower.includes('director') || mNameNorm.includes('director') || mNameNorm.includes('frangleen') || m.id === 'DBYC-DIR-001' || m.id === 'DBYC-DIR-002') {
       return;
     }
 
@@ -7691,6 +7697,7 @@ function syncLeadersWithMembers() {
     if (isLeaderRole || isLeaderCat) {
       const existing = leaders.find(l => {
         if (l.memberId && l.memberId === m.id) return true;
+        if (l.id && l.id === m.id) return true;
         const lPhone = (l.phone || '').replace(/\D/g, '');
         const mPhone = (m.mobile || '').replace(/\D/g, '');
         if (lPhone && mPhone && lPhone === mPhone) return true;
@@ -7700,7 +7707,7 @@ function syncLeadersWithMembers() {
 
       if (!existing) {
         leaders.push({
-          id: 'LDR-DYN-' + m.id,
+          id: m.id.startsWith('LDR-') ? m.id : ('LDR-DYN-' + m.id),
           memberId: m.id,
           name: m.name,
           role: m.role || 'Youth Leader',
@@ -7711,9 +7718,21 @@ function syncLeadersWithMembers() {
           achievements: m.futureAmbition || 'Active Member of DBYC',
           abilities: Array.isArray(m.activities) ? m.activities.join(', ') : (m.activities || m.joiningPurpose || 'Youth animation and service')
         });
+      } else {
+        // Keep in sync
+        existing.memberId = m.id;
+        if (m.name) existing.name = m.name;
+        if (m.role) existing.role = m.role;
+        if (m.mobile) existing.phone = m.mobile;
+        if (m.photo) existing.photo = m.photo;
       }
     }
   });
+
+  // Save if new auto-registrations occurred so total member counting stays consistent
+  if (hasNewRegistrations && typeof saveLocalData === 'function') {
+    saveLocalData(true);
+  }
 }
 window.syncLeadersWithMembers = syncLeadersWithMembers;
 
@@ -8233,16 +8252,21 @@ window.renderFlashNewsTicker = function() {
     '“Joy, study, and piety: that is the grand programme.” — St. John Bosco'
   ];
 
-  // Preserve previous elegant Salesian design
+  // Preserve previous elegant Salesian banner styling
   if (container) {
     container.style.background = '#002b66';
     container.style.border = '1.5px solid #fde047';
   }
 
+  // Keep strictly ONE icon/label for flash news, NO "DON BOSCO" in the badge!
+  if (badge) {
+    badge.style.background = '#004b98';
+    badge.style.color = '#ffffff';
+  }
+
   if (activeNews.length > 0) {
     if (badge) {
-      badge.innerHTML = '<span style="animation:scanPulse 1.2s infinite; display:inline-block;">⚡</span> <span>FLASH NEWS</span> <span style="font-size:0.7rem; color:#fde047; margin-left:2px;">▶</span>';
-      badge.style.background = '#004b98';
+      badge.innerHTML = '<span style="animation:scanPulse 1.2s infinite; display:inline-block; font-size:1rem;">⚡</span> <span>FLASH NEWS</span>';
     }
     const headlines = activeNews.map(n => {
       const cat = (n.category || 'NEWS').toUpperCase();
@@ -8254,10 +8278,9 @@ window.renderFlashNewsTicker = function() {
     marquee.innerHTML = headlines + ' &nbsp;&nbsp;&nbsp;✦&nbsp;&nbsp;&nbsp; 📍 DON BOSCO YOUTH CENTRE, BASIN BRIDGE';
   } else {
     if (badge) {
-      badge.innerHTML = '<span>✨ DON BOSCO</span> <span style="font-size:0.7rem; color:#fde047; margin-left:2px;">▶</span>';
-      badge.style.background = '#004b98';
+      badge.innerHTML = '<span style="font-size:1rem;">⚡</span> <span>FLASH NEWS</span>';
     }
-    marquee.innerHTML = `✨ <strong>DON BOSCO YOUTH CENTRE, BASIN BRIDGE</strong> &bull; ${salesianQuotes.join(' &nbsp;&nbsp;&nbsp;✦&nbsp;&nbsp;&nbsp; ')}`;
+    marquee.innerHTML = `📢 <strong>LATEST ANNOUNCEMENTS & MOTTO</strong> &bull; ${salesianQuotes.join(' &nbsp;&nbsp;&nbsp;✦&nbsp;&nbsp;&nbsp; ')}`;
   }
 };
 
@@ -19150,6 +19173,7 @@ window.renderOfficeBearersDashboard = function() {
   }
 
   // 1. Live Dynamic Two-Way Sync with appState.members
+  // Auto-registers any unregistered office bearers into members, and connects members with postings
   if (typeof window.syncLeadersWithMembers === 'function') {
     window.syncLeadersWithMembers();
   }
@@ -19161,9 +19185,11 @@ window.renderOfficeBearersDashboard = function() {
   }
 
   const leaders = window.appState.leaders || window.DBYC_OFFICIAL_LEADERS_SEED || [];
+  const members = window.appState.members || [];
   const searchInput = document.getElementById('obSearchInput');
   const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
 
+  // Filter leaders
   const filtered = leaders.filter(ldr => {
     const r = (ldr.role || '').toLowerCase();
     const n = (ldr.name || '').toLowerCase();
@@ -19190,42 +19216,50 @@ window.renderOfficeBearersDashboard = function() {
   }
 
   const canEditOB = (typeof window.canEdit === 'function') ? window.canEdit('officebearers') : false;
-  const canEdit = canEditOB;
 
   container.innerHTML = filtered.map(l => {
-    const photo = l.photo || window.DBYC_OFFICIAL_LOGO || window.DBYC_DEFAULT_AVATAR;
-    let catBg = '#0b57d0';
-    if (l.category === 'Senior Leaders') catBg = '#b91c1c';
-    else if (l.category === 'Sub-Junior Leaders') catBg = '#15803d';
-    else if (l.category === 'Junior Leaders') catBg = '#7e22ce';
-    else if (l.category === 'Inter Leaders') catBg = '#c2410c';
-    else if (l.category === 'Super Senior Leaders') catBg = '#0369a1';
-    else if (l.category === 'Elders') catBg = '#1e293b';
-    else if (l.category === 'Committee Members') catBg = '#334155';
+    // Find the connected registered member record!
+    const m = members.find(mem => mem.id === l.memberId || mem.id === l.id || (mem.name && l.name && mem.name.trim().toLowerCase() === l.name.trim().toLowerCase())) || l;
+    const photo = m.photo || l.photo || window.DBYC_OFFICIAL_LOGO || window.DBYC_DEFAULT_AVATAR;
+    const phone = m.mobile || m.phone || l.phone || '';
+    const role = m.role || l.role || 'Youth Leader';
+    const category = l.category || m.category || m.group || 'Oratory Leaders';
+    const memberId = m.id || l.memberId || l.id;
 
-    const hasPhone = l.phone && l.phone.length >= 7;
-    const targetMemberId = l.memberId || l.id;
+    let catBg = '#0b57d0';
+    if (category === 'Senior Leaders') catBg = '#b91c1c';
+    else if (category === 'Sub-Junior Leaders') catBg = '#15803d';
+    else if (category === 'Junior Leaders') catBg = '#7e22ce';
+    else if (category === 'Inter Leaders') catBg = '#c2410c';
+    else if (category === 'Super Senior Leaders') catBg = '#0369a1';
+    else if (category === 'Elders') catBg = '#1e293b';
+    else if (category === 'Committee Members') catBg = '#334155';
+
+    const hasPhone = phone && phone.length >= 7;
 
     return `
-      <div class="member-card" style="background:#fff; border-radius:16px; border:1px solid #e2e8f0; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.06); display:flex; flex-direction:column; justify-content:space-between;">
+      <div class="member-card" style="background:#fff; border-radius:16px; border:1.5px solid #e2e8f0; overflow:hidden; box-shadow:0 4px 14px rgba(0,0,0,0.06); display:flex; flex-direction:column; justify-content:space-between;">
         
-        <!-- Category Banner -->
-        <div style="background:${catBg}; color:#fff; padding:6px 12px; font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; display:flex; justify-content:space-between; align-items:center;">
-          <span>${l.category}</span>
-          <span style="background:rgba(255,255,255,0.2); padding:1px 6px; border-radius:10px; font-size:0.7rem;">Official</span>
+        <!-- Category Banner with Official Registered Member ID -->
+        <div style="background:${catBg}; color:#fff; padding:7px 12px; font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; display:flex; justify-content:space-between; align-items:center;">
+          <span>${category}</span>
+          <span style="background:rgba(255,255,255,0.25); color:#ffffff; padding:2px 8px; border-radius:10px; font-size:0.7rem; font-family:monospace; font-weight:800;">${memberId}</span>
         </div>
 
         <div style="padding:14px; flex:1;">
           <div style="display:flex; gap:12px; align-items:flex-start;">
-            <img src="${photo}" alt="${l.name}" style="width:64px; height:64px; border-radius:50%; object-fit:cover; border:2.5px solid ${catBg}; box-shadow:0 2px 8px rgba(0,0,0,0.15); flex-shrink:0; cursor:pointer; background:#f8fafc;" onclick="${canEditOB ? `window.quickEditLeaderPhoto('${l.id}')` : `window.viewOfficeBearerDetails('${l.id}')`}" title="${canEditOB ? 'Tap to change or upload photo' : 'View Office Bearer Dossier'}">
+            <img src="${photo}" alt="${m.name}" style="width:66px; height:66px; border-radius:50%; object-fit:cover; border:2.5px solid ${catBg}; box-shadow:0 2px 8px rgba(0,0,0,0.15); flex-shrink:0; cursor:pointer; background:#f8fafc;" onclick="${canEditOB ? `window.quickEditMemberPhoto('${memberId}')` : `window.viewMemberPass('${memberId}')`}" title="${canEditOB ? 'Tap to change photo' : 'View Member Pass'}">
             <div style="flex:1;">
-              <h3 style="font-size:1.05rem; font-weight:900; color:#0f172a; margin:0 0 2px;">${l.name}</h3>
-              <div style="display:inline-block; background:#eff6ff; color:#004b98; border:1px solid #bfdbfe; font-size:0.75rem; font-weight:800; padding:2px 8px; border-radius:6px; margin-bottom:4px;">
-                ${l.role}
+              <h3 style="font-size:1.05rem; font-weight:900; color:#0f172a; margin:0 0 3px;">${m.name}</h3>
+              
+              <!-- Official Posting Badge -->
+              <div style="display:inline-block; background:#eff6ff; color:#004b98; border:1px solid #bfdbfe; font-size:0.76rem; font-weight:800; padding:2px 8px; border-radius:6px; margin-bottom:4px;">
+                ★ ${role} ★
               </div>
+              
               ${hasPhone ? `
                 <div style="font-size:0.78rem; color:#475569; display:flex; align-items:center; gap:4px; font-weight:700;">
-                  📞 ${l.phone}
+                  📞 ${phone}
                 </div>
               ` : ''}
               ${l.tenure ? `
@@ -19237,54 +19271,51 @@ window.renderOfficeBearersDashboard = function() {
           </div>
 
           ${l.achievements ? `
-            <div style="margin-top:10px; background:#f8fafc; border-radius:8px; padding:8px; font-size:0.75rem; color:#334155; line-height:1.35;">
+            <div style="margin-top:10px; background:#f8fafc; border-radius:8px; padding:8px 10px; font-size:0.75rem; color:#334155; line-height:1.35; border-left:3px solid ${catBg};">
               <strong>Achievements:</strong> ${l.achievements}
             </div>
           ` : ''}
 
           ${l.abilities ? `
-            <div style="margin-top:6px; font-size:0.72rem; color:#64748b;">
+            <div style="margin-top:6px; font-size:0.72rem; color:#64748b; padding-left:4px;">
               <strong>Abilities:</strong> ${l.abilities}
             </div>
           ` : ''}
         </div>
 
-        <!-- Action Bar: Details, Photo, Pass, Combined Print, Call, WhatsApp, Edit -->
+        <!-- Action Bar: View Pass, Details, Photo, Edit -->
         <div style="background:#f8fafc; border-top:1px solid #e2e8f0; padding:10px 12px; display:flex; gap:6px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
           <div style="display:flex; gap:5px; flex-wrap:wrap;">
-            <!-- View Details Button -->
-            <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:6px; display:inline-flex; align-items:center; gap:3px;" onclick="window.viewOfficeBearerDetails('${l.id}')" title="View Full Office Bearer Dossier">
-              👁️ View Details
-            </button>
-            <!-- Edit Photo Button for Office Bearers -->
-            ${canEditOB ? `<button type="button" class="btn-dbyc-secondary" style="background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:6px; display:inline-flex; align-items:center; gap:3px;" onclick="window.quickEditMemberPhoto('${targetMemberId}')" title="Change or update photo">
-              📷 Photo
-            </button>` : ''}
-            <!-- QR Pass & Form Print Buttons -->
-            <button type="button" class="btn-dbyc-primary" style="background:#0b57d0; padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:6px;" onclick="window.downloadMemberPassPdf('${targetMemberId}')" title="Download QR Pass">
+            <!-- View QR Pass Button -->
+            <button type="button" class="btn-dbyc-primary" style="background:#0b57d0; padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:6px; display:inline-flex; align-items:center; gap:3px;" onclick="window.viewMemberPass('${memberId}')" title="View Member QR Pass">
               🪪 Pass
             </button>
-            <button type="button" class="btn-dbyc-primary" style="background:linear-gradient(135deg, #7c3aed, #4338ca); padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:6px;" onclick="window.printCombinedPassAndForm('${targetMemberId}')" title="Print Pass + Form Together on single A4">
-              🖨️ Pass + Form
+            <!-- View Details Button -->
+            <button type="button" class="btn-dbyc-secondary" style="background:#f1f5f9; color:#0f172a; border:1px solid #cbd5e1; padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:6px; display:inline-flex; align-items:center; gap:3px;" onclick="window.viewOfficeBearerDetails('${l.id}')" title="View Full Office Bearer Dossier">
+              👁️ Details
+            </button>
+            <!-- Edit Photo Button -->
+            ${canEditOB ? `<button type="button" class="btn-dbyc-secondary" style="background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:6px; display:inline-flex; align-items:center; gap:3px;" onclick="window.quickEditMemberPhoto('${memberId}')" title="Change or update photo">
+              📷 Photo
+            </button>` : ''}
+            <!-- Print Pass & Form Combined -->
+            <button type="button" class="btn-dbyc-primary" style="background:linear-gradient(135deg, #7c3aed, #4338ca); padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:6px;" onclick="window.printCombinedPassAndForm('${memberId}')" title="Print Pass + Form Together on single A4">
+              🖨️ Print
             </button>
           </div>
 
-          <div style="display:flex; gap:5px; flex-wrap:wrap;">
+          <div style="display:flex; gap:4px; align-items:center;">
             ${hasPhone ? `
-              <a href="tel:${l.phone}" class="btn-dbyc-primary" style="background:#10b981; padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:3px;">
-                📞 Call
+              <a href="tel:${phone}" class="btn-dbyc-secondary" style="padding:6px 8px; font-size:0.75rem; text-decoration:none; background:#ecfdf5; color:#059669; border:1px solid #a7f3d0; border-radius:6px;" title="Call Member">
+                📞
               </a>
-              <a href="https://wa.me/91${l.phone.replace(/[^0-9]/g,'')}" target="_blank" class="btn-dbyc-primary" style="background:#25d366; padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:3px;">
-                💬 WhatsApp
+              <a href="https://wa.me/91${phone.replace(/^91/, '')}" target="_blank" class="btn-dbyc-secondary" style="padding:6px 8px; font-size:0.75rem; text-decoration:none; background:#ecfdf5; color:#059669; border:1px solid #a7f3d0; border-radius:6px;" title="WhatsApp Member">
+                💬
               </a>
-            ` : ''}
-            ${canEdit ? `
-              <button type="button" class="btn-dbyc-primary" style="background:#475569; padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:6px;" onclick="window.openEditLeaderModal('${l.id}')">
-                ✏️ Edit
-              </button>
             ` : ''}
           </div>
         </div>
+
       </div>
     `;
   }).join('');

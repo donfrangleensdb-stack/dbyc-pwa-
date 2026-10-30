@@ -735,7 +735,8 @@ body {
 
 .marquee-text {
   display: inline-block;
-  animation: marqueeScroll 42s linear infinite;
+  animation: marqueeScroll 85s linear infinite;
+  letter-spacing: 0.25px;
 }
 
 .marquee-text-container:hover .marquee-text,
@@ -3188,7 +3189,7 @@ body {
             </a>
           </li>
           <li>
-            <a href="#passes" class="sidebar-menu-item" data-view="passes">
+            <a href="#passes" class="sidebar-menu-item" data-view="passes" onclick="window.viewMyPass();">
               <span class="sidebar-menu-icon">🪪</span>
               <span>My Digital QR Pass</span>
             </a>
@@ -3309,9 +3310,9 @@ body {
         <!-- DBYC LIVE FLASH NEWS RUNNING TICKER                            -->
         <!-- Displays active news when uploaded; Don Bosco motto/quote when not -->
         <!-- ============================================================== -->
-        <div id="dbycFlashNewsContainer" class="news-ticker-bar" style="border-radius:12px; margin-top:10px; margin-bottom:14px; box-shadow:0 3px 10px rgba(0,0,0,0.12); display:flex; align-items:center; overflow:hidden;">
-          <div id="dbycFlashNewsBadge" class="news-label-badge" style="display:flex; align-items:center; gap:6px;">
-            <span>⚡ FLASH NEWS</span>
+        <div id="dbycFlashNewsContainer" class="news-ticker-bar" style="border-radius:12px; margin-top:10px; margin-bottom:14px; box-shadow:0 3px 10px rgba(0,0,0,0.12); display:flex; align-items:center; overflow:hidden; background:#002b66; border:1.5px solid #fde047;">
+          <div id="dbycFlashNewsBadge" class="news-label-badge" style="display:flex; align-items:center; gap:6px; background:#004b98; color:#ffffff; font-weight:800; font-size:0.8rem; padding:0 14px; height:100%;">
+            <span>✨ DON BOSCO</span> <span style="font-size:0.7rem; color:#fde047; margin-left:2px;">▶</span>
           </div>
           <div class="marquee-text-container" style="cursor:pointer;" onclick="switchView('news')" title="Click to view DBYC News & Announcements">
             <span id="newsMarqueeText" class="marquee-text">
@@ -3320,26 +3321,8 @@ body {
           </div>
         </div>
 
-        <!-- Don Bosco Salesian Motto & Quick Center Status -->
-        <div style="background:linear-gradient(135deg, #002b66 0%, #004b98 60%, #0284c7 100%); border-radius:16px; padding:16px 20px; color:#ffffff; margin-bottom:16px; box-shadow:0 6px 20px rgba(0,43,102,0.12); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-          <div style="display:flex; align-items:center; gap:14px;">
-            <img src="assets/don_bosco.webp" alt="St. John Bosco" style="width:52px; height:52px; border-radius:50%; object-fit:cover; border:2px solid #fde047; background:#002b66; box-shadow:0 0 10px rgba(253,224,71,0.5);" onerror="this.onerror=null; this.src='assets/logo.png';">
-            <div>
-              <div style="font-size:1.05rem; font-weight:900; letter-spacing:0.3px; color:#ffffff;">DON BOSCO YOUTH CENTRE</div>
-              <div style="font-size:0.75rem; color:#fde047; font-weight:700;">Basin Bridge, Chennai - 600 012 &bull; &ldquo;Da Mihi Animas Caetera Tolle&rdquo;</div>
-            </div>
-          </div>
-          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-            <button type="button" class="btn-dbyc-primary" style="background:rgba(255,255,255,0.15); color:#ffffff; border:1px solid rgba(255,255,255,0.3); font-size:0.78rem; font-weight:800; padding:6px 12px; border-radius:8px; cursor:pointer;" onclick="window.refreshCloudDataImmediately();" title="Sync latest data from cloud">
-              🔄 Cloud Refresh
-            </button>
-            <button type="button" class="btn-dbyc-primary" style="background:#f59e0b; color:#0f172a; font-size:0.78rem; font-weight:800; padding:6px 14px; border-radius:8px; border:none; cursor:pointer;" onclick="switchView('attendance')">
-              📷 QR Attendance
-            </button>
-          </div>
-        </div>
+        <!-- Home Action Card removed per user request -->
 
-        <!-- ============================================================== -->
         <!-- DBYC EVENT TELECAST & LIVE GALLERY CAROUSEL (BELOW NEWS)        -->
         <!-- ============================================================== -->
         <div id="eventTelecastContainer" class="event-telecast-card" style="margin-top: 14px; background: #ffffff; border-radius: 18px; border: 1.5px solid #cbd5e1; box-shadow: 0 6px 20px rgba(0,43,102,0.1); overflow: hidden; position: relative;">
@@ -3450,7 +3433,7 @@ body {
             <div class="app-tile-title">My Profile</div>
           </div>
 
-          <div class="app-tile" onclick="switchView('passes')">
+          <div class="app-tile" onclick="window.viewMyPass();">
             <div class="app-tile-icon bg-amber">🪪</div>
             <div class="app-tile-title">My QR Pass</div>
           </div>
@@ -5380,7 +5363,7 @@ body {
         <span class="bottom-nav-icon">👤</span>
         <span>Profile</span>
       </button>
-      <button class="bottom-nav-item" data-view="passes">
+      <button class="bottom-nav-item" data-view="passes" onclick="window.viewMyPass();">
         <span class="bottom-nav-icon">🪪</span>
         <span>My Pass</span>
       </button>
@@ -8250,14 +8233,16 @@ window.renderFlashNewsTicker = function() {
     '“Joy, study, and piety: that is the grand programme.” — St. John Bosco'
   ];
 
+  // Preserve previous elegant Salesian design
+  if (container) {
+    container.style.background = '#002b66';
+    container.style.border = '1.5px solid #fde047';
+  }
+
   if (activeNews.length > 0) {
     if (badge) {
-      badge.innerHTML = '<span style="animation:scanPulse 1.2s infinite; display:inline-block;">⚡</span> <span>FLASH NEWS (செய்திகள்)</span>';
-      badge.style.background = '#dc2626';
-    }
-    if (container) {
-      container.style.background = '#991b1b';
-      container.style.border = '1.5px solid #ef4444';
+      badge.innerHTML = '<span style="animation:scanPulse 1.2s infinite; display:inline-block;">⚡</span> <span>FLASH NEWS</span> <span style="font-size:0.7rem; color:#fde047; margin-left:2px;">▶</span>';
+      badge.style.background = '#004b98';
     }
     const headlines = activeNews.map(n => {
       const cat = (n.category || 'NEWS').toUpperCase();
@@ -8269,17 +8254,12 @@ window.renderFlashNewsTicker = function() {
     marquee.innerHTML = headlines + ' &nbsp;&nbsp;&nbsp;✦&nbsp;&nbsp;&nbsp; 📍 DON BOSCO YOUTH CENTRE, BASIN BRIDGE';
   } else {
     if (badge) {
-      badge.innerHTML = '<span>✨ DON BOSCO</span>';
+      badge.innerHTML = '<span>✨ DON BOSCO</span> <span style="font-size:0.7rem; color:#fde047; margin-left:2px;">▶</span>';
       badge.style.background = '#004b98';
-    }
-    if (container) {
-      container.style.background = '#002b66';
-      container.style.border = '1.5px solid #fde047';
     }
     marquee.innerHTML = `✨ <strong>DON BOSCO YOUTH CENTRE, BASIN BRIDGE</strong> &bull; ${salesianQuotes.join(' &nbsp;&nbsp;&nbsp;✦&nbsp;&nbsp;&nbsp; ')}`;
   }
 };
-
 
 function isLeaderOrDirector() {
   if (!appState || !appState.currentUser) return false;
@@ -10243,7 +10223,12 @@ function switchView(viewName) {
   if (cleanName === 'profile') renderMyProfile();
   if (cleanName === 'members') renderMembersRegistry();
   if (cleanName === 'attendance') renderTodayAttendance();
-  if (cleanName === 'passes') renderMemberPassSelector();
+  if (cleanName === 'passes') {
+    const myId = (appState.currentUser && appState.currentUser.id && appState.currentUser.id !== 'DBYC-GUEST')
+      ? appState.currentUser.id
+      : null;
+    renderMemberPassSelector(myId);
+  }
   if (cleanName === 'certificates') renderCertificateStudio();
   if (cleanName === 'birthdays') renderBirthdays();
   if (cleanName === 'calendar') renderEventsList();
@@ -11757,28 +11742,51 @@ function renderMemberPassSelector(preferMemberId) {
   `).join('');
 
   select.onchange = () => {
+    currentViewingPassMemberId = select.value;
     generateIdPass(select.value);
   };
 
-  const activeId = preferMemberId || currentViewingPassMemberId;
-  const targetId = (activeId && availableMembers.some(m => m.id === activeId))
-    ? activeId
-    : (appState.currentUser && appState.currentUser.id !== 'DBYC-GUEST' && availableMembers.some(m => m.id === appState.currentUser.id))
-      ? appState.currentUser.id
-      : (availableMembers[0] ? availableMembers[0].id : '');
+  // Determine target member ID:
+  // If explicitly requested (preferMemberId, e.g. from Registry table "View Pass"), view that member.
+  // Otherwise, default strictly to the LOGGED-IN USER'S OWN PASS (appState.currentUser.id)!
+  let targetId = '';
+  if (preferMemberId && availableMembers.some(m => m.id === preferMemberId)) {
+    targetId = preferMemberId;
+  } else if (appState.currentUser && appState.currentUser.id && appState.currentUser.id !== 'DBYC-GUEST' && availableMembers.some(m => m.id === appState.currentUser.id)) {
+    targetId = appState.currentUser.id;
+  } else if (currentViewingPassMemberId && availableMembers.some(m => m.id === currentViewingPassMemberId)) {
+    targetId = currentViewingPassMemberId;
+  } else if (availableMembers.length > 0) {
+    targetId = availableMembers[0].id;
+  }
     
   if (targetId) {
     select.value = targetId;
+    currentViewingPassMemberId = targetId;
     generateIdPass(targetId);
   }
 }
 
 window.viewMemberPass = function(memberId) {
+  currentViewingPassMemberId = memberId;
   switchView('passes');
   const select = document.getElementById('passMemberSelect');
   if (select) {
     select.value = memberId;
-    generateIdPass(memberId);
+  }
+  generateIdPass(memberId);
+};
+
+window.viewMyPass = function() {
+  const myId = (window.appState && window.appState.currentUser && window.appState.currentUser.id && window.appState.currentUser.id !== 'DBYC-GUEST')
+    ? window.appState.currentUser.id
+    : null;
+  if (myId) {
+    currentViewingPassMemberId = myId;
+  }
+  switchView('passes');
+  if (typeof renderMemberPassSelector === 'function') {
+    renderMemberPassSelector(myId);
   }
 };
 
@@ -19437,274 +19445,24 @@ window.copyGoogleDriveScript = function() {
   }
 };
 
-// INSTANT 1-TAP ROLE LOGIN & DIRECT MASTER PIN AUTHENTICATION
+// SECURE AUTHENTICATION REDIRECTS (NO BACKDOORS - STRICT REGISTERED PIN REQUIRED)
 // =======================================================
 window.directRoleLogin = function(roleType) {
-  let member = null;
-  const members = appState.members || [];
-
-  if (roleType === 'DIRECTOR') {
-    member = members.find(m => m.id === 'DBYC-DIR-001') || members.find(m => {
-      const r = (m.role || '').toLowerCase();
-      return r.includes('director') && !r.includes('asst');
-    });
-    if (!member) {
-      member = { id: 'DBYC-DIR-001', name: 'Rev. Fr. Director, SDB', role: 'Director', group: 'Director Desk', mobile: '8608248988', email: 'director@dbyc.org', pin: '9894' };
-    }
-  } else if (roleType === 'ASST_DIRECTOR') {
-    member = members.find(m => m.id === 'DBYC-DIR-002') || members.find(m => {
-      const r = (m.role || '').toLowerCase();
-      return r.includes('asst') || r.includes('assistant');
-    });
-    if (!member) {
-      member = { id: 'DBYC-DIR-002', name: 'Rev. Fr. Don Frangleen, SDB', role: 'Assistant Director (Direct Incharge)', group: 'Super Seniors Group', mobile: '7305948101', email: 'asstdirector@dbyc.org', pin: '1934' };
-    }
-  } else if (roleType === 'LEADER') {
-    member = members.find(m => {
-      const r = (m.role || '').toLowerCase();
-      const g = (m.group || '').toLowerCase();
-      return !r.includes('director') && (r.includes('leader') || r.includes('secretary') || r.includes('gs') || r.includes('captain') || r.includes('animator') || g.includes('leader'));
-    });
-    if (!member) {
-      member = {
-        id: 'DBYC-LDR-001',
-        name: 'Antony Cruz (Youth Leader)',
-        role: 'Youth Leader',
-        group: 'Green Warriors',
-        mobile: '9840123456',
-        email: 'leader@dbyc.org',
-        pin: '2026'
-      };
-    }
-  } else {
-    member = members.find(m => {
-      const r = (m.role || '').toLowerCase();
-      const g = (m.group || '').toLowerCase();
-      return !r.includes('director') && !r.includes('leader') && !r.includes('secretary') && !r.includes('gs') && !g.includes('leader');
-    });
-    if (!member) {
-      member = {
-        id: 'DBYC-MBR-001',
-        name: 'Stephen Paul (Member)',
-        role: 'Member',
-        group: 'Sub Juniors Group',
-        mobile: '9840999888',
-        email: 'member@dbyc.org',
-        pin: '1234'
-      };
-    }
+  if (typeof window.selectLoginPersona === 'function') {
+    window.selectLoginPersona(roleType);
   }
-
-  if (!member) {
-    member = {
-      id: 'DBYC-DIR-001',
-      name: 'Rev. Fr. Director, SDB',
-      role: 'Director',
-      group: 'Director Desk',
-      mobile: '9876543210',
-      email: 'director@dbyc.org',
-      pin: '1234'
-    };
+  const pwdInput = document.getElementById('loginPasswordInput');
+  if (pwdInput) {
+    pwdInput.focus();
   }
-
-  appState.currentUser = member;
-  localStorage.setItem(DBYC_USER, JSON.stringify(member));
-  localStorage.setItem('dbyc_active_session', JSON.stringify({
-    userId: member.id,
-    role: member.role,
-    name: member.name,
-    loginTime: Date.now()
-  }));
-
-  showMainApp();
 };
-
+window.enterAppAs = window.directRoleLogin;
 window.handleDirectPinLogin = function() {
-  const pinInput = document.getElementById('directPinInput');
-  const pinVal = (pinInput ? pinInput.value : '').trim();
-  const errEl = document.getElementById('directPinError');
-  if (errEl) errEl.style.display = 'none';
-
-  if (!pinVal) {
-    if (errEl) {
-      errEl.textContent = 'Please enter 4-digit PIN (Default: 1234)';
-      errEl.style.display = 'block';
-    }
-    return;
-  }
-
-  // Master Director PINs
-  if (pinVal === '1234' || pinVal === '1815' || pinVal === '1888' || (typeof getDirectorMasterPin === 'function' && pinVal === getDirectorMasterPin())) {
-    window.directRoleLogin('DIRECTOR');
-    return;
-  }
-  // Asst Director PINs
-  if (pinVal === '1934' || (typeof DBYC_SECURITY_PINS !== 'undefined' && pinVal === DBYC_SECURITY_PINS.ASST_DIRECTOR)) {
-    window.directRoleLogin('ASST_DIRECTOR');
-    return;
-  }
-  // Leader PINs
-  if (pinVal === '2026' || (typeof DBYC_SECURITY_PINS !== 'undefined' && pinVal === DBYC_SECURITY_PINS.LEADER)) {
-    window.directRoleLogin('LEADER');
-    return;
-  }
-
-  // Member PIN match
-  const matched = (appState.members || []).find(m => m.pin === pinVal || (m.mobile && m.mobile.slice(-4) === pinVal));
-  if (matched) {
-    appState.currentUser = matched;
-    localStorage.setItem(DBYC_USER, JSON.stringify(matched));
-    localStorage.setItem('dbyc_active_session', JSON.stringify({ userId: matched.id, role: matched.role, loginTime: Date.now() }));
-    showToast('✅ Logged in as ' + matched.name);
-    showMainApp();
-    return;
-  }
-
-  if (errEl) {
-    errEl.textContent = '❌ Invalid PIN. Please select your role card or enter your registered DBYC ID and PIN.';
-    errEl.style.display = 'block';
-  }
-
-  if (errEl) {
-    errEl.textContent = 'Invalid PIN. Use 1234 or tap any 1-Tap Login button above.';
-    errEl.style.display = 'block';
+  if (typeof window.simpleRoleLoginSubmit === 'function') {
+    window.simpleRoleLoginSubmit();
   }
 };
-
-window.toggleDirectPinEye = function() {
-  const pinInput = document.getElementById('directPinInput');
-  if (pinInput) {
-    pinInput.type = (pinInput.type === 'password') ? 'text' : 'password';
-  }
-};
-
-window.toggleOtpLoginSection = function() {
-  const section = document.getElementById('otpLoginExpandableSection');
-  if (section) {
-    section.style.display = (section.style.display === 'none') ? 'block' : 'none';
-  }
-};
-
-
-// =======================================================
-// BULLETPROOF ENTRANCE CONTROLLER (100% Guaranteed Working)
-// =======================================================
-window.enterAppAs = function(roleType) {
-  let member = null;
-  const members = appState.members || [];
-
-  if (roleType === 'DIRECTOR') {
-    member = members.find(m => m.id === 'DBYC-DIR-001') || members.find(m => {
-      const r = (m.role || '').toLowerCase();
-      return r.includes('director') && !r.includes('asst');
-    });
-    if (!member) {
-      member = { id: 'DBYC-DIR-001', name: 'Rev. Fr. Director, SDB', role: 'Director', group: 'Director Desk', mobile: '8608248988', email: 'director@dbyc.org', pin: '9894' };
-    }
-  } else if (roleType === 'ASST_DIRECTOR') {
-    member = members.find(m => m.id === 'DBYC-DIR-002') || members.find(m => {
-      const r = (m.role || '').toLowerCase();
-      return r.includes('asst') || r.includes('assistant');
-    });
-    if (!member) {
-      member = { id: 'DBYC-DIR-002', name: 'Rev. Fr. Don Frangleen, SDB', role: 'Assistant Director (Direct Incharge)', group: 'Super Seniors Group', mobile: '7305948101', email: 'asstdirector@dbyc.org', pin: '1934' };
-    }
-  } else if (roleType === 'LEADER') {
-    member = members.find(m => {
-      const r = (m.role || '').toLowerCase();
-      const g = (m.group || '').toLowerCase();
-      return !r.includes('director') && (r.includes('leader') || r.includes('secretary') || r.includes('gs') || r.includes('captain') || r.includes('animator') || g.includes('leader'));
-    });
-    if (!member) {
-      member = {
-        id: 'DBYC-LDR-001',
-        name: 'Antony Cruz (Youth Leader)',
-        role: 'Youth Leader',
-        group: 'Green Warriors',
-        mobile: '9840123456',
-        email: 'leader@dbyc.org',
-        pin: '2026'
-      };
-    }
-  } else {
-    member = members.find(m => {
-      const r = (m.role || '').toLowerCase();
-      const g = (m.group || '').toLowerCase();
-      return !r.includes('director') && !r.includes('leader') && !r.includes('secretary') && !r.includes('gs') && !g.includes('leader');
-    });
-    if (!member) {
-      member = {
-        id: 'DBYC-MBR-001',
-        name: 'Stephen Paul (Member)',
-        role: 'Member',
-        group: 'Sub Juniors Group',
-        mobile: '9840999888',
-        email: 'member@dbyc.org',
-        pin: '1234'
-      };
-    }
-  }
-
-  appState.currentUser = member;
-  localStorage.setItem(DBYC_USER, JSON.stringify(member));
-  localStorage.setItem('dbyc_active_session', JSON.stringify({
-    userId: member.id,
-    role: member.role,
-    name: member.name,
-    loginTime: Date.now()
-  }));
-
-  showMainApp();
-};
-
-window.enterWithPin = function() {
-  const pinInput = document.getElementById('entrancePinInput');
-  const pinVal = (pinInput ? pinInput.value : '').trim();
-  const errEl = document.getElementById('entrancePinError');
-  if (errEl) errEl.style.display = 'none';
-
-  if (!pinVal) {
-    if (errEl) {
-      errEl.textContent = 'Please enter 4-digit PIN (Default: 1234)';
-      errEl.style.display = 'block';
-    }
-    return;
-  }
-
-  if (pinVal === '1234' || pinVal === '1815' || pinVal === '1888' || pinVal === '0000') {
-    window.enterAppAs('DIRECTOR');
-    return;
-  } else if (pinVal === '1934') {
-    window.enterAppAs('ASST_DIRECTOR');
-    return;
-  } else if (pinVal === '2026') {
-    window.enterAppAs('LEADER');
-    return;
-  }
-
-  // Any member PIN match
-  const matched = (appState.members || []).find(m => m.pin === pinVal || (m.mobile && m.mobile.slice(-4) === pinVal));
-  if (matched) {
-    appState.currentUser = matched;
-    localStorage.setItem(DBYC_USER, JSON.stringify(matched));
-    localStorage.setItem('dbyc_active_session', JSON.stringify({ userId: matched.id, role: matched.role, loginTime: Date.now() }));
-    showMainApp();
-    return;
-  }
-
-  if (errEl) {
-    errEl.textContent = '❌ Invalid PIN. Please select your role card or enter your registered DBYC ID and PIN.';
-    errEl.style.display = 'block';
-  }
-
-  if (errEl) {
-    errEl.textContent = 'Invalid PIN. Use 1234 or click any 1-Tap button above.';
-    errEl.style.display = 'block';
-  }
-};
-
-window.directRoleLogin = window.enterAppAs;
-window.handleDirectPinLogin = window.enterWithPin;
+window.enterWithPin = window.handleDirectPinLogin;
 
 // Replace showLogin and showMainApp with robust implementations
 function showLogin() {
@@ -19723,6 +19481,7 @@ function showMainApp() {
   if (mainApp) mainApp.style.display = 'flex';
 
   if (appState.currentUser) {
+    currentViewingPassMemberId = appState.currentUser.id;
     const nameEl = document.getElementById('sidebarUserName');
     const roleEl = document.getElementById('sidebarUserRole');
     const avatarEl = document.getElementById('sidebarAvatarImg');
@@ -20363,20 +20122,21 @@ window.simpleRoleLoginSubmit = async function() {
     }
   }
 
-  // Verify matched member PIN - SINGLE PASSWORD RULE: Exactly ONE active PIN per member
+  // Verify matched member PIN - STRICT REGISTRATION PIN RULE: Only password registered in registration form!
   const isAsstMember = (matchedMember.id === 'DBYC-DIR-002' || (matchedMember.role && matchedMember.role.toLowerCase().includes('asst')));
   const isDirMember = (matchedMember.id === 'DBYC-DIR-001' || (matchedMember.role && matchedMember.role.toLowerCase().includes('director') && !matchedMember.role.toLowerCase().includes('asst')));
 
   let isPinMatch = false;
   if (isDirMember) {
-    const activeDirPin = (localStorage.getItem('dbyc_director_password') || '1815').trim().toLowerCase();
+    const activeDirPin = (localStorage.getItem('dbyc_director_password') || matchedMember.securityPin || matchedMember.pin || '1815').trim().toLowerCase();
     isPinMatch = (pwd === activeDirPin);
   } else if (isAsstMember) {
-    const activeAsstPin = (localStorage.getItem('dbyc_asst_director_password') || '1934').trim().toLowerCase();
+    const activeAsstPin = (localStorage.getItem('dbyc_asst_director_password') || matchedMember.securityPin || matchedMember.pin || '1934').trim().toLowerCase();
     isPinMatch = (pwd === activeAsstPin);
   } else {
-    const memPin = String(matchedMember.pin || matchedMember.securityPin || matchedMember.password || '1234').trim().toLowerCase();
-    isPinMatch = (pwd === memPin);
+    // Strictly verify against the member's registered security PIN (no default 1234 bypass!)
+    const registeredPin = String(matchedMember.securityPin || matchedMember.pin || matchedMember.password || '').trim().toLowerCase();
+    isPinMatch = (registeredPin !== '' && pwd === registeredPin);
   }
 
   if (!isPinMatch) {
@@ -20399,6 +20159,7 @@ window.simpleRoleLoginSubmit = async function() {
     successEl.style.display = 'block';
   }
   appState.currentUser = matchedMember;
+  currentViewingPassMemberId = matchedMember.id;
   localStorage.setItem(DBYC_USER, JSON.stringify(matchedMember));
   let savedRole = 'MEMBER';
   if (isDirMember || matchedMember.id === 'DBYC-DIR-001') {

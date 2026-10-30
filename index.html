@@ -7,6 +7,7 @@
 
   <!-- PWA & Native App Store Meta Tags (Equal to Google Play Store & Apple App Store) -->
   <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="data:application/manifest+json;utf-8,%7B%22name%22%3A%22Don%20Bosco%20Youth%20Centre%20-%20DBYC%20Master%20Portal%22%2C%22short_name%22%3A%22DBYC%20Portal%22%2C%22start_url%22%3A%22.%2Findex.html%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23002b66%22%2C%22theme_color%22%3A%22%23002b66%22%7D">
   <meta name="theme-color" content="#002b66">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -21,12 +22,73 @@
   <link rel="apple-touch-icon" sizes="152x152" href="assets/logo.png">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/logo.png">
   <link rel="apple-touch-icon" sizes="167x167" href="assets/logo.png">
-  <!-- Dynamic Tesseract.js for In-Browser Optical Form Scanner -->
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" async></script>
+  <!-- Lightweight Offline PWA Core Enabled -->
 
   <!-- Stylesheet -->
 
   <style>
+
+/* ==============================================================================
+   RESPONSIVE PWA LAYOUT: MOBILE PHONES & LAPTOPS / DESKTOP MONITORS
+   ============================================================================== */
+@media (min-width: 769px) {
+  /* HIDE MOBILE BOTTOM NAV COMPLETELY ON LAPTOPS & PC TO GIVE FULL SCREEN SPACE */
+  .bottom-nav-bar {
+    display: none !important;
+  }
+  body {
+    padding-bottom: 24px !important;
+  }
+  .main-content {
+    max-width: 1400px !important;
+    margin: 0 auto !important;
+    padding: 20px 24px !important;
+  }
+  .app-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 16px !important;
+  }
+  #membersListContainer {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)) !important;
+    gap: 14px !important;
+  }
+  .hide-laptop {
+    display: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* SLEEK 5-ITEM BOTTOM NAV FOR SMARTPHONES */
+  .bottom-nav-bar {
+    display: flex !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 62px !important;
+    background: #002b66 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+    z-index: 9999 !important;
+    box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.25) !important;
+  }
+  body {
+    padding-bottom: 76px !important;
+  }
+  .app-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+  #membersListContainer {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
 /* ==============================================================================
    DBYC - DON BOSCO YOUTH CENTRE, BASIN BRIDGE, CHENNAI - 600 012
    MASTER STYLESHEET (Fixed Holy Faces, Visible Registry & Upload Modals)
@@ -2901,8 +2963,8 @@ body {
           </div>
           <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px; padding-top:6px; border-top:1px dashed #cbd5e1; font-size:0.68rem; color:#64748b;">
             <span id="loginDbCountBadge">📦 Registered Members: <strong>Loading...</strong></span>
-            <a href="javascript:void(0);" onclick="window.openDeviceSyncModal();" style="color:#0284c7; font-weight:800; text-decoration:none; display:inline-flex; align-items:center; gap:3px;">
-              <span>⇄</span> <span>Direct Transfer / Backup</span>
+            <a href="javascript:void(0);" onclick="window.refreshCloudDataImmediately();" style="color:#0284c7; font-weight:800; text-decoration:none; display:inline-flex; align-items:center; gap:4px;" title="Fetch latest registrations from Google Drive cloud">
+              <span>🔄</span> <span>Cloud Sync Data (உடனடி புதுப்பித்தல்)</span>
             </a>
           </div>
         </div>
@@ -3061,6 +3123,11 @@ body {
             <span id="masterEditText">Edit Controls</span>
           </button>
         </div>
+        <!-- PWA One-Click Install Button for Phones & Laptops -->
+        <button id="pwaInstallHeaderBtn" type="button" class="btn-dbyc-primary" style="display:none; background:linear-gradient(135deg, #10b981, #059669); color:#ffffff; font-size:0.75rem; font-weight:800; padding:5px 12px; border-radius:8px; border:none; cursor:pointer; align-items:center; gap:6px; box-shadow:0 2px 6px rgba(16,185,129,0.35);" onclick="window.triggerPwaInstall()" title="Install DBYC App directly on your Mobile Phone or Laptop">
+          📲 <span class="hide-mobile">Install App</span><span class="show-mobile-only">Install</span>
+        </button>
+
         <button id="cloudSyncStatusBtn" class="pill-tool-btn" data-role-required="director-only" style="background:#ecfdf5; border:1.5px solid #10b981; color:#065f46; font-weight:800; display:none; align-items:center; gap:6px; cursor:pointer;" onclick="window.openCloudSyncModal();" title="Google Drive & Server Storage Manager">
           <span id="cloudStatusDot" style="width:8px; height:8px; border-radius:50%; background:#10b981; display:inline-block; box-shadow:0 0 8px #10b981;"></span>
           <span id="cloudStatusText">Google Drive / Server</span>
@@ -3158,12 +3225,7 @@ body {
               <span>Office Bearers (பொறுப்பாளர்கள்)</span>
             </a>
           </li>
-          <li>
-            <a href="#leaders" class="sidebar-menu-item" data-view="leaders">
-              <span class="sidebar-menu-icon">⭐</span>
-              <span>Leaders Council (தலைவர்கள் மன்றம்)</span>
-            </a>
-          </li>
+
           <li>
             <a href="#livescore" class="sidebar-menu-item" data-view="livescore">
               <span class="sidebar-menu-icon">⚽</span>
@@ -3210,6 +3272,9 @@ body {
       </div>
 
       <div style="margin-top:auto; padding:16px;">
+        <button id="pwaInstallSidebarBtn" type="button" class="btn-dbyc-primary" style="width:100%; margin-bottom:10px; background:linear-gradient(135deg, #10b981, #059669); color:#fff; font-weight:800; font-size:0.85rem; padding:10px; border-radius:8px; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;" onclick="window.triggerPwaInstall()">
+          📲 Install App on Phone / Laptop (ஆப் பதிவிறக்கு)
+        </button>
         <button id="logoutBtn" style="width:100%; background:rgba(239, 68, 68, 0.2); border:1px solid #ef4444; color:#ffffff; padding:10px; border-radius:8px; font-weight:700; cursor:pointer;">
           🚪 Logout
         </button>
@@ -3238,11 +3303,24 @@ body {
         <!-- News Marquee -->
         <div class="news-ticker-bar">
           <div class="news-label-badge">📢 News</div>
-          <div class="marquee-text-container">
-            <span id="newsMarqueeText" class="marquee-text">
-              தொன்போஸ்கோ இளைஞர் மன்றம், பேசின் பாலம், சென்னை - 600 012 • 75% Attendance Required • Sunday Assembly at 10:00 AM
-            </span>
+          <!-- Don Bosco Salesian Motto & Quick Center Status -->
+        <div style="background:linear-gradient(135deg, #002b66 0%, #004b98 60%, #0284c7 100%); border-radius:16px; padding:16px 20px; color:#ffffff; margin-top:14px; margin-bottom:16px; box-shadow:0 6px 20px rgba(0,43,102,0.12); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+          <div style="display:flex; align-items:center; gap:14px;">
+            <img src="assets/don_bosco.webp" alt="St. John Bosco" style="width:52px; height:52px; border-radius:50%; object-fit:cover; border:2px solid #fde047; background:#002b66; box-shadow:0 0 10px rgba(253,224,71,0.5);" onerror="this.onerror=null; this.src='assets/logo.png';">
+            <div>
+              <div style="font-size:1.05rem; font-weight:900; letter-spacing:0.3px; color:#ffffff;">DON BOSCO YOUTH CENTRE</div>
+              <div style="font-size:0.75rem; color:#fde047; font-weight:700;">Basin Bridge, Chennai - 600 012 &bull; &ldquo;Da Mihi Animas Caetera Tolle&rdquo;</div>
+            </div>
           </div>
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <button type="button" class="btn-dbyc-primary" style="background:rgba(255,255,255,0.15); color:#ffffff; border:1px solid rgba(255,255,255,0.3); font-size:0.78rem; font-weight:800; padding:6px 12px; border-radius:8px; cursor:pointer;" onclick="window.refreshCloudDataImmediately();" title="Sync latest data from cloud">
+              🔄 Cloud Refresh
+            </button>
+            <button type="button" class="btn-dbyc-primary" style="background:#f59e0b; color:#0f172a; font-size:0.78rem; font-weight:800; padding:6px 14px; border-radius:8px; border:none; cursor:pointer;" onclick="switchView('attendance')">
+              📷 QR Attendance
+            </button>
+          </div>
+        </div>
         </div>
 
         <!-- ============================================================== -->
@@ -17884,6 +17962,90 @@ window.downloadBlankRegistrationFormPdf = function() {
 // =======================================================
 window.DBYC_MASTER_BACKEND_URL = "https://script.google.com/macros/s/AKfycbzMcQf_cmYGFeu5h8x_MqUGAtjTTvJJo5yG7PLNTWTrf_qHEWKSnmUvSFgzc_HdG-G3/exec";
 
+
+// ==============================================================================
+// OFFICIAL DBYC MEMBER REGISTRATION CSV TEMPLATE GENERATOR
+// ==============================================================================
+window.downloadCsvTemplate = function() {
+  const csvHeaders = "Full Name,DOB (YYYY-MM-DD),Age,Gender,Mobile Number,Designation / Role,Group,Father Name,Mother Name,Address,Blood Group,Activities\n";
+  const sampleRows = 
+    'Rev. Fr. Director,1972-04-24,54,Male,8608248988,Director (Incharge),Super Seniors Group,Joseph,Mary,"Don Bosco, Basin Bridge, Chennai - 600012",O+ve,"Football, Gym, Leadership"\n' +
+    'Rev. Fr. Don Frangleen,2000-07-18,26,Male,7305948101,Assistant Director,Sub Juniors Group,Francis,Philomena,"Don Bosco, Basin Bridge, Chennai - 600012",A+ve,"Volleyball, Music, Leadership"\n' +
+    'Raja,2000-05-15,26,Male,9551235550,GS (General Secretary),Oratory Group,Sundaram,Selvi,"Basin Bridge, Chennai - 600012",O+ve,"Council Governance, Football"\n' +
+    'Kishore,2004-08-10,22,Male,9840123456,Member,Inters Group,Murugan,Lakshmi,"Basin Bridge, Chennai - 600012",B+ve,"Table Tennis, Choral Singing"\n';
+  
+  const blob = new Blob(["\uFEFF" + csvHeaders + sampleRows], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute('download', 'DBYC_Official_Member_Registration_Template.csv');
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+  if (typeof showToast === 'function') {
+    showToast('📥 Official DBYC CSV Template downloaded successfully!');
+  }
+};
+
+
+// ==============================================================================
+// PROGRESSIVE WEB APP (PWA) SERVICE WORKER & 1-CLICK INSTALL RESOLVER
+// ==============================================================================
+let deferredPwaInstallPrompt = null;
+
+if ('serviceWorker' in navigator && (window.location.protocol === 'http:' || window.location.protocol === 'https:')) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => {
+        console.log('✅ [DBYC PWA] Service Worker registered in scope:', reg.scope);
+      })
+      .catch(err => {
+        console.warn('[DBYC PWA] Service worker register note:', err);
+      });
+  });
+}
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPwaInstallPrompt = e;
+  const headerBtn = document.getElementById('pwaInstallHeaderBtn');
+  const sideBtn = document.getElementById('pwaInstallSidebarBtn');
+  if (headerBtn) headerBtn.style.display = 'inline-flex';
+  if (sideBtn) sideBtn.style.display = 'flex';
+});
+
+window.addEventListener('appinstalled', () => {
+  deferredPwaInstallPrompt = null;
+  const headerBtn = document.getElementById('pwaInstallHeaderBtn');
+  if (headerBtn) headerBtn.style.display = 'none';
+  if (typeof showToast === 'function') {
+    showToast('🎉 DBYC Master Portal installed as a standalone PWA!');
+  }
+});
+
+window.triggerPwaInstall = async function() {
+  if (deferredPwaInstallPrompt) {
+    deferredPwaInstallPrompt.prompt();
+    const choiceResult = await deferredPwaInstallPrompt.userChoice;
+    if (choiceResult && choiceResult.outcome === 'accepted') {
+      if (typeof showToast === 'function') showToast('🎉 DBYC Portal installed to your device!');
+    }
+    deferredPwaInstallPrompt = null;
+    const headerBtn = document.getElementById('pwaInstallHeaderBtn');
+    if (headerBtn) headerBtn.style.display = 'none';
+  } else {
+    alert('📲 INSTALL DBYC AS A PROGRESSIVE WEB APP (PWA)\n\n' +
+          '• On Laptop (Windows / Mac / Chrome / Edge):\n' +
+          '  Click the Install icon (⊕) in the browser address bar, or click Menu (⋮) ➔ Install "DBYC Portal".\n\n' +
+          '• On iPhone / iPad (Safari):\n' +
+          '  Tap the Share button (⎋) at the bottom ➔ Tap "Add to Home Screen" (➕).\n\n' +
+          '• On Android Phone (Chrome):\n' +
+          '  Tap Menu (⋮) ➔ Tap "Install app" or "Add to Home Screen".\n\n' +
+          'Once installed, DBYC opens in full screen like a native mobile & desktop application with offline support!');
+  }
+};
+
 window.DbycGoogleDriveServerStorage = {
   isInitialized: false,
   isConnected: false,
@@ -17897,19 +18059,21 @@ window.DbycGoogleDriveServerStorage = {
   _listenersAttached: false,
   _coordinationListenersAttached: false,
 
+  _pushDebounceTimer: null,
+
+  pushToCloudDebounced: function(delay = 1500) {
+    if (this._pushDebounceTimer) clearTimeout(this._pushDebounceTimer);
+    this._pushDebounceTimer = setTimeout(() => {
+      this.pushToCloud(false);
+    }, delay);
+  },
+
   getAdaptiveInterval: function() {
     const isDir = (typeof isDirectorOnly === 'function' && isDirectorOnly()) || (typeof isDirectorUser === 'function' && isDirectorUser());
-    const isLeader = (typeof isLeaderOnly === 'function' && isLeaderOnly()) || (window.appState && (window.appState.currentRole === 'UNIT_LEADER' || window.appState.currentRole === 'OFFICE_BEARER'));
-    // Role-adaptive polling cadence:
-    // Directors / Admins: 20s (need rapid updates for approvals and event management)
-    // Unit Leaders: 25s (need quick feedback for attendance & matches)
-    // General Youth Members: 85s (cuts ~85% of traffic, avoids cloud congestion)
-    let base = 85000;
-    if (isDir) base = 20000;
-    else if (isLeader) base = 25000;
-    // Add ±3000ms random jitter so devices don't hit the server at the exact same split-second
+    // Optimized Polling: 55s for Director/Leaders, 90s for Members. Prevents continuous network busy state!
+    let base = isDir ? 55000 : 90000;
     const jitter = Math.floor((Math.random() - 0.5) * 6000);
-    return Math.max(10000, base + jitter);
+    return Math.max(30000, base + jitter);
   },
 
   scheduleNextAdaptivePoll: function() {
@@ -18072,8 +18236,6 @@ window.DbycGoogleDriveServerStorage = {
       minutes: (window.appState && window.appState.minutes) || [],
       news: (window.appState && window.appState.news) || [],
       matches: (window.appState && window.appState.matches) || [],
-      media: (window.appState && window.appState.media) || [],
-      telecastPhotos: window.telecastPhotos || (window.appState && window.appState.telecastPhotos) || [],
       teams: (window.appState && window.appState.teams) || [],
       teamPointsLog: (window.appState && window.appState.teamPointsLog) || [],
       leaders: ((window.appState && window.appState.leaders) || []).filter(l => {
@@ -18164,7 +18326,7 @@ window.DbycGoogleDriveServerStorage = {
       abortController = new AbortController();
       timeoutId = setTimeout(() => {
         try { abortController.abort(); } catch(e) {}
-      }, 12000);
+      }, 6500);
     }
 
     const fetchUrl = endpoint + (endpoint.includes('?') ? '&' : '?') + 'action=SYNC_GET&_ts=' + Date.now();

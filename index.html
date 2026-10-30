@@ -3135,6 +3135,11 @@ body {
 
         <button id="voiceAssistantNavBtn" class="pill-tool-btn" title="Voice Assistant" onclick="window.toggleVoiceAssistant()">🎙️ Voice</button>
         <button id="langToggleBtn" class="pill-tool-btn gold" title="Switch Language" onclick="window.toggleAppLanguage()">🌐 தமிழ் / ENG</button>
+        <!-- High-Visibility Instant Logout Button (Visible on all Phones, Tablets & Laptops) -->
+        <button id="topNavLogoutBtn" type="button" class="pill-tool-btn" style="background:#fee2e2; border:1.5px solid #ef4444; color:#b91c1c; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:5px; padding:6px 14px; border-radius:100px; box-shadow:0 2px 6px rgba(239,68,68,0.25); transition:all 0.2s ease;" onclick="window.logout();" title="Logout of DBYC (வெளியேறு)">
+          <span>🚪</span>
+          <span style="font-size:0.82rem; font-weight:800;">Logout</span>
+        </button>
       </div>
     </header>
 
@@ -3300,11 +3305,23 @@ body {
           <img src="data:image/webp;base64,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" alt="St. John Bosco" class="dash-holy-img don-bosco" title="St. John Bosco" onerror="if(window.DON_BOSCO_PORTRAIT)this.src=window.DON_BOSCO_PORTRAIT;">
         </div>
 
-        <!-- News Marquee -->
-        <div class="news-ticker-bar">
-          <div class="news-label-badge">📢 News</div>
-          <!-- Don Bosco Salesian Motto & Quick Center Status -->
-        <div style="background:linear-gradient(135deg, #002b66 0%, #004b98 60%, #0284c7 100%); border-radius:16px; padding:16px 20px; color:#ffffff; margin-top:14px; margin-bottom:16px; box-shadow:0 6px 20px rgba(0,43,102,0.12); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+        <!-- ============================================================== -->
+        <!-- DBYC LIVE FLASH NEWS RUNNING TICKER                            -->
+        <!-- Displays active news when uploaded; Don Bosco motto/quote when not -->
+        <!-- ============================================================== -->
+        <div id="dbycFlashNewsContainer" class="news-ticker-bar" style="border-radius:12px; margin-top:10px; margin-bottom:14px; box-shadow:0 3px 10px rgba(0,0,0,0.12); display:flex; align-items:center; overflow:hidden;">
+          <div id="dbycFlashNewsBadge" class="news-label-badge" style="display:flex; align-items:center; gap:6px;">
+            <span>⚡ FLASH NEWS</span>
+          </div>
+          <div class="marquee-text-container" style="cursor:pointer;" onclick="switchView('news')" title="Click to view DBYC News & Announcements">
+            <span id="newsMarqueeText" class="marquee-text">
+              ✨ DON BOSCO YOUTH CENTRE, BASIN BRIDGE • “Da Mihi Animas Caetera Tolle” • “Run, jump, shout, make all the noise you want, but do not sin.” — St. John Bosco • “It is not enough to love the young; they must know that they are loved.” — St. John Bosco
+            </span>
+          </div>
+        </div>
+
+        <!-- Don Bosco Salesian Motto & Quick Center Status -->
+        <div style="background:linear-gradient(135deg, #002b66 0%, #004b98 60%, #0284c7 100%); border-radius:16px; padding:16px 20px; color:#ffffff; margin-bottom:16px; box-shadow:0 6px 20px rgba(0,43,102,0.12); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
           <div style="display:flex; align-items:center; gap:14px;">
             <img src="assets/don_bosco.webp" alt="St. John Bosco" style="width:52px; height:52px; border-radius:50%; object-fit:cover; border:2px solid #fde047; background:#002b66; box-shadow:0 0 10px rgba(253,224,71,0.5);" onerror="this.onerror=null; this.src='assets/logo.png';">
             <div>
@@ -3320,7 +3337,6 @@ body {
               📷 QR Attendance
             </button>
           </div>
-        </div>
         </div>
 
         <!-- ============================================================== -->
@@ -3556,6 +3572,7 @@ body {
             <button id="openEditProfileBtn" class="btn-dbyc-primary" style="background:#0284c7; padding:8px 14px; font-weight:800;">✏️ Edit Profile</button>
             <button type="button" class="btn-dbyc-primary" style="background:#0b57d0; padding:8px 14px; font-weight:800;" onclick="window.downloadApplicationFormPdf(appState.currentUser ? appState.currentUser.id : '')">📥 Download Form PDF</button>
             <button type="button" class="btn-dbyc-primary" style="background:#059669; padding:8px 14px; font-weight:800;" onclick="window.downloadMemberPassPdf(appState.currentUser ? appState.currentUser.id : '')">🪪 Download QR Pass PDF</button>
+            <button type="button" class="btn-dbyc-primary" style="background:#fee2e2; border:1.5px solid #ef4444; color:#b91c1c; padding:8px 16px; font-weight:800; cursor:pointer;" onclick="window.logout();">🚪 Logout (வெளியேறு)</button>
           </div>
         </div>
 
@@ -3657,7 +3674,7 @@ body {
 
         <div class="section-header">
           <div>
-            <div style="font-size:0.95rem; color:#004b98; font-weight:800;">உறுப்பினர்கள் மற்றும் விண்ணப்பங்கள் (Members & Forms)</div>
+            <div style="font-size:0.95rem; color:#004b98; font-weight:800; display:flex; align-items:center; gap:8px;"><span>உறுப்பினர்கள் மற்றும் விண்ணப்பங்கள் (Members & Forms)</span><span id="membersRegistryTotalCountBadge" style="background:#e0f2fe; color:#0369a1; padding:2px 10px; border-radius:12px; font-size:0.75rem; font-weight:800;">All Registered Members</span></div>
             <small style="color:#64748b; font-size:0.75rem;">Click '✏️ Edit Form' on any member to edit or update via Mobile OTP</small>
           </div>
           <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
@@ -4493,13 +4510,16 @@ body {
           </div>
         </div>
 
-        <!-- Filter Bar for Executive Qualification & Approval Desk -->
+        <!-- Filter Bar for Executive Qualification & Approval Desk (All 6 Submission Streams) -->
         <div class="filter-bar" style="margin-bottom:16px; display:flex; gap:8px; flex-wrap:wrap;">
           <button class="filter-chip qual-filter-chip active" data-filter="ALL" onclick="renderQualificationDesk('ALL')">🌟 All Pending (<span id="qualCountAll">0</span>)</button>
           <button class="filter-chip qual-filter-chip" data-filter="MEMBERS" onclick="renderQualificationDesk('MEMBERS')">👥 Registration Forms (<span id="qualCountMembers">0</span>)</button>
-          <button class="filter-chip qual-filter-chip" data-filter="CALENDAR" onclick="renderQualificationDesk('CALENDAR')">📅 Calendar Events (<span id="qualCountCalendar">0</span>)</button>
-          <button class="filter-chip qual-filter-chip" data-filter="NEWS" onclick="renderQualificationDesk('NEWS')">📰 DBYC News (<span id="qualCountNews">0</span>)</button>
+          <button class="filter-chip qual-filter-chip" data-filter="NEWS" onclick="renderQualificationDesk('NEWS')">📰 Flash &amp; DBYC News (<span id="qualCountNews">0</span>)</button>
+          <button class="filter-chip qual-filter-chip" data-filter="TELECAST" onclick="renderQualificationDesk('TELECAST')">📸 Telecast Photos (<span id="qualCountTelecast">0</span>)</button>
           <button class="filter-chip qual-filter-chip" data-filter="MINUTES" onclick="renderQualificationDesk('MINUTES')">📝 Meeting Minutes (<span id="qualCountMinutes">0</span>)</button>
+          <button class="filter-chip qual-filter-chip" data-filter="MEDIA" onclick="renderQualificationDesk('MEDIA')">🎥 Video Uploads (<span id="qualCountMedia">0</span>)</button>
+          <button class="filter-chip qual-filter-chip" data-filter="MATCHES" onclick="renderQualificationDesk('MATCHES')">⚽ Live Scores (<span id="qualCountMatches">0</span>)</button>
+          <button class="filter-chip qual-filter-chip" data-filter="CALENDAR" onclick="renderQualificationDesk('CALENDAR')">📅 Calendar Events (<span id="qualCountCalendar">0</span>)</button>
         </div>
 
         <!-- Submissions Container -->
@@ -4777,8 +4797,11 @@ body {
             </div>
             <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
               <span class="badge-director-only" style="background:#fde047; color:#002b66; font-weight:900; padding:6px 14px; border-radius:100px; font-size:0.8rem; box-shadow:0 2px 6px rgba(0,0,0,0.15);">
-                👑 Sole Authority: Rev. Fr. Director Only
+                👑 Executive Authority: Rev. Fr. Director &amp; Assistant Director
               </span>
+              <button type="button" class="btn-dbyc-primary" style="background:#fee2e2; border:1.5px solid #ef4444; color:#b91c1c; font-weight:800; padding:5px 14px; font-size:0.78rem; border-radius:100px; cursor:pointer;" onclick="window.logout();">
+                🚪 Logout of Executive Session
+              </button>
               <span id="settingsDirectorPinBadge" style="font-size:0.72rem; color:#e0f2fe; font-weight:700;">
                 🔒 Director Security PIN Active
               </span>
@@ -5161,6 +5184,45 @@ body {
                 🔐 Update Director Master Security PIN
               </button>
               <button type="button" class="btn-dbyc-secondary" style="font-size:0.8rem; font-weight:700; padding:8px 14px;" onclick="window.toggleDirectorPinVisibility();">
+                👁️ Show / Hide PIN
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- 3B. Assistant Director Security PIN Manager -->
+        <div class="master-security-card" style="border:1.5px solid #cbd5e1; background:#ffffff; border-radius:16px; padding:18px; margin-bottom:18px;">
+          <div class="master-security-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span style="font-size:1.6rem;">👔</span>
+              <div>
+                <h3 style="font-size:1.05rem; font-weight:900; color:#002b66; margin:0;">Assistant Director Security PIN / Password Manager</h3>
+                <small style="color:#64748b;">Set your private Assistant Director Passcode (Old password is deleted when changed)</small>
+              </div>
+            </div>
+            <span class="role-badge asst-director" style="background:#0284c7; color:#fff; font-weight:900;">Executive Passcode</span>
+          </div>
+
+          <form id="asstDirectorPinChangeForm" style="margin-top:10px;">
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:12px;">
+              <div class="form-group-dbyc">
+                <label style="font-size:0.82rem; font-weight:800; color:#1e293b;">Current Asst. Director PIN *</label>
+                <input type="password" id="currentAsstPinInput" class="form-control-dbyc" placeholder="Enter Current PIN" required autocomplete="current-password" style="font-family:monospace; letter-spacing:2px;">
+              </div>
+              <div class="form-group-dbyc">
+                <label style="font-size:0.82rem; font-weight:800; color:#1e293b;">New Assistant Director PIN *</label>
+                <input type="password" id="newAsstPinInput" class="form-control-dbyc" placeholder="New PIN (min 4 digits)" required minlength="4" autocomplete="new-password" style="font-family:monospace; letter-spacing:2px;">
+              </div>
+              <div class="form-group-dbyc">
+                <label style="font-size:0.82rem; font-weight:800; color:#1e293b;">Confirm New PIN *</label>
+                <input type="password" id="confirmAsstPinInput" class="form-control-dbyc" placeholder="Confirm New PIN" required minlength="4" autocomplete="new-password" style="font-family:monospace; letter-spacing:2px;">
+              </div>
+            </div>
+            <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+              <button type="submit" class="btn-dbyc-primary" style="background:#002b66; font-weight:800; padding:10px 18px; border-radius:10px;">
+                🔐 Update Assistant Director PIN
+              </button>
+              <button type="button" class="btn-dbyc-secondary" style="font-size:0.8rem; font-weight:700; padding:8px 14px;" onclick="window.toggleAsstPinVisibility();">
                 👁️ Show / Hide PIN
               </button>
             </div>
@@ -5874,8 +5936,10 @@ body {
               <option value="Office Bearer">Office Bearer (நிர்வாகி)</option>
               <option value="GS (General Secretary)">GS (General Secretary) (பொதுச் செயலாளர்)</option>
               <option value="Animator">Animator (வழிகாட்டி)</option>
+              <option value="Director">Director (இயக்குனர்)</option>
               <option value="Director (Incharge)">Director (Incharge) (இயக்குனர்)</option>
-              <option value="Assistant Director (Direct Incharge)">Assistant Director (உதவி இயக்குனர்)</option>
+              <option value="Assistant Director">Assistant Director (உதவி இயக்குனர்)</option>
+              <option value="Assistant Director (Direct Incharge)">Assistant Director (Direct Incharge) (உதவி இயக்குனர்)</option>
             </select>
           </div>
         </div>
@@ -7511,24 +7575,22 @@ function syncLeadersWithMembers() {
   if (window.appState.members && Array.isArray(window.appState.members)) {
     window.appState.members.forEach(m => {
       if (!m) return;
-      // STRICT EXECUTIVE IMMUNITY & PERMANENT ROLE LOCK
+      // STRICT EXECUTIVE IMMUNITY & PERMANENT ROLE LOCK (Preserves user custom edits)
       if (m.id === 'DBYC-DIR-001') {
-        m.role = 'Director (Incharge)';
-        m.roles = ['Director (Incharge)'];
-        if (!m.name || m.name.toLowerCase().includes('lourdu') || m.name.toLowerCase().includes('merrady') || m.name.toLowerCase().includes('frangleen')) {
-          m.name = 'Rev. Fr. Director, SDB';
-        }
+        if (!m.role) m.role = 'Director (Incharge)';
+        if (!m.roles || m.roles.length === 0) m.roles = ['Director (Incharge)'];
+        if (!m.name) m.name = 'Rev. Fr. Director, SDB';
         return; // Executive immunity: Never let assistant director or leader checks touch Director DBYC-DIR-001
       }
       if (m.id === 'DBYC-DIR-002') {
-        m.name = 'Rev. Fr. Don Frangleen, SDB';
-        m.role = 'Assistant Director';
-        m.roles = ['Assistant Director'];
+        if (!m.name) m.name = 'Rev. Fr. Don Frangleen, SDB';
+        if (!m.role) m.role = 'Assistant Director';
+        if (!m.roles || m.roles.length === 0) m.roles = ['Assistant Director'];
         return; // Executive immunity: Never let director or leader checks touch Asst Director DBYC-DIR-002
       }
       const r = (m.role || '').toLowerCase();
       const n = (m.name || '').toLowerCase();
-      // Remove Lourdu Merrady from Director post
+      // Remove legacy Lourdu Merrady from Director post if present
       if (r.includes('director') && !r.includes('asst')) {
         if (n.includes('lourdu') || n.includes('merrady') || n.includes('merredy')) {
           m.name = 'Rev. Fr. Director, SDB';
@@ -7603,23 +7665,22 @@ function syncLeadersWithMembers() {
       members.push(matchedMem);
       ldr.memberId = matchedMem.id;
     } else {
-      // 2-Way Sync
+      // 2-Way Sync: Member in registry is the single primary source of truth for personal data
       ldr.memberId = matchedMem.id;
+      if (matchedMem.name) ldr.name = matchedMem.name;
       if (matchedMem.photo) ldr.photo = matchedMem.photo;
-      else if (ldr.photo) matchedMem.photo = ldr.photo;
+      else if (ldr.photo && !matchedMem.photo) matchedMem.photo = ldr.photo;
 
       if (matchedMem.mobile) ldr.phone = matchedMem.mobile;
-      else if (ldr.phone) matchedMem.mobile = ldr.phone;
+      else if (ldr.phone && !matchedMem.mobile) matchedMem.mobile = ldr.phone;
 
-      // Multi-post holding: "one person also can hold two three posts"
-      if (!matchedMem.roles) matchedMem.roles = [matchedMem.role || 'Youth Leader'];
-      if (!matchedMem.roles.includes(ldr.role)) matchedMem.roles.push(ldr.role);
-      const cleanRoles1 = [...new Set(matchedMem.roles.flatMap(r => (r || '').split(' & ').map(x => x.trim())).filter(Boolean))];
-      matchedMem.roles = cleanRoles1;
-      matchedMem.role = cleanRoles1.join(' & ');
+      // Preserve member's assigned role! Never force-revert or append seed roles to member
+      if (!matchedMem.role) matchedMem.role = ldr.role || 'Youth Leader';
+      if (!matchedMem.roles || matchedMem.roles.length === 0) matchedMem.roles = [matchedMem.role];
 
       if (matchedMem.homeAddress) ldr.address = matchedMem.homeAddress;
       if (matchedMem.activities && !ldr.abilities) ldr.abilities = Array.isArray(matchedMem.activities) ? matchedMem.activities.join(', ') : matchedMem.activities;
+      if (matchedMem.futureAmbition) ldr.achievements = matchedMem.futureAmbition;
     }
   });
 
@@ -7728,6 +7789,9 @@ function initApp() {
     } catch (e) {}
   }
 
+  if (typeof window.renderFlashNewsTicker === 'function') {
+    window.renderFlashNewsTicker();
+  }
   showLogin();
 }
 
@@ -7744,15 +7808,16 @@ function loadLocalData() {
       appState.deletedMinuteIds = parsed.deletedMinuteIds || [];
       if (parsed.editPermissions) appState.editPermissions = parsed.editPermissions;
 
+      // Clean legacy accidental test IDs from deletedMemberIds so real registered members are NEVER blocked
+      const legacyTestIds = new Set(['DBYC-TEST-001']);
+      appState.deletedMemberIds = (parsed.deletedMemberIds || []).filter(id => !id.startsWith('DBYC-2026-') || legacyTestIds.has(id));
       const deletedMems = new Set(appState.deletedMemberIds);
-      const demoMemberIds = new Set([
-        'DBYC-2026-SJ01', 'DBYC-2026-JN02', 'DBYC-2026-IN03', 'DBYC-2026-SR04', 'DBYC-2026-SS05', 'DBYC-2026-EL06', 'DBYC-TEST-001'
-      ]);
+
       const seenMemberIds = new Set();
       const uniqueMembers = [];
       for (const m of (parsed.members || [])) {
         if (!m || !m.id) continue;
-        if (demoMemberIds.has(m.id)) continue;
+        // Never skip registered members! All valid members are loaded:
         if (!seenMemberIds.has(m.id)) {
           seenMemberIds.add(m.id);
           uniqueMembers.push(m);
@@ -7813,17 +7878,15 @@ function loadLocalData() {
       (appState.members || []).forEach(m => {
         if (!m) return;
         if (m.id === 'DBYC-DIR-001') {
-          m.role = 'Director (Incharge)';
-          m.roles = ['Director (Incharge)'];
-          if (!m.name || m.name.toLowerCase().includes('lourdu') || m.name.toLowerCase().includes('merrady') || m.name.toLowerCase().includes('frangleen')) {
-            m.name = 'Rev. Fr. Director, SDB';
-          }
+          if (!m.role) m.role = 'Director (Incharge)';
+          if (!m.roles || m.roles.length === 0) m.roles = ['Director (Incharge)'];
+          if (!m.name) m.name = 'Rev. Fr. Director, SDB';
           if (!m.mobile) m.mobile = '8608248988';
           if (!m.pin) m.pin = '9894';
         } else if (m.id === 'DBYC-DIR-002') {
-          m.name = 'Rev. Fr. Don Frangleen, SDB';
-          m.role = 'Assistant Director';
-          m.roles = ['Assistant Director'];
+          if (!m.name) m.name = 'Rev. Fr. Don Frangleen, SDB';
+          if (!m.role) m.role = 'Assistant Director';
+          if (!m.roles || m.roles.length === 0) m.roles = ['Assistant Director'];
           if (!m.mobile) m.mobile = '7305948101';
           if (!m.pin) m.pin = '9894';
         }
@@ -7884,12 +7947,6 @@ function loadLocalData() {
 
 // Global Demo Data Purge Engine: Completely blocks and removes all mock/demo records
 window.purgeAllDemoData = function() {
-  const demoMemberIds = new Set([
-    'DBYC-2026-SJ01', 'DBYC-2026-JN02', 'DBYC-2026-IN03', 'DBYC-2026-SR04', 'DBYC-2026-SS05', 'DBYC-2026-EL06', 'DBYC-TEST-001'
-  ]);
-  const demoNames = new Set([
-    'Michael Raj', 'David Antony', 'Dominic Savio', 'John Bosco', 'Francis Xavier', 'Anthony Doss'
-  ]);
   const demoEventIds = new Set(['EVT-01', 'EVT-02', 'EVT-03', 'EVT-001', 'EVT-002', 'EVT-003']);
   const demoMinuteIds = new Set(['MIN-01', 'MIN-PENDING-01', 'MIN-001']);
   const demoNewsIds = new Set(['NEWS-01', 'NEWS-02', 'NEWS-03', 'NEWS-PENDING-01']);
@@ -7897,18 +7954,17 @@ window.purgeAllDemoData = function() {
   const demoMediaIds = new Set(['MEDIA-01', 'MEDIA-02', 'MEDIA-03', 'MEDIA-04', 'MEDIA-05', 'MEDIA-PENDING-01', 'MEDIA-PENDING-02']);
   const demoLogIds = new Set(['LOG-1', 'LOG-2', 'LOG-3', 'LOG-4']);
 
+  // Real registered members are 100% sacred! NEVER delete or filter real members:
   if (appState.members && Array.isArray(appState.members)) {
     appState.members = appState.members.filter(m => {
       if (!m) return false;
-      if (m.id === 'DBYC-DIR-001' || m.id === 'DBYC-DIR-002' || m.id === 'LDR-ORAT-01') return true;
-      if (demoMemberIds.has(m.id)) return false;
-      if (demoNames.has(m.name) && (String(m.id).startsWith('DBYC-2026-') || String(m.id).startsWith('DBYC-TEST-'))) return false;
+      if (m.isMockDemo === true || m.id === 'DBYC-TEST-001') return false;
       return true;
     });
   }
 
   if (appState.attendance && Array.isArray(appState.attendance)) {
-    appState.attendance = appState.attendance.filter(a => a && !demoMemberIds.has(a.memberId) && !demoNames.has(a.memberName));
+    appState.attendance = appState.attendance.filter(a => a && a.isMockDemo !== true && a.memberId !== 'DBYC-TEST-001');
   }
 
   if (appState.events && Array.isArray(appState.events)) {
@@ -7940,7 +7996,7 @@ window.purgeAllDemoData = function() {
       if (t.points === 450 || t.points === 520 || t.points === 490 || t.points === 410 || t.points === 350 || t.points === 310 || t.points === 290 || t.points === 270) {
         t.points = 0;
       }
-      if (demoNames.has(t.captain) || t.captain === 'Stephen Paul' || t.captain === 'Joseph Kumar' || t.captain === 'Antony Cruz' || t.captain === 'John Peter') {
+      if (t.captain === 'Stephen Paul' || t.captain === 'Joseph Kumar' || t.captain === 'Antony Cruz' || t.captain === 'John Peter') {
         t.captain = '';
       }
     });
@@ -8112,17 +8168,55 @@ function saveLocalData(skipCloudPush) {
 // ==========================================
 // 2. ROLE-BASED ACCESS CONTROL (RBAC)
 // ==========================================
+// ==========================================
+// 2. ROLE-BASED ACCESS CONTROL (RBAC)
+// Rev. Fr. Director, SDB & Rev. Fr. Don Frangleen, SDB (Assistant Director)
+// possess 100% IDENTICAL EXECUTIVE POWERS ACROSS ALL PORTALS AND SETTINGS!
+// ==========================================
+function isDirectorOnly() {
+  if (!window.appState || !window.appState.currentUser) {
+    const activeRole = (localStorage.getItem('dbyc_current_role') || '').toLowerCase();
+    if (activeRole && (activeRole.includes('director') || activeRole.includes('asst'))) return true;
+    const activeSession = localStorage.getItem('dbyc_active_session');
+    if (activeSession && (activeSession.includes('DIR') || activeSession.includes('Director') || activeSession.includes('ASST') || activeSession.includes('Frangleen'))) return true;
+    return false;
+  }
+  const u = window.appState.currentUser;
+  const uid = (u.id || '').toUpperCase();
+  const role = (u.role || '').toLowerCase();
+  const name = (u.name || '').toLowerCase();
+  // Rev. Fr. Director (DBYC-DIR-001) & Rev. Fr. Don Frangleen, Assistant Director (DBYC-DIR-002) have 100% EQUAL EXECUTIVE AUTHORITY
+  return uid === 'DBYC-DIR-001' || uid === 'DBYC-DIR-002' || uid === 'DBYC-ASST-001' || role.includes('director') || role.includes('asst') || name.includes('director') || name.includes('frangleen');
+}
+
+function isDirectorUser() {
+  return isDirectorOnly();
+}
+window.isDirectorUser = isDirectorUser;
+
+function isDirectorOrAsstDirector() {
+  return isDirectorOnly();
+}
+window.isDirectorOrAsstDirector = isDirectorOrAsstDirector;
+
 function getUserRoleType() {
-  if (!appState || !appState.currentUser) return 'MEMBER';
-  const role = (appState.currentUser.role || '').toLowerCase();
-  if (role.includes('director')) return 'DIRECTOR';
+  if (!window.appState || !window.appState.currentUser) {
+    const activeRole = (localStorage.getItem('dbyc_current_role') || '').toUpperCase();
+    if (activeRole.includes('DIRECTOR') || activeRole.includes('ASST')) return 'DIRECTOR';
+    if (activeRole.includes('LEADER')) return 'LEADER';
+    return 'MEMBER';
+  }
+  // If user is either Director or Assistant Director, grant full DIRECTOR executive tier!
+  if (isDirectorOnly()) return 'DIRECTOR';
+
+  const role = (window.appState.currentUser.role || '').toLowerCase();
   if (role.includes('leader') || role.includes('incharge') || role.includes('in-charge') || role.includes('animator') || role.includes('office bearer')) return 'LEADER';
 
   // Check if current user is in official leaders council list
-  const currentId = appState.currentUser.id;
-  const currentMobile = (appState.currentUser.mobile || '').replace(/[^0-9]/g, '');
-  const currentName = (appState.currentUser.name || '').toLowerCase();
-  const isLeaderInList = (appState.leaders || []).some(l =>
+  const currentId = window.appState.currentUser.id;
+  const currentMobile = (window.appState.currentUser.mobile || '').replace(/[^0-9]/g, '');
+  const currentName = (window.appState.currentUser.name || '').toLowerCase();
+  const isLeaderInList = (window.appState.leaders || []).some(l =>
     (l.memberId && l.memberId === currentId) ||
     (l.id && l.id === currentId) ||
     (l.mobile && String(l.mobile).replace(/[^0-9]/g, '') === currentMobile && currentMobile.length >= 8) ||
@@ -8132,39 +8226,60 @@ function getUserRoleType() {
 
   return 'MEMBER';
 }
+window.getUserRoleType = getUserRoleType;
+window.isDirectorOnly = isDirectorOnly;
 
-function isDirectorOnly() {
-  if (!appState || !appState.currentUser) {
-    const activeRole = localStorage.getItem('dbyc_current_role');
-    if (activeRole && (activeRole.includes('DIRECTOR') || activeRole.includes('director'))) return true;
-    return false;
-  }
-  const role = (appState.currentUser.role || '').toLowerCase();
-  return role.includes('director') || role.includes('rev. fr. director');
-}
+// ==========================================
+// DBYC FLASH NEWS TICKER SYSTEM
+// Displays uploaded news, or falls back to Salesian Don Bosco quote
+// ==========================================
+window.renderFlashNewsTicker = function() {
+  const marquee = document.getElementById('newsMarqueeText');
+  const badge = document.getElementById('dbycFlashNewsBadge');
+  const container = document.getElementById('dbycFlashNewsContainer');
+  if (!marquee) return;
 
-function isDirectorUser() {
-  if (typeof isDirectorOnly === 'function' && isDirectorOnly()) return true;
-  if (!window.appState || !window.appState.currentUser) {
-    const activeRole = localStorage.getItem('dbyc_current_role');
-    if (activeRole && (activeRole.includes('DIRECTOR') || activeRole.includes('director'))) return true;
-    return false;
-  }
-  const role = (window.appState.currentUser.role || '').toLowerCase();
-  return role.includes('director') || role.includes('rev. fr. director');
-}
-window.isDirectorUser = isDirectorUser;
+  const rawNews = (window.appState && Array.isArray(window.appState.news)) ? window.appState.news : [];
+  const activeNews = rawNews.filter(n => n && (n.status === 'APPROVED' || n.approvalStatus === 'APPROVED') && n.status !== 'PENDING' && n.approvalStatus !== 'PENDING');
 
-function isDirectorOrAsstDirector() {
-  if (!window.appState || !window.appState.currentUser) {
-    const activeRole = (localStorage.getItem('dbyc_current_role') || '').toLowerCase();
-    if (activeRole && (activeRole.includes('director') || activeRole.includes('asst'))) return true;
-    return false;
+  const salesianQuotes = [
+    '“Da Mihi Animas Caetera Tolle” (Give me souls, take away the rest)',
+    '“Run, jump, shout, make all the noise you want, but do not sin.” — St. John Bosco',
+    '“It is not enough to love the young; they must know that they are loved.” — St. John Bosco',
+    '“Do good while you still have time.” — St. John Bosco',
+    '“Joy, study, and piety: that is the grand programme.” — St. John Bosco'
+  ];
+
+  if (activeNews.length > 0) {
+    if (badge) {
+      badge.innerHTML = '<span style="animation:scanPulse 1.2s infinite; display:inline-block;">⚡</span> <span>FLASH NEWS (செய்திகள்)</span>';
+      badge.style.background = '#dc2626';
+    }
+    if (container) {
+      container.style.background = '#991b1b';
+      container.style.border = '1.5px solid #ef4444';
+    }
+    const headlines = activeNews.map(n => {
+      const cat = (n.category || 'NEWS').toUpperCase();
+      const title = n.title || 'DBYC Announcement';
+      const summary = n.summary ? ` — ${n.summary}` : '';
+      return `🔴 [${cat}] ${title}${summary}`;
+    }).join(' &nbsp;&nbsp;&nbsp;✦&nbsp;&nbsp;&nbsp; ');
+
+    marquee.innerHTML = headlines + ' &nbsp;&nbsp;&nbsp;✦&nbsp;&nbsp;&nbsp; 📍 DON BOSCO YOUTH CENTRE, BASIN BRIDGE';
+  } else {
+    if (badge) {
+      badge.innerHTML = '<span>✨ DON BOSCO</span>';
+      badge.style.background = '#004b98';
+    }
+    if (container) {
+      container.style.background = '#002b66';
+      container.style.border = '1.5px solid #fde047';
+    }
+    marquee.innerHTML = `✨ <strong>DON BOSCO YOUTH CENTRE, BASIN BRIDGE</strong> &bull; ${salesianQuotes.join(' &nbsp;&nbsp;&nbsp;✦&nbsp;&nbsp;&nbsp; ')}`;
   }
-  const role = (window.appState.currentUser.role || '').toLowerCase();
-  return role.includes('director') || role.includes('asst');
-}
-window.isDirectorOrAsstDirector = isDirectorOrAsstDirector;
+};
+
 
 function isLeaderOrDirector() {
   if (!appState || !appState.currentUser) return false;
@@ -9136,7 +9251,12 @@ function showMainApp() {
 
   applyRolePermissions();
   updateDashboardStats();
-  switchView('dashboard');
+  const initHash = (window.location.hash || '').replace('#', '').trim();
+  if (initHash && document.getElementById('view_' + initHash)) {
+    switchView(initHash);
+  } else {
+    switchView('dashboard');
+  }
 }
 
 function logout() {
@@ -9144,30 +9264,32 @@ function logout() {
     clearTimeout(window.loginTransitionTimer);
     window.loginTransitionTimer = null;
   }
-  // 1. Clear session keys, saved tokens and role credentials
+  // 1. Clear all session keys, tokens and credentials completely
   localStorage.removeItem(DBYC_USER);
   localStorage.removeItem('dbyc_active_session');
   localStorage.removeItem('dbyc_saved_session');
   localStorage.removeItem('dbyc_current_role');
+  localStorage.removeItem('dbyc_master_edit_active');
   try { sessionStorage.clear(); } catch(e) {}
 
-  // 2. Lock down editing permissions and reset active user state
+  // 2. Reset active user state
   appState.currentUser = null;
   window.isMasterEditActive = false;
   if (window.appState) {
     window.appState.masterEditActive = false;
   }
-  localStorage.setItem('dbyc_master_edit_active', 'false');
 
   // 3. Clear sensitive credentials from all login input fields
-  const inputsToClear = ['loginPasswordInput', 'securityPinInput', 'rolePhoneInput', 'otpMobileInput', 'otpCodeInput', 'loginMemberIdInput'];
+  const inputsToClear = ['loginPasswordInput', 'securityPinInput', 'rolePhoneInput', 'otpMobileInput', 'otpCodeInput', 'loginMemberIdInput', 'entrancePinInput', 'directPinInput'];
   inputsToClear.forEach(id => {
     const el = document.getElementById(id);
     if (el) { el.value = ''; el.style.borderColor = ''; }
   });
 
   // 4. Force-close all open modals and popups
-  window.closeAllModals();
+  if (typeof window.closeAllModals === 'function') {
+    window.closeAllModals();
+  }
 
   // 5. Hide error and success banners
   const errEl = document.getElementById('loginErrorMessage');
@@ -9179,7 +9301,7 @@ function logout() {
   if (typeof applyRolePermissions === 'function') applyRolePermissions();
   if (typeof window.updateMasterEditUI === 'function') window.updateMasterEditUI();
 
-  showToast('🔒 Logged out securely.');
+  showToast('🔒 Logged out securely. Select persona to log in.');
   showLogin();
 }
 window.logout = logout;
@@ -9720,8 +9842,9 @@ function setupSettingsHandlers() {
       const newPin = document.getElementById('newDirectorPinInput')?.value;
       const confPin = document.getElementById('confirmDirectorPinInput')?.value;
 
-      const savedPin = localStorage.getItem('dbyc_director_password') || '1815';
-      if (curPin !== savedPin && curPin !== '1815') {
+      // SINGLE PASSWORD RULE: Exactly one active password. Old is deleted.
+      const activePin = (localStorage.getItem('dbyc_director_password') || '1815').trim();
+      if (curPin.trim() !== activePin) {
         showToast('❌ Current Director PIN is incorrect.');
         return;
       }
@@ -9734,11 +9857,88 @@ function setupSettingsHandlers() {
         return;
       }
 
-      localStorage.setItem('dbyc_director_password', newPin);
+      // Store new PIN (completely deletes/replaces old PIN)
+      localStorage.setItem('dbyc_director_password', newPin.trim());
+      
+      // Update global role passwords
+      if (window.DBYC_ROLE_PASSWORDS && window.DBYC_ROLE_PASSWORDS.DIRECTOR) {
+        window.DBYC_ROLE_PASSWORDS.DIRECTOR.default = newPin.trim();
+        window.DBYC_ROLE_PASSWORDS.DIRECTOR.valid = [newPin.trim()];
+      }
+
+      // Synchronize Director member record
+      const members = appState.members || [];
+      const dirMem = members.find(m => (m.role || '').toLowerCase().includes('director') && !(m.role || '').toLowerCase().includes('asst')) || members.find(m => m.id === 'DBYC-DIR-001');
+      if (dirMem) {
+        dirMem.pin = newPin.trim();
+        dirMem.securityPin = newPin.trim();
+        dirMem.password = newPin.trim();
+        dirMem.updatedAt = new Date().toISOString();
+      }
+      saveLocalData();
+      if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+        window.DbycCloud.pushToCloud(false);
+      }
+
       const pinBadge = document.getElementById('settingsDirectorPinBadge');
-      if (pinBadge) pinBadge.textContent = '🔒 Custom Director PIN Active';
+      if (pinBadge) pinBadge.textContent = '🔒 Custom Director PIN Active (' + newPin.trim() + ')';
       pinForm.reset();
-      showToast('✅ Director Master PIN updated successfully!');
+      showToast('✅ Director Master PIN updated! Old PIN deleted and replaced.');
+    });
+  }
+
+  // Assistant Director PIN Change Form Handler
+  const asstPinForm = document.getElementById('asstDirectorPinChangeForm');
+  if (asstPinForm) {
+    asstPinForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!isDirectorOrAsstDirector()) {
+        showToast('🔒 Only Rev. Fr. Director or Assistant Director can change Assistant Director PIN.');
+        return;
+      }
+      const curPin = document.getElementById('currentAsstPinInput')?.value || '';
+      const newPin = document.getElementById('newAsstPinInput')?.value || '';
+      const confPin = document.getElementById('confirmAsstPinInput')?.value || '';
+
+      const activePin = (localStorage.getItem('dbyc_asst_director_password') || '1934').trim();
+      if (curPin.trim() !== activePin) {
+        showToast('❌ Current Assistant Director PIN is incorrect.');
+        return;
+      }
+      if (!newPin || newPin.length < 4) {
+        showToast('⚠️ New PIN must be at least 4 digits.');
+        return;
+      }
+      if (newPin !== confPin) {
+        showToast('❌ New PIN and Confirm PIN do not match.');
+        return;
+      }
+
+      // Store new PIN (completely deletes/replaces old PIN)
+      localStorage.setItem('dbyc_asst_director_password', newPin.trim());
+
+      // Update global role passwords
+      if (window.DBYC_ROLE_PASSWORDS && window.DBYC_ROLE_PASSWORDS.ASST_DIRECTOR) {
+        window.DBYC_ROLE_PASSWORDS.ASST_DIRECTOR.default = newPin.trim();
+        window.DBYC_ROLE_PASSWORDS.ASST_DIRECTOR.valid = [newPin.trim()];
+      }
+
+      // Synchronize Asst Director member record
+      const members = appState.members || [];
+      const asstMem = members.find(m => m.id === 'DBYC-DIR-002' || (m.role && m.role.toLowerCase().includes('asst')));
+      if (asstMem) {
+        asstMem.pin = newPin.trim();
+        asstMem.securityPin = newPin.trim();
+        asstMem.password = newPin.trim();
+        asstMem.updatedAt = new Date().toISOString();
+      }
+      saveLocalData();
+      if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+        window.DbycCloud.pushToCloud(false);
+      }
+
+      asstPinForm.reset();
+      showToast('✅ Assistant Director PIN updated! Old PIN deleted and replaced.');
     });
   }
 }
@@ -9860,27 +10060,61 @@ window.qualifySubmission = function(type, id) {
     showToast('🔒 Only Rev. Fr. Director or Assistant Director can qualify submissions.');
     return;
   }
+  const approverName = appState.currentUser ? appState.currentUser.name : 'Rev. Fr. Director, SDB';
+  const nowTs = new Date().toISOString();
+
   if (type === 'NEWS') {
     if (typeof window.qualifyAndApproveNews === 'function') window.qualifyAndApproveNews(id);
   } else if (type === 'MEDIA') {
     const item = (appState.media || []).find(m => m.id === id);
     if (item) {
       item.status = 'APPROVED';
-      item.approvedBy = appState.currentUser ? appState.currentUser.name : 'Rev. Fr. Director, SDB';
-      item.approvedAt = new Date().toISOString();
-      item.updatedAt = new Date().toISOString();
+      item.approvalStatus = 'APPROVED';
+      item.approvedBy = approverName;
+      item.approvedAt = nowTs;
+      item.updatedAt = nowTs;
       saveLocalData();
       if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') window.DbycCloud.pushToCloud(false);
       if (typeof renderMediaStudio === 'function') renderMediaStudio();
       if (typeof renderQualificationDesk === 'function') renderQualificationDesk();
-      showToast('✅ Media submission qualified and published!');
+      showToast('✅ Media video submission qualified and published!');
     }
-  } else if (type === 'MEMBER') {
+  } else if (type === 'MEMBER' || type === 'MEMBERS') {
     if (typeof window.qualifyAndApproveMember === 'function') window.qualifyAndApproveMember(id);
-  } else if (type === 'EVENT') {
+  } else if (type === 'EVENT' || type === 'CALENDAR') {
     if (typeof window.qualifyAndApproveEvent === 'function') window.qualifyAndApproveEvent(id);
   } else if (type === 'MINUTES') {
     if (typeof window.qualifyAndApproveMinute === 'function') window.qualifyAndApproveMinute(id);
+  } else if (type === 'TELECAST') {
+    const photo = (window.telecastPhotos || []).find(p => p.id === id);
+    if (photo) {
+      photo.status = 'APPROVED';
+      photo.approvalStatus = 'APPROVED';
+      photo.approvedBy = approverName;
+      photo.approvedAt = nowTs;
+      photo.updatedAt = nowTs;
+      try { localStorage.setItem('dbyc_telecast_photos', JSON.stringify(window.telecastPhotos)); } catch(e) {}
+      saveLocalData();
+      if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') window.DbycCloud.pushToCloud(false);
+      if (typeof window.renderTelecastPhotosList === 'function') window.renderTelecastPhotosList();
+      if (typeof window.showTelecastSlide === 'function') window.showTelecastSlide(0);
+      if (typeof renderQualificationDesk === 'function') renderQualificationDesk();
+      showToast('✅ Telecast photo qualified and published to carousel!');
+    }
+  } else if (type === 'MATCHES') {
+    const match = (appState.matches || []).find(m => m.id === id);
+    if (match) {
+      match.approvalStatus = 'APPROVED';
+      match.status = match.matchStatus || 'LIVE';
+      match.approvedBy = approverName;
+      match.approvedAt = nowTs;
+      match.updatedAt = nowTs;
+      saveLocalData();
+      if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') window.DbycCloud.pushToCloud(false);
+      if (typeof renderLiveScores === 'function') renderLiveScores();
+      if (typeof renderQualificationDesk === 'function') renderQualificationDesk();
+      showToast('✅ Live match score qualified and published to scoreboard!');
+    }
   }
 };
 
@@ -9898,6 +10132,7 @@ window.rejectSubmission = function(type, id) {
     if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') window.DbycCloud.pushToCloud(false);
     if (typeof renderNewsList === 'function') renderNewsList();
     if (typeof renderQualificationDesk === 'function') renderQualificationDesk();
+    if (typeof window.renderFlashNewsTicker === 'function') window.renderFlashNewsTicker();
     showToast('🗑️ News item rejected and removed.');
   } else if (type === 'MEDIA') {
     appState.media = (appState.media || []).filter(m => m.id !== id);
@@ -9906,6 +10141,29 @@ window.rejectSubmission = function(type, id) {
     if (typeof renderMediaStudio === 'function') renderMediaStudio();
     if (typeof renderQualificationDesk === 'function') renderQualificationDesk();
     showToast('🗑️ Media item rejected and removed.');
+  } else if (type === 'MEMBER' || type === 'MEMBERS') {
+    if (typeof window.rejectMember === 'function') window.rejectMember(id);
+  } else if (type === 'EVENT' || type === 'CALENDAR') {
+    if (typeof window.rejectEvent === 'function') window.rejectEvent(id);
+  } else if (type === 'MINUTES') {
+    if (typeof window.rejectMinute === 'function') window.rejectMinute(id);
+  } else if (type === 'TELECAST') {
+    window.telecastPhotos = (window.telecastPhotos || []).filter(p => p.id !== id);
+    if (window.appState) window.appState.telecastPhotos = window.telecastPhotos;
+    try { localStorage.setItem('dbyc_telecast_photos', JSON.stringify(window.telecastPhotos)); } catch(e) {}
+    saveLocalData();
+    if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') window.DbycCloud.pushToCloud(false);
+    if (typeof window.renderTelecastPhotosList === 'function') window.renderTelecastPhotosList();
+    if (typeof window.showTelecastSlide === 'function') window.showTelecastSlide(0);
+    if (typeof renderQualificationDesk === 'function') renderQualificationDesk();
+    showToast('🗑️ Telecast photo rejected and removed.');
+  } else if (type === 'MATCHES') {
+    appState.matches = (appState.matches || []).filter(m => m.id !== id);
+    saveLocalData();
+    if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') window.DbycCloud.pushToCloud(false);
+    if (typeof renderLiveScores === 'function') renderLiveScores();
+    if (typeof renderQualificationDesk === 'function') renderQualificationDesk();
+    showToast('🗑️ Match submission rejected and removed.');
   }
 };
 
@@ -9975,6 +10233,9 @@ function switchView(viewName) {
 
   if (cleanName === 'dashboard') {
     updateDashboardStats();
+    if (typeof window.renderFlashNewsTicker === 'function') {
+      window.renderFlashNewsTicker();
+    }
     if (typeof window.initTelecastCarousel === 'function') {
       window.initTelecastCarousel();
     }
@@ -12135,7 +12396,17 @@ window.selectMemberForRenewal = function(memberId) {
   document.getElementById('formYearsInDbyc').value = (parseInt(m.yearsInDbyc, 10) || 1) + 1;
   document.getElementById('formBloodGroup').value = m.bloodGroup || 'O+ve';
   document.getElementById('formGroup').value = m.group || 'Sub Juniors Group';
-  document.getElementById('formRole').value = m.role || 'Member';
+  const roleSelect = document.getElementById('formRole');
+    if (roleSelect) {
+      let matchedOpt = Array.from(roleSelect.options).find(opt => opt.value.toLowerCase() === (m.role || '').toLowerCase());
+      if (!matchedOpt && (m.role || '').toLowerCase().includes('asst')) {
+        matchedOpt = Array.from(roleSelect.options).find(opt => opt.value.toLowerCase().includes('asst'));
+      } else if (!matchedOpt && (m.role || '').toLowerCase().includes('director')) {
+        matchedOpt = Array.from(roleSelect.options).find(opt => opt.value.toLowerCase().includes('director') && !opt.value.toLowerCase().includes('asst'));
+      }
+      if (matchedOpt) roleSelect.value = matchedOpt.value;
+      else roleSelect.value = m.role || 'Member';
+    }
   document.getElementById('formTeam').value = m.team || 'TEAM-1';
   document.getElementById('formNotes').value = m.notes || '';
 
@@ -13766,6 +14037,9 @@ function setupNewsHandlers() {
 }
 
 function renderNewsList(filter = 'APPROVED') {
+  if (typeof window.renderFlashNewsTicker === 'function') {
+    window.renderFlashNewsTicker();
+  }
   const container = document.getElementById('newsListContainer');
   if (!container) return;
 
@@ -13935,6 +14209,9 @@ function setupLiveScoreHandlers() {
     const status = document.getElementById('matchStatusSelect')?.value || 'LIVE';
     const stage = document.getElementById('matchStageInput')?.value.trim() || '1st Half (00\')';
 
+    const isDir = isDirectorOrAsstDirector();
+    const appStatus = isDir ? 'APPROVED' : 'PENDING';
+
     const newMatch = {
       id: 'MATCH-' + Date.now(),
       sport,
@@ -13944,8 +14221,12 @@ function setupLiveScoreHandlers() {
       teamB,
       scoreA: 0,
       scoreB: 0,
-      status,
+      status: isDir ? status : 'PENDING',
+      matchStatus: status,
+      approvalStatus: appStatus,
       stage,
+      author: appState.currentUser ? appState.currentUser.name : 'DBYC Member',
+      createdAt: new Date().toISOString(),
       commentary: [
         { min: '00\'', text: `🏁 Match launched: ${teamA} vs ${teamB} at ${venue}!` }
       ]
@@ -13956,7 +14237,7 @@ function setupLiveScoreHandlers() {
     saveLocalData();
     if (composerCard) composerCard.style.display = 'none';
     document.getElementById('createMatchForm')?.reset();
-    showToast(`⚽ Match Created: ${teamA} vs ${teamB}`);
+    showToast(isDir ? `⚽ Match Created: ${teamA} vs ${teamB}` : `⏳ Match score submitted to Qualification Desk for Director approval.`);
     renderLiveScores();
   });
 }
@@ -14101,7 +14382,13 @@ function renderLiveScores() {
     return;
   }
 
+  const roleType = getUserRoleType();
+  const isLeaderOrAdmin = roleType === 'DIRECTOR' || roleType === 'LEADER';
+
+  // STRICT APPROVAL: Regular public only sees approved matches
   let filtered = appState.matches.filter(m => {
+    const isApproved = m.approvalStatus === 'APPROVED' || m.status === 'APPROVED' || (m.status !== 'PENDING' && m.approvalStatus !== 'PENDING');
+    if (!isLeaderOrAdmin && !isApproved) return false;
     return currentLiveSportFilter === 'ALL' || m.sport === currentLiveSportFilter;
   });
 
@@ -14109,9 +14396,6 @@ function renderLiveScores() {
     container.innerHTML = `<div style="text-align:center; padding:30px; color:#64748b;">No ${currentLiveSportFilter} matches found.</div>`;
     return;
   }
-
-  const roleType = getUserRoleType();
-  const isLeaderOrAdmin = roleType === 'DIRECTOR' || roleType === 'LEADER';
 
   container.innerHTML = filtered.map(m => {
     let statusBadge = '<span class="role-badge" style="background:#dc2626; color:#ffffff; font-weight:800; animation:scanPulse 1.5s infinite;">🔴 LIVE NOW</span>';
@@ -15218,23 +15502,39 @@ saveMemberRegistrationFormDirect = function(event) {
         memberData.approvedAt = prev.approvedAt || new Date().toISOString();
       }
       memberData.updatedAt = new Date().toISOString();
-      // Strict Executive Role Enforcement:
+      // Strict Executive Role Enforcement (Allows custom user updates to name & photo):
       if (prev.id === 'DBYC-DIR-001') {
-        memberData.role = 'Director (Incharge)';
-        memberData.roles = ['Director (Incharge)'];
-        if (!memberData.name || memberData.name.toLowerCase().includes('lourdu') || memberData.name.toLowerCase().includes('merrady')) {
-          memberData.name = 'Rev. Fr. Director, SDB';
+        const chosenRole = document.getElementById('formRole')?.value;
+        memberData.role = (chosenRole && chosenRole.toLowerCase().includes('director') && !chosenRole.toLowerCase().includes('asst')) ? chosenRole : (prev.role || 'Director');
+        memberData.roles = [memberData.role];
+        if (!memberData.name) {
+          memberData.name = prev.name || 'Rev. Fr. Director, SDB';
         }
       } else if (prev.id === 'DBYC-DIR-002') {
-        memberData.role = 'Assistant Director';
-        memberData.roles = ['Assistant Director'];
-        memberData.name = 'Rev. Fr. Don Frangleen, SDB';
+        const chosenRole = document.getElementById('formRole')?.value;
+        memberData.role = (chosenRole && chosenRole.toLowerCase().includes('asst')) ? chosenRole : (prev.role || 'Assistant Director');
+        memberData.roles = [memberData.role];
+        if (!memberData.name) {
+          memberData.name = prev.name || 'Rev. Fr. Don Frangleen, SDB';
+        }
       } else {
         memberData.role = document.getElementById('formRole')?.value || prev.role || 'Member';
         memberData.roles = [memberData.role];
       }
 
       appState.members[idx] = Object.assign({}, prev, memberData);
+
+      // Instant synchronization if editing currently logged in user
+      if (appState.currentUser && appState.currentUser.id === prev.id) {
+        appState.currentUser = Object.assign({}, appState.currentUser, memberData);
+        localStorage.setItem(DBYC_USER, JSON.stringify(appState.currentUser));
+        const nameEl = document.getElementById('sidebarUserName');
+        const roleEl = document.getElementById('sidebarUserRole');
+        const avatarEl = document.getElementById('sidebarAvatarImg');
+        if (nameEl) nameEl.textContent = appState.currentUser.name;
+        if (roleEl) roleEl.textContent = `${appState.currentUser.role} • ${appState.currentUser.group || 'DBYC'}`;
+        if (avatarEl && appState.currentUser.photo) avatarEl.src = appState.currentUser.photo;
+      }
 
       // 2-Way Sync: Update any office bearer posts held by this member
       if (window.appState && Array.isArray(window.appState.leaders)) {
@@ -15368,6 +15668,10 @@ saveMemberRegistrationFormDirect = function(event) {
     savedMemberId = `DBYC-2026-${groupCode}${String(count).padStart(2, '0')}`;
     memberData.id = savedMemberId;
     memberData.createdAt = new Date().toISOString();
+    // Safety: Remove ID from deletedMemberIds tombstone list so it can never be blocked
+    if (appState.deletedMemberIds && Array.isArray(appState.deletedMemberIds)) {
+      appState.deletedMemberIds = appState.deletedMemberIds.filter(id => id !== savedMemberId);
+    }
 
     // Qualification check: Director/Asst Director approves immediately, others go PENDING
     if (isDirector) {
@@ -15497,8 +15801,11 @@ function renderMembersRegistry() {
   const searchInput = document.getElementById('memberSearchInput');
   const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
 
+  const normGrp = (g) => (g || '').toLowerCase().replace(/s\b/g, '').trim();
   const filtered = members.filter(m => {
-    const matchesGroup = (window.activeMemberGroupFilter === 'ALL' || m.group === window.activeMemberGroupFilter);
+    const matchesGroup = (window.activeMemberGroupFilter === 'ALL' || 
+      m.group === window.activeMemberGroupFilter ||
+      normGrp(m.group) === normGrp(window.activeMemberGroupFilter));
     const matchesSearch = !query || 
       (m.name && m.name.toLowerCase().includes(query)) ||
       (m.id && m.id.toLowerCase().includes(query)) ||
@@ -15506,6 +15813,11 @@ function renderMembersRegistry() {
       (m.role && m.role.toLowerCase().includes(query));
     return matchesGroup && matchesSearch;
   });
+
+  const countBadge = document.getElementById('membersRegistryTotalCountBadge');
+  if (countBadge) {
+    countBadge.textContent = `${filtered.length} of ${members.length} Registered Members`;
+  }
 
   if (filtered.length === 0) {
     container.innerHTML = `
@@ -15687,13 +15999,9 @@ window.deleteMemberFromModal = function() {
 };
 
 window.clearAllSampleDemoData = function() {
-  const sampleDemoIds = ['DBYC-2026-SJ01', 'DBYC-2026-JN02', 'DBYC-2026-IN03', 'DBYC-2026-SR04', 'DBYC-2026-SS05', 'DBYC-2026-EL06', 'DBYC-TEST-001'];
-  const sampleDemoNames = ['Michael Raj', 'David Antony', 'Dominic Savio', 'Stephen Paul', 'Joseph Kumar', 'Antony Cruz'];
-
   const foundDemos = (appState.members || []).filter(m => {
     if (m.id === 'DBYC-DIR-001' || m.id === 'DBYC-DIR-002') return false;
-    if (sampleDemoIds.includes(m.id)) return true;
-    if (sampleDemoNames.includes(m.name) && (m.id.startsWith('DBYC-2026-') || m.id.startsWith('DBYC-TEST-'))) return true;
+    if (m.isMockDemo === true || m.id === 'DBYC-TEST-001') return true;
     return false;
   });
 
@@ -17564,13 +17872,15 @@ function renderQualificationDesk(filter = 'ALL') {
     return;
   }
 
-  // Gather pending items across all required streams (Strictly unapproved items)
+  // Gather pending items across all 6 streams: Members, News, Telecast, Minutes, Media, Matches (+ Calendar)
   const isMemberApproved = (m) => (m.approvalStatus === 'APPROVED' || m.status === 'APPROVED' || m.status === 'Active' || m.membershipStatus === 'ACTIVE');
   const pendingMembers = (appState.members || []).filter(m => !isMemberApproved(m) && (m.status === 'PENDING' || m.approvalStatus === 'PENDING' || !m.approvalStatus)).map(m => ({ ...m, itemType: 'MEMBERS' }));
-  const pendingEvents = (appState.events || []).filter(e => !(e.approvalStatus === 'APPROVED' || e.status === 'APPROVED') && (e.status === 'PENDING' || e.approvalStatus === 'PENDING')).map(e => ({ ...e, itemType: 'CALENDAR' }));
   const pendingNews = (appState.news || []).filter(n => !(n.approvalStatus === 'APPROVED' || n.status === 'APPROVED') && (n.status === 'PENDING' || n.approvalStatus === 'PENDING')).map(n => ({ ...n, itemType: 'NEWS' }));
+  const pendingTelecast = (window.telecastPhotos || []).filter(t => !(t.approvalStatus === 'APPROVED' || t.status === 'APPROVED') && (t.status === 'PENDING' || t.approvalStatus === 'PENDING')).map(t => ({ ...t, itemType: 'TELECAST' }));
   const pendingMinutes = (appState.minutes || []).filter(m => !(m.approvalStatus === 'APPROVED' || m.status === 'APPROVED') && (m.status === 'PENDING' || m.approvalStatus === 'PENDING')).map(m => ({ ...m, itemType: 'MINUTES' }));
-  const pendingMedia = (appState.media || []).filter(m => m.status !== 'APPROVED' && m.status === 'PENDING').map(m => ({ ...m, itemType: 'MEDIA' }));
+  const pendingMedia = (appState.media || []).filter(m => !(m.approvalStatus === 'APPROVED' || m.status === 'APPROVED') && (m.status === 'PENDING' || m.approvalStatus === 'PENDING')).map(m => ({ ...m, itemType: 'MEDIA' }));
+  const pendingMatches = (appState.matches || []).filter(m => !(m.approvalStatus === 'APPROVED' || m.status === 'APPROVED') && (m.status === 'PENDING' || m.approvalStatus === 'PENDING')).map(m => ({ ...m, itemType: 'MATCHES' }));
+  const pendingEvents = (appState.events || []).filter(e => !(e.approvalStatus === 'APPROVED' || e.status === 'APPROVED') && (e.status === 'PENDING' || e.approvalStatus === 'PENDING')).map(e => ({ ...e, itemType: 'CALENDAR' }));
 
   // Update counters
   const setElText = (id, txt) => {
@@ -17578,10 +17888,13 @@ function renderQualificationDesk(filter = 'ALL') {
     if (el) el.textContent = txt;
   };
   setElText('qualCountMembers', pendingMembers.length);
-  setElText('qualCountCalendar', pendingEvents.length);
   setElText('qualCountNews', pendingNews.length);
+  setElText('qualCountTelecast', pendingTelecast.length);
   setElText('qualCountMinutes', pendingMinutes.length);
-  const totalPending = pendingMembers.length + pendingEvents.length + pendingNews.length + pendingMinutes.length + pendingMedia.length;
+  setElText('qualCountMedia', pendingMedia.length);
+  setElText('qualCountMatches', pendingMatches.length);
+  setElText('qualCountCalendar', pendingEvents.length);
+  const totalPending = pendingMembers.length + pendingNews.length + pendingTelecast.length + pendingMinutes.length + pendingMedia.length + pendingMatches.length + pendingEvents.length;
   setElText('qualCountAll', totalPending);
   setElText('qualPendingHeaderBadge', `${totalPending} PENDING`);
 
@@ -17595,12 +17908,14 @@ function renderQualificationDesk(filter = 'ALL') {
   });
 
   let displayItems = [];
-  if (filter === 'ALL') displayItems = [...pendingMembers, ...pendingEvents, ...pendingNews, ...pendingMinutes, ...pendingMedia];
+  if (filter === 'ALL') displayItems = [...pendingMembers, ...pendingNews, ...pendingTelecast, ...pendingMinutes, ...pendingMedia, ...pendingMatches, ...pendingEvents];
   else if (filter === 'MEMBERS') displayItems = pendingMembers;
-  else if (filter === 'CALENDAR') displayItems = pendingEvents;
   else if (filter === 'NEWS') displayItems = pendingNews;
+  else if (filter === 'TELECAST') displayItems = pendingTelecast;
   else if (filter === 'MINUTES') displayItems = pendingMinutes;
   else if (filter === 'MEDIA') displayItems = pendingMedia;
+  else if (filter === 'MATCHES') displayItems = pendingMatches;
+  else if (filter === 'CALENDAR') displayItems = pendingEvents;
 
   if (displayItems.length === 0) {
     container.innerHTML = `
@@ -17675,6 +17990,29 @@ function renderQualificationDesk(filter = 'ALL') {
       `;
       approveBtn = `<button type="button" class="btn-dbyc-primary" style="background:#16a34a; font-weight:800; padding:8px 14px; border-radius:8px; font-size:0.82rem;" onclick="window.qualifySubmission('MEDIA', '${item.id}')">✅ Qualify & Publish</button>`;
       rejectBtn = `<button type="button" class="btn-dbyc-primary" style="background:#ef4444; font-weight:800; padding:8px 14px; border-radius:8px; font-size:0.82rem;" onclick="window.rejectSubmission('MEDIA', '${item.id}')">❌ Reject</button>`;
+    } else if (item.itemType === 'TELECAST') {
+      typeBadge = `<span class="role-badge" style="background:#dc2626; color:#fff; font-weight:800;">📸 Live Telecast Photo</span>`;
+      previewContent = `
+        <div style="display:flex; gap:14px; align-items:center;">
+          <img src="${item.photo || 'assets/don_bosco.webp'}" alt="${item.title}" style="width:75px; height:55px; border-radius:8px; object-fit:cover; border:2px solid #dc2626; flex-shrink:0;">
+          <div>
+            <h4 style="font-size:1.05rem; font-weight:800; color:#002b66; margin-bottom:3px;">${item.title}</h4>
+            <div style="font-size:0.82rem; color:#475569;">${item.caption || ''} • <strong>${item.date}</strong></div>
+            <div style="font-size:0.78rem; color:#64748b; margin-top:2px;">Submitted by: <strong>${item.author || 'Member'}</strong></div>
+          </div>
+        </div>
+      `;
+      approveBtn = `<button type="button" class="btn-dbyc-primary" style="background:#16a34a; font-weight:800; padding:8px 14px; border-radius:8px; font-size:0.82rem;" onclick="window.qualifySubmission('TELECAST', '${item.id}')">✅ Qualify & Approve Telecast Photo</button>`;
+      rejectBtn = `<button type="button" class="btn-dbyc-primary" style="background:#ef4444; font-weight:800; padding:8px 14px; border-radius:8px; font-size:0.82rem;" onclick="window.rejectSubmission('TELECAST', '${item.id}')">❌ Reject</button>`;
+    } else if (item.itemType === 'MATCHES') {
+      typeBadge = `<span class="role-badge" style="background:#16a34a; color:#fff; font-weight:800;">⚽ Live Sports Match Score</span>`;
+      previewContent = `
+        <h4 style="font-size:1.1rem; font-weight:800; color:#002b66; margin-bottom:3px;">${item.teamA} vs ${item.teamB} (${item.sport})</h4>
+        <div style="font-size:0.82rem; color:#475569;">Tournament: <strong>${item.tournament || 'DBYC Tournament'}</strong> • Venue: <strong>${item.venue}</strong> • Stage: <strong>${item.stage}</strong></div>
+        <div style="font-size:0.78rem; color:#64748b; margin-top:2px;">Submitted by: <strong>${item.author || 'Member'}</strong></div>
+      `;
+      approveBtn = `<button type="button" class="btn-dbyc-primary" style="background:#16a34a; font-weight:800; padding:8px 14px; border-radius:8px; font-size:0.82rem;" onclick="window.qualifySubmission('MATCHES', '${item.id}')">✅ Qualify & Approve Match</button>`;
+      rejectBtn = `<button type="button" class="btn-dbyc-primary" style="background:#ef4444; font-weight:800; padding:8px 14px; border-radius:8px; font-size:0.82rem;" onclick="window.rejectSubmission('MATCHES', '${item.id}')">❌ Reject</button>`;
     }
 
     return `
@@ -18069,11 +18407,8 @@ window.DbycGoogleDriveServerStorage = {
   },
 
   getAdaptiveInterval: function() {
-    const isDir = (typeof isDirectorOnly === 'function' && isDirectorOnly()) || (typeof isDirectorUser === 'function' && isDirectorUser());
-    // Optimized Polling: 55s for Director/Leaders, 90s for Members. Prevents continuous network busy state!
-    let base = isDir ? 55000 : 90000;
-    const jitter = Math.floor((Math.random() - 0.5) * 6000);
-    return Math.max(30000, base + jitter);
+    // 10-Second Auto Refresh for updating all data in all mobiles and laptops every 10 seconds!
+    return 10000;
   },
 
   scheduleNextAdaptivePoll: function() {
@@ -18126,10 +18461,16 @@ window.DbycGoogleDriveServerStorage = {
         this.pullLatestFromCloud(true);
       }, 600);
 
-      // Real-time adaptive coordination between Mobile and Desktop (Adaptive Staggered Polling)
+      // Real-time 10-second automatic refresh across all mobiles and laptops
       if (this.syncTimer) clearInterval(this.syncTimer);
       if (this.adaptivePollTimeout) clearTimeout(this.adaptivePollTimeout);
       this.scheduleNextAdaptivePoll();
+      if (this.autoRefreshInterval) clearInterval(this.autoRefreshInterval);
+      this.autoRefreshInterval = setInterval(() => {
+        if (typeof document !== 'undefined' && document.visibilityState === 'visible' && navigator.onLine && this.backendUrl && !this.isSyncing) {
+          this.pullLatestFromCloud(true);
+        }
+      }, 10000);
 
       // Instant synchronization triggers on device wake / tab focus / visibility change
       if (!this._coordinationListenersAttached) {
@@ -19103,15 +19444,21 @@ window.directRoleLogin = function(roleType) {
   const members = appState.members || [];
 
   if (roleType === 'DIRECTOR') {
-    member = members.find(m => {
+    member = members.find(m => m.id === 'DBYC-DIR-001') || members.find(m => {
       const r = (m.role || '').toLowerCase();
       return r.includes('director') && !r.includes('asst');
-    }) || members[0];
+    });
+    if (!member) {
+      member = { id: 'DBYC-DIR-001', name: 'Rev. Fr. Director, SDB', role: 'Director', group: 'Director Desk', mobile: '8608248988', email: 'director@dbyc.org', pin: '9894' };
+    }
   } else if (roleType === 'ASST_DIRECTOR') {
-    member = members.find(m => {
+    member = members.find(m => m.id === 'DBYC-DIR-002') || members.find(m => {
       const r = (m.role || '').toLowerCase();
       return r.includes('asst') || r.includes('assistant');
-    }) || members[1] || members[0];
+    });
+    if (!member) {
+      member = { id: 'DBYC-DIR-002', name: 'Rev. Fr. Don Frangleen, SDB', role: 'Assistant Director (Direct Incharge)', group: 'Super Seniors Group', mobile: '7305948101', email: 'asstdirector@dbyc.org', pin: '1934' };
+    }
   } else if (roleType === 'LEADER') {
     member = members.find(m => {
       const r = (m.role || '').toLowerCase();
@@ -19213,10 +19560,9 @@ window.handleDirectPinLogin = function() {
     return;
   }
 
-  // Fallback: If 4 digits entered, sign in as Director
-  if (pinVal.length === 4) {
-    window.directRoleLogin('DIRECTOR');
-    return;
+  if (errEl) {
+    errEl.textContent = '❌ Invalid PIN. Please select your role card or enter your registered DBYC ID and PIN.';
+    errEl.style.display = 'block';
   }
 
   if (errEl) {
@@ -19248,36 +19594,20 @@ window.enterAppAs = function(roleType) {
   const members = appState.members || [];
 
   if (roleType === 'DIRECTOR') {
-    member = members.find(m => {
+    member = members.find(m => m.id === 'DBYC-DIR-001') || members.find(m => {
       const r = (m.role || '').toLowerCase();
       return r.includes('director') && !r.includes('asst');
-    }) || members[0];
+    });
     if (!member) {
-      member = {
-        id: 'DBYC-DIR-001',
-        name: 'Rev. Fr. Director, SDB',
-        role: 'Director',
-        group: 'Director Desk',
-        mobile: '9876543210',
-        email: 'director@dbyc.org',
-        pin: '1234'
-      };
+      member = { id: 'DBYC-DIR-001', name: 'Rev. Fr. Director, SDB', role: 'Director', group: 'Director Desk', mobile: '8608248988', email: 'director@dbyc.org', pin: '9894' };
     }
   } else if (roleType === 'ASST_DIRECTOR') {
-    member = members.find(m => {
+    member = members.find(m => m.id === 'DBYC-DIR-002') || members.find(m => {
       const r = (m.role || '').toLowerCase();
       return r.includes('asst') || r.includes('assistant');
-    }) || members[1] || members[0];
+    });
     if (!member) {
-      member = {
-        id: 'DBYC-ASST-001',
-        name: 'Rev. Fr. Asst. Director, SDB',
-        role: 'Asst. Director',
-        group: 'Admin Office',
-        mobile: '9876543211',
-        email: 'asstdirector@dbyc.org',
-        pin: '1934'
-      };
+      member = { id: 'DBYC-DIR-002', name: 'Rev. Fr. Don Frangleen, SDB', role: 'Assistant Director (Direct Incharge)', group: 'Super Seniors Group', mobile: '7305948101', email: 'asstdirector@dbyc.org', pin: '1934' };
     }
   } else if (roleType === 'LEADER') {
     member = members.find(m => {
@@ -19362,10 +19692,9 @@ window.enterWithPin = function() {
     return;
   }
 
-  // Fallback: If 4 digits entered, allow Director entry
-  if (pinVal.length === 4) {
-    window.enterAppAs('DIRECTOR');
-    return;
+  if (errEl) {
+    errEl.textContent = '❌ Invalid PIN. Please select your role card or enter your registered DBYC ID and PIN.';
+    errEl.style.display = 'block';
   }
 
   if (errEl) {
@@ -19501,28 +19830,42 @@ window.toggleSimplePassword = function() {
 // =======================================================
 window.DBYC_OFFICIAL_LOGO_URI = window.DBYC_OFFICIAL_LOGO;
 
+// SINGLE ACTIVE PASSWORD HELPER: Returns ONLY the currently active password/PIN
+window.getActiveRolePassword = function(role) {
+  if (role === 'DIRECTOR') {
+    return (localStorage.getItem('dbyc_director_password') || '1815').trim();
+  }
+  if (role === 'ASST_DIRECTOR') {
+    return (localStorage.getItem('dbyc_asst_director_password') || '1934').trim();
+  }
+  if (role === 'LEADER') {
+    return (localStorage.getItem('dbyc_leader_password') || '2026').trim();
+  }
+  return (localStorage.getItem('dbyc_member_password') || '1234').trim();
+};
+
 const DBYC_ROLE_PASSWORDS = {
   DIRECTOR: {
-    default: '1815',
-    valid: ['1815', '9894', 'dir1815', 'director1815', 'father', 'dbyc-admin-2026', 'dbyc2026', 'admin', '1888'],
+    get default() { return window.getActiveRolePassword('DIRECTOR'); },
+    get valid() { return [window.getActiveRolePassword('DIRECTOR')]; },
     title: 'Rev. Fr. Director, SDB',
     roleName: 'Director',
     tamil: 'இயக்குநர்',
     icon: '🛡️',
-    hint: 'Director Password: 1815 (Historic Salesian Birth Year)'
+    hint: 'Director Master Password (Only active password accepted)'
   },
   ASST_DIRECTOR: {
-    default: '1934',
-    valid: ['1934', '9894', '1888', '1815', '1234', '0000', 'admin', 'asst', 'assistant', 'asstdirector', 'assistantdirector', 'asst1934', 'dbyc', 'dbyc2026', '2026', 'dbyc-asst-2026'],
+    get default() { return window.getActiveRolePassword('ASST_DIRECTOR'); },
+    get valid() { return [window.getActiveRolePassword('ASST_DIRECTOR')]; },
     title: 'Rev. Fr. Don Frangleen, SDB',
     roleName: 'Assistant Director',
     tamil: 'உதவி இயக்குநர்',
     icon: '👔',
-    hint: 'Asst. Director Password: 1934 (or 1888 / 1234 / admin)'
+    hint: 'Asst. Director Password (Only active password accepted)'
   },
   LEADER: {
-    default: '2026',
-    valid: ['2026', 'lead2026', 'leader2026', 'staff2026', 'dbyc-leader-2026'],
+    get default() { return window.getActiveRolePassword('LEADER'); },
+    get valid() { return [window.getActiveRolePassword('LEADER')]; },
     title: 'Antony Cruz (Youth Leader)',
     roleName: 'Youth Leader',
     tamil: 'இளைஞர் தலைவர்',
@@ -19530,8 +19873,8 @@ const DBYC_ROLE_PASSWORDS = {
     hint: 'Youth Leader Password: 2026 (Youth Action Year)'
   },
   MEMBER: {
-    default: '1234',
-    valid: ['1234', 'dbyc1234', 'youth1234', 'member1234', 'dbyc', 'dbyc-member-2026'],
+    get default() { return window.getActiveRolePassword('MEMBER'); },
+    get valid() { return [window.getActiveRolePassword('MEMBER')]; },
     title: 'Stephen Paul (Youth Member)',
     roleName: 'Member',
     tamil: 'இளைஞர் உறுப்பினர்',
@@ -19616,7 +19959,8 @@ window.selectLoginPersona = function(role) {
     pwdInput.focus();
   }
   if (hintText) {
-    hintText.innerHTML = `🔑 ${config.roleName} Password: <strong style="letter-spacing:1px;">${config.default}</strong>`;
+    const currentActivePin = (typeof window.getActiveRolePassword === 'function') ? window.getActiveRolePassword(role) : config.default;
+    hintText.innerHTML = `🔑 ${config.roleName} Active Password: <strong style="letter-spacing:1px;">${currentActivePin}</strong>`;
   }
 };
 
@@ -19894,10 +20238,11 @@ window.simpleRoleLoginSubmit = async function() {
     }
   } else {
     // Case 2: Box 2 was left blank, user entered only Security PIN / Password:
-    // Check Director / Asst Director passwords first:
-    const customDirPin = (localStorage.getItem('dbyc_director_password') || '').trim().toLowerCase();
-    const isDirectorAuth = (pwd === '1815' || pwd === '1888' || (customDirPin && pwd === customDirPin) || (DBYC_ROLE_PASSWORDS.DIRECTOR.valid && DBYC_ROLE_PASSWORDS.DIRECTOR.valid.includes(pwd)));
-    const isAsstAuth = (pwd === '1934' || (pwd === '1888' && role === 'ASST_DIRECTOR') || (pwd === '1815' && role === 'ASST_DIRECTOR') || pwd === 'admin' || pwd === 'assistant' || (DBYC_ROLE_PASSWORDS.ASST_DIRECTOR && DBYC_ROLE_PASSWORDS.ASST_DIRECTOR.valid && DBYC_ROLE_PASSWORDS.ASST_DIRECTOR.valid.includes(pwd)));
+    // SINGLE PASSWORD RULE: Exactly ONE active password per role. Old passwords are completely deleted.
+    const activeDirPin = (localStorage.getItem('dbyc_director_password') || '1815').trim().toLowerCase();
+    const activeAsstPin = (localStorage.getItem('dbyc_asst_director_password') || '1934').trim().toLowerCase();
+    const isDirectorAuth = (pwd === activeDirPin);
+    const isAsstAuth = (pwd === activeAsstPin);
 
     if (role === 'DIRECTOR' && isDirectorAuth) {
       const members = appState.members || [];
@@ -20000,7 +20345,7 @@ window.simpleRoleLoginSubmit = async function() {
       }
       if (role === 'ASST_DIRECTOR') {
         if (errEl) {
-          errEl.innerHTML = `❌ Incorrect Password for Rev. Fr. Asst. Director Desk. Use <strong>1934</strong> or <strong>1888</strong>.`;
+          errEl.innerHTML = `❌ Incorrect Password for Rev. Fr. Asst. Director Desk.`;
           errEl.style.display = 'block';
         }
         if (pwdInput) pwdInput.focus();
@@ -20018,15 +20363,21 @@ window.simpleRoleLoginSubmit = async function() {
     }
   }
 
-  // Verify matched member PIN
-  const memPin = String(matchedMember.pin || matchedMember.securityPin || '').trim().toLowerCase();
-  const memPwd = String(matchedMember.password || '').trim().toLowerCase();
+  // Verify matched member PIN - SINGLE PASSWORD RULE: Exactly ONE active PIN per member
   const isAsstMember = (matchedMember.id === 'DBYC-DIR-002' || (matchedMember.role && matchedMember.role.toLowerCase().includes('asst')));
   const isDirMember = (matchedMember.id === 'DBYC-DIR-001' || (matchedMember.role && matchedMember.role.toLowerCase().includes('director') && !matchedMember.role.toLowerCase().includes('asst')));
-  const isPinMatch = (memPin && pwd === memPin) || (memPwd && pwd === memPwd) || 
-    (pwd === '1234' || pwd === '0000') ||
-    (isDirMember && (pwd === '1815' || pwd === '1888' || pwd === 'admin')) ||
-    (isAsstMember && (pwd === '1934' || pwd === '1888' || pwd === '1815' || pwd === 'admin' || pwd === 'assistant' || pwd === 'asstdirector'));
+
+  let isPinMatch = false;
+  if (isDirMember) {
+    const activeDirPin = (localStorage.getItem('dbyc_director_password') || '1815').trim().toLowerCase();
+    isPinMatch = (pwd === activeDirPin);
+  } else if (isAsstMember) {
+    const activeAsstPin = (localStorage.getItem('dbyc_asst_director_password') || '1934').trim().toLowerCase();
+    isPinMatch = (pwd === activeAsstPin);
+  } else {
+    const memPin = String(matchedMember.pin || matchedMember.securityPin || matchedMember.password || '1234').trim().toLowerCase();
+    isPinMatch = (pwd === memPin);
+  }
 
   if (!isPinMatch) {
     if (errEl) {
@@ -20049,7 +20400,15 @@ window.simpleRoleLoginSubmit = async function() {
   }
   appState.currentUser = matchedMember;
   localStorage.setItem(DBYC_USER, JSON.stringify(matchedMember));
-  localStorage.setItem('dbyc_current_role', (matchedMember.role && matchedMember.role.toLowerCase().includes('leader')) ? 'LEADER' : 'MEMBER');
+  let savedRole = 'MEMBER';
+  if (isDirMember || matchedMember.id === 'DBYC-DIR-001') {
+    savedRole = 'DIRECTOR';
+  } else if (isAsstMember || matchedMember.id === 'DBYC-DIR-002') {
+    savedRole = 'ASST_DIRECTOR';
+  } else if (matchedMember.role && (matchedMember.role.toLowerCase().includes('leader') || matchedMember.role.toLowerCase().includes('incharge'))) {
+    savedRole = 'LEADER';
+  }
+  localStorage.setItem('dbyc_current_role', savedRole);
   localStorage.setItem('dbyc_active_session', JSON.stringify({
     userId: matchedMember.id,
     role: matchedMember.role || 'Member',
@@ -20334,13 +20693,23 @@ function showMainApp() {
     if (roleEl) roleEl.textContent = `${appState.currentUser.role} • ${appState.currentUser.group || 'DBYC'}`;
     const avatarEl = document.getElementById('sidebarAvatarImg');
     if (avatarEl) {
-      avatarEl.src = appState.currentUser.photo || window.DBYC_OFFICIAL_LOGO_URI;
+      avatarEl.src = appState.currentUser.photo || window.DBYC_OFFICIAL_LOGO_URI || 'assets/logo.png';
     }
+  }
+
+  // Trigger Flash News Ticker (News if uploaded, Quote if not)
+  if (typeof window.renderFlashNewsTicker === 'function') {
+    window.renderFlashNewsTicker();
   }
 
   applyRolePermissions();
   updateDashboardStats();
-  switchView('dashboard');
+  const initHash = (window.location.hash || '').replace('#', '').trim();
+  if (initHash && document.getElementById('view_' + initHash)) {
+    switchView(initHash);
+  } else {
+    switchView('dashboard');
+  }
 }
 
 function showLogin() {
@@ -20598,13 +20967,20 @@ window.saveQuickPhoto = function() {
   const leaderId = document.getElementById('quickPhotoTargetLeaderId').value;
   const newPhoto = window.tempQuickPhotoBase64 || '';
 
-  let updated = false;
+  if (!newPhoto) {
+    if (typeof showToast === 'function') showToast('⚠️ Please choose a new photo first');
+    return;
+  }
 
+  let updated = false;
+  const nowTs = new Date().toISOString();
+
+  // CLEAN OVERWRITE: Old photo is completely deleted and replaced by new photo
   if (memberId) {
     const m = (window.appState.members || []).find(x => x.id === memberId);
     if (m) {
       m.photo = newPhoto;
-      m.updatedAt = new Date().toISOString();
+      m.updatedAt = nowTs;
       updated = true;
     }
   }
@@ -20613,23 +20989,36 @@ window.saveQuickPhoto = function() {
     const l = (window.appState.leaders || []).find(x => x.id === leaderId);
     if (l) {
       l.photo = newPhoto;
-      l.updatedAt = new Date().toISOString();
+      l.updatedAt = nowTs;
       updated = true;
     }
   }
 
-  // Cross-synchronize between member and leader
+  // Cross-synchronize between member and leader so old photo is completely replaced everywhere
   if (memberId) {
     const m = (window.appState.members || []).find(x => x.id === memberId);
     if (m) {
       const matchLeader = (window.appState.leaders || []).find(l => l.memberId === m.id || l.name === m.name || (l.phone && m.mobile && l.phone.replace(/\D/g,'') === m.mobile.replace(/\D/g,'')));
-      if (matchLeader) matchLeader.photo = newPhoto;
+      if (matchLeader) {
+        matchLeader.photo = newPhoto;
+        matchLeader.updatedAt = nowTs;
+      }
     }
+  }
+
+  // If currently logged-in user: replace current user's photo and sidebar avatar
+  if (window.appState.currentUser && (window.appState.currentUser.id === memberId || window.appState.currentUser.id === leaderId)) {
+    window.appState.currentUser.photo = newPhoto;
+    localStorage.setItem(DBYC_USER, JSON.stringify(window.appState.currentUser));
+    const avatarEl = document.getElementById('sidebarAvatarImg');
+    if (avatarEl) avatarEl.src = newPhoto;
   }
 
   if (updated) {
     saveLocalData();
-    if (window.DbycGoogleDriveServerStorage && window.DbycGoogleDriveServerStorage.pushToCloud) {
+    if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+      window.DbycCloud.pushToCloud(false);
+    } else if (window.DbycGoogleDriveServerStorage && window.DbycGoogleDriveServerStorage.pushToCloud) {
       window.DbycGoogleDriveServerStorage.pushToCloud();
     }
     renderMembersRegistry();
@@ -20638,7 +21027,7 @@ window.saveQuickPhoto = function() {
       window.renderOfficeBearersDashboard();
     }
     window.closeQuickPhotoEditModal();
-    if (typeof showToast === 'function') showToast('✅ Member photo saved & synchronized across all portals!');
+    if (typeof showToast === 'function') showToast('✅ Member photo replaced & synchronized across all portals!');
   } else {
     if (typeof showToast === 'function') showToast('⚠️ No target selected to save photo.');
   }
@@ -21934,6 +22323,19 @@ window.toggleDirectorPinVisibility = function() {
   showToast(isPwd ? '👁️ PIN visibility revealed' : '🔒 PIN hidden for security');
 };
 
+window.toggleAsstPinVisibility = function() {
+  const in1 = document.getElementById('currentAsstPinInput');
+  const in2 = document.getElementById('newAsstPinInput');
+  const in3 = document.getElementById('confirmAsstPinInput');
+  if (!in1) return;
+  const isPwd = in1.type === 'password';
+  const newType = isPwd ? 'text' : 'password';
+  if (in1) in1.type = newType;
+  if (in2) in2.type = newType;
+  if (in3) in3.type = newType;
+  showToast(isPwd ? '👁️ Asst. PIN visibility revealed' : '🔒 Asst. PIN hidden for security');
+};
+
 window.saveInstitutionalSettings = function() {
   if (!isDirectorUser()) {
     showToast('🔒 Only Rev. Fr. Director & Assistant Director can modify Institutional Settings.');
@@ -22333,12 +22735,23 @@ window.initTelecastCarousel = function() {
 };
 
 window.showTelecastSlide = function(index) {
-  if (!window.telecastPhotos || window.telecastPhotos.length === 0) return;
-  if (index >= window.telecastPhotos.length) index = 0;
-  if (index < 0) index = window.telecastPhotos.length - 1;
+  // STRICT APPROVAL: Only show qualified and approved telecast photos on the public carousel
+  const allPhotos = window.telecastPhotos || [];
+  const list = allPhotos.filter(t => t && (t.approvalStatus === 'APPROVED' || t.status === 'APPROVED' || (!t.approvalStatus && !t.status)));
+  if (!list || list.length === 0) {
+    const imgEl = document.getElementById('telecastSlideImg');
+    const titleEl = document.getElementById('telecastCaptionTitle');
+    const subEl = document.getElementById('telecastCaptionSub');
+    if (imgEl) imgEl.src = 'assets/don_bosco.webp';
+    if (titleEl) titleEl.textContent = 'Don Bosco Youth Centre';
+    if (subEl) subEl.textContent = 'Basin Bridge, Chennai - 600 012';
+    return;
+  }
+  if (index >= list.length) index = 0;
+  if (index < 0) index = list.length - 1;
   window.currentTelecastIndex = index;
 
-  const item = window.telecastPhotos[index];
+  const item = list[index];
   const imgEl = document.getElementById('telecastSlideImg');
   const titleEl = document.getElementById('telecastCaptionTitle');
   const subEl = document.getElementById('telecastCaptionSub');
@@ -22360,11 +22773,11 @@ window.showTelecastSlide = function(index) {
     subEl.textContent = item.caption || item.date || 'Don Bosco Youth Centre, Basin Bridge';
   }
   if (badgeEl) {
-    badgeEl.textContent = `${index + 1} / ${window.telecastPhotos.length}`;
+    badgeEl.textContent = `${index + 1} / ${list.length}`;
   }
 
   if (dotsContainer) {
-    dotsContainer.innerHTML = window.telecastPhotos.map((_, i) => `
+    dotsContainer.innerHTML = list.map((_, i) => `
       <span onclick="window.showTelecastSlide(${i})" style="width:8px; height:8px; border-radius:50%; background:${i === index ? '#fde047' : 'rgba(255,255,255,0.4)'}; display:inline-block; cursor:pointer; transition:all 0.2s; box-shadow:0 1px 3px rgba(0,0,0,0.4);"></span>
     `).join('');
   }
@@ -22432,12 +22845,20 @@ window.handleEventPhotoUploadSubmit = function(e) {
     return;
   }
 
+  const isDir = isDirectorOrAsstDirector();
+  const photoStatus = isDir ? 'APPROVED' : 'PENDING';
+
   const newPhoto = {
     id: 'TELECAST-' + Date.now(),
     title: title,
     caption: caption || 'DBYC Event Gathering',
     date: dateVal,
-    photo: window.stagedEventPhotoBase64
+    photo: window.stagedEventPhotoBase64,
+    status: photoStatus,
+    approvalStatus: photoStatus,
+    author: appState.currentUser ? appState.currentUser.name : 'DBYC Member',
+    authorId: appState.currentUser ? appState.currentUser.id : '',
+    createdAt: new Date().toISOString()
   };
 
   if (!window.telecastPhotos) window.telecastPhotos = [];
@@ -22466,7 +22887,7 @@ window.handleEventPhotoUploadSubmit = function(e) {
   window.renderTelecastPhotosList();
   window.showTelecastSlide(0);
   window.resetTelecastTimer();
-  showToast('✅ Photo added to Home Event Telecast Carousel & synced to cloud!');
+  showToast(isDir ? '✅ Photo added to Home Telecast Carousel & synced to cloud!' : '⏳ Photo submitted to Qualification & Approval Desk for Director review.');
 };
 
 window.renderTelecastPhotosList = function() {
@@ -24062,11 +24483,12 @@ window.runAntigravitySelfHealing = function() {
       createdDate: '2026-01-01'
     };
   } else {
+    // Preserve Director user custom edits!
     dirMem.id = 'DBYC-DIR-001';
-    dirMem.name = 'Rev. Fr. Director, SDB';
-    dirMem.role = 'Director';
-    dirMem.roles = ['Director'];
-    dirMem.pin = '9894';
+    if (!dirMem.name) dirMem.name = 'Rev. Fr. Director, SDB';
+    if (!dirMem.role) dirMem.role = 'Director (Incharge)';
+    if (!dirMem.roles || dirMem.roles.length === 0) dirMem.roles = [dirMem.role];
+    if (!dirMem.pin) dirMem.pin = '9894';
     dirMem.status = 'APPROVED';
     dirMem.activeStatus = 'ACTIVE';
     dirMem.membershipStatus = 'ACTIVE';
@@ -24095,26 +24517,23 @@ window.runAntigravitySelfHealing = function() {
       createdDate: '2026-01-01'
     };
   } else {
+    // Preserve Assistant Director user custom edits!
     asstMem.id = 'DBYC-DIR-002';
-    asstMem.name = 'Rev. Fr. Don Frangleen, SDB';
-    asstMem.role = 'Assistant Director';
-    asstMem.roles = ['Assistant Director'];
-    asstMem.mobile = '7305948101';
-    asstMem.pin = '9894';
+    if (!asstMem.name) asstMem.name = 'Rev. Fr. Don Frangleen, SDB';
+    if (!asstMem.role) asstMem.role = 'Assistant Director';
+    if (!asstMem.roles || asstMem.roles.length === 0) asstMem.roles = [asstMem.role];
+    if (!asstMem.mobile) asstMem.mobile = '7305948101';
+    if (!asstMem.pin) asstMem.pin = '9894';
     asstMem.status = 'APPROVED';
     asstMem.activeStatus = 'ACTIVE';
     asstMem.membershipStatus = 'ACTIVE';
     asstMem.approvalStatus = 'APPROVED';
   }
 
-  // Filter out any duplicate directors/asst directors and Lourdu Merrady from registry
+  // Filter out duplicate DBYC-DIR-001 or DBYC-DIR-002 objects
   const filteredExistingMembers = window.appState.members.filter(m => {
     if (!m) return false;
     if (m.id === 'DBYC-DIR-001' || m.id === 'DBYC-DIR-002') return false;
-    const r = (m.role || '').toLowerCase();
-    const n = (m.name || '').toLowerCase();
-    if (n.includes('lourdu') && r.includes('director')) return false;
-    if (r.includes('director')) return false;
     return true;
   });
 
@@ -24126,18 +24545,18 @@ window.runAntigravitySelfHealing = function() {
     syncLeadersWithMembers();
   }
 
-  // 5. Deduplicate members by name & phone to ensure clean registry
+  // 5. Deduplicate members strictly by unique ID so distinct persons are NEVER dropped
   const cleanMembers = [];
-  const seenMemberIdentifiers = new Set();
+  const seenMemberIds = new Set();
   window.appState.members.forEach(m => {
-    const norm = (m.name || '').trim().toLowerCase() + '::' + (m.mobile || '').replace(/\D/g, '');
-    if (!seenMemberIdentifiers.has(norm)) {
-      seenMemberIdentifiers.add(norm);
+    if (!m || !m.id) return;
+    if (!seenMemberIds.has(m.id)) {
+      seenMemberIds.add(m.id);
       m.status = 'APPROVED';
       m.approvalStatus = 'APPROVED';
       m.activeStatus = 'ACTIVE';
       m.membershipStatus = 'ACTIVE';
-      if (!m.qrCodeId) m.qrCodeId = m.mobile ? `DBYC-${m.mobile.slice(-4)}` : `DBYC-${Date.now()}`;
+      if (!m.qrCodeId) m.qrCodeId = m.mobile ? `DBYC-${m.mobile.slice(-4)}` : `DBYC-${m.id}`;
       if (m.points === undefined || m.points === null || isNaN(m.points)) m.points = 100;
       cleanMembers.push(m);
     }
@@ -24417,11 +24836,9 @@ window.executeAntigravityAutonomousRepair = function(customCmd) {
       logSentinel('✔ Initialized missing official Director record DBYC-DIR-001.', '#4ade80');
       repairsApplied++;
     } else {
-      dirMem.role = 'Director (Incharge)';
-      dirMem.roles = ['Director (Incharge)'];
-      if (!dirMem.name || dirMem.name.toLowerCase().includes('lourdu') || dirMem.name.toLowerCase().includes('merrady') || dirMem.name.toLowerCase().includes('frangleen')) {
-        dirMem.name = 'Rev. Fr. Director, SDB';
-      }
+      if (!dirMem.role) dirMem.role = 'Director (Incharge)';
+      if (!dirMem.roles || dirMem.roles.length === 0) dirMem.roles = [dirMem.role];
+      if (!dirMem.name) dirMem.name = 'Rev. Fr. Director, SDB';
       if (!dirMem.mobile) dirMem.mobile = '8608248988';
       if (!dirMem.dob) dirMem.dob = '1972-04-24';
       if (!dirMem.age) dirMem.age = 54;
@@ -24429,7 +24846,7 @@ window.executeAntigravityAutonomousRepair = function(customCmd) {
       dirMem.status = 'APPROVED';
       dirMem.membershipStatus = 'ACTIVE';
       dirMem.updatedAt = new Date().toISOString();
-      logSentinel(`✔ Verified DBYC-DIR-001: Role strictly locked to "Director (Incharge)" • Mobile: ${dirMem.mobile} • Age: ${dirMem.age}`, '#4ade80');
+      logSentinel(`✔ Verified DBYC-DIR-001: ${dirMem.name} • ${dirMem.role} • Mobile: ${dirMem.mobile}`, '#4ade80');
       repairsApplied++;
     }
 
@@ -24460,9 +24877,9 @@ window.executeAntigravityAutonomousRepair = function(customCmd) {
       logSentinel('✔ Initialized missing official Assistant Director record DBYC-DIR-002.', '#4ade80');
       repairsApplied++;
     } else {
-      asstMem.name = 'Rev. Fr. Don Frangleen, SDB';
-      asstMem.role = 'Assistant Director';
-      asstMem.roles = ['Assistant Director'];
+      if (!asstMem.name) asstMem.name = 'Rev. Fr. Don Frangleen, SDB';
+      if (!asstMem.role) asstMem.role = 'Assistant Director';
+      if (!asstMem.roles || asstMem.roles.length === 0) asstMem.roles = [asstMem.role];
       if (!asstMem.mobile) asstMem.mobile = '7305948101';
       if (!asstMem.dob) asstMem.dob = '2000-07-18';
       if (!asstMem.age) asstMem.age = 26;
@@ -24470,7 +24887,7 @@ window.executeAntigravityAutonomousRepair = function(customCmd) {
       asstMem.status = 'APPROVED';
       asstMem.membershipStatus = 'ACTIVE';
       asstMem.updatedAt = new Date().toISOString();
-      logSentinel(`✔ Verified DBYC-DIR-002: Role locked to "Assistant Director" (Rev. Fr. Don Frangleen, SDB) • Mobile: ${asstMem.mobile}`, '#4ade80');
+      logSentinel(`✔ Verified DBYC-DIR-002: ${asstMem.name} • ${asstMem.role} • Mobile: ${asstMem.mobile}`, '#4ade80');
       repairsApplied++;
     }
 

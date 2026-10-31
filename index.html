@@ -3538,7 +3538,7 @@ body {
     <section id="view_profile" class="app-section" style="display:none;">
       <div class="main-content">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
-          <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard" style="margin:0;">◀ Back (பின் செல்)</button>
+          <button class="view-back-btn" onclick="window.goStepBack();" title="Go Back Step-by-Step (முந்தைய திரைக்கு செல்)">◀ Back (பின் செல்)</button>
           <button id="settingsTopStudioBtn" type="button" class="btn-dbyc-primary" style="background:linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color:#ffffff; font-weight:800; padding:9px 16px; border-radius:10px; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 4px 12px rgba(99,102,241,0.3); font-size:0.86rem;" onclick="window.openAntigravityStudioModal();">
             🚀 Antigravity Coding Studio (உரையாடல் &amp; நிரல்)
           </button>
@@ -3647,7 +3647,7 @@ body {
          ======================================================= -->
     <section id="view_members" class="app-section" style="display:none;">
       <div class="main-content">
-        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
+        <button class="view-back-btn" onclick="window.goStepBack();" title="Go Back Step-by-Step (முந்தைய திரைக்கு செல்)">◀ Back (பின் செல்)</button>
         
         <!-- Artwork Banner -->
         <div class="section-art-banner banner-oratory">
@@ -3679,18 +3679,45 @@ body {
         </div>
 
         <div style="margin-bottom:12px;">
-          <input type="text" id="memberSearchInput" class="form-control-dbyc" placeholder="🔍 Search Name, Member ID, or Mobile...">
+          <input type="text" id="memberSearchInput" class="form-control-dbyc" placeholder="🔍 Search Name, Member ID, Mobile, or Enrolled Activity (e.g. Football, Gym, Volleyball, Table Tennis)...">
         </div>
 
-        <!-- 6 Groups Filter Bar -->
-        <div class="filter-bar">
-          <button class="filter-chip active" data-group="ALL">All (அனைத்தும்)</button>
-          <button class="filter-chip" data-group="Sub Juniors Group">Sub Juniors (6-14)</button>
-          <button class="filter-chip" data-group="Junior Group">Juniors (15-18)</button>
-          <button class="filter-chip" data-group="Inters Group">Inters (19-25)</button>
-          <button class="filter-chip" data-group="Senior Group">Seniors (25-34)</button>
-          <button class="filter-chip" data-group="Super Seniors Group">Super Seniors (34-55)</button>
-          <button class="filter-chip" data-group="Elders Group">Elders (56+)</button>
+        <!-- Enrolled Activities & Acts Basis Controls -->
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:12px 14px; margin-bottom:14px; box-shadow:0 1px 4px rgba(0,0,0,0.03);">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="font-size:0.92rem; font-weight:800; color:#002b66; display:flex; align-items:center; gap:6px;">
+                <span style="font-size:1.1rem;">🎯</span> <span>செயல்பாடுகள் வாரியாக (Acts Basis / Enrolled Activity):</span>
+              </span>
+            </div>
+            <div style="display:flex; gap:6px; align-items:center;">
+              <button type="button" id="btnMembersLayoutList" class="btn-dbyc-primary" style="font-size:0.76rem; padding:5px 12px; font-weight:800; background:#004b98; border-radius:6px;" onclick="window.setMembersLayoutMode('LIST');">
+                📋 List View (வரிசை)
+              </button>
+              <button type="button" id="btnMembersLayoutGrouped" class="btn-dbyc-secondary" style="font-size:0.76rem; padding:5px 12px; font-weight:800; background:#ffffff; color:#004b98; border:1.5px solid #004b98; border-radius:6px;" onclick="window.setMembersLayoutMode('GROUPED_BY_ACTS');">
+                📊 Group by Acts (தொகுப்பு)
+              </button>
+            </div>
+          </div>
+
+          <!-- Activity / Acts Filter Bar -->
+          <div id="membersActivityFilterBar" class="filter-bar" style="margin-bottom:10px; padding-bottom:4px;">
+            <!-- Rendered dynamically with live member counts -->
+          </div>
+
+          <!-- 6 Age Groups Filter Bar -->
+          <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
+            <span style="font-size:0.78rem; font-weight:700; color:#64748b;">👥 வயதுக் குழுக்கள் (Age Groups):</span>
+          </div>
+          <div class="filter-bar" id="membersGroupFilterBar" style="margin-bottom:0; padding-bottom:2px;">
+            <button class="filter-chip active member-group-chip" data-group="ALL" onclick="window.filterMembersByGroup('ALL');">All (அனைத்தும்)</button>
+            <button class="filter-chip member-group-chip" data-group="Sub Juniors Group" onclick="window.filterMembersByGroup('Sub Juniors Group');">Sub Juniors (6-14)</button>
+            <button class="filter-chip member-group-chip" data-group="Junior Group" onclick="window.filterMembersByGroup('Junior Group');">Juniors (15-18)</button>
+            <button class="filter-chip member-group-chip" data-group="Inters Group" onclick="window.filterMembersByGroup('Inters Group');">Inters (19-25)</button>
+            <button class="filter-chip member-group-chip" data-group="Senior Group" onclick="window.filterMembersByGroup('Senior Group');">Seniors (25-34)</button>
+            <button class="filter-chip member-group-chip" data-group="Super Seniors Group" onclick="window.filterMembersByGroup('Super Seniors Group');">Super Seniors (34-55)</button>
+            <button class="filter-chip member-group-chip" data-group="Elders Group" onclick="window.filterMembersByGroup('Elders Group');">Elders (56+)</button>
+          </div>
         </div>
 
         <div id="membersListContainer" class="member-list"></div>
@@ -3703,7 +3730,7 @@ body {
          ======================================================= -->
     <section id="view_attendance" class="app-section" style="display:none;">
       <div class="main-content">
-        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
+        <button class="view-back-btn" onclick="window.goStepBack();" title="Go Back Step-by-Step (முந்தைய திரைக்கு செல்)">◀ Back (பின் செல்)</button>
         <div class="section-header" style="flex-wrap:wrap; gap:10px;">
           <div>
             <h2 class="section-title">📷 Live QR வருகைப் பதிவு (Attendance)</h2>
@@ -3938,7 +3965,7 @@ body {
          ======================================================= -->
     <section id="view_passes" class="app-section" style="display:none;">
       <div class="main-content">
-        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
+        <button class="view-back-btn" onclick="window.goStepBack();" title="Go Back Step-by-Step (முந்தைய திரைக்கு செல்)">◀ Back (பின் செல்)</button>
         <div class="section-header" style="flex-wrap:wrap; gap:10px;">
           <div>
             <h2 class="section-title">🪪 உறுப்பினர் அடையாள அட்டை (Member QR Pass)</h2>
@@ -3972,7 +3999,7 @@ body {
          ======================================================= -->
     <section id="view_certificates" class="app-section" style="display:none;">
       <div class="main-content">
-        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
+        <button class="view-back-btn" onclick="window.goStepBack();" title="Go Back Step-by-Step (முந்தைய திரைக்கு செல்)">◀ Back (பின் செல்)</button>
         
         <!-- Artwork Banner -->
         <div class="section-art-banner banner-walk">
@@ -4054,7 +4081,7 @@ body {
          ======================================================= -->
     <section id="view_news" class="app-section" style="display:none;">
       <div class="main-content">
-        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
+        <button class="view-back-btn" onclick="window.goStepBack();" title="Go Back Step-by-Step (முந்தைய திரைக்கு செல்)">◀ Back (பின் செல்)</button>
         
         <div class="section-header">
           <div>
@@ -4178,7 +4205,7 @@ body {
          ======================================================= -->
     <section id="view_livescore" class="app-section" style="display:none;">
       <div class="main-content">
-        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
+        <button class="view-back-btn" onclick="window.goStepBack();" title="Go Back Step-by-Step (முந்தைய திரைக்கு செல்)">◀ Back (பின் செல்)</button>
         
         <!-- Live Sports Header Banner -->
         <div class="section-art-banner banner-walk">
@@ -4292,7 +4319,7 @@ body {
          ======================================================= -->
     <section id="view_media" class="app-section" style="display:none;">
       <div class="main-content">
-        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
+        <button class="view-back-btn" onclick="window.goStepBack();" title="Go Back Step-by-Step (முந்தைய திரைக்கு செல்)">◀ Back (பின் செல்)</button>
         
         <!-- Live Telecast & Media Header Banner -->
         <div class="section-art-banner banner-gather">
@@ -4474,7 +4501,7 @@ body {
          ======================================================= -->
     <section id="view_qualifications" class="app-section" style="display:none;">
       <div class="main-content">
-        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
+        <button class="view-back-btn" onclick="window.goStepBack();" title="Go Back Step-by-Step (முந்தைய திரைக்கு செல்)">◀ Back (பின் செல்)</button>
         
         <div class="qualification-banner">
           <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px; position:relative; z-index:2;">
@@ -4517,7 +4544,7 @@ body {
          ======================================================= -->
     <section id="view_rules" class="app-section" style="display:none;">
       <div class="main-content">
-        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
+        <button class="view-back-btn" onclick="window.goStepBack();" title="Go Back Step-by-Step (முந்தைய திரைக்கு செல்)">◀ Back (பின் செல்)</button>
         
         <div class="section-art-banner banner-gather">
           <h3 style="font-size:1.15rem; font-weight:900;">தொன்போஸ்கோ இளைஞர் மன்றத்தின் விதிமுறைகள்</h3>
@@ -4534,7 +4561,7 @@ body {
          ======================================================= -->
     <section id="view_birthdays" class="app-section" style="display:none;">
       <div class="main-content">
-        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
+        <button class="view-back-btn" onclick="window.goStepBack();" title="Go Back Step-by-Step (முந்தைய திரைக்கு செல்)">◀ Back (பின் செல்)</button>
         <div class="section-header">
           <h2 class="section-title">🎂 Birthday Celebrations This Month</h2>
         </div>
@@ -4548,7 +4575,7 @@ body {
          ======================================================= -->
     <section id="view_calendar" class="app-section" style="display:none;">
       <div class="main-content">
-        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
+        <button class="view-back-btn" onclick="window.goStepBack();" title="Go Back Step-by-Step (முந்தைய திரைக்கு செல்)">◀ Back (பின் செல்)</button>
         <div class="section-header">
           <h2 class="section-title">📅 DBYC Event Calendar</h2>
           <button id="openAddEventBtn" class="btn-dbyc-primary">+ Add Event</button>
@@ -4563,7 +4590,7 @@ body {
          ======================================================= -->
     <section id="view_minutes" class="app-section" style="display:none;">
       <div class="main-content">
-        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
+        <button class="view-back-btn" onclick="window.goStepBack();" title="Go Back Step-by-Step (முந்தைய திரைக்கு செல்)">◀ Back (பின் செல்)</button>
         <div class="section-header">
           <div>
             <h2 class="section-title">📋 DBYC Minutes & Reports (கூட்ட குறிப்புகள்)</h2>
@@ -4597,7 +4624,7 @@ body {
          ======================================================= -->
     <section id="view_officebearers" class="app-section" style="display:none;">
       <div class="main-content">
-        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
+        <button class="view-back-btn" onclick="window.goStepBack();" title="Go Back Step-by-Step (முந்தைய திரைக்கு செல்)">◀ Back (பின் செல்)</button>
         
         <!-- Official Banner matching Poster -->
         <div style="background: linear-gradient(135deg, #002b66 0%, #004b98 60%, #0284c7 100%); border-radius: 18px; padding: 20px; color: #fff; margin-bottom: 20px; box-shadow: 0 8px 24px rgba(0,43,102,0.18); position: relative; overflow: hidden;">
@@ -4646,7 +4673,7 @@ body {
 
 <section id="view_leaders" class="app-section" style="display:none;">
       <div class="main-content">
-        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
+        <button class="view-back-btn" onclick="window.goStepBack();" title="Go Back Step-by-Step (முந்தைய திரைக்கு செல்)">◀ Back (பின் செல்)</button>
         
         <!-- Artwork Banner with Official DBYC Crest Logo -->
         <div style="background: linear-gradient(135deg, #002b66 0%, #004b98 60%, #0284c7 100%); border-radius: 18px; padding: 20px; color: #fff; margin-bottom: 20px; box-shadow: 0 8px 24px rgba(0,43,102,0.18); position: relative; overflow: hidden;">
@@ -4696,7 +4723,7 @@ body {
 
     <section id="view_teams" class="app-section" style="display:none;">
       <div class="main-content">
-        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
+        <button class="view-back-btn" onclick="window.goStepBack();" title="Go Back Step-by-Step (முந்தைய திரைக்கு செல்)">◀ Back (பின் செல்)</button>
         
         <!-- Artwork Banner -->
         <div class="section-art-banner banner-oratory" style="background:linear-gradient(135deg, #00264d 0%, #004b98 100%);">
@@ -4759,7 +4786,7 @@ body {
          ======================================================= -->
     <section id="view_settings" class="app-section" style="display:none;">
       <div class="main-content">
-        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
+        <button class="view-back-btn" onclick="window.goStepBack();" title="Go Back Step-by-Step (முந்தைய திரைக்கு செல்)">◀ Back (பின் செல்)</button>
         
         <!-- Master Authority & Status Banner -->
         <div class="master-security-card" style="background:linear-gradient(135deg, #002b66 0%, #004b98 60%, #0284c7 100%); color:#ffffff; border: 2px solid #fde047; border-radius:18px; padding:20px; box-shadow:0 8px 24px rgba(0,43,102,0.25); margin-bottom:20px;">
@@ -10213,7 +10240,149 @@ function setupNavigation() {
   document.getElementById('logoutBtn')?.addEventListener('click', logout);
 }
 
-function switchView(viewName) {
+// ==========================================
+// NAVIGATION STACK & STEP-BY-STEP BACK ENGINE
+// ==========================================
+window.appNavigationStack = ['dashboard'];
+window.currentActiveViewName = 'dashboard';
+
+window.getFriendlyViewName = function(v) {
+  const map = {
+    'dashboard': 'Home (முகப்பு)',
+    'members': 'Members (உறுப்பினர்கள்)',
+    'officebearers': 'Office Bearers (நிர்வாகிகள்)',
+    'leaders': 'Leaders (பொறுப்பாளர்கள்)',
+    'passes': 'Passes (அடையாள அட்டை)',
+    'attendance': 'Attendance (வருகை)',
+    'profile': 'Profile (சுயவிவரம்)',
+    'birthdays': 'Birthdays (பிறந்தநாள்)',
+    'news': 'News (செய்திகள்)',
+    'qualifications': 'Qualification Desk (சரிபார்ப்பு)',
+    'settings': 'Settings (அமைப்புகள்)',
+    'rules': 'Rules (விதிகள்)',
+    'calendar': 'Events (நிகழ்வுகள்)',
+    'minutes': 'Minutes (அறிக்கை)',
+    'certificates': 'Certificates (சான்றிதழ்)',
+    'livescore': 'Live Score (நேரலை)',
+    'media': 'Media (ஊடகம்)',
+    'teams': 'House Teams (அணிகள்)'
+  };
+  return map[v] || v;
+};
+
+window.updateBackButtonsUI = function() {
+  const stack = window.appNavigationStack || [];
+  let prevView = 'dashboard';
+  for (let i = stack.length - 1; i >= 0; i--) {
+    if (stack[i] && stack[i] !== window.currentActiveViewName) {
+      prevView = stack[i];
+      break;
+    }
+  }
+  const friendly = window.getFriendlyViewName(prevView);
+  document.querySelectorAll('.view-back-btn').forEach(btn => {
+    btn.setAttribute('onclick', 'window.goStepBack();');
+    btn.setAttribute('title', `Back to ${friendly} (முந்தைய திரைக்கு செல்)`);
+    btn.innerHTML = `◀ Back (${friendly})`;
+  });
+};
+
+window.goStepBack = function(fromPopState) {
+  // Step 1: Check if any active modal or lightbox is open
+  const modalSelectors = [
+    '#addMemberModal', '#officeBearerDetailModal', '#printDocumentModal',
+    '#editProfileModal', '#editPassModal', '#cloudSyncModal',
+    '#editPermissionsModal', '#deviceSyncModal', '#addNewsModal',
+    '#addEventModal', '#addMinutesModal', '#scanMemberModal',
+    '#antigravityStudioModal', '#quickPhotoEditModal', '#uploadMemberDocModal',
+    '#scannedDocLightboxModal', '#cameraCaptureModal', '#forgotPinModal',
+    '#masterAnalyticsModal', '#awardPointsModal', '#editTeamModal',
+    '.modal-backdrop', '.modal-overlay'
+  ];
+  for (let sel of modalSelectors) {
+    const el = document.querySelector(sel);
+    if (el && (el.style.display === 'block' || el.style.display === 'flex' || (window.getComputedStyle && window.getComputedStyle(el).display !== 'none'))) {
+      el.style.display = 'none';
+      if (sel === '#addMemberModal' && typeof window.closeAddMemberModal === 'function') {
+        try { window.closeAddMemberModal(); } catch (e) {}
+      } else if (sel === '#officeBearerDetailModal' && typeof window.closeOfficeBearerDetailModal === 'function') {
+        try { window.closeOfficeBearerDetailModal(); } catch (e) {}
+      } else if (sel === '#printDocumentModal' && typeof window.closePrintDocumentModal === 'function') {
+        try { window.closePrintDocumentModal(); } catch (e) {}
+      }
+      if (typeof showToast === 'function') {
+        showToast('↩ Closed window');
+      }
+      return true;
+    }
+  }
+
+  // Step 2: Check if mobile sidebar is open
+  const sidebar = document.getElementById('appSidebar');
+  if (sidebar && sidebar.classList.contains('open')) {
+    sidebar.classList.remove('open');
+    const overlay = document.getElementById('sidebarOverlay');
+    if (overlay) overlay.style.display = 'none';
+    return true;
+  }
+
+  // Step 3: Step Back on navigation stack
+  if (!window.appNavigationStack || !Array.isArray(window.appNavigationStack) || window.appNavigationStack.length === 0) {
+    window.appNavigationStack = ['dashboard'];
+  }
+
+  let targetView = null;
+  while (window.appNavigationStack.length > 0) {
+    const candidate = window.appNavigationStack.pop();
+    if (candidate && candidate !== window.currentActiveViewName && document.getElementById(`view_${candidate}`)) {
+      targetView = candidate;
+      break;
+    }
+  }
+
+  if (!targetView) {
+    targetView = 'dashboard';
+  }
+
+  if (targetView === window.currentActiveViewName) {
+    if (window.currentActiveViewName !== 'dashboard') {
+      targetView = 'dashboard';
+    } else {
+      return false; // Already on dashboard
+    }
+  }
+
+  // Switch to previous target view without pushing duplicate
+  switchView(targetView, true);
+
+  if (!fromPopState) {
+    try {
+      history.pushState({ view: targetView, isBack: true }, '', '#view_' + targetView);
+    } catch (e) {}
+  }
+
+  return true;
+};
+
+// Global Escape Key Listener
+window.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    window.goStepBack();
+  }
+});
+
+// Browser / Mobile Hardware Back Button integration
+window.addEventListener('popstate', function(e) {
+  if (e.state && e.state.view) {
+    if (e.state.view !== window.currentActiveViewName) {
+      switchView(e.state.view, true);
+    }
+  } else {
+    window.goStepBack(true);
+  }
+});
+
+function switchView(viewName, isBackAction) {
   const cleanName = viewName.replace(/^view_/, '');
   const isDir = isDirectorOnly();
   const roleType = getUserRoleType();
@@ -10227,11 +10396,33 @@ function switchView(viewName) {
     return;
   }
 
+  // Manage Navigation Stack
+  if (!window.appNavigationStack) window.appNavigationStack = ['dashboard'];
+  if (!window.currentActiveViewName) window.currentActiveViewName = 'dashboard';
+
+  if (!isBackAction && cleanName !== window.currentActiveViewName) {
+    if (window.appNavigationStack[window.appNavigationStack.length - 1] !== window.currentActiveViewName) {
+      window.appNavigationStack.push(window.currentActiveViewName);
+    }
+    if (window.appNavigationStack.length > 30) {
+      window.appNavigationStack.shift();
+    }
+    try {
+      history.pushState({ view: cleanName }, '', '#view_' + cleanName);
+    } catch (e) {}
+  }
+
+  window.currentActiveViewName = cleanName;
+
   document.querySelectorAll('.app-section').forEach(sec => sec.style.display = 'none');
   const target = document.getElementById(`view_${cleanName}`);
   if (target) {
     target.style.display = 'block';
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  if (typeof window.updateBackButtonsUI === 'function') {
+    window.updateBackButtonsUI();
   }
 
   if (cleanName === 'dashboard') {
@@ -10269,7 +10460,6 @@ function switchView(viewName) {
   }
 }
 
-// ==========================================
 // 6. DASHBOARD & STATS
 // ==========================================
 function updateDashboardStats() {
@@ -15824,6 +16014,213 @@ window.saveAndDownloadQrPassPdf = function(event) {
 // 4. MEMBERS REGISTRY VIEW RENDERER
 window.activeMemberGroupFilter = 'ALL';
 
+// ==========================================
+// DBYC ENROLLED ACTIVITIES TAXONOMY & ENGINE
+// "in the members board give members according to their acts basis that is which activity they are enrolled in"
+// ==========================================
+window.DBYC_STANDARD_ACTIVITIES = [
+  { key: 'ALL', label: 'All Acts (அனைத்து செயல்பாடுகள்)', icon: '🎯', color: '#004b98', bg: '#eff6ff', border: '#bfdbfe' },
+  { key: 'FOOTBALL', label: 'Football (கால்பந்து)', icon: '⚽', color: '#15803d', bg: '#f0fdf4', border: '#bbf7d0' },
+  { key: 'VOLLEYBALL', label: 'Volleyball (கைப்பந்து)', icon: '🏐', color: '#0369a1', bg: '#f0f9ff', border: '#bae6fd' },
+  { key: 'TABLE_TENNIS', label: 'Table Tennis (மேசைப்பந்து)', icon: '🏓', color: '#b45309', bg: '#fffbeb', border: '#fde68a' },
+  { key: 'CARROM', label: 'Carrom (கேரம்)', icon: '🎯', color: '#b91c1c', bg: '#fef2f2', border: '#fecaca' },
+  { key: 'GYM', label: 'Gym & Fitness (உடற்பயிற்சி)', icon: '🏋️', color: '#6d28d9', bg: '#f5f3ff', border: '#ddd6fe' },
+  { key: 'CULTURAL', label: 'Cultural & Arts (கலை)', icon: '🎭', color: '#be185d', bg: '#fdf2f8', border: '#fbcfe8' },
+  { key: 'LEADERSHIP', label: 'Leadership & Animation (தலைமைத்துவம்)', icon: '🌟', color: '#c2410c', bg: '#fff7ed', border: '#ffedd5' },
+  { key: 'SPIRITUAL', label: 'Spiritual & Social Service (ஆன்மீகம்)', icon: '🕊️', color: '#0e7490', bg: '#ecfeff', border: '#a5f3fc' }
+];
+
+window.getMemberEnrolledActivities = function(m) {
+  if (!m) return [];
+  const text = [
+    Array.isArray(m.activities) ? m.activities.join(' ') : (m.activities || ''),
+    m.specialActivities || '',
+    m.abilities || '',
+    m.role || '',
+    m.futureAmbition || '',
+    m.joiningPurpose || '',
+    m.category || ''
+  ].join(' ').toLowerCase();
+
+  const acts = [];
+  if (/football|soccer|கால்பந்து/i.test(text)) {
+    acts.push(window.DBYC_STANDARD_ACTIVITIES.find(a => a.key === 'FOOTBALL'));
+  }
+  if (/volleyball|கைப்பந்து/i.test(text)) {
+    acts.push(window.DBYC_STANDARD_ACTIVITIES.find(a => a.key === 'VOLLEYBALL'));
+  }
+  if (/table\s*tennis|\btt\b|மேசைப்பந்து/i.test(text)) {
+    acts.push(window.DBYC_STANDARD_ACTIVITIES.find(a => a.key === 'TABLE_TENNIS'));
+  }
+  if (/carrom|கேரம்/i.test(text)) {
+    acts.push(window.DBYC_STANDARD_ACTIVITIES.find(a => a.key === 'CARROM'));
+  }
+  if (/gym|fitness|athletic|bodybuilding|track\s*&\s*field|உடற்பயிற்சி/i.test(text)) {
+    acts.push(window.DBYC_STANDARD_ACTIVITIES.find(a => a.key === 'GYM'));
+  }
+  if (/cultural|sing|dance|drama|stage|mime|choir|sound|light|drawing|கலை|நாடகம்|பாடல்/i.test(text)) {
+    acts.push(window.DBYC_STANDARD_ACTIVITIES.find(a => a.key === 'CULTURAL'));
+  }
+  if (/animation|council|leader|president|secretary|governance|public speaking|தலைமை|வழிகாட்டல்/i.test(text)) {
+    acts.push(window.DBYC_STANDARD_ACTIVITIES.find(a => a.key === 'LEADERSHIP'));
+  }
+  if (/spiritual|prayer|marian|altar|liturgy|social|clean campus|devotion|relief|தொண்டு|ஆன்மீகம்/i.test(text)) {
+    acts.push(window.DBYC_STANDARD_ACTIVITIES.find(a => a.key === 'SPIRITUAL'));
+  }
+
+  // If none matched, provide default oratory sports activities
+  if (acts.length === 0) {
+    acts.push(window.DBYC_STANDARD_ACTIVITIES.find(a => a.key === 'FOOTBALL'));
+    acts.push(window.DBYC_STANDARD_ACTIVITIES.find(a => a.key === 'GYM'));
+  }
+  return acts.filter(Boolean);
+};
+
+window.activeMemberActivityFilter = window.activeMemberActivityFilter || 'ALL';
+window.activeMemberGroupFilter = window.activeMemberGroupFilter || 'ALL';
+window.membersViewLayoutMode = window.membersViewLayoutMode || 'LIST';
+
+window.setMembersLayoutMode = function(mode) {
+  window.membersViewLayoutMode = mode;
+  const btnList = document.getElementById('btnMembersLayoutList');
+  const btnGrouped = document.getElementById('btnMembersLayoutGrouped');
+  if (btnList && btnGrouped) {
+    if (mode === 'GROUPED_BY_ACTS') {
+      btnList.style.background = '#ffffff';
+      btnList.style.color = '#004b98';
+      btnList.style.border = '1.5px solid #004b98';
+      btnGrouped.style.background = '#004b98';
+      btnGrouped.style.color = '#ffffff';
+      btnGrouped.style.border = 'none';
+    } else {
+      btnList.style.background = '#004b98';
+      btnList.style.color = '#ffffff';
+      btnList.style.border = 'none';
+      btnGrouped.style.background = '#ffffff';
+      btnGrouped.style.color = '#004b98';
+      btnGrouped.style.border = '1.5px solid #004b98';
+    }
+  }
+  renderMembersRegistry();
+};
+
+window.filterMembersByActivity = function(actKey) {
+  window.activeMemberActivityFilter = actKey;
+  renderMembersRegistry();
+};
+
+window.filterMembersByGroup = function(grp) {
+  window.activeMemberGroupFilter = grp;
+  document.querySelectorAll('.member-group-chip').forEach(c => {
+    if (c.getAttribute('data-group') === grp) {
+      c.classList.add('active');
+    } else {
+      c.classList.remove('active');
+    }
+  });
+  renderMembersRegistry();
+};
+
+function renderSingleMemberCard(m, validity, isDirector) {
+  const photo = m.photo || window.DBYC_OFFICIAL_LOGO || 'assets/logo.png';
+  const isApproved = m.approvalStatus === 'APPROVED' || m.status === 'APPROVED' || m.status === 'Active' || m.membershipStatus === 'ACTIVE';
+  const statusBadge = isApproved
+    ? `<span class="role-badge" style="background:#ecfdf5; color:#059669; font-weight:800;">✅ Qualified & Approved</span>`
+    : `<span class="role-badge" style="background:#ffedd5; color:#c2410c; font-weight:800;">⏳ Pending Approval</span>`;
+
+  const validityBadge = validity.isActive
+    ? `<span class="role-badge" style="background:#dcfce7; color:#15803d; font-weight:800;" title="1-Year Registration Valid">🟢 ${validity.yearStr} (Valid: ${validity.expiryFormatted})</span>`
+    : `<span class="role-badge" style="background:#fee2e2; color:#b91c1c; font-weight:900;" title="Registration Expired. Tap Renew!">🔴 Expired: ${validity.expiryFormatted} (Renew Now)</span>`;
+
+  // Team badge info
+  let teamName = 'House Team';
+  let teamColor = '#004b98';
+  if (m.team === 'TEAM-1') { teamName = '🔴 Red Dragons'; teamColor = '#dc2626'; }
+  else if (m.team === 'TEAM-2') { teamName = '🔵 Blue Sharks'; teamColor = '#0284c7'; }
+  else if (m.team === 'TEAM-3') { teamName = '🟢 Green Warriors'; teamColor = '#16a34a'; }
+  else if (m.team === 'TEAM-4') { teamName = '🟡 Yellow Tigers'; teamColor = '#d97706'; }
+
+  // Enrolled Activities
+  const enrolledActs = window.getMemberEnrolledActivities(m);
+
+  const approvalBtn = (!isApproved && isDirector)
+    ? `<button type="button" class="btn-dbyc-primary" style="background:#16a34a; font-weight:800; padding:6px 10px; font-size:0.75rem;" onclick="window.qualifyAndApproveMember('${m.id}')">✅ Qualify</button>
+       <button type="button" class="btn-icon-sm" style="background:#fef2f2; color:#dc2626;" title="Reject" onclick="window.rejectMember('${m.id}')">🗑️</button>`
+    : '';
+
+  return `
+    <div class="member-card" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; padding:14px; background:#ffffff; border-radius:14px; border:1px solid #e2e8f0; box-shadow:0 2px 6px rgba(0,0,0,0.04); margin-bottom:10px;">
+      <div style="display:flex; align-items:flex-start; gap:12px; flex:1; min-width:280px;">
+        <img src="${photo}" alt="${m.name}" style="width:58px; height:58px; border-radius:50%; object-fit:cover; border:2.5px solid #004b98; flex-shrink:0; background:#f8fafc; cursor:pointer;" onclick="${(typeof window.canEdit === 'function' && window.canEdit('members')) ? `window.quickEditMemberPhoto('${m.id}')` : `window.viewMemberPass('${m.id}')`}" title="${(typeof window.canEdit === 'function' && window.canEdit('members')) ? 'Tap to change member photo' : 'View Member QR Pass'}">
+        <div style="flex:1;">
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <h4 style="font-size:1.05rem; font-weight:800; color:#002b66; margin:0;">${m.name}</h4>
+            <span class="role-badge" style="background:#f1f5f9; color:#334155; font-weight:800;">🪪 ${m.id}</span>
+            ${statusBadge}
+          </div>
+          <div style="font-size:0.8rem; color:#475569; margin-top:3px;">
+            <span style="font-weight:700; color:#002b66;">${m.role || 'Member'}</span> • <span>${m.group}</span> • <span style="font-weight:700; color:${teamColor};">${teamName}</span>
+          </div>
+          <div style="font-size:0.75rem; color:#64748b; margin-top:2px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <span>📞 <strong>${m.mobile}</strong></span> • <span>🎂 DOB: <strong>${m.dob || 'N/A'}</strong> (Age: ${m.age || 'N/A'})</span> • ${validityBadge}
+          </div>
+
+          <!-- ENROLLED ACTIVITIES / ACTS BASIS DISPLAY -->
+          <div style="margin-top:8px; display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
+            <span style="font-size:0.72rem; font-weight:800; color:#004b98; background:#eff6ff; border:1px solid #bfdbfe; padding:2px 8px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
+              <span>🎯 Enrolled Acts:</span>
+            </span>
+            ${enrolledActs.map(a => `
+              <span style="display:inline-flex; align-items:center; gap:4px; background:${a.bg}; color:${a.color}; border:1px solid ${a.border}; padding:2px 8px; border-radius:6px; font-size:0.73rem; font-weight:800;" title="Enrolled in ${a.label}">
+                <span>${a.icon}</span> <span>${a.label.split('(')[0].trim()}</span>
+              </span>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+        ${isDirector ? `
+          <!-- Director & Asst Director: Both Renewal Options Side-by-Side -->
+          <button type="button" class="btn-dbyc-primary" style="background:${validity.isActive && m.renewalStatus !== 'NOT_RENEWED' ? '#15803d' : '#22c55e'}; color:#ffffff; padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:8px; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 6px rgba(0,0,0,0.15); border:${validity.isActive && m.renewalStatus !== 'NOT_RENEWED' ? '2px solid #86efac' : 'none'}; cursor:pointer;" onclick="window.markMemberAsRenewed('${m.id}')" title="Director / Asst Director: Mark as Renewed (+1 Yr) / புதுப்பிக்கப்பட்டது">
+            ⚡ ${validity.isActive && m.renewalStatus !== 'NOT_RENEWED' ? '✓ Renewed (+1 Yr)' : 'Mark Renewed (+1 Yr)'}
+          </button>
+          <button type="button" class="btn-dbyc-secondary" style="background:${!validity.isActive || m.renewalStatus === 'NOT_RENEWED' ? '#b91c1c' : '#ffffff'}; color:${!validity.isActive || m.renewalStatus === 'NOT_RENEWED' ? '#ffffff' : '#b91c1c'}; border:1.5px solid #dc2626; padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:8px; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 6px rgba(0,0,0,0.1); border:${!validity.isActive || m.renewalStatus === 'NOT_RENEWED' ? '2px solid #fca5a5' : '1.5px solid #dc2626'}; cursor:pointer;" onclick="window.markMemberAsNotRenewed('${m.id}')" title="Director / Asst Director: Mark as Not Renewed / Expired / புதுப்பிக்கப்படவில்லை">
+            🔴 ${!validity.isActive || m.renewalStatus === 'NOT_RENEWED' ? '✓ Not Renewed (Expired)' : 'Mark Not Renewed'}
+          </button>
+        ` : ''}
+        ${(typeof window.canEdit === 'function' && window.canEdit('members')) ? `
+          <!-- Member Details & Photo Editing for Leaders and Director -->
+          <button type="button" class="btn-dbyc-secondary" style="background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; padding:6px 10px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.quickEditMemberPhoto('${m.id}')" title="Change or update member photo">
+            📷 Photo
+          </button>
+          <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:6px 12px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.openAddMemberModal('${m.id}')" title="Edit member details and photo">
+            ✏️ Edit
+          </button>
+        ` : ''}
+        ${m.scannedFormImage ? `
+          <button type="button" class="btn-dbyc-secondary" style="background:#f0fdf4; color:#15803d; border:1.5px solid #86efac; padding:6px 10px; font-size:0.78rem; font-weight:800; border-radius:8px; display:inline-flex; align-items:center; gap:4px;" onclick="window.viewScannedMemberForm('${m.id}')" title="View attached physical scanned application form">
+            📄 Scanned Form
+          </button>
+        ` : ''}
+        <button type="button" class="btn-dbyc-primary" style="background:#0b57d0; padding:6px 12px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.viewMemberPass('${m.id}')" title="View digital QR pass">
+          🪪 QR Pass
+        </button>
+        <button type="button" class="btn-dbyc-primary" style="background:#475569; padding:6px 10px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.downloadApplicationFormPdf('${m.id}')" title="Download filled 18-Field PDF form">
+          📥 Form PDF
+        </button>
+        <button type="button" class="btn-dbyc-primary" style="background:linear-gradient(135deg, #7c3aed, #4338ca); padding:6px 10px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.printCombinedPassAndForm('${m.id}')" title="Print Form + QR Pass Together on 1 Full A4 Page">
+          🖪 Pass + Form Together
+        </button>
+        ${(typeof window.canEdit === 'function' && window.canEdit('members')) ? `<button type="button" class="btn-dbyc-primary" style="background:#fee2e2; color:#b91c1c; border:1px solid #fecaca; padding:6px 10px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.deleteMember('${m.id}')" title="Permanently delete member">
+          🗑️ Delete
+        </button>` : ''}
+        ${approvalBtn}
+      </div>
+    </div>
+  `;
+}
+
 function renderMembersRegistry() {
   const container = document.getElementById('membersListContainer');
   if (!container) return;
@@ -15832,30 +16229,80 @@ function renderMembersRegistry() {
   const searchInput = document.getElementById('memberSearchInput');
   const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
 
+  // 1. Dynamic Activity Enrollment Counts across all registered members
+  const actFilterContainer = document.getElementById('membersActivityFilterBar');
+  if (actFilterContainer) {
+    const activityCounts = { ALL: members.length };
+    window.DBYC_STANDARD_ACTIVITIES.forEach(a => {
+      if (a.key !== 'ALL') activityCounts[a.key] = 0;
+    });
+    members.forEach(m => {
+      const mActs = window.getMemberEnrolledActivities(m);
+      mActs.forEach(a => {
+        if (activityCounts[a.key] !== undefined) activityCounts[a.key]++;
+      });
+    });
+
+    actFilterContainer.innerHTML = window.DBYC_STANDARD_ACTIVITIES.map(act => {
+      const isActive = window.activeMemberActivityFilter === act.key;
+      const count = activityCounts[act.key] || 0;
+      const activeStyle = isActive
+        ? `background:#004b98; color:#ffffff; border-color:#004b98; box-shadow:0 2px 6px rgba(0,75,152,0.25);`
+        : `background:#ffffff; color:#334155; border:1px solid #cbd5e1;`;
+      return `
+        <button type="button" class="filter-chip member-act-chip ${isActive ? 'active' : ''}" 
+          style="${activeStyle} font-weight:800; padding:6px 12px; border-radius:20px; font-size:0.78rem; display:inline-flex; align-items:center; gap:5px; cursor:pointer;"
+          onclick="window.filterMembersByActivity('${act.key}');">
+          <span>${act.icon}</span>
+          <span>${act.label.split('(')[0].trim()}</span>
+          <span style="background:${isActive ? 'rgba(255,255,255,0.25)' : '#f1f5f9'}; color:${isActive ? '#ffffff' : '#64748b'}; padding:1px 6px; border-radius:10px; font-size:0.72rem;">${count}</span>
+        </button>
+      `;
+    }).join('');
+  }
+
+  // 2. Filter Members by Group, Activity / Acts, and Search
   const normGrp = (g) => (g || '').toLowerCase().replace(/s\b/g, '').trim();
   const filtered = members.filter(m => {
+    // Group filter
     const matchesGroup = (window.activeMemberGroupFilter === 'ALL' || 
       m.group === window.activeMemberGroupFilter ||
       normGrp(m.group) === normGrp(window.activeMemberGroupFilter));
+
+    // Activity / Acts filter
+    const mActs = window.getMemberEnrolledActivities(m);
+    const matchesActivity = (window.activeMemberActivityFilter === 'ALL' ||
+      mActs.some(a => a.key === window.activeMemberActivityFilter));
+
+    // Search query match
     const matchesSearch = !query || 
       (m.name && m.name.toLowerCase().includes(query)) ||
       (m.id && m.id.toLowerCase().includes(query)) ||
       (m.mobile && m.mobile.includes(query)) ||
-      (m.role && m.role.toLowerCase().includes(query));
-    return matchesGroup && matchesSearch;
+      (m.role && m.role.toLowerCase().includes(query)) ||
+      (mActs.some(a => a.label.toLowerCase().includes(query) || a.key.toLowerCase().includes(query)));
+
+    return matchesGroup && matchesActivity && matchesSearch;
   });
 
+  // 3. Count Badge Indicator
   const countBadge = document.getElementById('membersRegistryTotalCountBadge');
   if (countBadge) {
-    countBadge.textContent = `${filtered.length} of ${members.length} Registered Members`;
+    const foundAct = window.DBYC_STANDARD_ACTIVITIES.find(a => a.key === window.activeMemberActivityFilter);
+    if (foundAct && foundAct.key !== 'ALL') {
+      const actName = foundAct.label.split('(')[0].trim();
+      countBadge.textContent = `${filtered.length} Enrolled in ${actName} (${members.length} Total Members)`;
+    } else {
+      countBadge.textContent = `${filtered.length} of ${members.length} Registered Members`;
+    }
   }
 
   if (filtered.length === 0) {
     container.innerHTML = `
       <div style="text-align:center; padding:40px 20px; background:#fff; border-radius:14px; border:1px dashed #cbd5e1; color:#64748b;">
-        <span style="font-size:2.5rem;">👥</span>
+        <span style="font-size:2.5rem;">🎯</span>
         <h4 style="font-size:1.1rem; color:#0f172a; margin-top:8px;">No Members Found</h4>
-        <p style="font-size:0.85rem; margin-top:4px;">No members match the selected filter. Tap "➕ New Registration" to add members.</p>
+        <p style="font-size:0.85rem; margin-top:4px;">No members match the selected filter. Try selecting "All Acts" or "➕ New Registration".</p>
       </div>
     `;
     return;
@@ -15863,96 +16310,63 @@ function renderMembersRegistry() {
 
   const isDirector = isDirectorOrAsstDirector();
 
-  container.innerHTML = filtered.map(m => {
-    const photo = m.photo || window.DBYC_OFFICIAL_LOGO || 'assets/logo.png';
-    const isApproved = m.approvalStatus === 'APPROVED' || m.status === 'APPROVED' || m.status === 'Active' || m.membershipStatus === 'ACTIVE';
-    const statusBadge = isApproved
-      ? `<span class="role-badge" style="background:#ecfdf5; color:#059669; font-weight:800;">✅ Qualified & Approved</span>`
-      : `<span class="role-badge" style="background:#ffedd5; color:#c2410c; font-weight:800;">⏳ Pending Approval</span>`;
+  // 4. Render Layout (Grouped by Acts vs Standard List)
+  if (window.membersViewLayoutMode === 'GROUPED_BY_ACTS') {
+    const actsToRender = window.DBYC_STANDARD_ACTIVITIES.filter(a => a.key !== 'ALL');
+    let groupedHtml = '';
 
-    const validity = (typeof window.calculateMembershipValidity === 'function')
-      ? window.calculateMembershipValidity(m)
-      : { isActive: true, yearStr: '2026 - 2027', expiryFormatted: 'N/A' };
-    
-    const validityBadge = validity.isActive
-      ? `<span class="role-badge" style="background:#dcfce7; color:#15803d; font-weight:800;" title="1-Year Registration Valid">🟢 ${validity.yearStr} (Valid: ${validity.expiryFormatted})</span>`
-      : `<span class="role-badge" style="background:#fee2e2; color:#b91c1c; font-weight:900;" title="Registration Expired. Tap Renew!">🔴 Expired: ${validity.expiryFormatted} (Renew Now)</span>`;
+    actsToRender.forEach(act => {
+      // If a specific activity filter is active, only show that act section
+      if (window.activeMemberActivityFilter !== 'ALL' && window.activeMemberActivityFilter !== act.key) {
+        return;
+      }
 
-    // Team badge info
-    let teamName = 'House Team';
-    let teamColor = '#004b98';
-    if (m.team === 'TEAM-1') { teamName = '🔴 Red Dragons'; teamColor = '#dc2626'; }
-    else if (m.team === 'TEAM-2') { teamName = '🔵 Blue Sharks'; teamColor = '#0284c7'; }
-    else if (m.team === 'TEAM-3') { teamName = '🟢 Green Warriors'; teamColor = '#16a34a'; }
-    else if (m.team === 'TEAM-4') { teamName = '🟡 Yellow Tigers'; teamColor = '#d97706'; }
+      const membersInAct = filtered.filter(m => {
+        const mActs = window.getMemberEnrolledActivities(m);
+        return mActs.some(a => a.key === act.key);
+      });
 
-    const approvalBtn = (!isApproved && isDirector)
-      ? `<button type="button" class="btn-dbyc-primary" style="background:#16a34a; font-weight:800; padding:6px 10px; font-size:0.75rem;" onclick="window.qualifyAndApproveMember('${m.id}')">✅ Qualify</button>
-         <button type="button" class="btn-icon-sm" style="background:#fef2f2; color:#dc2626;" title="Reject" onclick="window.rejectMember('${m.id}')">🗑️</button>`
-      : '';
-
-    return `
-      <div class="member-card" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; padding:14px; background:#ffffff; border-radius:14px; border:1px solid #e2e8f0; box-shadow:0 2px 6px rgba(0,0,0,0.04); margin-bottom:10px;">
-        <div style="display:flex; align-items:center; gap:12px;">
-          <img src="${photo}" alt="${m.name}" style="width:56px; height:56px; border-radius:50%; object-fit:cover; border:2.5px solid #004b98; flex-shrink:0; background:#f8fafc; cursor:pointer;" onclick="${(typeof window.canEdit === 'function' && window.canEdit('members')) ? `window.quickEditMemberPhoto('${m.id}')` : `window.viewMemberPass('${m.id}')`}" title="${(typeof window.canEdit === 'function' && window.canEdit('members')) ? 'Tap to change member photo' : 'View Member QR Pass'}">
-          <div>
-            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-              <h4 style="font-size:1.05rem; font-weight:800; color:#002b66; margin:0;">${m.name}</h4>
-              <span class="role-badge" style="background:#f1f5f9; color:#334155; font-weight:800;">${m.id}</span>
-              ${statusBadge}
+      if (membersInAct.length > 0) {
+        groupedHtml += `
+          <div class="act-group-section" style="margin-bottom:20px; background:#f8fafc; border:1.5px solid ${act.border}; border-radius:14px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+            <div style="background:${act.bg}; padding:10px 16px; border-bottom:1px solid ${act.border}; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:1.4rem;">${act.icon}</span>
+                <strong style="font-size:1rem; color:${act.color};">${act.label}</strong>
+              </div>
+              <span style="background:${act.color}; color:#ffffff; font-size:0.76rem; font-weight:800; padding:3px 10px; border-radius:12px;">
+                ${membersInAct.length} Enrolled Members
+              </span>
             </div>
-            <div style="font-size:0.8rem; color:#475569; margin-top:3px;">
-              <span>${m.role || 'Member'}</span> • <span>${m.group}</span> • <span style="font-weight:700; color:${teamColor};">${teamName}</span>
-            </div>
-            <div style="font-size:0.75rem; color:#64748b; margin-top:2px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-              <span>📞 <strong>${m.mobile}</strong></span> • <span>🎂 DOB: <strong>${m.dob || 'N/A'}</strong> (Age: ${m.age || 'N/A'})</span> • ${validityBadge}
+            <div style="padding:12px;">
+              ${membersInAct.map(m => {
+                const validity = (typeof window.calculateMembershipValidity === 'function')
+                  ? window.calculateMembershipValidity(m)
+                  : { isActive: true, yearStr: '2026 - 2027', expiryFormatted: 'N/A' };
+                return renderSingleMemberCard(m, validity, isDirector);
+              }).join('')}
             </div>
           </div>
-        </div>
+        `;
+      }
+    });
 
-                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-          ${isDirector ? `
-            <!-- Director & Asst Director: Both Renewal Options Side-by-Side -->
-            <button type="button" class="btn-dbyc-primary" style="background:${validity.isActive && m.renewalStatus !== 'NOT_RENEWED' ? '#15803d' : '#22c55e'}; color:#ffffff; padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:8px; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 6px rgba(0,0,0,0.15); border:${validity.isActive && m.renewalStatus !== 'NOT_RENEWED' ? '2px solid #86efac' : 'none'}; cursor:pointer;" onclick="window.markMemberAsRenewed('${m.id}')" title="Director / Asst Director: Mark as Renewed (+1 Yr) / புதுப்பிக்கப்பட்டது">
-              ⚡ ${validity.isActive && m.renewalStatus !== 'NOT_RENEWED' ? '✓ Renewed (+1 Yr)' : 'Mark Renewed (+1 Yr)'}
-            </button>
-            <button type="button" class="btn-dbyc-secondary" style="background:${!validity.isActive || m.renewalStatus === 'NOT_RENEWED' ? '#b91c1c' : '#ffffff'}; color:${!validity.isActive || m.renewalStatus === 'NOT_RENEWED' ? '#ffffff' : '#b91c1c'}; border:1.5px solid #dc2626; padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:8px; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 6px rgba(0,0,0,0.1); border:${!validity.isActive || m.renewalStatus === 'NOT_RENEWED' ? '2px solid #fca5a5' : '1.5px solid #dc2626'}; cursor:pointer;" onclick="window.markMemberAsNotRenewed('${m.id}')" title="Director / Asst Director: Mark as Not Renewed / Expired / புதுப்பிக்கப்படவில்லை">
-              🔴 ${!validity.isActive || m.renewalStatus === 'NOT_RENEWED' ? '✓ Not Renewed (Expired)' : 'Mark Not Renewed'}
-            </button>
-          ` : ''}
-          ${(typeof window.canEdit === 'function' && window.canEdit('members')) ? `
-            <!-- Member Details & Photo Editing for Leaders and Director -->
-            <button type="button" class="btn-dbyc-secondary" style="background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; padding:6px 10px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.quickEditMemberPhoto('${m.id}')" title="Change or update member photo">
-              📷 Photo
-            </button>
-            <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:6px 12px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.openAddMemberModal('${m.id}')" title="Edit member details and photo">
-              ✏️ Edit
-            </button>
-          ` : ''}
-          ${m.scannedFormImage ? `
-            <!-- View Scanned Paper Application Form -->
-            <button type="button" class="btn-dbyc-secondary" style="background:#f0fdf4; color:#15803d; border:1.5px solid #86efac; padding:6px 10px; font-size:0.78rem; font-weight:800; border-radius:8px; display:inline-flex; align-items:center; gap:4px;" onclick="window.viewScannedMemberForm('${m.id}')" title="View attached physical scanned application form">
-              📄 Scanned Form
-            </button>
-          ` : ''}
-          <button type="button" class="btn-dbyc-primary" style="background:#0b57d0; padding:6px 12px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.viewMemberPass('${m.id}')" title="View digital QR pass">
-            🪪 QR Pass
-          </button>
-          <button type="button" class="btn-dbyc-primary" style="background:#475569; padding:6px 10px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.downloadApplicationFormPdf('${m.id}')" title="Download filled 18-Field PDF form">
-            📥 Form PDF
-          </button>
-          <!-- Combined Pass + Form Together -->
-          <button type="button" class="btn-dbyc-primary" style="background:linear-gradient(135deg, #7c3aed, #4338ca); padding:6px 10px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.printCombinedPassAndForm('${m.id}')" title="Print Form + QR Pass Together on 1 Full A4 Page">
-            🖪 Pass + Form Together
-          </button>
-          ${(typeof window.canEdit === 'function' && window.canEdit('members')) ? `<button type="button" class="btn-dbyc-primary" style="background:#fee2e2; color:#b91c1c; border:1px solid #fecaca; padding:6px 10px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.deleteMember('${m.id}')" title="Permanently delete member">
-            🗑️ Delete
-          </button>` : ''}
-          ${approvalBtn}
-        </div>
+    container.innerHTML = groupedHtml || `
+      <div style="text-align:center; padding:40px 20px; background:#fff; border-radius:14px; border:1px dashed #cbd5e1; color:#64748b;">
+        <span style="font-size:2.5rem;">🎯</span>
+        <h4 style="font-size:1.1rem; color:#0f172a; margin-top:8px;">No Members Found for Selected Acts</h4>
+        <p style="font-size:0.85rem; margin-top:4px;">Try selecting "All Acts" or another activity category above.</p>
       </div>
     `;
-  }).join('');
+  } else {
+    // Flat List mode
+    container.innerHTML = filtered.map(m => {
+      const validity = (typeof window.calculateMembershipValidity === 'function')
+        ? window.calculateMembershipValidity(m)
+        : { isActive: true, yearStr: '2026 - 2027', expiryFormatted: 'N/A' };
+      return renderSingleMemberCard(m, validity, isDirector);
+    }).join('');
+  }
 }
 
 // ==============================================================================

@@ -2736,6 +2736,64 @@ body {
   image-rendering: high-quality;
   transition: opacity 0.4s ease-in-out;
 }
+
+/* ==========================================================================
+   STEP-BY-STEP BACK NAVIGATION STYLING (PC/LAPTOP & MOBILE UNIFIED)
+   ========================================================================== */
+.top-nav-back-btn {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff !important;
+  border: 1.5px solid #38bdf8;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 0.86rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.top-nav-back-btn:hover {
+  background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+  border-color: #7dd3fc;
+  transform: translateX(-2px);
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.45);
+}
+
+#dbycFloatingBackBtn {
+  display: none;
+  position: fixed;
+  bottom: 24px;
+  left: 20px;
+  z-index: 9995;
+  background: linear-gradient(135deg, #002b66, #004b98);
+  color: #ffffff;
+  border: 1.8px solid #38bdf8;
+  border-radius: 30px;
+  padding: 10px 20px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  box-shadow: 0 6px 20px rgba(0, 43, 102, 0.45);
+  cursor: pointer;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+#dbycFloatingBackBtn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.6);
+  border-color: #fde047;
+}
+
+@media (max-width: 768px) {
+  #dbycFloatingBackBtn {
+    bottom: 74px !important;
+  }
+}
+
 </style>
   <!-- ==============================================================================
        100% GOOGLE DRIVE & INSTITUTIONAL SERVER STORAGE ARCHITECTURE
@@ -3096,6 +3154,11 @@ body {
     <!-- Top Sticky Navigation Bar -->
     <header class="top-navbar">
       <div class="nav-left">
+        <!-- Prominent Sticky Top Header Step-by-Step Back Button (Shown on all sub-screens) -->
+        <button id="topNavBackBtn" class="top-nav-back-btn" type="button" onclick="window.goStepBack();" style="display:none;" title="Go Back Step-by-Step (முந்தைய திரைக்கு செல்)">
+          <span style="font-size:1.1rem; line-height:1;">◀</span>
+          <span id="topNavBackBtnLabel">Back</span>
+        </button>
         <button id="hamburgerBtn" class="hamburger-btn" aria-label="Open Menu">
           <span></span>
           <span></span>
@@ -5403,6 +5466,12 @@ body {
         <span>Birthdays</span>
       </button>
     </nav>
+
+    <!-- Floating Step-by-Step Back Button for Mobile & PC/Laptop -->
+    <button id="dbycFloatingBackBtn" type="button" onclick="window.goStepBack();" style="display:none;" title="Go Back Step-by-Step (முந்தைய திரைக்கு செல்)">
+      <span style="font-size:1.15rem; line-height:1;">◀</span>
+      <span id="floatingBackBtnLabel">Back (பின் செல்)</span>
+    </button>
 
   </div>
 
@@ -9281,7 +9350,7 @@ function showMainApp() {
 
   applyRolePermissions();
   updateDashboardStats();
-  const initHash = (window.location.hash || '').replace('#', '').trim();
+  const initHash = (window.location.hash || '').replace('#', '').replace(/^view_/, '').trim();
   if (initHash && document.getElementById('view_' + initHash)) {
     switchView(initHash);
   } else {
@@ -10241,10 +10310,11 @@ function setupNavigation() {
 }
 
 // ==========================================
-// NAVIGATION STACK & STEP-BY-STEP BACK ENGINE
-// ==========================================
+// NAVIGATION STACK & STEP-BY-STEP BACK ENGINE (PC & MOBILE UNIFIED)
+// ==============================================================================
 window.appNavigationStack = ['dashboard'];
 window.currentActiveViewName = 'dashboard';
+window.appHistoryDepth = 0; // Tracks history pushed within this application session
 
 window.getFriendlyViewName = function(v) {
   const map = {
@@ -10270,8 +10340,12 @@ window.getFriendlyViewName = function(v) {
   return map[v] || v;
 };
 
+// Update visibility and text on all back buttons (Top Header, Floating, and In-Page)
 window.updateBackButtonsUI = function() {
+  const isHome = (window.currentActiveViewName === 'dashboard');
   const stack = window.appNavigationStack || [];
+
+  // Determine previous view name from stack
   let prevView = 'dashboard';
   for (let i = stack.length - 1; i >= 0; i--) {
     if (stack[i] && stack[i] !== window.currentActiveViewName) {
@@ -10280,6 +10354,30 @@ window.updateBackButtonsUI = function() {
     }
   }
   const friendly = window.getFriendlyViewName(prevView);
+
+  // 1. Sticky Top Navbar Back Button (High visibility on PC & Mobile)
+  const topBackBtn = document.getElementById('topNavBackBtn');
+  if (topBackBtn) {
+    topBackBtn.style.display = isHome ? 'none' : 'inline-flex';
+    const labelEl = document.getElementById('topNavBackBtnLabel');
+    if (labelEl) {
+      labelEl.textContent = `Back`;
+    }
+    topBackBtn.title = `Back to ${friendly} (முந்தைய திரைக்கு செல்)`;
+  }
+
+  // 2. Floating Quick Back Button
+  const floatBtn = document.getElementById('dbycFloatingBackBtn');
+  if (floatBtn) {
+    floatBtn.style.display = isHome ? 'none' : 'inline-flex';
+    const floatLabel = document.getElementById('floatingBackBtnLabel');
+    if (floatLabel) {
+      floatLabel.textContent = `Back (பின் செல்)`;
+    }
+    floatBtn.title = `Back to ${friendly} (முந்தைய திரைக்கு செல்)`;
+  }
+
+  // 3. In-View Section Back Buttons
   document.querySelectorAll('.view-back-btn').forEach(btn => {
     btn.setAttribute('onclick', 'window.goStepBack();');
     btn.setAttribute('title', `Back to ${friendly} (முந்தைய திரைக்கு செல்)`);
@@ -10287,8 +10385,9 @@ window.updateBackButtonsUI = function() {
   });
 };
 
+// Global Step-by-Step Back Handler (Synchronized across PC & Mobile)
 window.goStepBack = function(fromPopState) {
-  // Step 1: Check if any active modal or lightbox is open
+  // Step 1: Check if any modal dialog or popup is open
   const modalSelectors = [
     '#addMemberModal', '#officeBearerDetailModal', '#printDocumentModal',
     '#editProfileModal', '#editPassModal', '#cloudSyncModal',
@@ -10296,9 +10395,10 @@ window.goStepBack = function(fromPopState) {
     '#addEventModal', '#addMinutesModal', '#scanMemberModal',
     '#antigravityStudioModal', '#quickPhotoEditModal', '#uploadMemberDocModal',
     '#scannedDocLightboxModal', '#cameraCaptureModal', '#forgotPinModal',
-    '#masterAnalyticsModal', '#awardPointsModal', '#editTeamModal',
-    '.modal-backdrop', '.modal-overlay'
+    '#masterAnalyticsModal', '#awardPointsModal', '#editTeamModal'
   ];
+
+  let modalClosed = false;
   for (let sel of modalSelectors) {
     const el = document.querySelector(sel);
     if (el && (el.style.display === 'block' || el.style.display === 'flex' || (window.getComputedStyle && window.getComputedStyle(el).display !== 'none'))) {
@@ -10310,15 +10410,16 @@ window.goStepBack = function(fromPopState) {
       } else if (sel === '#printDocumentModal' && typeof window.closePrintDocumentModal === 'function') {
         try { window.closePrintDocumentModal(); } catch (e) {}
       }
-      if (typeof showToast === 'function') {
-        showToast('↩ Closed window');
-      }
-      return true;
+      modalClosed = true;
     }
   }
+  if (modalClosed) {
+    if (typeof showToast === 'function') showToast('↩ Closed window');
+    return true;
+  }
 
-  // Step 2: Check if mobile sidebar is open
-  const sidebar = document.getElementById('appSidebar');
+  // Step 2: Check if mobile / PC sidebar is open
+  const sidebar = document.getElementById('sidebarDrawer') || document.getElementById('appSidebar');
   if (sidebar && sidebar.classList.contains('open')) {
     sidebar.classList.remove('open');
     const overlay = document.getElementById('sidebarOverlay');
@@ -10326,12 +10427,24 @@ window.goStepBack = function(fromPopState) {
     return true;
   }
 
-  // Step 3: Step Back on navigation stack
-  if (!window.appNavigationStack || !Array.isArray(window.appNavigationStack) || window.appNavigationStack.length === 0) {
+  // Step 3: Already at home root?
+  if (window.currentActiveViewName === 'dashboard') {
+    return false;
+  }
+
+  // Step 4: If we pushed history in this session and NOT triggered by popstate,
+  // let browser history back handle it so PC browser back & forward stay 100% in sync!
+  if (!fromPopState && window.appHistoryDepth && window.appHistoryDepth > 0) {
+    window.history.back();
+    return true;
+  }
+
+  // Step 5: Direct Stack Fallback (e.g. reload or direct hash link)
+  if (!window.appNavigationStack || !Array.isArray(window.appNavigationStack)) {
     window.appNavigationStack = ['dashboard'];
   }
 
-  let targetView = null;
+  let targetView = 'dashboard';
   while (window.appNavigationStack.length > 0) {
     const candidate = window.appNavigationStack.pop();
     if (candidate && candidate !== window.currentActiveViewName && document.getElementById(`view_${candidate}`)) {
@@ -10340,46 +10453,84 @@ window.goStepBack = function(fromPopState) {
     }
   }
 
-  if (!targetView) {
-    targetView = 'dashboard';
-  }
-
-  if (targetView === window.currentActiveViewName) {
-    if (window.currentActiveViewName !== 'dashboard') {
-      targetView = 'dashboard';
-    } else {
-      return false; // Already on dashboard
-    }
-  }
-
-  // Switch to previous target view without pushing duplicate
   switchView(targetView, true);
 
-  if (!fromPopState) {
-    try {
-      history.pushState({ view: targetView, isBack: true }, '', '#view_' + targetView);
-    } catch (e) {}
-  }
+  try {
+    const newHash = targetView === 'dashboard' ? '' : '#view_' + targetView;
+    window.history.replaceState({ view: targetView }, '', newHash || window.location.pathname);
+  } catch(e) {}
 
   return true;
 };
 
-// Global Escape Key Listener
+// PC Keyboard & Mouse Shortcuts for Step-by-Step Back Navigation
 window.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
     window.goStepBack();
+    return;
+  }
+  // PC Backspace back navigation when not in an input/textarea
+  if (e.key === 'Backspace') {
+    const active = document.activeElement;
+    const isInput = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable || active.tagName === 'SELECT');
+    if (!isInput && window.currentActiveViewName !== 'dashboard') {
+      e.preventDefault();
+      window.goStepBack();
+    }
   }
 });
 
-// Browser / Mobile Hardware Back Button integration
-window.addEventListener('popstate', function(e) {
-  if (e.state && e.state.view) {
-    if (e.state.view !== window.currentActiveViewName) {
-      switchView(e.state.view, true);
+// PC Mouse Button 3 / 4 (Back button on mice)
+window.addEventListener('mouseup', function(e) {
+  if (e.button === 3 || e.button === 4) { // Browser back mouse button
+    if (window.currentActiveViewName !== 'dashboard') {
+      window.goStepBack();
     }
-  } else {
-    window.goStepBack(true);
   }
+});
+
+// Mobile & PC Browser Hardware/Toolbar Back Button (popstate)
+window.addEventListener('popstate', function(e) {
+  if (window.appHistoryDepth && window.appHistoryDepth > 0) {
+    window.appHistoryDepth--;
+  }
+
+  // Check and close any open modal first
+  const modalSelectors = [
+    '#addMemberModal', '#officeBearerDetailModal', '#printDocumentModal',
+    '#editProfileModal', '#editPassModal', '#cloudSyncModal',
+    '#editPermissionsModal', '#deviceSyncModal', '#addNewsModal',
+    '#addEventModal', '#addMinutesModal', '#scanMemberModal',
+    '#antigravityStudioModal', '#quickPhotoEditModal', '#uploadMemberDocModal',
+    '#scannedDocLightboxModal', '#cameraCaptureModal', '#forgotPinModal',
+    '#masterAnalyticsModal', '#awardPointsModal', '#editTeamModal'
+  ];
+  for (let sel of modalSelectors) {
+    const el = document.querySelector(sel);
+    if (el && (el.style.display === 'block' || el.style.display === 'flex' || (window.getComputedStyle && window.getComputedStyle(el).display !== 'none'))) {
+      el.style.display = 'none';
+      return;
+    }
+  }
+
+  let targetView = 'dashboard';
+  if (e.state && e.state.view) {
+    targetView = e.state.view;
+  } else if (window.location.hash && window.location.hash.startsWith('#view_')) {
+    targetView = window.location.hash.replace('#view_', '');
+  } else {
+    targetView = 'dashboard';
+  }
+
+  // Synchronize stack: find targetView in stack and trim stack up to that point
+  if (window.appNavigationStack && Array.isArray(window.appNavigationStack)) {
+    const idx = window.appNavigationStack.lastIndexOf(targetView);
+    if (idx !== -1) {
+      window.appNavigationStack = window.appNavigationStack.slice(0, idx);
+    }
+  }
+
+  switchView(targetView, true);
 });
 
 function switchView(viewName, isBackAction) {
@@ -10396,19 +10547,25 @@ function switchView(viewName, isBackAction) {
     return;
   }
 
-  // Manage Navigation Stack
-  if (!window.appNavigationStack) window.appNavigationStack = ['dashboard'];
-  if (!window.currentActiveViewName) window.currentActiveViewName = 'dashboard';
+  // Manage Navigation Stack & Browser History
+  if (!window.appNavigationStack || !Array.isArray(window.appNavigationStack)) {
+    window.appNavigationStack = ['dashboard'];
+  }
+  if (!window.currentActiveViewName) {
+    window.currentActiveViewName = 'dashboard';
+  }
 
   if (!isBackAction && cleanName !== window.currentActiveViewName) {
     if (window.appNavigationStack[window.appNavigationStack.length - 1] !== window.currentActiveViewName) {
       window.appNavigationStack.push(window.currentActiveViewName);
     }
-    if (window.appNavigationStack.length > 30) {
+    if (window.appNavigationStack.length > 50) {
       window.appNavigationStack.shift();
     }
+    
+    window.appHistoryDepth = (window.appHistoryDepth || 0) + 1;
     try {
-      history.pushState({ view: cleanName }, '', '#view_' + cleanName);
+      window.history.pushState({ view: cleanName }, '', '#view_' + cleanName);
     } catch (e) {}
   }
 
@@ -10421,6 +10578,25 @@ function switchView(viewName, isBackAction) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  // Update bottom nav active indicator
+  document.querySelectorAll('.bottom-nav-item').forEach(item => {
+    if (item.getAttribute('data-view') === cleanName) {
+      item.classList.add('active');
+    } else {
+      item.classList.remove('active');
+    }
+  });
+
+  // Update sidebar active indicator
+  document.querySelectorAll('.sidebar-menu-item').forEach(item => {
+    if (item.getAttribute('data-view') === cleanName) {
+      item.classList.add('active');
+    } else {
+      item.classList.remove('active');
+    }
+  });
+
+  // Update all back buttons UI across top navbar, floating button, and views
   if (typeof window.updateBackButtonsUI === 'function') {
     window.updateBackButtonsUI();
   }
@@ -20910,7 +21086,7 @@ function showMainApp() {
 
   applyRolePermissions();
   updateDashboardStats();
-  const initHash = (window.location.hash || '').replace('#', '').trim();
+  const initHash = (window.location.hash || '').replace('#', '').replace(/^view_/, '').trim();
   if (initHash && document.getElementById('view_' + initHash)) {
     switchView(initHash);
   } else {
@@ -25760,5 +25936,6 @@ window.executeAgCodeSandbox = function() {
     </div>
   </div>
 
+  
 </body>
 </html>

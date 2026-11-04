@@ -4142,15 +4142,7 @@ window.DBYC_OFFICIAL_SEAL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAWgAA
       </div>
 
       <div class="nav-actions">
-        <!-- Adaptive Multi-Device Switcher: Mobile | Laptop | TV | Projector -->
-        <div id="deviceModeSwitcher" class="device-switcher-pill" title="Switch View Mode for Device (Mobile, Laptop, Smart TV, Projector)">
-          <button type="button" class="dev-mode-btn active" data-mode="auto" onclick="window.setDeviceMode('auto')" title="Auto detect display">⚡ Auto</button>
-          <button type="button" class="dev-mode-btn" data-mode="mobile" onclick="window.setDeviceMode('mobile')" title="Mobile View (Compact handheld)">📱 Mobile</button>
-          <button type="button" class="dev-mode-btn" data-mode="laptop" onclick="window.setDeviceMode('laptop')" title="Laptop / Desktop View">💻 Laptop</button>
-          <button type="button" class="dev-mode-btn" data-mode="tv" onclick="window.setDeviceMode('tv')" title="Smart TV View (Large high-contrast)">📺 TV</button>
-          <button type="button" class="dev-mode-btn" data-mode="projector" onclick="window.setDeviceMode('projector')" title="Projector Presentation View (Hall mode)">📽️ Projector</button>
-          <button type="button" class="dev-mode-btn" onclick="window.toggleFullScreenPresentation()" title="Toggle Fullscreen Presentation" style="padding:4px 7px;">⛶</button>
-        </div>
+        <!-- Automatic multi-device responsiveness active (Mobile, Laptop, TV) -->
         <!-- Director 4-Way Edit Permissions Desk (Director & Asst Director Only) -->
         <div id="masterEditNavContainer" style="display:none; align-items:center; margin-right:6px;">
           <button type="button" id="masterEditToggleBtn" onclick="window.openEditPermissionsModal();" style="display:inline-flex; align-items:center; gap:6px; background:#eff6ff; border:1.5px solid #004b98; color:#004b98; font-size:0.75rem; font-weight:800; padding:5px 12px; border-radius:100px; cursor:pointer; transition:all 0.2s ease; box-shadow:0 2px 6px rgba(0,75,152,0.15);" title="Director Edit Permissions: Profile, Certificates, QR Passes, Registration">
@@ -4698,7 +4690,28 @@ window.DBYC_OFFICIAL_SEAL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAWgAA
           </select>
         </div>
 
-        <div class="scanner-card">
+        
+        <!-- QR Code Dual Capability: Both Attendance and Awarding Points -->
+        <div style="background:#ffffff; border:1.5px solid #bfdbfe; border-radius:14px; padding:12px 16px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; box-shadow:0 2px 8px rgba(0,43,102,0.06);">
+          <div>
+            <strong style="font-size:0.88rem; color:#002b66; display:flex; align-items:center; gap:6px;">
+              <span>🎯 QR Code Scan Action (ஸ்கேன் செயல்பாடு):</span>
+            </strong>
+            <small style="color:#64748b; font-size:0.75rem;">Scan member pass QR for Attendance OR directly award points</small>
+          </div>
+          <div id="qrScanTargetGroup" style="display:flex; background:#f1f5f9; border-radius:10px; padding:3px; gap:4px; border:1px solid #cbd5e1;">
+            <button type="button" id="btnQrTargetAttendance" class="qr-target-btn active" style="background:#004b98; color:#fff; border:none; padding:7px 14px; font-size:0.78rem; font-weight:800; border-radius:8px; cursor:pointer;" onclick="window.setQrScanTarget('ATTENDANCE')">
+              📋 Attendance (வருகை)
+            </button>
+            <button type="button" id="btnQrTargetPoints" class="qr-target-btn" style="background:transparent; color:#334155; border:none; padding:7px 14px; font-size:0.78rem; font-weight:800; border-radius:8px; cursor:pointer;" onclick="window.setQrScanTarget('POINTS')">
+              🏆 Award Points (புள்ளிகள்)
+            </button>
+            <button type="button" id="btnQrTargetDual" class="qr-target-btn" style="background:transparent; color:#334155; border:none; padding:7px 14px; font-size:0.78rem; font-weight:800; border-radius:8px; cursor:pointer;" onclick="window.setQrScanTarget('DUAL')">
+              ⚡ Attendance + 10 Pts
+            </button>
+          </div>
+        </div>
+<div class="scanner-card">
           <!-- Scanning Mode Selector: Auto Entry/Exit | Force Entry | Force Exit -->
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
             <h3 style="font-size:1.05rem; font-weight:800; color:#004b98; margin:0;">📷 Scan Member QR Pass (அடையாள அட்டை)</h3>
@@ -7149,6 +7162,87 @@ function doGet(e) {
     </div>
   </div>
 
+  <!-- 10.5. Award Live Points to Member Modal (QR Code & Registry Powered) -->
+  <div id="awardMemberPointsModal" class="modal-backdrop">
+    <div class="modal-content" style="max-width: 520px; border-radius: 18px; border: 2px solid #f59e0b; overflow: hidden; box-shadow: 0 12px 36px rgba(180,83,9,0.25);">
+      <div class="modal-header" style="background: linear-gradient(135deg, #78350f 0%, #b45309 60%, #d97706 100%); color:#fff; padding: 16px 20px;">
+        <div>
+          <h3 class="modal-title" style="color:#fff; display:flex; align-items:center; gap:8px; margin:0; font-size:1.15rem;">
+            <span>🏆 Award Points to Member</span>
+          </h3>
+          <small style="color:#fef3c7; font-size:0.75rem;">உறுப்பினருக்கு புள்ளிகள் வழங்குதல் (QR Pass / Fast Desk / Registry)</small>
+        </div>
+        <button type="button" style="background:rgba(255,255,255,0.2); border:none; font-size:1.4rem; color:#fff; width:32px; height:32px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center;" onclick="document.getElementById('awardMemberPointsModal').style.display='none'">&times;</button>
+      </div>
+
+      <div style="padding: 18px 20px; max-height: calc(85vh - 70px); overflow-y: auto;">
+        <!-- Member Information Card Preview -->
+        <div id="awardMemberPreviewBox" style="background:#fefce8; border:1.5px solid #fde047; border-radius:12px; padding:12px; display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+          <img id="awardMemberPhoto" src="" alt="Member" style="width:54px; height:54px; border-radius:50%; object-fit:cover; border:2.5px solid #f59e0b; background:#fff; flex-shrink:0;">
+          <div style="flex:1; min-width:0;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+              <div>
+                <h4 id="awardMemberName" style="margin:0; font-size:1.05rem; font-weight:800; color:#0f172a;">Member Name</h4>
+                <div id="awardMemberSub" style="font-size:0.75rem; color:#64748b; margin-top:2px;">DBYC-001 • Sub-Juniors • Red Dragons</div>
+              </div>
+              <div>
+                <span id="awardMemberCurrentPtsBadge" style="background:#fef3c7; color:#b45309; border:1px solid #fde68a; font-weight:900; font-size:0.85rem; padding:4px 10px; border-radius:8px; display:inline-block;">⭐ 0 PTS</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <form id="awardMemberPointsForm">
+          <input type="hidden" id="awardMemberTargetId">
+
+          <!-- Quick Points Preset Chips -->
+          <div class="form-group-dbyc" style="margin-bottom:14px;">
+            <label style="font-weight:700; font-size:0.82rem; color:#334155; margin-bottom:6px; display:block;">Quick Preset Points (விரைவுப் புள்ளிகள்):</label>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button type="button" class="filter-chip quick-mem-pts-btn" data-pts="10" onclick="window.setMemberAwardPts(10, 'Daily Assembly / Attendance')">+10 (வருகை/மன்றம்)</button>
+              <button type="button" class="filter-chip quick-mem-pts-btn" data-pts="20" onclick="window.setMemberAwardPts(20, 'Oratory / Cultural / Discipline')">+20 (பாசறை/ஒழுக்கம்)</button>
+              <button type="button" class="filter-chip quick-mem-pts-btn" data-pts="25" onclick="window.setMemberAwardPts(25, 'Sports / Practice Match')">+25 (விளையாட்டு)</button>
+              <button type="button" class="filter-chip quick-mem-pts-btn" data-pts="50" onclick="window.setMemberAwardPts(50, 'Tournament / Match Victory')">+50 (போட்டி வெற்றி)</button>
+              <button type="button" class="filter-chip quick-mem-pts-btn" data-pts="100" onclick="window.setMemberAwardPts(100, 'Star Performer of the Day')">+100 (சிறந்த வீரர்)</button>
+              <button type="button" class="filter-chip quick-mem-pts-btn" data-pts="-10" onclick="window.setMemberAwardPts(-10, 'Late / Disciplinary Penalty')" style="border-color:#fca5a5; color:#dc2626; background:#fef2f2;">-10 (தண்டனை)</button>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:14px;">
+            <div class="form-group-dbyc" style="margin:0;">
+              <label style="font-weight:700; font-size:0.82rem; color:#334155;">Points Amount (புள்ளிகள்) *</label>
+              <input type="number" id="awardMemberPtsInput" class="form-control-dbyc" required value="25" style="font-size:1.15rem; font-weight:800; color:#b45309; border:2px solid #f59e0b;">
+            </div>
+
+            <div class="form-group-dbyc" style="margin:0;">
+              <label style="font-weight:700; font-size:0.82rem; color:#334155;">Category (வகை) *</label>
+              <select id="awardMemberCategorySelect" class="form-control-dbyc" required style="font-size:0.82rem; height:42px;">
+                <option value="Attendance & Assembly">📋 Attendance (வருகை & மன்றம்)</option>
+                <option value="Sports Tournament" selected>⚽ Sports Tournament (விளையாட்டு)</option>
+                <option value="Cultural / Oratory">📚 Oratory & Cultural (பாசறை & கலை)</option>
+                <option value="Discipline & Spirit">🌟 Discipline & Spirit (ஒழுக்கம் & ஒற்றுமை)</option>
+                <option value="Volunteering">🤝 Volunteering (தன்னார்வ சேவை)</option>
+                <option value="Penalty / Deduction">⚠️ Penalty / Late (தண்டனைப் புள்ளி)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group-dbyc" style="margin-bottom:18px;">
+            <label style="font-weight:700; font-size:0.82rem; color:#334155;">Reason / Activity Note (காரணம் / குறிப்பு) *</label>
+            <input type="text" id="awardMemberReasonInput" class="form-control-dbyc" placeholder="e.g. Scored winning goal in Football / 100% Assembly attendance" required value="Sports Match Participation">
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; gap:8px;">
+            <button type="button" class="btn-dbyc-secondary" onclick="document.getElementById('awardMemberPointsModal').style.display='none'">Cancel</button>
+            <button type="submit" class="btn-dbyc-primary" style="background: linear-gradient(135deg, #b45309 0%, #d97706 100%); font-weight:800; padding:10px 22px; font-size:0.92rem; border:none; box-shadow:0 4px 12px rgba(217,119,6,0.3); border-radius:8px;">
+              🏆 Award Points Now (புள்ளிகள் வழங்கு)
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- =======================================================
        16. GOOGLE 2-STEP OTP VERIFICATION & PASSWORD / PIN EDIT MODAL
        ======================================================= -->
@@ -7443,6 +7537,10 @@ let appState = window.appState = {
   gasUrl: ''
 };
 
+// 39 OFFICIAL LEADERS COUNCIL SEED (MEMBERSHIP DAY 2026)
+window.DBYC_OFFICIAL_LEADERS_SEED = [{"id": "LDR-ORAT-01", "name": "RAJA", "role": "GS (General Secretary)", "category": "Oratory Leaders", "phone": "9551235550", "tenure": "6 Years", "photo": "", "achievements": "DBYC Outstanding General Secretary 2025; Annual Membership Day Director; Youth Council Founder.", "abilities": "Youth Animation, Public Speaking, Football Captaincy, Council Governance, Event Planning"}, {"id": "LDR-ORAT-02", "name": "YUKENDIRAN", "role": "AGS (Asst. General Secretary)", "category": "Oratory Leaders", "phone": "8778945864", "tenure": "5 Years", "photo": "", "achievements": "Inter-House Sports Festival Coordinator; Oratory General Assembly Lead 2025.", "abilities": "Council Administration, Operations Logistics, Volleyball, Youth Counseling"}, {"id": "LDR-ORAT-03", "name": "MADHAN", "role": "SPORTS SECRETARY", "category": "Oratory Leaders", "phone": "9677044211", "tenure": "5 Years", "photo": "", "achievements": "Chennai Salesian Cup Football Gold Medalist; Turf Ground Infrastructure Lead.", "abilities": "Football Forward, Athletics, Physical Fitness Coaching, Tournament Management"}, {"id": "LDR-ORAT-04", "name": "SURYA", "role": "CULTURAL SECRETARY", "category": "Oratory Leaders", "phone": "6382319639", "tenure": "4 Years", "photo": "", "achievements": "Don Bosco Feast Cultural Director; Christmas Carol Gala Grand Champion.", "abilities": "Stage Production, Choral Singing, Drama Direction, Creative Sound & Lights"}, {"id": "LDR-ORAT-05", "name": "KAVIYARASAN", "role": "SOCIAL & SPIRITUAL SECRETARY", "category": "Oratory Leaders", "phone": "8668119379", "tenure": "4 Years", "photo": "", "achievements": "Marian Pilgrimage & Feast Coordinator; Basin Bridge Slum Outreach Lead.", "abilities": "Marian Devotions, Choir Conducting, Social Relief Drives, Youth Mentorship"}, {"id": "LDR-SUB-01", "name": "AJAI", "role": "PRESIDENT", "category": "Sub-Junior Leaders", "phone": "9840112201", "tenure": "3 Years", "photo": "", "achievements": "Best Sub-Junior Leader 2025; Junior Oratory Cup Winner.", "abilities": "Team Guidance, Carrom, Relay Running, Peer Motivation"}, {"id": "LDR-SUB-02", "name": "RATHIKAN", "role": "VICE PRESIDENT", "category": "Sub-Junior Leaders", "phone": "9840112202", "tenure": "3 Years", "photo": "", "achievements": "Sub-Junior Championship Runners-up; Discipline Star Award.", "abilities": "Football Defense, Morning Prayer Lead, Group Coordination"}, {"id": "LDR-SUB-03", "name": "ASHWIN", "role": "CULTURAL SECRETARY", "category": "Sub-Junior Leaders", "phone": "9840112203", "tenure": "2 Years", "photo": "", "achievements": "Children's Day Fine Arts Gold; Oratory Skit Lead Performer.", "abilities": "Singing, Drawing, Stage Drama, Creative Writing"}, {"id": "LDR-SUB-04", "name": "SUBASH", "role": "SPORTS SECRETARY", "category": "Sub-Junior Leaders", "phone": "9840112204", "tenure": "3 Years", "photo": "", "achievements": "Sub-Junior Table Tennis Gold; 100m Sprint Champion.", "abilities": "Table Tennis, Football, Track & Field, Sportsmanship"}, {"id": "LDR-SUB-05", "name": "ABI", "role": "SOCIAL & SPIRITUAL SECRETARY", "category": "Sub-Junior Leaders", "phone": "9840112205", "tenure": "2 Years", "photo": "", "achievements": "100% Attendance Excellence 2025; Altar Boy Leader.", "abilities": "Altar Service, Prayer Leadership, Clean Campus Volunteer"}, {"id": "LDR-JUN-01", "name": "RUBESH", "role": "PRESIDENT", "category": "Junior Leaders", "phone": "9840223301", "tenure": "4 Years", "photo": "", "achievements": "Junior Leadership Shield 2025; 7-a-side Football Champions.", "abilities": "Junior Animation, Public Address, Football Playmaker, Event Marshal"}, {"id": "LDR-JUN-02", "name": "DAVID", "role": "SECRETARY", "category": "Junior Leaders", "phone": "9840223302", "tenure": "3 Years", "photo": "", "achievements": "Junior Council Minutes Keeper; Oratory Summer Camp Captain.", "abilities": "Volleyball, Meeting Documentation, Attendance Coordination"}, {"id": "LDR-JUN-03", "name": "THANIGAVEL", "role": "SPORTS SECRETARY", "category": "Junior Leaders", "phone": "9840223303", "tenure": "4 Years", "photo": "", "achievements": "Junior Football Golden Boot Winner; Inter-Oratory Striker.", "abilities": "Football Striker, Cricket, Fast Bowling, Team Spirit"}, {"id": "LDR-JUN-04", "name": "ASHWIN", "role": "CULTURAL SECRETARY", "category": "Junior Leaders", "phone": "9840223304", "tenure": "3 Years", "photo": "", "achievements": "State-level Youth Talent Solo Dance Winner; Cultural Emcee.", "abilities": "Folk & Western Dance, Anchoring, Mime, Creative Choreography"}, {"id": "LDR-JUN-05", "name": "MENDOSA", "role": "SOCIAL & SPIRITUAL SECRETARY", "category": "Junior Leaders", "phone": "9840223305", "tenure": "3 Years", "photo": "", "achievements": "Salesian Youth Spirituality Award; Feast Day Altar Incharge.", "abilities": "Liturgy Preparation, Choir Harmonies, Marian Devotions"}, {"id": "LDR-INT-01", "name": "ARUN", "role": "PRESIDENT", "category": "Inter Leaders", "phone": "9840334401", "tenure": "5 Years", "photo": "", "achievements": "Inter-Category Trophy Winner 2025; Oratory Night Tournament Lead.", "abilities": "Team Strategy, Tournament Management, Motivational Speaking"}, {"id": "LDR-INT-02", "name": "RUBESH", "role": "SECRETARY", "category": "Inter Leaders", "phone": "9840334402", "tenure": "4 Years", "photo": "", "achievements": "Inter-House Points Review Lead; Youth Camp Logistics Officer.", "abilities": "Documentation, Social Media Updates, Equipment Management"}, {"id": "LDR-INT-03", "name": "BALAJI", "role": "SPORTS SECRETARY", "category": "Inter Leaders", "phone": "9840334403", "tenure": "5 Years", "photo": "", "achievements": "DBYC Cricket Championship Best All-Rounder; Turf Incharge.", "abilities": "Cricket Captaincy, Football Midfield, Gym Training"}, {"id": "LDR-INT-04", "name": "VICKY", "role": "CULTURAL SECRETARY", "category": "Inter Leaders", "phone": "9840334404", "tenure": "4 Years", "photo": "", "achievements": "Christmas Gala Stage Director; Street Theatre Social Awareness.", "abilities": "Street Theatre, Sound & Lighting, Event Coordination, Music"}, {"id": "LDR-INT-05", "name": "VISWA", "role": "SPIRITUAL & SOCIAL SECRETARY", "category": "Inter Leaders", "phone": "9840334405", "tenure": "4 Years", "photo": "", "achievements": "Community Food Distribution Convener; Youth Rosary Leader.", "abilities": "Social Welfare, Food Drives, Marian Devotions, Community Service"}, {"id": "LDR-SEN-01", "name": "AKASH", "role": "PRESIDENT", "category": "Senior Leaders", "phone": "9094630476", "tenure": "7 Years", "photo": "", "achievements": "Senior Leader of the Year 2025; Don Bosco Centenary Youth Leader.", "abilities": "Executive Leadership, Conflict Resolution, Football, Oratory Management"}, {"id": "LDR-SEN-02", "name": "MANI", "role": "SECRETARY", "category": "Senior Leaders", "phone": "8939750703", "tenure": "6 Years", "photo": "", "achievements": "Official DBYC Executive Council Minutes Scribe; Budget Committee.", "abilities": "Official Correspondence, Financial Record Keeping, Youth Guidance"}, {"id": "LDR-SEN-03", "name": "UGESH", "role": "CULTURAL SECRETARY", "category": "Senior Leaders", "phone": "9566135801", "tenure": "6 Years", "photo": "", "achievements": "Salesian Centenary Cultural Gold Director; Annual Mega Drama.", "abilities": "Major Stage Direction, Scriptwriting, Choreography, Stage Art"}, {"id": "LDR-SEN-04", "name": "ANAND", "role": "SPORTS SECRETARY", "category": "Senior Leaders", "phone": "9710035426", "tenure": "7 Years", "photo": "", "achievements": "State-level Oratory Football Convener; Senior Turf Incharge.", "abilities": "Football Coaching, Certified Refereeing, Ground Architecture"}, {"id": "LDR-SEN-05", "name": "RAJASEKAR", "role": "SPIRITUAL SECRETARY", "category": "Senior Leaders", "phone": "9003212827", "tenure": "6 Years", "photo": "", "achievements": "Don Bosco Annual Youth Retreat Director; Sacristy Council Head.", "abilities": "Spiritual Counseling, Retreat Directing, Liturgical Ceremonies"}, {"id": "LDR-SSEN-01", "name": "SANKAR", "role": "PRESIDENT", "category": "Super Senior Leaders", "phone": "9790811866", "tenure": "12 Years", "photo": "", "achievements": "DBYC Pillar of Excellence 2025; Senior Council Founding Member.", "abilities": "Senior Council Direction, Mentorship, Heritage Preservation, Mediation"}, {"id": "LDR-SSEN-02", "name": "BALAMURUGAN", "role": "SECRETARY", "category": "Super Senior Leaders", "phone": "7904391626", "tenure": "11 Years", "photo": "", "achievements": "Past Pupils & Alumni Network Lead; Super Senior Tournament Head.", "abilities": "Alumni Fellowship, Event Management, Career Mentoring"}, {"id": "LDR-SSEN-03", "name": "LOGANATHAN", "role": "SPORTS SECRETARY", "category": "Super Senior Leaders", "phone": "8667862801", "tenure": "10 Years", "photo": "", "achievements": "Veteran Cup Championship Trophy; Stadium Floodlights Renovation.", "abilities": "Veteran Football, Ground Maintenance, Sports Infrastructure"}, {"id": "LDR-SSEN-04", "name": "THIRUNAVUKARASU", "role": "CULTURAL SECRETARY", "category": "Super Senior Leaders", "phone": "8610839980", "tenure": "10 Years", "photo": "", "achievements": "Traditional Tamil Heritage Arts Recognition; Stage Architecture.", "abilities": "Folk Arts, Tamil Eloquence, Traditional Music, Stage Craft"}, {"id": "LDR-SSEN-05", "name": "ARUNKUMAR", "role": "SPIRITUAL & SOCIAL SECRETARY", "category": "Super Senior Leaders", "phone": "9841256566", "tenure": "12 Years", "photo": "", "achievements": "Basin Bridge Medical & Blood Donation Camp Lead; Flood Relief 2023.", "abilities": "Social Welfare, Disaster Relief, Community Medical Drives"}, {"id": "LDR-SSEN-06", "name": "SAMSON", "role": "TREASURER", "category": "Super Senior Leaders", "phone": "7550286169", "tenure": "11 Years", "photo": "", "achievements": "DBYC Audit & Transparency Shield; Capital Projects Treasurer.", "abilities": "Financial Auditing, Budget Planning, Asset Custodianship"}, {"id": "LDR-ELD-01", "name": "ULAGANATHAN", "role": "PRESIDENT", "category": "Elders", "phone": "8148631022", "tenure": "20+ Years", "photo": "", "achievements": "Lifetime Oratory Dedication Award; 25 Years Council Trustee.", "abilities": "Oratory Patronage, Salesian Preventive System, Civic Advisory"}, {"id": "LDR-ELD-02", "name": "JOHN BERKMENS", "role": "SECRETARY", "category": "Elders", "phone": "8072289913", "tenure": "18+ Years", "photo": "", "achievements": "Golden Jubilee History Chronicler; DBYC Heritage Archivist.", "abilities": "Historical Documentation, Legal Advisory, Community Guidance"}, {"id": "LDR-ELD-03", "name": "ARUMUGAM", "role": "TREASURER", "category": "Elders", "phone": "9841276605", "tenure": "19+ Years", "photo": "", "achievements": "Distinguished Elders Service Medal; Trust Fund Custodian.", "abilities": "Benevolent Fund Governance, Elder Fellowship, Ethical Advisory"}, {"id": "LDR-COM-01", "name": "MATHIVANAN", "role": "COMMITTEE MEMBER", "category": "Committee Members", "phone": "9444281207", "tenure": "15 Years", "photo": "", "achievements": "Senior Advisory Board Member; Youth Sponsorship Trustee.", "abilities": "Civic Liaison, Youth Welfare Sponsorship, Community Relations"}, {"id": "LDR-COM-02", "name": "DEVENDRAN", "role": "COMMITTEE MEMBER", "category": "Committee Members", "phone": "9566084070", "tenure": "14 Years", "photo": "", "achievements": "Campus Renovation Committee Lead; Sports Complex Expansion.", "abilities": "Civil Infrastructure, Power & Electricals, Campus Safety"}, {"id": "LDR-COM-03", "name": "MALARMANNAN", "role": "COMMITTEE MEMBER", "category": "Committee Members", "phone": "9444454799", "tenure": "16 Years", "photo": "", "achievements": "Youth Educational Scholarship Trustee; Legal Consultation Lead.", "abilities": "Legal Consultation, Education Grants, Higher Studies Mentoring"}, {"id": "LDR-COM-04", "name": "SRINIVASAN", "role": "COMMITTEE MEMBER", "category": "Committee Members", "phone": "9840094477", "tenure": "15 Years", "photo": "", "achievements": "Basin Bridge Sports Promoter Award; Tournament Chief Patron.", "abilities": "Sports Sponsorship, Equipment Procurement, Inter-Club Liaison"}, {"id": "LDR-COM-05", "name": "SATHISH KUMAR", "role": "COMMITTEE MEMBER", "category": "Committee Members", "phone": "9840795014", "tenure": "12 Years", "photo": "", "achievements": "Youth Career & Employment Guidance Director; IT Facilities Lead.", "abilities": "IT Infrastructure, Youth Career Placement, Digital Media"}];
+
+
 // ==========================================
 // 1. INITIALIZATION & RICH DATA SEEDING
 // ==========================================
@@ -7454,56 +7552,27 @@ window.currentDeviceMode = localStorage.getItem('dbyc_device_mode') || 'auto';
 
 window.detectDeviceMode = function() {
   const w = window.innerWidth;
-  if (w < 768) return 'mobile';
+  if (w <= 768) return 'mobile';
   if (w <= 1366) return 'laptop';
   return 'tv';
 };
 
-window.setDeviceMode = function(mode) {
-  window.currentDeviceMode = mode;
-  localStorage.setItem('dbyc_device_mode', mode);
-
-  const effectiveMode = (mode === 'auto') ? window.detectDeviceMode() : mode;
+window.applyAutoDeviceLayout = function() {
+  const mode = window.detectDeviceMode();
   document.body.classList.remove('device-mobile', 'device-laptop', 'device-tv', 'device-projector');
-  document.body.classList.add('device-' + effectiveMode);
-
-  document.querySelectorAll('.dev-mode-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.getAttribute('data-mode') === mode);
-  });
-
-  const labels = {
-    mobile: '📱 Mobile View (Compact Handheld Layout)',
-    laptop: '💻 Laptop View (Desktop Grid & Sidebar)',
-    tv: '📺 Smart TV View (Large High-Contrast)',
-    projector: '📽️ Projector View (Auditorium Presentation Mode)'
-  };
-  if (typeof showToast === 'function') {
-    showToast(labels[effectiveMode] || `Switched to ${effectiveMode} view`);
-  }
+  document.body.classList.add('device-' + mode);
 };
 
-window.toggleFullScreenPresentation = function() {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().then(() => {
-      window.setDeviceMode('projector');
-      if (typeof showToast === 'function') showToast('📽️ Fullscreen Projector Presentation Mode ON');
-    }).catch(() => {
-      window.setDeviceMode('projector');
-    });
-  } else {
-    if (document.exitFullscreen) document.exitFullscreen();
-  }
+window.setDeviceMode = function(mode) {
+  window.applyAutoDeviceLayout();
 };
 
 window.initDeviceMode = function() {
-  const saved = localStorage.getItem('dbyc_device_mode') || 'auto';
-  window.setDeviceMode(saved);
+  window.applyAutoDeviceLayout();
 };
 
 window.addEventListener('resize', () => {
-  if (window.currentDeviceMode === 'auto') {
-    window.setDeviceMode('auto');
-  }
+  window.applyAutoDeviceLayout();
 });
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -7536,6 +7605,7 @@ function initApp() {
   try { setupMemberHandlers(); } catch(e) {}
   try { setupAttendanceHandlers(); } catch(e) {}
   try { setupPassHandlers(); } catch(e) {}
+  try { setupMemberAwardPointsHandlers(); } catch(e) {}
   try { setupCertificateHandlers(); } catch(e) {}
   try { setupNewsHandlers(); } catch(e) {}
   try { setupLiveScoreHandlers(); } catch(e) {}
@@ -7603,7 +7673,9 @@ function loadLocalData() {
       appState.certificates = (parsed.certificates || []).filter(c => !deletedMems.has(c.memberId));
       appState.leaders = (parsed.leaders && parsed.leaders.length > 0)
         ? parsed.leaders
-        : (window.DBYC_OFFICIAL_LEADERS_SEED ? JSON.parse(JSON.stringify(window.DBYC_OFFICIAL_LEADERS_SEED)) : []);
+        : (window.DBYC_OFFICIAL_LEADERS_SEED && window.DBYC_OFFICIAL_LEADERS_SEED.length > 0
+            ? JSON.parse(JSON.stringify(window.DBYC_OFFICIAL_LEADERS_SEED))
+            : []);
 
       appState.teams = (parsed.teams && parsed.teams.length > 0) ? parsed.teams : [
         { id: 'TEAM-1', name: 'Red Dragons', nameTa: 'சிவப்பு டிராகன்கள்', color: '#dc2626', captain: 'Stephen Paul', slogan: 'Courage & Passion (துணிவும் உற்சாகமும்)', points: 450, icon: '🐉' },
@@ -9417,9 +9489,7 @@ let lastScannedCode = '';
 let lastScannedTime = 0;
 
 function setupAttendanceHandlers() {
-  document.getElementById('startCameraBtn')?.addEventListener('click', () => {
-    window.toggleQrCamera();
-  });
+  // startCameraBtn trigger handled exclusively by onclick="window.toggleQrCamera();"
   document.getElementById('manualCheckinBtn')?.addEventListener('click', () => {
     window.manualCheckinSubmit();
   });
@@ -9471,14 +9541,15 @@ window.renderFastAttendanceDesk = function() {
           <img src="${photo}" style="width:34px; height:34px; border-radius:50%; object-fit:cover; border:1px solid #cbd5e1;">
           <div>
             <strong style="font-size:0.85rem; color:#0f172a; display:block;">${m.name}</strong>
-            <small style="color:#64748b; font-size:0.72rem;">${m.id} • ${m.group || 'Member'}</small>
+            <small style="color:#64748b; font-size:0.72rem;">${m.id} • ${m.group || 'Member'} • <strong style="color:#b45309;">⭐ ${m.points || 0} pts</strong></small>
           </div>
         </div>
-        <div>
+        <div style="display:flex; align-items:center; gap:6px;">
           ${isPresent 
             ? '<span style="background:#dcfce7; color:#15803d; font-size:0.75rem; font-weight:800; padding:4px 8px; border-radius:6px;">✅ Present</span>'
             : `<button type="button" class="btn-dbyc-primary" style="background:#10b981; font-size:0.75rem; font-weight:800; padding:4px 10px; border-radius:6px;" onclick="window.processAttendanceCheckin('${m.id}')">⚡ Mark Present</button>`
           }
+          <button type="button" class="btn-dbyc-secondary" style="background:#fef3c7; color:#b45309; border:1px solid #fde68a; font-size:0.75rem; font-weight:800; padding:4px 8px; border-radius:6px;" onclick="window.openAwardPointsForMember('${m.id}')" title="Award Points to ${m.name}">🏆 +Pts</button>
         </div>
       </div>
     `;
@@ -9492,11 +9563,18 @@ window.manualCheckinSubmit = function() {
     showToast('⚠️ Please enter Member ID, Mobile, or Name.');
     return;
   }
-  window.processAttendanceCheckin(val);
+  const targetMode = window.currentQrScanTarget || 'ATTENDANCE';
+  if (targetMode === 'POINTS') {
+    window.openAwardPointsForMember(val);
+  } else if (targetMode === 'DUAL') {
+    window.processAttendanceCheckin(val, 'MANUAL', true);
+  } else {
+    window.processAttendanceCheckin(val, 'MANUAL', false);
+  }
   if (input) input.value = '';
 };
 
-window.processAttendanceCheckin = function(query, scanMethod) {
+window.processAttendanceCheckin = function(query, scanMethod, autoAwardPoints = false) {
   if (!query) return;
   const members = appState.members || [];
   let qClean = decodeURIComponent(query).trim().toUpperCase();
@@ -9568,6 +9646,31 @@ window.processAttendanceCheckin = function(query, scanMethod) {
       timestamp: new Date().toISOString(),
       recordedBy: (appState.currentUser && appState.currentUser.name) ? appState.currentUser.name : 'Leader'
     };
+    // Auto award points if dual mode active
+    if (autoAwardPoints || window.currentQrScanTarget === 'DUAL') {
+      const attPts = 10;
+      member.points = (member.points || 0) + attPts;
+      const memberTeamId = member.teamId || member.team;
+      const team = (appState.teams || []).find(t => t.id === memberTeamId || t.name === memberTeamId || (member.team && t.name.includes(member.team)));
+      if (team) {
+        team.points = (team.points || 0) + attPts;
+      }
+      if (!appState.teamPointsLog) appState.teamPointsLog = [];
+      appState.teamPointsLog.unshift({
+        id: 'PTS-' + Date.now(),
+        teamId: team ? team.id : 'TEAM-1',
+        teamName: team ? team.name : 'Red Dragons',
+        memberId: member.id,
+        memberName: member.name,
+        points: attPts,
+        category: 'Attendance Excellence',
+        reason: `Daily Session Check-in (+${attPts} Pts)`,
+        awardedBy: (appState.currentUser && appState.currentUser.name) ? appState.currentUser.name : 'Leader',
+        timestamp: new Date().toISOString()
+      });
+      if (typeof window.playPointsAwardFanfare === 'function') window.playPointsAwardFanfare();
+    }
+
     appState.attendance.unshift(record);
     saveLocalData();
     if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
@@ -9576,6 +9679,8 @@ window.processAttendanceCheckin = function(query, scanMethod) {
     renderTodayAttendance();
     updateDashboardStats();
     if (typeof window.renderFastAttendanceDesk === 'function') window.renderFastAttendanceDesk();
+    if (typeof renderMembersRegistry === 'function') renderMembersRegistry();
+    if (typeof renderTeamsView === 'function') renderTeamsView();
 
     // High pitch ascending chime for ENTRY (587Hz -> 880Hz)
     try {
@@ -9593,7 +9698,11 @@ window.processAttendanceCheckin = function(query, scanMethod) {
       osc.stop(ctx.currentTime + 0.35);
     } catch(e) {}
 
-    showToast(`🟢 ENTRY NOTED: ${member.name} (${member.id}) checked in at ${nowTime}!`);
+    if (autoAwardPoints || window.currentQrScanTarget === 'DUAL') {
+      showToast(`🟢 ENTRY NOTED + 🏆 +10 Attendance Points awarded to ${member.name}! (Total: ${member.points} pts)`);
+    } else {
+      showToast(`🟢 ENTRY NOTED: ${member.name} (${member.id}) checked in at ${nowTime}!`);
+    }
     return;
   } else if (!existingAtt.exitTime || scanMode === 'FORCE_EXIT') {
     // 🔴 2. EXIT NOTED (வெளியேறுதல் பதிவு)
@@ -9710,26 +9819,24 @@ window.toggleQrCamera = function() {
   // 1. Check if mediaDevices API is supported or restricted by browser
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     const isFileProto = (window.location.protocol === 'file:');
-    showToast('📸 Opening camera photo snap directly...');
-    const snapInput = document.getElementById('qrDirectSnapInput') || document.getElementById('qrPhotoFileInput');
-    if (snapInput) {
-      snapInput.click();
-      return;
-    }
+    const msg = isFileProto
+      ? 'Browsers require HTTPS to run live camera video streams directly. Tap below to snap a photo of the pass QR with your device camera.'
+      : 'Camera stream is restricted on this browser context. Tap below to snap a photo of the pass QR with your device camera.';
+    showToast('📸 Please snap a photo of the QR pass with your device camera...');
     if (container) {
       container.innerHTML = `
-        <div style="color:#fde047; padding:20px; text-align:center; max-width:340px;">
+        <div style="color:#fde047; padding:20px; text-align:center; max-width:340px; margin:0 auto;">
           <div style="font-size:2.2rem; margin-bottom:8px;">📷</div>
           <strong style="color:#ffffff; font-size:0.92rem; display:block; margin-bottom:6px;">Camera Access Restricted</strong>
           <p style="font-size:0.78rem; color:#cbd5e1; line-height:1.4; margin:0 0 12px;">${msg}</p>
-          <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:8px 16px; font-size:0.84rem; font-weight:800; border-radius:8px;" onclick="document.getElementById('qrPhotoFileInput').click();">
-            📸 Snap / Select Pass Photo with Camera
+          <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:8px 16px; font-size:0.84rem; font-weight:800; border-radius:8px;" onclick="document.getElementById('qrDirectSnapInput').click();">
+            📸 Snap Photo with Device Camera
           </button>
         </div>
       `;
     }
-    const fileInp = document.getElementById('qrPhotoFileInput');
-    if (fileInp) fileInp.click();
+    const snapInput = document.getElementById('qrDirectSnapInput') || document.getElementById('qrPhotoFileInput');
+    if (snapInput) snapInput.click();
     return;
   }
 
@@ -9743,8 +9850,8 @@ window.toggleQrCamera = function() {
   if (container) {
     container.setAttribute('data-active', 'true');
     container.innerHTML = `
-      <div style="position:relative; width:100%; height:100%; min-height:250px; display:flex; align-items:center; justify-content:center; background:#000;">
-        <video id="qrVideo" playsinline autoplay muted style="width:100%; height:100%; max-height:280px; object-fit:cover; border-radius:8px;"></video>
+      <div style="position:relative; width:100%; height:100%; min-height:250px; display:flex; align-items:center; justify-content:center; background:#000; border-radius:8px; overflow:hidden;">
+        <video id="qrVideo" playsinline webkit-playsinline autoplay muted style="width:100%; height:100%; max-height:280px; object-fit:cover; border-radius:8px;"></video>
         <div style="position:absolute; width:190px; height:190px; border:3px solid #10b981; border-radius:16px; box-shadow:0 0 0 4000px rgba(0,0,0,0.5); pointer-events:none; display:flex; align-items:center; justify-content:center;">
           <div style="width:100%; height:2px; background:#10b981; box-shadow:0 0 8px #10b981; animation:scanPulse 1.5s infinite ease-in-out;"></div>
         </div>
@@ -9761,7 +9868,10 @@ window.toggleQrCamera = function() {
         const video = document.getElementById('qrVideo');
         if (video) {
           video.srcObject = stream;
+          video.muted = true;
+          video.playsInline = true;
           video.setAttribute('playsinline', 'true');
+          video.setAttribute('webkit-playsinline', 'true');
           video.play().catch(e => console.warn('Video play note:', e));
         }
         showToast('📷 Camera scanner active. Point at Member Pass.');
@@ -9777,24 +9887,24 @@ window.toggleQrCamera = function() {
       console.warn('Camera access error:', err);
       isQrScanningActive = false;
       if (btn) {
-        btn.textContent = '📷 Turn On Camera Scanner';
+        btn.textContent = '📷 Live Camera Stream';
         btn.style.background = '#004b98';
       }
       if (flipBtn) flipBtn.style.display = 'none';
       if (container) {
         container.innerHTML = `
-          <div style="color:#ef4444; padding:18px; text-align:center; max-width:320px;">
+          <div style="color:#ef4444; padding:18px; text-align:center; max-width:320px; margin:0 auto;">
             <div style="font-size:2rem; margin-bottom:6px;">⚠️</div>
-            <strong style="display:block; margin-bottom:4px; font-size:0.88rem;">Camera Permission or Access Issue</strong>
-            <p style="font-size:0.76rem; color:#94a3b8; margin:0 0 10px; line-height:1.4;">
-              Ensure camera permissions are allowed in site settings, or tap below to snap a photo with your device camera:
+            <strong style="display:block; margin-bottom:4px; font-size:0.88rem; color:#fff;">Camera Access Restricted</strong>
+            <p style="font-size:0.76rem; color:#cbd5e1; margin:0 0 10px; line-height:1.4;">
+              Ensure camera permissions are allowed, or tap below to snap a photo with your device camera:
             </p>
-            <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:7px 14px; font-size:0.8rem; font-weight:800; border-radius:8px;" onclick="document.getElementById('qrPhotoFileInput').click();">
-              📸 Take / Select Photo of Pass
+            <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:7px 14px; font-size:0.8rem; font-weight:800; border-radius:8px;" onclick="document.getElementById('qrDirectSnapInput').click();">
+              📸 Snap Photo with Device Camera
             </button>
           </div>`;
       }
-      showToast('⚠️ Camera permission denied or in use. Use gallery photo or 1-tap check-in.');
+      showToast('⚠️ Camera access restricted. Use camera photo snap or 1-tap entry.');
     });
 };
 
@@ -9872,6 +9982,224 @@ function startScanningLoop() {
   }, 250);
 }
 
+// ==========================================
+// DUAL QR CAPABILITY: ATTENDANCE & AWARDING POINTS
+// ==========================================
+window.currentQrScanTarget = 'ATTENDANCE';
+
+window.setQrScanTarget = function(target) {
+  window.currentQrScanTarget = target;
+  const bAtt = document.getElementById('btnQrTargetAttendance');
+  const bPts = document.getElementById('btnQrTargetPoints');
+  const bDual = document.getElementById('btnQrTargetDual');
+
+  if (bAtt) {
+    bAtt.style.background = target === 'ATTENDANCE' ? '#004b98' : 'transparent';
+    bAtt.style.color = target === 'ATTENDANCE' ? '#fff' : '#334155';
+  }
+  if (bPts) {
+    bPts.style.background = target === 'POINTS' ? '#d97706' : 'transparent';
+    bPts.style.color = target === 'POINTS' ? '#fff' : '#334155';
+  }
+  if (bDual) {
+    bDual.style.background = target === 'DUAL' ? '#059669' : 'transparent';
+    bDual.style.color = target === 'DUAL' ? '#fff' : '#334155';
+  }
+
+  const msg = target === 'ATTENDANCE'
+    ? '📋 QR Scanner: Attendance Mode (Mark Entry / Exit)'
+    : (target === 'POINTS'
+        ? '🏆 QR Scanner: Award Points Mode (Scan pass to award points to member)'
+        : '⚡ QR Scanner: Dual Action (Attendance + Auto 10 Points)');
+  showToast(msg);
+};
+
+window.playPointsAwardFanfare = function() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const notes = [
+      { f: 523.25, t: 0.0, d: 0.12 }, // C5
+      { f: 659.25, t: 0.12, d: 0.12 }, // E5
+      { f: 783.99, t: 0.24, d: 0.12 }, // G5
+      { f: 1046.50, t: 0.36, d: 0.40 } // C6
+    ];
+    notes.forEach(n => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(n.f, ctx.currentTime + n.t);
+      gain.gain.setValueAtTime(0.32, ctx.currentTime + n.t);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + n.t + n.d);
+      osc.start(ctx.currentTime + n.t);
+      osc.stop(ctx.currentTime + n.t + n.d);
+    });
+  } catch(e) {}
+};
+
+window.openAwardPointsForMember = function(query, defaultPts = 25, defaultCategory = 'Sports Tournament', defaultReason = '') {
+  if (!query) return;
+  const members = appState.members || [];
+  let qClean = decodeURIComponent(String(query)).trim().toUpperCase();
+
+  // Handle format DBYC:ID:TOKEN or DBYC:ID:Name:Group
+  if (qClean.includes('DBYC:')) {
+    const parts = qClean.split(':');
+    if (parts.length >= 2) qClean = parts[1].trim();
+  }
+
+  // Match Member by ID or code
+  let member = members.find(m => (m.id || '').toUpperCase() === qClean || (m.member_code || '').toUpperCase() === qClean || (m.id || '').toUpperCase().includes(qClean));
+  if (!member) {
+    const digitsOnly = String(query).replace(/[^0-9]/g, '');
+    if (digitsOnly.length >= 7) {
+      member = members.find(m => (m.mobile || '').replace(/[^0-9]/g, '') === digitsOnly);
+    }
+  }
+  if (!member) {
+    member = members.find(m => (m.name || '').toUpperCase().includes(qClean));
+  }
+
+  if (!member) {
+    showToast(`⚠️ Member not found for awarding points: "${query}"`);
+    return;
+  }
+
+  const modal = document.getElementById('awardMemberPointsModal');
+  if (!modal) return;
+
+  const photoEl = document.getElementById('awardMemberPhoto');
+  if (photoEl) photoEl.src = member.photo || window.DBYC_OFFICIAL_LOGO || window.DBYC_DEFAULT_AVATAR;
+
+  const nameEl = document.getElementById('awardMemberName');
+  if (nameEl) nameEl.textContent = member.name;
+
+  let teamLabel = 'House Team';
+  if (member.team === 'TEAM-1' || (member.team && member.team.includes('Red'))) teamLabel = '🔴 Red Dragons';
+  else if (member.team === 'TEAM-2' || (member.team && member.team.includes('Blue'))) teamLabel = '🔵 Blue Sharks';
+  else if (member.team === 'TEAM-3' || (member.team && member.team.includes('Green'))) teamLabel = '🟢 Green Warriors';
+  else if (member.team === 'TEAM-4' || (member.team && member.team.includes('Yellow'))) teamLabel = '🟡 Yellow Tigers';
+
+  const subEl = document.getElementById('awardMemberSub');
+  if (subEl) subEl.textContent = `${member.id} • ${member.group || 'Member'} • ${teamLabel}`;
+
+  const currentPtsBadge = document.getElementById('awardMemberCurrentPtsBadge');
+  if (currentPtsBadge) currentPtsBadge.textContent = `⭐ ${member.points || 0} PTS`;
+
+  const targetIdInput = document.getElementById('awardMemberTargetId');
+  if (targetIdInput) targetIdInput.value = member.id;
+
+  const ptsInput = document.getElementById('awardMemberPtsInput');
+  if (ptsInput) ptsInput.value = defaultPts;
+
+  const catSelect = document.getElementById('awardMemberCategorySelect');
+  if (catSelect) catSelect.value = defaultCategory;
+
+  const reasonInput = document.getElementById('awardMemberReasonInput');
+  if (reasonInput) reasonInput.value = defaultReason || (defaultCategory === 'Sports Tournament' ? 'Active participation & match performance' : 'Session attendance & leadership');
+
+  modal.style.display = 'flex';
+};
+
+window.setMemberAwardPts = function(pts, defaultReason) {
+  const ptsInput = document.getElementById('awardMemberPtsInput');
+  if (ptsInput) ptsInput.value = pts;
+  const reasonInput = document.getElementById('awardMemberReasonInput');
+  if (reasonInput && defaultReason) reasonInput.value = defaultReason;
+  const catSelect = document.getElementById('awardMemberCategorySelect');
+  if (catSelect) {
+    if (pts === 10) catSelect.value = 'Attendance & Assembly';
+    else if (pts === 25 || pts === 50) catSelect.value = 'Sports Tournament';
+    else if (pts === 20) catSelect.value = 'Cultural / Oratory';
+    else if (pts < 0) catSelect.value = 'Penalty / Deduction';
+    else if (pts >= 100) catSelect.value = 'Discipline & Spirit';
+  }
+};
+
+function setupMemberAwardPointsHandlers() {
+  const form = document.getElementById('awardMemberPointsForm');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const memberId = document.getElementById('awardMemberTargetId')?.value;
+      const ptsVal = parseInt(document.getElementById('awardMemberPtsInput')?.value, 10);
+      const category = document.getElementById('awardMemberCategorySelect')?.value || 'General';
+      const reason = document.getElementById('awardMemberReasonInput')?.value.trim();
+
+      if (!memberId) {
+        showToast('⚠️ No member selected.');
+        return;
+      }
+      if (isNaN(ptsVal) || ptsVal === 0) {
+        showToast('⚠️ Please enter a valid point value.');
+        return;
+      }
+      if (!reason) {
+        showToast('⚠️ Please enter an activity note or reason.');
+        return;
+      }
+
+      const member = (appState.members || []).find(m => m.id === memberId);
+      if (!member) {
+        showToast('⚠️ Member not found.');
+        return;
+      }
+
+      // Update Member Points
+      member.points = (member.points || 0) + ptsVal;
+      if (member.points < 0) member.points = 0;
+
+      // Update Member Team Points
+      const memberTeamId = member.teamId || member.team;
+      const team = (appState.teams || []).find(t => t.id === memberTeamId || t.name === memberTeamId || (member.team && t.name.includes(member.team)));
+      if (team) {
+        team.points = (team.points || 0) + ptsVal;
+        if (team.points < 0) team.points = 0;
+      }
+
+      // Add to teamPointsLog
+      if (!appState.teamPointsLog) appState.teamPointsLog = [];
+      appState.teamPointsLog.unshift({
+        id: 'PTS-' + Date.now(),
+        teamId: team ? team.id : 'TEAM-1',
+        teamName: team ? team.name : 'Red Dragons',
+        memberId: member.id,
+        memberName: member.name,
+        points: ptsVal,
+        category: category,
+        reason: reason,
+        awardedBy: (appState.currentUser && appState.currentUser.name) ? appState.currentUser.name : 'Rev. Fr. Director',
+        timestamp: new Date().toISOString()
+      });
+
+      // Fanfare Sound
+      if (typeof window.playPointsAwardFanfare === 'function') {
+        window.playPointsAwardFanfare();
+      }
+
+      // Close Modal
+      const modal = document.getElementById('awardMemberPointsModal');
+      if (modal) modal.style.display = 'none';
+
+      // Toast Celebration
+      showToast(`🏆 ${ptsVal > 0 ? '+' : ''}${ptsVal} Points awarded to ${member.name}! Total: ${member.points} pts`);
+
+      // Persist locally & push to cloud
+      saveLocalData();
+      if (window.DbycCloud && typeof window.DbycCloud.pushToCloud === 'function') {
+        window.DbycCloud.pushToCloud();
+      }
+
+      // Rerender Views
+      if (typeof renderMembersRegistry === 'function') renderMembersRegistry();
+      if (typeof window.renderFastAttendanceDesk === 'function') window.renderFastAttendanceDesk();
+      if (typeof renderTeamsView === 'function') renderTeamsView();
+      if (typeof updateDashboardStats === 'function') updateDashboardStats();
+    });
+  }
+}
+
 window.currentQrScanMode = 'AUTO';
 window.setQrScanMode = function(mode) {
   window.currentQrScanMode = mode;
@@ -9896,7 +10224,19 @@ function handleScannedQrResult(rawVal) {
   }
   lastScannedCode = rawVal;
   lastScannedTime = now;
-  window.processAttendanceCheckin(rawVal, 'QR_CAMERA');
+
+  const targetMode = window.currentQrScanTarget || 'ATTENDANCE';
+
+  if (targetMode === 'POINTS') {
+    // 🏆 Award Points Mode: Open points awarding dialog for the scanned member
+    window.openAwardPointsForMember(rawVal);
+  } else if (targetMode === 'DUAL') {
+    // ⚡ Dual Action: Mark Attendance AND Auto-Award 10 Points
+    window.processAttendanceCheckin(rawVal, 'QR_CAMERA', true);
+  } else {
+    // 📋 Attendance Mode: Mark Entry / Exit
+    window.processAttendanceCheckin(rawVal, 'QR_CAMERA', false);
+  }
 }
 
 window.scanQrFromFile = function(event) {
@@ -10161,10 +10501,13 @@ function generateIdPass(memberId) {
         <!-- Side-by-Side: QR Code in the LEFT & Image / Photo in the RIGHT -->
         <div class="id-pass-media-row">
           
-          <!-- LEFT: QR Code -->
+          <!-- LEFT: QR Code for Both Attendance & Awarding Points -->
           <div style="display:flex; flex-direction:column; align-items:center; flex:1; min-width:0;">
             <div class="id-pass-qr-box">
               <img src="${qrUrl}" alt="Member QR Pass" class="id-pass-qr-img">
+            </div>
+            <div style="font-size:0.64rem; color:#002b66; font-weight:900; margin-top:2px; text-align:center; line-height:1.2;">
+              📷 Attendance & Points QR
             </div>
           </div>
 
@@ -10184,6 +10527,11 @@ function generateIdPass(memberId) {
             <td class="icon-col">🪪</td>
             <td class="label">ID:</td>
             <td class="val val-id">${member.id}</td>
+          </tr>
+          <tr>
+            <td class="icon-col">⭐</td>
+            <td class="label">Points:</td>
+            <td class="val" style="color:#b45309; font-weight:900;">${member.points || 0} PTS</td>
           </tr>
           <tr>
             <td class="icon-col">⏳</td>
@@ -10249,6 +10597,10 @@ function generateIdPass(memberId) {
 
     <!-- 3 Distinct HD Action Buttons (PDF, PNG, Print) -->
     <div class="id-pass-download-bar" style="display:flex; flex-direction:column; gap:8px;">
+      <button type="button" class="btn-dbyc-primary" style="background: linear-gradient(135deg, #b45309 0%, #d97706 100%); font-size:0.92rem; font-weight:800; padding:11px; border-radius:10px; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 3px 8px rgba(180,83,9,0.35); cursor:pointer; border:none;" onclick="window.openAwardPointsForMember('${member.id}')">
+        🏆 Award Points to ${member.name} (புள்ளிகள் வழங்கு)
+      </button>
+
       <button type="button" class="btn-dbyc-primary" style="background:#059669; font-size:0.92rem; font-weight:800; padding:11px; border-radius:10px; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 3px 8px rgba(5,150,105,0.3); cursor:pointer;" onclick="window.downloadMemberPassPdf('${member.id}')">
         📄 Download HD PDF (PDF பதிவிறக்கம்)
       </button>
@@ -13100,6 +13452,7 @@ function renderMembersRegistry() {
               <h4 style="font-size:1.05rem; font-weight:800; color:#002b66; margin:0;">${m.name}</h4>
               <span class="role-badge" style="background:#f1f5f9; color:#334155; font-weight:800;">${m.id}</span>
               ${statusBadge}
+              <span class="role-badge" style="background:#fef3c7; color:#b45309; font-weight:900; border:1px solid #fde68a;">⭐ ${m.points || 0} Points</span>
             </div>
             <div style="font-size:0.8rem; color:#475569; margin-top:3px;">
               <span>${m.role || 'Member'}</span> • <span>${m.group}</span> • <span style="font-weight:700; color:${teamColor};">${teamName}</span>
@@ -13134,6 +13487,9 @@ function renderMembersRegistry() {
             ✏️ Edit
           </button>
 
+          <button type="button" class="btn-dbyc-primary" style="background:#d97706; padding:6px 10px; font-size:0.78rem; font-weight:800; border-radius:8px; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 6px rgba(217,119,6,0.25); border:none;" onclick="window.openAwardPointsForMember('${m.id}')" title="Award Points to ${m.name}">
+            🏆 +Pts
+          </button>
           <button type="button" class="btn-dbyc-primary" style="background:#0b57d0; padding:6px 12px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.viewMemberPass('${m.id}')" title="View digital QR pass">
             🪪 QR Pass
           </button>
@@ -13977,7 +14333,9 @@ function renderLeadersDashboard() {
 
   // 1. Initialize leaders from seed if empty
   if (!window.appState.leaders || window.appState.leaders.length === 0) {
-    window.appState.leaders = JSON.parse(JSON.stringify(window.DBYC_OFFICIAL_LEADERS_SEED || []));
+    window.appState.leaders = (window.DBYC_OFFICIAL_LEADERS_SEED && window.DBYC_OFFICIAL_LEADERS_SEED.length > 0)
+      ? JSON.parse(JSON.stringify(window.DBYC_OFFICIAL_LEADERS_SEED))
+      : [];
   }
 
   // 2. Dynamic live sync with window.appState.members (2-way connection)
@@ -15814,7 +16172,14 @@ window.renderOfficeBearersDashboard = function() {
   const container = document.getElementById('officeBearersListContainer');
   if (!container) return;
 
-  // 1. Live Dynamic Two-Way Sync with appState.members
+  // 1. Ensure leaders state is populated from official 39 leaders seed
+  if (!window.appState.leaders || window.appState.leaders.length === 0) {
+    window.appState.leaders = (window.DBYC_OFFICIAL_LEADERS_SEED && window.DBYC_OFFICIAL_LEADERS_SEED.length > 0)
+      ? JSON.parse(JSON.stringify(window.DBYC_OFFICIAL_LEADERS_SEED))
+      : [];
+  }
+
+  // 2. Live Dynamic Two-Way Sync with appState.members
   if (typeof window.syncLeadersWithMembers === 'function') {
     window.syncLeadersWithMembers();
   }
@@ -15829,12 +16194,15 @@ window.renderOfficeBearersDashboard = function() {
     obDb.src = window.DON_BOSCO_PORTRAIT;
   }
 
-  const leaders = window.appState.leaders || window.DBYC_OFFICIAL_LEADERS_SEED || [];
+  const leaders = (window.appState.leaders && window.appState.leaders.length > 0)
+    ? window.appState.leaders
+    : (window.DBYC_OFFICIAL_LEADERS_SEED || []);
   const searchInput = document.getElementById('obSearchInput');
   const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+  const currentFilter = window.activeObCategoryFilter || 'ALL';
 
   const filtered = leaders.filter(ldr => {
-    const matchesCat = (window.activeObCategoryFilter === 'ALL' || ldr.category === window.activeObCategoryFilter);
+    const matchesCat = (currentFilter === 'ALL' || ldr.category === currentFilter);
     const matchesSearch = !query ||
       (ldr.name && ldr.name.toLowerCase().includes(query)) ||
       (ldr.role && ldr.role.toLowerCase().includes(query)) ||

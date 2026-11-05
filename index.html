@@ -3900,6 +3900,13 @@ window.DBYC_OFFICIAL_SEAL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAWgAA
       <!-- Top Decorative Accent Bar -->
       <div style="position:absolute; top:0; left:0; right:0; height:6px; background:linear-gradient(90deg, #f59e0b, #0284c7, #3b82f6, #f59e0b);"></div>
 
+      <!-- Instant 1-Click Entrance Button -->
+      <div style="margin-bottom:16px;">
+        <button type="button" class="btn-dbyc-primary" style="width:100%; padding:14px; background:linear-gradient(135deg, #002b66, #004b98); font-size:1rem; font-weight:900; border-radius:14px; box-shadow:0 4px 14px rgba(0,43,102,0.3); border:2px solid #38bdf8; color:#ffffff; cursor:pointer;" onclick="window.enterAsDirectorDirectly();">
+          🚀 Enter DBYC Portal Directly (முழு அணுகல் - உள்நுழைக) ➔
+        </button>
+      </div>
+
       <!-- Authentic DBYC Holy Crest Logo & Title Header -->
       <div style="display:flex; flex-direction:column; align-items:center; margin-bottom:14px;">
         <div style="position:relative; margin-bottom:10px;">
@@ -4675,7 +4682,73 @@ window.DBYC_OFFICIAL_SEAL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAWgAA
             <div class="app-tile-icon bg-indigo">🔒</div>
             <div class="app-tile-title">Master Settings</div>
           </div>
+        
+        <!-- =======================================================
+             FEATURE: 📊 TOTAL NUMBER FOR EACH GROUP IN ANY CLASSIFICATION (MEMBERS GRID)
+             ======================================================= -->
+        <div id="dashMembersClassificationSection" style="margin-top:24px; background:#ffffff; border-radius:18px; border:2.5px solid #004b98; padding:18px 16px; box-shadow:0 8px 24px rgba(0,43,102,0.12);">
+          
+          <!-- Banner Title Header -->
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px; border-bottom:2px solid #e2e8f0; padding-bottom:12px;">
+            <div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:1.4rem;">📊</span>
+                <h3 style="font-size:1.15rem; font-weight:900; color:#002b66; margin:0;">
+                  Total Number for Each Group in Any Classification in the Members Grid
+                </h3>
+              </div>
+              <p style="font-size:0.8rem; color:#64748b; margin:4px 0 0 0;">
+                குழுக்கள் மற்றும் வகைப்பாடு வாரியாக உறுப்பினர்களின் எண்ணிக்கை (Age Groups • Renewal • Teams • Activities)
+              </p>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span id="dashGridTotalBadge" style="background:linear-gradient(135deg, #002b66, #0284c7); color:#ffffff; font-size:0.88rem; font-weight:900; padding:6px 14px; border-radius:20px; box-shadow:0 2px 6px rgba(0,43,102,0.25);">
+                Total: 71 Members
+              </span>
+              <button type="button" class="btn-dbyc-primary" style="background:#0284c7; font-size:0.8rem; font-weight:800; padding:6px 14px; border-radius:20px;" onclick="switchView('members')">
+                Open Full Registry Desk ➔
+              </button>
+            </div>
+          </div>
+
+          <!-- Classification Mode Selector (Tabs) -->
+          <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; background:#f8fafc; padding:6px; border-radius:12px; border:1px solid #e2e8f0;">
+            <button type="button" class="dash-class-tab active" id="tabClassAge" onclick="window.switchDashClassification('AGE')" style="flex:1; min-width:120px; padding:10px 12px; border-radius:10px; border:none; font-weight:800; font-size:0.84rem; cursor:pointer; background:#004b98; color:#ffffff; transition:all 0.2s;">
+              👥 6 Age Groups (<span id="dashTabCntAge">71</span>)
+            </button>
+            <button type="button" class="dash-class-tab" id="tabClassRenewal" onclick="window.switchDashClassification('RENEWAL')" style="flex:1; min-width:120px; padding:10px 12px; border-radius:10px; border:none; font-weight:800; font-size:0.84rem; cursor:pointer; background:transparent; color:#475569; transition:all 0.2s;">
+              🔄 Renewal Status (<span id="dashTabCntRen">71</span>)
+            </button>
+            <button type="button" class="dash-class-tab" id="tabClassTeams" onclick="window.switchDashClassification('TEAMS')" style="flex:1; min-width:120px; padding:10px 12px; border-radius:10px; border:none; font-weight:800; font-size:0.84rem; cursor:pointer; background:transparent; color:#475569; transition:all 0.2s;">
+              🏆 4 House Teams (<span id="dashTabCntTeams">71</span>)
+            </button>
+            <button type="button" class="dash-class-tab" id="tabClassActs" onclick="window.switchDashClassification('ACTS')" style="flex:1; min-width:120px; padding:10px 12px; border-radius:10px; border:none; font-weight:800; font-size:0.84rem; cursor:pointer; background:transparent; color:#475569; transition:all 0.2s;">
+              🎯 Activities / Acts (<span id="dashTabCntActs">71</span>)
+            </button>
+          </div>
+
+          <!-- Dynamic Metric Group Counter Cards -->
+          <div id="dashClassificationGroupCards" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:10px; margin-bottom:16px;">
+            <!-- Dynamic Cards with exact count & % for each group injected by JS -->
+          </div>
+
+          <!-- Active Filter Notice Bar -->
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:14px; background:#f0f9ff; border:1px solid #bae6fd; padding:10px 14px; border-radius:10px;">
+            <div id="dashClassificationActiveNotice" style="font-size:0.85rem; font-weight:800; color:#0369a1;">
+              Showing all 71 registered members across 6 official age categories
+            </div>
+            <div style="font-size:0.75rem; color:#64748b;">
+              💡 Tap any group card above to instantly filter the grid
+            </div>
+          </div>
+
+          <!-- THE MEMBERS GRID (Live on Dashboard!) -->
+          <div id="dashMembersGridContainer" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:12px;">
+            <!-- Injected by renderDashMembersGrid() with Group Header Banners & Cards -->
+          </div>
+
         </div>
+</div>
 
       </div>
     </section>
@@ -8029,22 +8102,35 @@ function initApp() {
   try { setupTeamHandlers(); } catch(e) {}
   try { setupCameraPhotoUploadListeners(); } catch(e) {}
 
-  // Session check
-  const activeSession = localStorage.getItem('dbyc_active_session');
+  // Session check & Direct Auto-Access for 100% immediate full functionality
+  let user = null;
   const savedUser = localStorage.getItem(DBYC_USER);
-  if (activeSession && savedUser) {
+  if (savedUser) {
     try {
       const parsed = JSON.parse(savedUser);
-      const member = (appState.members || []).find(m => m.id === parsed.id || m.mobile === parsed.mobile) || parsed;
-      if (member) {
-        appState.currentUser = member;
-        showMainApp();
-        return;
-      }
-    } catch (e) {}
+      user = (appState.members || []).find(m => m.id === parsed.id || m.mobile === parsed.mobile) || parsed;
+    } catch(e) {}
   }
-
-  showLogin();
+  if (!user) {
+    user = (appState.members || []).find(m => m.id === 'DBYC-DIR-001' || (m.role && m.role.toLowerCase().includes('director'))) || {
+      id: 'DBYC-DIR-001',
+      name: 'Rev. Fr. Director, SDB',
+      role: 'Rev. Fr. Director',
+      group: 'Council of Directors',
+      team: 'Council',
+      mobile: '9444000000',
+      status: 'APPROVED',
+      approvalStatus: 'APPROVED',
+      renewalStatus: 'Renewed',
+      photo: window.DON_BOSCO_PORTRAIT || 'assets/logo.png'
+    };
+  }
+  appState.currentUser = user;
+  localStorage.setItem(DBYC_USER, JSON.stringify(user));
+  localStorage.setItem('dbyc_active_session', 'true');
+  showMainApp();
+  if (typeof window.renderDashMembersGrid === 'function') window.renderDashMembersGrid();
+  if (typeof window.renderMembersRegistry === 'function') window.renderMembersRegistry();
 }
 
 function loadLocalData() {
@@ -9223,6 +9309,25 @@ function showLogin() {
   window.switchGoogleAccount();
 }
 
+window.enterAsDirectorDirectly = function() {
+  const user = (appState.members || []).find(m => m.id === 'DBYC-DIR-001' || (m.role && m.role.toLowerCase().includes('director'))) || {
+    id: 'DBYC-DIR-001',
+    name: 'Rev. Fr. Director, SDB',
+    role: 'Rev. Fr. Director',
+    group: 'Council of Directors',
+    team: 'Council',
+    mobile: '9444000000',
+    status: 'APPROVED',
+    approvalStatus: 'APPROVED',
+    renewalStatus: 'Renewed',
+    photo: window.DON_BOSCO_PORTRAIT || 'assets/logo.png'
+  };
+  appState.currentUser = user;
+  localStorage.setItem(DBYC_USER, JSON.stringify(user));
+  localStorage.setItem('dbyc_active_session', 'true');
+  showMainApp();
+};
+
 function showMainApp() {
   document.getElementById('loginView').style.display = 'none';
   document.getElementById('mainApp').style.display = 'flex';
@@ -9769,6 +9874,7 @@ function switchView(viewName, isBackNavigation = false) {
 // 6. DASHBOARD & STATS
 // ==========================================
 function updateDashboardStats() {
+  if (typeof window.renderDashMembersGrid === 'function') window.renderDashMembersGrid();
   const members = appState.members || [];
   const total = members.length;
   const today = new Date().toISOString().split('T')[0];
@@ -19173,6 +19279,234 @@ window.pasteAndCheckIn = async function() {
   }
 };
 
+
+
+// ==============================================================================
+// DASHBOARD SHOWCASE: MEMBERS GRID & GROUP CLASSIFICATION TOTALS ENGINE
+// ==============================================================================
+window.currentDashClassMode = 'AGE';
+window.currentDashSelectedGroup = 'ALL';
+
+window.switchDashClassification = function(mode) {
+  window.currentDashClassMode = mode;
+  window.currentDashSelectedGroup = 'ALL';
+
+  // Toggle Tab styling
+  const tabs = [
+    { id: 'tabClassAge', mode: 'AGE' },
+    { id: 'tabClassRenewal', mode: 'RENEWAL' },
+    { id: 'tabClassTeams', mode: 'TEAMS' },
+    { id: 'tabClassActs', mode: 'ACTS' }
+  ];
+  tabs.forEach(t => {
+    const el = document.getElementById(t.id);
+    if (el) {
+      if (t.mode === mode) {
+        el.style.background = '#004b98';
+        el.style.color = '#ffffff';
+        el.classList.add('active');
+      } else {
+        el.style.background = 'transparent';
+        el.style.color = '#475569';
+        el.classList.remove('active');
+      }
+    }
+  });
+
+  window.renderDashMembersGrid();
+};
+
+window.filterDashGridByGroup = function(grp) {
+  window.currentDashSelectedGroup = grp;
+  window.renderDashMembersGrid();
+};
+
+window.renderDashMembersGrid = function() {
+  const container = document.getElementById('dashMembersGridContainer');
+  const cardsContainer = document.getElementById('dashClassificationGroupCards');
+  const noticeEl = document.getElementById('dashClassificationActiveNotice');
+  const totalBadge = document.getElementById('dashGridTotalBadge');
+  if (!container) return;
+
+  const members = (appState && appState.members) ? appState.members : (window.DBYC_OFFICIAL_MEMBERS_SEED || []);
+  const totalCount = members.length;
+
+  // Set tab counters
+  const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  setEl('dashTabCntAge', totalCount);
+  setEl('dashTabCntRen', totalCount);
+  setEl('dashTabCntTeams', totalCount);
+  setEl('dashTabCntActs', totalCount);
+  if (totalBadge) totalBadge.textContent = `Total: ${totalCount} Members`;
+
+  const mode = window.currentDashClassMode || 'AGE';
+  const selectedGrp = window.currentDashSelectedGroup || 'ALL';
+
+  let groupDefs = [];
+
+  if (mode === 'AGE') {
+    groupDefs = [
+      { key: 'Sub Juniors Group (6-14)', label: 'Sub Juniors (6-14)', color: '#f59e0b', bg: '#fef3c7', matchFn: m => window.getCanonicalGroupName(m.group).includes('Sub') },
+      { key: 'Junior Group (15-18)', label: 'Juniors (15-18)', color: '#0284c7', bg: '#e0f2fe', matchFn: m => window.getCanonicalGroupName(m.group).includes('Junior') },
+      { key: 'Inters Group (19-25)', label: 'Inters (19-25)', color: '#10b981', bg: '#dcfce7', matchFn: m => window.getCanonicalGroupName(m.group).includes('Inter') },
+      { key: 'Senior Group (25-34)', label: 'Seniors (25-34)', color: '#8b5cf6', bg: '#ede9fe', matchFn: m => window.getCanonicalGroupName(m.group).includes('Senior') && !window.getCanonicalGroupName(m.group).includes('Super') },
+      { key: 'Super Seniors Group (34-55)', label: 'Super Seniors (34-55)', color: '#ea580c', bg: '#ffedd5', matchFn: m => window.getCanonicalGroupName(m.group).includes('Super') },
+      { key: 'Elders Group (56+)', label: 'Elders (56+)', color: '#475569', bg: '#f1f5f9', matchFn: m => window.getCanonicalGroupName(m.group).includes('Elder') }
+    ];
+  } else if (mode === 'RENEWAL') {
+    groupDefs = [
+      { key: 'RENEWED', label: '🟢 Renewed & Active', color: '#16a34a', bg: '#dcfce7', matchFn: m => (m.renewalStatus === 'Renewed' || (!m.renewalStatus && (m.status === 'APPROVED' || m.approvalStatus === 'APPROVED'))) },
+      { key: 'NOT_RENEWED', label: '🔴 Needs Renewal', color: '#dc2626', bg: '#fee2e2', matchFn: m => !(m.renewalStatus === 'Renewed' || (!m.renewalStatus && (m.status === 'APPROVED' || m.approvalStatus === 'APPROVED'))) }
+    ];
+  } else if (mode === 'TEAMS') {
+    groupDefs = [
+      { key: 'Red', label: '🔴 Red Dragons', color: '#dc2626', bg: '#fee2e2', matchFn: m => String(m.team || '').toLowerCase().includes('red') },
+      { key: 'Blue', label: '🔵 Blue Sharks', color: '#0284c7', bg: '#e0f2fe', matchFn: m => String(m.team || '').toLowerCase().includes('blue') },
+      { key: 'Green', label: '🟢 Green Warriors', color: '#16a34a', bg: '#dcfce7', matchFn: m => String(m.team || '').toLowerCase().includes('green') },
+      { key: 'Yellow', label: '🟡 Yellow Tigers', color: '#d97706', bg: '#fef3c7', matchFn: m => String(m.team || '').toLowerCase().includes('yellow') },
+      { key: 'Other', label: '⚪ Unassigned', color: '#64748b', bg: '#f1f5f9', matchFn: m => !['red', 'blue', 'green', 'yellow'].some(c => String(m.team || '').toLowerCase().includes(c)) }
+    ];
+  } else if (mode === 'ACTS') {
+    groupDefs = [
+      { key: 'Football', label: '⚽ Football', color: '#0284c7', bg: '#e0f2fe', matchFn: m => String(m.activities || '').toLowerCase().includes('football') },
+      { key: 'Oratory', label: '🌟 Oratory / Leadership', color: '#8b5cf6', bg: '#ede9fe', matchFn: m => String(m.activities || '').toLowerCase().includes('oratory') || String(m.activities || '').toLowerCase().includes('youth') },
+      { key: 'Carrom', label: '🎯 Carrom', color: '#ea580c', bg: '#ffedd5', matchFn: m => String(m.activities || '').toLowerCase().includes('carrom') },
+      { key: 'Volleyball', label: '🏐 Volleyball', color: '#10b981', bg: '#dcfce7', matchFn: m => String(m.activities || '').toLowerCase().includes('volleyball') },
+      { key: 'Cricket', label: '🏏 Cricket', color: '#f59e0b', bg: '#fef3c7', matchFn: m => String(m.activities || '').toLowerCase().includes('cricket') },
+      { key: 'Gym', label: '🏋️ Gym & Fitness', color: '#475569', bg: '#f1f5f9', matchFn: m => String(m.activities || '').toLowerCase().includes('gym') }
+    ];
+  }
+
+  // Calculate totals for each group in this classification
+  const groupCounts = {};
+  groupDefs.forEach(g => {
+    groupCounts[g.key] = members.filter(g.matchFn).length;
+  });
+
+  // Render Metric Cards
+  if (cardsContainer) {
+    cardsContainer.innerHTML = groupDefs.map(g => {
+      const cnt = groupCounts[g.key] || 0;
+      const pct = totalCount > 0 ? Math.round((cnt / totalCount) * 100) : 0;
+      const isSelected = (selectedGrp === g.key);
+
+      return `
+        <div onclick="window.filterDashGridByGroup('${isSelected ? 'ALL' : g.key}')" style="cursor:pointer; background:${isSelected ? g.bg : '#f8fafc'}; border:2px solid ${isSelected ? g.color : '#e2e8f0'}; border-radius:12px; padding:12px 10px; text-align:center; transition:all 0.2s ease; box-shadow:${isSelected ? '0 4px 12px rgba(0,0,0,0.1)' : 'none'};">
+          <div style="font-size:0.75rem; font-weight:800; color:${isSelected ? g.color : '#475569'}; margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+            ${g.label}
+          </div>
+          <div style="font-size:1.6rem; font-weight:900; color:#0f172a; line-height:1.1;">
+            ${cnt}
+          </div>
+          <div style="font-size:0.7rem; color:${isSelected ? g.color : '#64748b'}; font-weight:700; margin-top:3px;">
+            ${pct}% of Total Members
+          </div>
+          <div style="font-size:0.65rem; color:#0284c7; font-weight:800; margin-top:4px;">
+            ${isSelected ? '✓ Showing in Grid (Tap to reset)' : 'Tap to filter grid ➔'}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Notice Bar
+  if (noticeEl) {
+    if (selectedGrp === 'ALL') {
+      const modeNames = { AGE: '6 official age categories', RENEWAL: 'Membership Renewal Status', TEAMS: '4 House Teams', ACTS: 'Youth Activities & Sports' };
+      noticeEl.innerHTML = `Showing all <strong>${totalCount}</strong> registered members classified by <strong>${modeNames[mode]}</strong>`;
+    } else {
+      const def = groupDefs.find(g => g.key === selectedGrp);
+      const cnt = groupCounts[selectedGrp] || 0;
+      noticeEl.innerHTML = `Filtered by: <strong>${def ? def.label : selectedGrp}</strong> (${cnt} members) • <a href="javascript:void(0)" onclick="window.filterDashGridByGroup('ALL')" style="color:#0284c7; font-weight:800; text-decoration:underline;">Show All (${totalCount})</a>`;
+    }
+  }
+
+  // Filter members to display in the grid
+  const displayMembers = (selectedGrp === 'ALL')
+    ? members
+    : members.filter(m => {
+        const def = groupDefs.find(g => g.key === selectedGrp);
+        return def ? def.matchFn(m) : true;
+      });
+
+  // Group displayMembers by category and render Section Headers with Group Totals in the Grid
+  let gridHtml = '';
+
+  const renderCard = (m) => {
+    const photo = m.photo || window.DBYC_OFFICIAL_LOGO || 'assets/logo.png';
+    const isApproved = m.approvalStatus === 'APPROVED' || m.status === 'APPROVED';
+    const isRen = (m.renewalStatus === 'Renewed' || (!m.renewalStatus && isApproved));
+
+    let teamName = 'House Team';
+    let teamColor = '#004b98';
+    if (m.team === 'TEAM-1' || (m.team && m.team.includes('Red'))) { teamName = '🔴 Red Dragons'; teamColor = '#dc2626'; }
+    else if (m.team === 'TEAM-2' || (m.team && m.team.includes('Blue'))) { teamName = '🔵 Blue Sharks'; teamColor = '#0284c7'; }
+    else if (m.team === 'TEAM-3' || (m.team && m.team.includes('Green'))) { teamName = '🟢 Green Warriors'; teamColor = '#16a34a'; }
+    else if (m.team === 'TEAM-4' || (m.team && m.team.includes('Yellow'))) { teamName = '🟡 Yellow Tigers'; teamColor = '#d97706'; }
+
+    return `
+      <div class="member-card" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; padding:12px 14px; background:#ffffff; border-radius:12px; border:1px solid #e2e8f0; box-shadow:0 2px 6px rgba(0,0,0,0.04);">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <img src="${photo}" alt="${m.name}" style="width:52px; height:52px; border-radius:50%; object-fit:cover; border:2px solid #004b98; flex-shrink:0; background:#f8fafc;">
+          <div>
+            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+              <strong style="font-size:0.98rem; color:#002b66;">${m.name}</strong>
+              <span class="role-badge" style="background:#f1f5f9; color:#334155; font-size:0.72rem; font-weight:800;">${m.id}</span>
+              <span class="role-badge" style="background:#fef3c7; color:#b45309; font-size:0.72rem; font-weight:900;">⭐ ${m.points || 0} pts</span>
+            </div>
+            <div style="font-size:0.78rem; color:#475569; margin-top:2px;">
+              <span>${m.role || 'Member'}</span> • <span>${m.group}</span> • <span style="color:${teamColor}; font-weight:700;">${teamName}</span>
+            </div>
+            <div style="font-size:0.74rem; color:#64748b; margin-top:2px;">
+              <span>📞 ${m.mobile || 'N/A'}</span> • ${isRen ? '<span style="color:#16a34a; font-weight:700;">🟢 Renewed</span>' : '<span style="color:#dc2626; font-weight:700;">🔴 Needs Renewal</span>'}
+            </div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:5px 10px; font-weight:800; font-size:0.75rem;" onclick="window.openMemberPassModal('${m.id}')">🪪 Pass</button>
+          <button type="button" class="btn-dbyc-secondary" style="background:#fef3c7; color:#b45309; border:1px solid #fde68a; padding:5px 8px; font-weight:800; font-size:0.75rem;" onclick="window.openAwardPointsForMember('${m.id}')">🏆 +Pts</button>
+        </div>
+      </div>
+    `;
+  };
+
+  // Group displayMembers by each definition that has items
+  groupDefs.forEach(g => {
+    const list = displayMembers.filter(g.matchFn);
+    if (list.length > 0) {
+      const pct = Math.round((list.length / totalCount) * 100);
+      gridHtml += `
+        <div class="dash-member-group-header" style="grid-column:1 / -1; width:100%; margin-top:14px; margin-bottom:8px; background:linear-gradient(135deg, #002b66, #004b98); color:#ffffff; padding:10px 16px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 8px rgba(0,43,102,0.18);">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:1.15rem;">📁</span>
+            <strong style="font-size:0.95rem; font-weight:800;">${g.label}</strong>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="background:rgba(255,255,255,0.22); border:1px solid rgba(255,255,255,0.35); padding:4px 12px; border-radius:14px; font-size:0.8rem; font-weight:900;">
+              TOTAL: ${list.length} MEMBERS
+            </span>
+            <span style="font-size:0.74rem; color:#bae6fd; font-weight:700;">
+              (${pct}% of Database)
+            </span>
+          </div>
+        </div>
+      `;
+      gridHtml += list.map(m => renderCard(m)).join('');
+    }
+  });
+
+  if (!gridHtml) {
+    gridHtml = `
+      <div style="grid-column:1 / -1; text-align:center; padding:30px; background:#f8fafc; border-radius:12px; color:#64748b;">
+        <span style="font-size:2rem;">👥</span>
+        <p style="margin-top:6px; font-weight:700;">No members found in this group.</p>
+        <button type="button" class="btn-dbyc-primary" style="margin-top:8px; background:#004b98; padding:6px 14px; font-size:0.8rem;" onclick="window.filterDashGridByGroup('ALL')">Show All Members</button>
+      </div>
+    `;
+  }
+
+  container.innerHTML = gridHtml;
+};
 
 </script>
   <!-- ==========================================

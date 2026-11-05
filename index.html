@@ -5,13 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>DBYC - Don Bosco Youth Centre | Basin Bridge, Chennai - 600 012</title>
 
-  <!-- PWA Meta Tags -->
+  <!-- Progressive Web App (PWA) Full Engine (Android, PC & TV) -->
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#004b98">
+  <link rel="manifest" id="manifestFallback" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22DBYC%20Basin%20Bridge%20-%20Don%20Bosco%20Youth%20Centre%22%2C%22short_name%22%3A%22DBYC%22%2C%22description%22%3A%22Official%20Youth%20Management%20Portal%20of%20Don%20Bosco%20Youth%20Centre%2C%20Basin%20Bridge%22%2C%22start_url%22%3A%22.%2Findex.html%22%2C%22scope%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23002b66%22%2C%22theme_color%22%3A%22%23002b66%22%7D">
+  <meta name="theme-color" content="#002b66">
+  <meta name="application-name" content="DBYC Basin Bridge">
   <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="DBYC Basin Bridge">
-  <link rel="icon" type="image/svg+xml" href="assets/icon.jpg">
+  <link rel="icon" type="image/jpeg" href="assets/icon.jpg">
   <link rel="apple-touch-icon" href="assets/icon.jpg">
 
   <!-- Stylesheet -->
@@ -3672,7 +3675,32 @@ body.device-mobile .top-navbar {
   padding: 8px 12px !important;
 }
 body.device-mobile .main-content {
-  padding: 10px 12px !important;
+  padding: 10px 12px 105px 12px !important; /* Full scroll clearance above fixed bottom-nav-bar */
+}
+body.device-mobile .dash-holy-img {
+  width: 52px !important;
+  height: 52px !important;
+}
+body.device-mobile .dash-center-info h2 {
+  font-size: 0.95rem !important;
+  line-height: 1.2 !important;
+}
+body.device-mobile .dash-center-info small {
+  font-size: 0.7rem !important;
+}
+body.device-mobile .app-grid {
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 8px !important;
+}
+body.device-mobile .app-tile {
+  padding: 10px 4px !important;
+  min-height: 78px !important;
+}
+body.device-mobile .app-tile-icon {
+  font-size: 1.5rem !important;
+}
+body.device-mobile .app-tile-title {
+  font-size: 0.72rem !important;
 }
 body.device-mobile .member-card {
   flex-direction: column !important;
@@ -3697,6 +3725,7 @@ body.device-mobile .filter-bar {
   -webkit-overflow-scrolling: touch;
 }
 
+
 /* 2. LAPTOP VIEW (.device-laptop) */
 body.device-laptop {
   font-size: 14.5px;
@@ -3710,9 +3739,14 @@ body.device-laptop #membersListContainer {
   grid-template-columns: repeat(auto-fill, minmax(370px, 1fr)) !important;
   gap: 14px !important;
 }
-body.device-laptop .dashboard-grid {
+body.device-laptop .app-grid {
   grid-template-columns: repeat(4, 1fr) !important;
+  gap: 16px !important;
 }
+body.device-laptop .bottom-nav-bar {
+  display: none !important;
+}
+
 
 /* 3. SMART TV VIEW (.device-tv) */
 body.device-tv {
@@ -3738,6 +3772,14 @@ body.device-tv #membersListContainer {
   grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)) !important;
   gap: 20px !important;
 }
+body.device-tv .app-grid {
+  grid-template-columns: repeat(5, 1fr) !important;
+  gap: 20px !important;
+}
+body.device-tv .bottom-nav-bar {
+  display: none !important;
+}
+
 body.device-tv .member-card {
   background: #0f172a !important;
   border: 2px solid #1e293b !important;
@@ -3754,6 +3796,8 @@ body.device-tv .dashboard-stat-val {
   font-size: 3rem !important;
   font-weight: 900 !important;
 }
+
+/* Desktop Top Navigation Bar removed */
 
 /* 4. PROJECTOR PRESENTATION VIEW (.device-projector) */
 body.device-projector {
@@ -4159,6 +4203,8 @@ window.DBYC_OFFICIAL_SEAL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAWgAA
       </div>
     </header>
 
+    <!-- Desktop Top Navigation Bar removed as requested -->
+
     <!-- Sidebar Drawer -->
     <div id="sidebarOverlay" class="sidebar-overlay"></div>
     <aside id="sidebarDrawer" class="sidebar-drawer">
@@ -4181,6 +4227,12 @@ window.DBYC_OFFICIAL_SEAL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAWgAA
             <a href="#dashboard" class="sidebar-menu-item active" data-view="dashboard">
               <span class="sidebar-menu-icon">📊</span>
               <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="#statshub" class="sidebar-menu-item" data-view="statshub">
+              <span class="sidebar-menu-icon">📈</span>
+              <span>Analytics & Stats Hub <span style="background:#0284c7; color:#ffffff; font-size:0.65rem; padding:2px 6px; border-radius:10px; font-weight:800; margin-left:4px;">LIVE</span></span>
             </a>
           </li>
           <li>
@@ -4334,23 +4386,37 @@ window.DBYC_OFFICIAL_SEAL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAWgAA
 
       <div class="main-content">
         
-        <!-- Live Quick Stats -->
+        <!-- Live Quick Stats (6 Interactive Direct-Access Cards) -->
         <div class="org-stats-grid">
-          <div class="org-stat-card">
+          <div class="org-stat-card" onclick="switchView('members')" style="cursor:pointer;" title="View Members Registry">
             <span class="org-stat-label">Total Members</span>
             <span id="statTotalMembers" class="org-stat-num">0</span>
+            <span style="font-size:0.7rem; color:#0284c7; font-weight:700;">All Groups ➔</span>
           </div>
-          <div class="org-stat-card">
+          <div class="org-stat-card" onclick="switchView('officebearers')" style="cursor:pointer; background:linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border:1.5px solid #93c5fd;" title="View Official 39 Office Bearers Council">
+            <span class="org-stat-label" style="color:#1e40af; font-weight:800;">🏛️ Office Bearers</span>
+            <span id="statOfficeBearers" class="org-stat-num" style="color:#0369a1;">39 Bearers</span>
+            <span style="font-size:0.7rem; color:#2563eb; font-weight:700;">View Council ➔</span>
+          </div>
+          <div class="org-stat-card" onclick="switchView('attendance')" style="cursor:pointer;" title="View Live Attendance Scanner & Logs">
             <span class="org-stat-label">Today's Attendance</span>
             <span id="statTodayAttendance" class="org-stat-num" style="color:#10b981;">0</span>
+            <span id="statTodayAttendanceSub" style="font-size:0.7rem; color:#059669; font-weight:700;">0 Inside • 0 Exited</span>
           </div>
-          <div class="org-stat-card">
-            <span class="org-stat-label">Active Groups</span>
-            <span class="org-stat-num" style="color:#f59e0b;">6 Groups</span>
+          <div class="org-stat-card" onclick="window.filterMembersByRenewal('RENEWED')" style="cursor:pointer;" title="View Renewal Status">
+            <span class="org-stat-label">Renewal Status</span>
+            <span id="statRenewalOverview" class="org-stat-num" style="color:#059669;">100% Active</span>
+            <span style="font-size:0.7rem; color:#10b981; font-weight:700;">Renewed vs Due ➔</span>
           </div>
-          <div class="org-stat-card">
-            <span class="org-stat-label">Upcoming Events</span>
+          <div class="org-stat-card" onclick="switchView('teams')" style="cursor:pointer;" title="View 4 House Teams Leaderboard">
+            <span class="org-stat-label">House Teams</span>
+            <span id="statTeamsLeader" class="org-stat-num" style="color:#f59e0b;">4 Teams</span>
+            <span style="font-size:0.7rem; color:#d97706; font-weight:700;">Points Leaderboard ➔</span>
+          </div>
+          <div class="org-stat-card" onclick="switchView('calendar')" style="cursor:pointer;" title="View Calendar Events">
+            <span class="org-stat-label">Calendar & News</span>
             <span id="statTotalEvents" class="org-stat-num" style="color:#8b5cf6;">0</span>
+            <span style="font-size:0.7rem; color:#7c3aed; font-weight:700;">Events & Meets ➔</span>
           </div>
         </div>
 
@@ -4378,8 +4444,148 @@ window.DBYC_OFFICIAL_SEAL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAWgAA
           <button class="btn-dbyc-primary" style="background:#1d4ed8; border:none; padding:8px 14px; font-weight:800; font-size:0.82rem;" onclick="switchView('settings')">⚙️ Master Settings ➔</button>
         </div>
 
+        <!-- ========================================================
+             📊 DBYC MASTER FEATURE ANALYTICS & STATISTICS HUB (SUMMARY CARD)
+             ======================================================== -->
+        <div class="master-stats-hub-card" style="background:#ffffff; border:1.5px solid #cbd5e1; border-radius:18px; padding:20px; margin-bottom:22px; box-shadow:0 4px 16px rgba(0,0,0,0.06);">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:18px; border-bottom:2px solid #f1f5f9; padding-bottom:12px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span style="font-size:1.8rem; background:#eff6ff; padding:8px 12px; border-radius:12px; border:1px solid #bfdbfe;">📊</span>
+              <div>
+                <h3 style="font-size:1.2rem; font-weight:900; color:#002b66; margin:0;">DBYC Master Feature Analytics & Statistics Hub</h3>
+                <small style="color:#64748b; font-weight:600;">Comprehensive real-time statistics across all club groups, attendance, renewals, leaders & teams</small>
+              </div>
+            </div>
+            <button type="button" class="btn-dbyc-primary" style="background:#0284c7; color:#fff; font-size:0.75rem; font-weight:800; padding:6px 14px; border-radius:20px; border:none; cursor:pointer;" onclick="switchView('statshub')">
+              Open Full Analytics Portal ➔
+            </button>
+          </div>
+
+          <!-- 6-Panel Feature Analytics Grid -->
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:18px;">
+            
+            <!-- 1. Groups & Age Breakdown -->
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:16px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h4 style="font-size:0.95rem; font-weight:800; color:#0f172a; margin:0;">👥 Members by Age Group</h4>
+                <span id="hubTotalMembersBadge" style="background:#004b98; color:#fff; font-size:0.75rem; font-weight:800; padding:2px 8px; border-radius:10px;">71 Total</span>
+              </div>
+              <div id="hubGroupStatsList" style="display:flex; flex-direction:column; gap:8px;"></div>
+            </div>
+
+            <!-- 2. Membership Renewal & Status -->
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:16px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h4 style="font-size:0.95rem; font-weight:800; color:#0f172a; margin:0;">🔄 Renewal Status & Validity</h4>
+                <span id="hubRenewalRateBadge" style="background:#10b981; color:#fff; font-size:0.75rem; font-weight:800; padding:2px 8px; border-radius:10px;">100% Active</span>
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+                <div style="background:#ffffff; border:1.5px solid #86efac; border-radius:10px; padding:12px; text-align:center;">
+                  <div style="font-size:0.75rem; color:#15803d; font-weight:800;">RENEWED (2026)</div>
+                  <div id="hubCountRenewed" style="font-size:1.6rem; font-weight:900; color:#16a34a; margin:4px 0;">0</div>
+                  <button type="button" class="btn-dbyc-primary" style="background:#16a34a; border:none; padding:4px 8px; font-size:0.7rem; border-radius:6px; font-weight:700;" onclick="window.filterMembersByRenewal('RENEWED')">View Renewed</button>
+                </div>
+                <div style="background:#ffffff; border:1.5px solid #fed7aa; border-radius:10px; padding:12px; text-align:center;">
+                  <div style="font-size:0.75rem; color:#c2410c; font-weight:800;">NEEDS RENEWAL</div>
+                  <div id="hubCountNotRenewed" style="font-size:1.6rem; font-weight:900; color:#ea580c; margin:4px 0;">0</div>
+                  <button type="button" class="btn-dbyc-primary" style="background:#ea580c; border:none; padding:4px 8px; font-size:0.7rem; border-radius:6px; font-weight:700;" onclick="window.filterMembersByRenewal('NOT_RENEWED')">View Due</button>
+                </div>
+              </div>
+              <div style="font-size:0.78rem; color:#64748b; line-height:1.4;">
+                Annual DBYC membership renewal confirms youth active status, insurance coverage & Sunday Oratory privileges.
+              </div>
+            </div>
+
+            <!-- 3. Dual QR Attendance Analytics -->
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:16px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h4 style="font-size:0.95rem; font-weight:800; color:#0f172a; margin:0;">📷 Dual QR Attendance (Today)</h4>
+                <span id="hubAttDateBadge" style="background:#6366f1; color:#fff; font-size:0.75rem; font-weight:800; padding:2px 8px; border-radius:10px;">Today</span>
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+                <div style="background:#ecfdf5; border:1.5px solid #6ee7b7; border-radius:10px; padding:10px; text-align:center;">
+                  <div style="font-size:0.72rem; color:#047857; font-weight:800;">🟢 CURRENTLY INSIDE</div>
+                  <div id="hubAttInside" style="font-size:1.5rem; font-weight:900; color:#059669; margin:3px 0;">0</div>
+                  <div style="font-size:0.68rem; color:#065f46;">Logged In</div>
+                </div>
+                <div style="background:#fef2f2; border:1.5px solid #fca5a5; border-radius:10px; padding:10px; text-align:center;">
+                  <div style="font-size:0.72rem; color:#b91c1c; font-weight:800;">🔴 SAFELY EXITED</div>
+                  <div id="hubAttExited" style="font-size:1.5rem; font-weight:900; color:#dc2626; margin:3px 0;">0</div>
+                  <div style="font-size:0.68rem; color:#991b1b;">Logged Out</div>
+                </div>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; background:#fff; padding:8px 12px; border-radius:8px; border:1px solid #e2e8f0;">
+                <span style="font-weight:700; color:#334155;">Total Unique Attendees Today:</span>
+                <strong id="hubAttTotalToday" style="color:#004b98; font-size:0.95rem;">0</strong>
+              </div>
+            </div>
+
+            <!-- 4. 🏛️ Office Bearers & Leadership Council -->
+            <div style="background:#f8fafc; border:1.5px solid #bae6fd; border-radius:14px; padding:16px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h4 style="font-size:0.95rem; font-weight:800; color:#002b66; margin:0;">🏛️ Office Bearers Council</h4>
+                <span style="background:#0284c7; color:#fff; font-size:0.75rem; font-weight:800; padding:2px 8px; border-radius:10px;">39 Bearers</span>
+              </div>
+              <div id="hubObCategoriesList" style="display:flex; flex-direction:column; gap:6px; font-size:0.8rem; margin-bottom:12px;"></div>
+              <button type="button" class="btn-dbyc-primary" style="width:100%; background:linear-gradient(135deg, #004b98, #0284c7); border:none; padding:10px; font-size:0.82rem; font-weight:800; border-radius:8px; cursor:pointer;" onclick="switchView('officebearers')">
+                🏛️ Open 39 Office Bearers Desk ➔
+              </button>
+            </div>
+
+            <!-- 5. 🏆 4 House Teams Standings -->
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:16px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h4 style="font-size:0.95rem; font-weight:800; color:#0f172a; margin:0;">🏆 4 House Teams Standings</h4>
+                <button type="button" style="background:#f59e0b; color:#0f172a; border:none; font-size:0.7rem; font-weight:800; padding:2px 8px; border-radius:10px; cursor:pointer;" onclick="switchView('teams')">View Standings ➔</button>
+              </div>
+              <div id="hubTeamsList" style="display:flex; flex-direction:column; gap:8px;"></div>
+            </div>
+
+            <!-- 6. 📋 Operations & Qualification Counter -->
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:16px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h4 style="font-size:0.95rem; font-weight:800; color:#0f172a; margin:0;">📋 Centre Desks & Operations</h4>
+                <span id="hubPendingTotalBadge" style="background:#ea580c; color:#fff; font-size:0.72rem; font-weight:800; padding:2px 8px; border-radius:10px;">0 Pending</span>
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:0.8rem;">
+                <div style="background:#fff; padding:8px 10px; border-radius:8px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; cursor:pointer;" onclick="switchView('calendar')">
+                  <span>📅 Calendar Events</span>
+                  <strong id="hubCountEvents">0</strong>
+                </div>
+                <div style="background:#fff; padding:8px 10px; border-radius:8px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; cursor:pointer;" onclick="switchView('news')">
+                  <span>📢 Official News</span>
+                  <strong id="hubCountNews">0</strong>
+                </div>
+                <div style="background:#fff; padding:8px 10px; border-radius:8px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; cursor:pointer;" onclick="switchView('minutes')">
+                  <span>📝 Meeting Minutes</span>
+                  <strong id="hubCountMinutes">0</strong>
+                </div>
+                <div style="background:#fff; padding:8px 10px; border-radius:8px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; cursor:pointer;" onclick="switchView('media')">
+                  <span>🎥 Videos & Live</span>
+                  <strong id="hubCountMedia">0</strong>
+                </div>
+              </div>
+              <div style="margin-top:10px;">
+                <button type="button" class="btn-dbyc-primary" style="width:100%; background:#ea580c; border:none; padding:8px; font-size:0.8rem; font-weight:800; border-radius:8px; cursor:pointer;" onclick="switchView('qualifications')">
+                  ⭐ Executive Qualification Desk (<span id="hubPendingBtnCount">0</span>) ➔
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
         <!-- Role-Aware App Grid -->
         <div class="app-grid">
+          <!-- DBYC Master Feature Analytics & Statistics Hub Icon Tile -->
+          <div class="app-tile" id="tileMasterStatsHub" onclick="switchView('statshub')" style="cursor:pointer; background:linear-gradient(135deg, #eff6ff 0%, #ffffff 100%); border:1.5px solid #2563eb; box-shadow:0 4px 14px rgba(37,99,235,0.18);" title="Open DBYC Master Feature Analytics & Statistics Hub">
+            <div class="app-tile-icon" style="background:linear-gradient(135deg, #0b57d0, #002b66); color:#fff; position:relative; box-shadow:0 4px 14px rgba(11,87,208,0.3);">
+              📊
+              <span style="position:absolute; top:-4px; right:-4px; background:#f59e0b; color:#0f172a; font-size:0.55rem; font-weight:900; padding:1px 5px; border-radius:6px; text-transform:uppercase; box-shadow:0 2px 4px rgba(0,0,0,0.2);">LIVE</span>
+            </div>
+            <div class="app-tile-title" style="font-weight:900; color:#002b66; line-height:1.2;">Analytics Hub</div>
+            <small style="font-size:0.62rem; color:#0284c7; font-weight:700; margin-top:2px;">Feature Statistics</small>
+          </div>
           <div class="app-tile" onclick="switchView('profile')">
             <div class="app-tile-icon bg-orange">👤</div>
             <div class="app-tile-title">My Profile</div>
@@ -4471,6 +4677,147 @@ window.DBYC_OFFICIAL_SEAL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAWgAA
           </div>
         </div>
 
+      </div>
+    </section>
+
+    <!-- =======================================================
+         VIEW: DBYC MASTER FEATURE ANALYTICS & STATISTICS HUB (FULL PORTAL)
+         ======================================================= -->
+    <section id="view_statshub" class="app-section" style="display:none;">
+      <div class="main-content">
+        <button class="view-back-btn" onclick="switchView('dashboard')" title="Return to Dashboard">◀ Back (பின் செல்)</button>
+        
+        <!-- Official Banner -->
+        <div style="background: linear-gradient(135deg, #002b66 0%, #004b98 60%, #0284c7 100%); border-radius: 18px; padding: 20px; color: #fff; margin-bottom: 20px; box-shadow: 0 8px 24px rgba(0,43,102,0.18); position: relative; overflow: hidden;">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;">
+            <div style="display:flex; align-items:center; gap:14px;">
+              <span style="font-size:2.8rem; background:rgba(255,255,255,0.15); padding:10px 16px; border-radius:16px; border:1px solid rgba(255,255,255,0.3); box-shadow:0 4px 12px rgba(0,0,0,0.15);">📊</span>
+              <div>
+                <span style="background:rgba(253,224,71,0.25); color:#fde047; font-size:0.75rem; font-weight:800; padding:2px 8px; border-radius:12px; text-transform:uppercase; letter-spacing:0.8px;">MASTER FEATURE ANALYTICS & STATS HUB</span>
+                <h2 style="font-size:1.35rem; font-weight:900; margin:4px 0 2px; color:#ffffff; letter-spacing:0.5px;">DON BOSCO YOUTH CENTRE</h2>
+                <div style="font-size:0.85rem; color:#bae6fd; font-weight:700;">Basin Bridge, Chennai - 600 012 • Live Club-Wide Executive Metrics</div>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+              <div style="text-align:right;">
+                <div style="font-size:0.82rem; font-weight:800; color:#fde047; font-style:italic;">"Together for a Better Tomorrow"</div>
+                <div id="statshubTotalBadge" style="font-size:0.75rem; color:#e0f2fe; margin-top:2px;">71 Registered Youths • 39 Office Bearers</div>
+              </div>
+              <button type="button" class="btn-dbyc-primary" style="background:#f59e0b; color:#0f172a; font-weight:900; border:none; padding:8px 14px; border-radius:10px; font-size:0.82rem; cursor:pointer;" onclick="window.print()">🖨️ Print Report</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Master Analytics Panels Grid -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:18px;">
+          
+          <!-- 1. Age Groups Breakdown -->
+          <div style="background:#ffffff; border:1.5px solid #cbd5e1; border-radius:16px; padding:18px; box-shadow:0 4px 14px rgba(0,0,0,0.05);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid #f1f5f9; padding-bottom:8px;">
+              <h3 style="font-size:1.05rem; font-weight:800; color:#0f172a; margin:0;">👥 Members by Age Group</h3>
+              <button type="button" class="btn-dbyc-primary" style="background:#0284c7; border:none; padding:4px 10px; font-size:0.75rem; font-weight:700; border-radius:6px;" onclick="switchView('members')">Registry ➔</button>
+            </div>
+            <div id="statshubGroupStatsList" style="display:flex; flex-direction:column; gap:10px;"></div>
+          </div>
+
+          <!-- 2. Renewal Status & Validity -->
+          <div style="background:#ffffff; border:1.5px solid #cbd5e1; border-radius:16px; padding:18px; box-shadow:0 4px 14px rgba(0,0,0,0.05);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid #f1f5f9; padding-bottom:8px;">
+              <h3 style="font-size:1.05rem; font-weight:800; color:#0f172a; margin:0;">🔄 Membership Renewal Status</h3>
+              <span id="statshubRenewalBadge" style="background:#10b981; color:#fff; font-size:0.75rem; font-weight:800; padding:2px 8px; border-radius:10px;">100% Active</span>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+              <div style="background:#f0fdf4; border:1.5px solid #86efac; border-radius:12px; padding:14px; text-align:center;">
+                <div style="font-size:0.75rem; color:#15803d; font-weight:800;">RENEWED & ACTIVE</div>
+                <div id="statshubCountRenewed" style="font-size:1.8rem; font-weight:900; color:#16a34a; margin:4px 0;">0</div>
+                <button type="button" class="btn-dbyc-primary" style="background:#16a34a; border:none; padding:4px 10px; font-size:0.72rem; border-radius:6px; font-weight:700;" onclick="window.filterMembersByRenewal('RENEWED')">View Active ➔</button>
+              </div>
+              <div style="background:#fff7ed; border:1.5px solid #fed7aa; border-radius:12px; padding:14px; text-align:center;">
+                <div style="font-size:0.75rem; color:#c2410c; font-weight:800;">NEEDS RENEWAL</div>
+                <div id="statshubCountNotRenewed" style="font-size:1.8rem; font-weight:900; color:#ea580c; margin:4px 0;">0</div>
+                <button type="button" class="btn-dbyc-primary" style="background:#ea580c; border:none; padding:4px 10px; font-size:0.72rem; border-radius:6px; font-weight:700;" onclick="window.filterMembersByRenewal('NOT_RENEWED')">View Due ➔</button>
+              </div>
+            </div>
+            <div style="font-size:0.8rem; color:#64748b; line-height:1.4;">
+              Tracks members possessing valid 2026 DBYC registration. Unrenewed profiles are flagged for animator contact.
+            </div>
+          </div>
+
+          <!-- 3. Live Dual QR Attendance -->
+          <div style="background:#ffffff; border:1.5px solid #cbd5e1; border-radius:16px; padding:18px; box-shadow:0 4px 14px rgba(0,0,0,0.05);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid #f1f5f9; padding-bottom:8px;">
+              <h3 style="font-size:1.05rem; font-weight:800; color:#0f172a; margin:0;">📷 Dual QR Attendance (Today)</h3>
+              <button type="button" class="btn-dbyc-primary" style="background:#0284c7; border:none; padding:4px 10px; font-size:0.75rem; font-weight:700; border-radius:6px;" onclick="switchView('attendance')">Scanner ➔</button>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+              <div style="background:#ecfdf5; border:1.5px solid #6ee7b7; border-radius:12px; padding:12px; text-align:center;">
+                <div style="font-size:0.75rem; color:#047857; font-weight:800;">🟢 CURRENTLY INSIDE</div>
+                <div id="statshubAttInside" style="font-size:1.8rem; font-weight:900; color:#059669; margin:3px 0;">0</div>
+                <div style="font-size:0.7rem; color:#065f46;">Logged In Members</div>
+              </div>
+              <div style="background:#fef2f2; border:1.5px solid #fca5a5; border-radius:12px; padding:12px; text-align:center;">
+                <div style="font-size:0.75rem; color:#b91c1c; font-weight:800;">🔴 SAFELY EXITED</div>
+                <div id="statshubAttExited" style="font-size:1.8rem; font-weight:900; color:#dc2626; margin:3px 0;">0</div>
+                <div style="font-size:0.7rem; color:#991b1b;">Logged Out Members</div>
+              </div>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.85rem; background:#f8fafc; padding:10px 14px; border-radius:10px; border:1px solid #e2e8f0;">
+              <span style="font-weight:700; color:#334155;">Unique Turnout Today:</span>
+              <strong id="statshubAttTotal" style="color:#004b98; font-size:1.05rem;">0 Members</strong>
+            </div>
+          </div>
+
+          <!-- 4. 🏛️ Office Bearers & Responsibilities Portfolio -->
+          <div style="background:#ffffff; border:1.5px solid #bae6fd; border-radius:16px; padding:18px; box-shadow:0 4px 14px rgba(0,0,0,0.05);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid #f1f5f9; padding-bottom:8px;">
+              <h3 style="font-size:1.05rem; font-weight:800; color:#002b66; margin:0;">🏛️ Office Bearers Council</h3>
+              <span style="background:#0284c7; color:#fff; font-size:0.75rem; font-weight:800; padding:2px 8px; border-radius:10px;">39 Bearers</span>
+            </div>
+            <div id="statshubObList" style="display:flex; flex-direction:column; gap:6px; font-size:0.82rem; margin-bottom:14px;"></div>
+            <button type="button" class="btn-dbyc-primary" style="width:100%; background:linear-gradient(135deg, #004b98, #0284c7); border:none; padding:10px; font-size:0.85rem; font-weight:800; border-radius:10px; cursor:pointer;" onclick="switchView('officebearers')">
+              🏛️ Open 39 Office Bearers Desk ➔
+            </button>
+          </div>
+
+          <!-- 5. 🏆 4 House Teams Standings -->
+          <div style="background:#ffffff; border:1.5px solid #cbd5e1; border-radius:16px; padding:18px; box-shadow:0 4px 14px rgba(0,0,0,0.05);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid #f1f5f9; padding-bottom:8px;">
+              <h3 style="font-size:1.05rem; font-weight:800; color:#0f172a; margin:0;">🏆 4 House Teams Leaderboard</h3>
+              <button type="button" style="background:#f59e0b; color:#0f172a; border:none; font-size:0.75rem; font-weight:800; padding:4px 10px; border-radius:8px; cursor:pointer;" onclick="switchView('teams')">Teams Desk ➔</button>
+            </div>
+            <div id="statshubTeamsList" style="display:flex; flex-direction:column; gap:10px;"></div>
+          </div>
+
+          <!-- 6. 📋 Operations & Qualifications Counter -->
+          <div style="background:#ffffff; border:1.5px solid #cbd5e1; border-radius:16px; padding:18px; box-shadow:0 4px 14px rgba(0,0,0,0.05);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid #f1f5f9; padding-bottom:8px;">
+              <h3 style="font-size:1.05rem; font-weight:800; color:#0f172a; margin:0;">📋 Centre Desks & Operations</h3>
+              <span id="statshubPendingBadge" style="background:#ea580c; color:#fff; font-size:0.75rem; font-weight:800; padding:2px 8px; border-radius:10px;">0 Pending</span>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:0.82rem; margin-bottom:14px;">
+              <div style="background:#f8fafc; padding:10px 12px; border-radius:10px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; cursor:pointer;" onclick="switchView('calendar')">
+                <span>📅 Calendar</span>
+                <strong id="statshubCountEvents">0</strong>
+              </div>
+              <div style="background:#f8fafc; padding:10px 12px; border-radius:10px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; cursor:pointer;" onclick="switchView('news')">
+                <span>📢 News</span>
+                <strong id="statshubCountNews">0</strong>
+              </div>
+              <div style="background:#f8fafc; padding:10px 12px; border-radius:10px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; cursor:pointer;" onclick="switchView('minutes')">
+                <span>📝 Minutes</span>
+                <strong id="statshubCountMinutes">0</strong>
+              </div>
+              <div style="background:#f8fafc; padding:10px 12px; border-radius:10px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; cursor:pointer;" onclick="switchView('media')">
+                <span>🎥 Media</span>
+                <strong id="statshubCountMedia">0</strong>
+              </div>
+            </div>
+            <button type="button" class="btn-dbyc-primary" style="width:100%; background:#ea580c; border:none; padding:10px; font-size:0.85rem; font-weight:800; border-radius:10px; cursor:pointer;" onclick="switchView('qualifications')">
+              ⭐ Executive Qualification Desk (<span id="statshubPendingBtn">0</span>) ➔
+            </button>
+          </div>
+
+        </div>
       </div>
     </section>
 
@@ -4617,38 +4964,77 @@ window.DBYC_OFFICIAL_SEAL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAWgAA
           <input type="text" id="memberSearchInput" class="form-control-dbyc" placeholder="🔍 Search Name, Member ID, or Mobile...">
         </div>
 
-        <!-- 6 Groups Filter Bar -->
-        <div class="filter-bar">
-          <button class="filter-chip group-chip active" data-group="ALL">All (அனைத்தும்)</button>
-          <button class="filter-chip group-chip" data-group="Sub Juniors Group">Sub Juniors (6-14)</button>
-          <button class="filter-chip group-chip" data-group="Junior Group">Juniors (15-18)</button>
-          <button class="filter-chip group-chip" data-group="Inters Group">Inters (19-25)</button>
-          <button class="filter-chip group-chip" data-group="Senior Group">Seniors (25-34)</button>
-          <button class="filter-chip group-chip" data-group="Super Seniors Group">Super Seniors (34-55)</button>
-          <button class="filter-chip group-chip" data-group="Elders Group">Elders (56+)</button>
+        <!-- 1. AGE GROUPS CLASSIFICATION FILTER BAR -->
+        <div class="filter-bar" style="margin-bottom:8px; display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+          <strong style="font-size:0.75rem; color:#004b98; font-weight:800; margin-right:4px;">👥 வயதுப் பிரிவு (Age Groups):</strong>
+          <button type="button" class="filter-chip group-chip active" data-group="ALL" onclick="window.setMemberGroupFilter('ALL')">🌟 All (<span id="chipCountGrpAll">71</span>)</button>
+          <button type="button" class="filter-chip group-chip" data-group="Sub Juniors Group" onclick="window.setMemberGroupFilter('Sub Juniors Group')">Sub Juniors (6-14) (<span id="chipCountGrpSubJunior">43</span>)</button>
+          <button type="button" class="filter-chip group-chip" data-group="Junior Group" onclick="window.setMemberGroupFilter('Junior Group')">Juniors (15-18) (<span id="chipCountGrpJunior">7</span>)</button>
+          <button type="button" class="filter-chip group-chip" data-group="Inters Group" onclick="window.setMemberGroupFilter('Inters Group')">Inters (19-25) (<span id="chipCountGrpInter">4</span>)</button>
+          <button type="button" class="filter-chip group-chip" data-group="Senior Group" onclick="window.setMemberGroupFilter('Senior Group')">Seniors (25-34) (<span id="chipCountGrpSenior">8</span>)</button>
+          <button type="button" class="filter-chip group-chip" data-group="Super Seniors Group" onclick="window.setMemberGroupFilter('Super Seniors Group')">Super Seniors (34-55) (<span id="chipCountGrpSuperSenior">5</span>)</button>
+          <button type="button" class="filter-chip group-chip" data-group="Elders Group" onclick="window.setMemberGroupFilter('Elders Group')">Elders (56+) (<span id="chipCountGrpElder">4</span>)</button>
         </div>
 
-        <!-- Renewal Status Filter Bar -->
-        <div class="filter-bar" style="margin-top:6px; margin-bottom:8px; display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
-          <strong style="font-size:0.75rem; color:#475569; margin-right:4px;">🔄 புதுப்பித்தல் (Renewal):</strong>
-          <button type="button" class="filter-chip renewal-chip active" data-renewal="ALL" onclick="window.setMemberRenewalFilter('ALL')">All Status (அனைத்தும்)</button>
-          <button type="button" class="filter-chip renewal-chip" data-renewal="RENEWED" onclick="window.setMemberRenewalFilter('RENEWED')">🟢 Renewed (புதுப்பிக்கப்பட்டது)</button>
-          <button type="button" class="filter-chip renewal-chip" data-renewal="NOT_RENEWED" onclick="window.setMemberRenewalFilter('NOT_RENEWED')">🔴 Not Renewed (புதுப்பிக்கப்படவில்லை)</button>
+        <!-- 2. RENEWAL STATUS CLASSIFICATION FILTER BAR -->
+        <div class="filter-bar" style="margin-top:4px; margin-bottom:8px; display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+          <strong style="font-size:0.75rem; color:#15803d; font-weight:800; margin-right:4px;">🔄 புதுப்பித்தல் (Renewal):</strong>
+          <button type="button" class="filter-chip renewal-chip active" data-renewal="ALL" onclick="window.setMemberRenewalFilter('ALL')">All Status (<span id="chipCountRenAll">71</span>)</button>
+          <button type="button" class="filter-chip renewal-chip" data-renewal="RENEWED" onclick="window.setMemberRenewalFilter('RENEWED')">🟢 Renewed & Active (<span id="chipCountRenYes">71</span>)</button>
+          <button type="button" class="filter-chip renewal-chip" data-renewal="NOT_RENEWED" onclick="window.setMemberRenewalFilter('NOT_RENEWED')">🔴 Needs Renewal (<span id="chipCountRenNo">0</span>)</button>
         </div>
 
-        <!-- Activities & Sports Filter Bar (Acts: Football, Carrom, etc.) -->
+        <!-- 3. HOUSE TEAMS CLASSIFICATION FILTER BAR -->
+        <div class="filter-bar" style="margin-top:4px; margin-bottom:8px; display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+          <strong style="font-size:0.75rem; color:#b45309; font-weight:800; margin-right:4px;">🏆 இல்லங்கள் (House Teams):</strong>
+          <button type="button" class="filter-chip team-chip active" data-team="ALL" onclick="window.setMemberTeamFilter('ALL')">All Teams (<span id="chipCountTeamAll">71</span>)</button>
+          <button type="button" class="filter-chip team-chip" data-team="Red" onclick="window.setMemberTeamFilter('Red')">🔴 Red Dragons (<span id="chipCountTeamRed">31</span>)</button>
+          <button type="button" class="filter-chip team-chip" data-team="Blue" onclick="window.setMemberTeamFilter('Blue')">🔵 Blue Sharks (<span id="chipCountTeamBlue">17</span>)</button>
+          <button type="button" class="filter-chip team-chip" data-team="Green" onclick="window.setMemberTeamFilter('Green')">🟢 Green Warriors (<span id="chipCountTeamGreen">13</span>)</button>
+          <button type="button" class="filter-chip team-chip" data-team="Yellow" onclick="window.setMemberTeamFilter('Yellow')">🟡 Yellow Tigers (<span id="chipCountTeamYellow">7</span>)</button>
+        </div>
+
+        <!-- 4. ACTIVITIES CLASSIFICATION FILTER BAR -->
         <div class="filter-bar" style="margin-top:4px; margin-bottom:12px; display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
-          <strong style="font-size:0.75rem; color:#475569; margin-right:4px;">🎯 கலை & விளையாட்டு (Activities):</strong>
-          <button type="button" class="filter-chip act-chip active" data-act="ALL" onclick="window.setMemberActivityFilter('ALL')">All Acts (அனைத்தும்)</button>
-          <button type="button" class="filter-chip act-chip" data-act="Football" onclick="window.setMemberActivityFilter('Football')">⚽ Football (கால்பந்து)</button>
-          <button type="button" class="filter-chip act-chip" data-act="Carrom" onclick="window.setMemberActivityFilter('Carrom')">🎯 Carrom (கேரம்)</button>
-          <button type="button" class="filter-chip act-chip" data-act="Volleyball" onclick="window.setMemberActivityFilter('Volleyball')">🏐 Volleyball (கைப்பந்து)</button>
-          <button type="button" class="filter-chip act-chip" data-act="Table Tennis" onclick="window.setMemberActivityFilter('Table Tennis')">🏓 Table Tennis</button>
-          <button type="button" class="filter-chip act-chip" data-act="Cricket" onclick="window.setMemberActivityFilter('Cricket')">🏏 Cricket</button>
-          <button type="button" class="filter-chip act-chip" data-act="Gym" onclick="window.setMemberActivityFilter('Gym')">🏋️ Gym & Fitness</button>
-          <button type="button" class="filter-chip act-chip" data-act="Music" onclick="window.setMemberActivityFilter('Music')">🎵 Music / Choir</button>
-          <button type="button" class="filter-chip act-chip" data-act="Cultural" onclick="window.setMemberActivityFilter('Cultural')">🎭 Cultural & Drama</button>
-          <button type="button" class="filter-chip act-chip" data-act="Oratory" onclick="window.setMemberActivityFilter('Oratory')">🌟 Oratory / Leadership</button>
+          <strong style="font-size:0.75rem; color:#6b21a8; font-weight:800; margin-right:4px;">🎯 செயல்பாடுகள் (Activities):</strong>
+          <button type="button" class="filter-chip act-chip active" data-act="ALL" onclick="window.setMemberActivityFilter('ALL')">All Acts (<span id="chipCountActAll">71</span>)</button>
+          <button type="button" class="filter-chip act-chip" data-act="Football" onclick="window.setMemberActivityFilter('Football')">⚽ Football (<span id="chipCountActFootball">71</span>)</button>
+          <button type="button" class="filter-chip act-chip" data-act="Carrom" onclick="window.setMemberActivityFilter('Carrom')">🎯 Carrom (<span id="chipCountActCarrom">0</span>)</button>
+          <button type="button" class="filter-chip act-chip" data-act="Volleyball" onclick="window.setMemberActivityFilter('Volleyball')">🏐 Volleyball (<span id="chipCountActVolleyball">0</span>)</button>
+          <button type="button" class="filter-chip act-chip" data-act="Table Tennis" onclick="window.setMemberActivityFilter('Table Tennis')">🏓 Table Tennis (<span id="chipCountActTableTennis">0</span>)</button>
+          <button type="button" class="filter-chip act-chip" data-act="Cricket" onclick="window.setMemberActivityFilter('Cricket')">🏏 Cricket (<span id="chipCountActCricket">0</span>)</button>
+          <button type="button" class="filter-chip act-chip" data-act="Gym" onclick="window.setMemberActivityFilter('Gym')">🏋️ Gym & Fitness (<span id="chipCountActGym">0</span>)</button>
+          <button type="button" class="filter-chip act-chip" data-act="Music" onclick="window.setMemberActivityFilter('Music')">🎵 Music / Choir (<span id="chipCountActMusic">0</span>)</button>
+          <button type="button" class="filter-chip act-chip" data-act="Cultural" onclick="window.setMemberActivityFilter('Cultural')">🎭 Cultural & Drama (<span id="chipCountActCultural">0</span>)</button>
+          <button type="button" class="filter-chip act-chip" data-act="Oratory" onclick="window.setMemberActivityFilter('Oratory')">🌟 Oratory / Leadership (<span id="chipCountActOratory">71</span>)</button>
+        </div>
+
+        <!-- 5. MEMBERS GRID CLASSIFICATION & GROUP TOTALS MATRIX HUB -->
+        <div id="membersGridClassificationHub" class="members-classification-hub" style="background:#ffffff; border:1px solid #cbd5e1; border-radius:14px; padding:14px; margin-bottom:14px; box-shadow:0 3px 10px rgba(0,43,102,0.06);">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px; border-bottom:1px solid #e2e8f0; padding-bottom:10px;">
+            <div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:1.25rem;">📊</span>
+                <h4 style="font-size:1rem; font-weight:900; color:#002b66; margin:0;">குழுக்கள் மற்றும் வகைப்பாடு புள்ளிவிவரங்கள் (Group & Classification Totals Matrix)</h4>
+              </div>
+              <div id="gridActiveFilterSummary" style="font-size:0.8rem; color:#64748b; margin-top:3px;">
+                Showing all 71 registered members across 6 official age groups
+              </div>
+            </div>
+            <div id="gridTotalMembersBadge" style="background:linear-gradient(135deg, #002b66, #0284c7); color:#ffffff; font-weight:900; font-size:0.85rem; padding:6px 16px; border-radius:20px; box-shadow:0 2px 6px rgba(0,43,102,0.25);">
+              Total: 71 Members
+            </div>
+          </div>
+
+          <!-- Dynamic 6 Age Group Cards -->
+          <div id="gridGroupTotalsCards" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(135px, 1fr)); gap:8px;">
+            <!-- Generated dynamically in JS -->
+          </div>
+
+          <!-- Sub-Classification Status Line (Renewals, Teams, etc.) -->
+          <div id="gridClassificationSubBar" style="margin-top:10px; padding-top:8px; border-top:1px dashed #e2e8f0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; font-size:0.78rem; color:#475569;">
+            <!-- Generated dynamically in JS -->
+          </div>
         </div>
 
         <div id="membersListContainer" class="member-list"></div>
@@ -5347,13 +5733,15 @@ window.DBYC_OFFICIAL_SEAL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAWgAA
           </div>
         </div>
 
-        <!-- Filter Bar for Executive Qualification & Approval Desk -->
+        <!-- Filter Bar for Executive Qualification & Approval Desk (6 Full Streams) -->
         <div class="filter-bar" style="margin-bottom:16px; display:flex; gap:8px; flex-wrap:wrap;">
           <button class="filter-chip qual-filter-chip active" data-filter="ALL" onclick="renderQualificationDesk('ALL')">🌟 All Pending (<span id="qualCountAll">0</span>)</button>
-          <button class="filter-chip qual-filter-chip" data-filter="MEMBERS" onclick="renderQualificationDesk('MEMBERS')">👥 Registration Forms (<span id="qualCountMembers">0</span>)</button>
-          <button class="filter-chip qual-filter-chip" data-filter="CALENDAR" onclick="renderQualificationDesk('CALENDAR')">📅 Calendar Events (<span id="qualCountCalendar">0</span>)</button>
-          <button class="filter-chip qual-filter-chip" data-filter="NEWS" onclick="renderQualificationDesk('NEWS')">📰 DBYC News (<span id="qualCountNews">0</span>)</button>
-          <button class="filter-chip qual-filter-chip" data-filter="MINUTES" onclick="renderQualificationDesk('MINUTES')">📝 Meeting Minutes (<span id="qualCountMinutes">0</span>)</button>
+          <button class="filter-chip qual-filter-chip" data-filter="MEMBERS" onclick="renderQualificationDesk('MEMBERS')">👥 Registrations (<span id="qualCountMembers">0</span>)</button>
+          <button class="filter-chip qual-filter-chip" data-filter="MINUTES" onclick="renderQualificationDesk('MINUTES')">📝 Minutes (<span id="qualCountMinutes">0</span>)</button>
+          <button class="filter-chip qual-filter-chip" data-filter="NEWS" onclick="renderQualificationDesk('NEWS')">📰 News (<span id="qualCountNews">0</span>)</button>
+          <button class="filter-chip qual-filter-chip" data-filter="MEDIA" onclick="renderQualificationDesk('MEDIA')">🎥 Live & Videos (<span id="qualCountMedia">0</span>)</button>
+          <button class="filter-chip qual-filter-chip" data-filter="CALENDAR" onclick="renderQualificationDesk('CALENDAR')">📅 Calendar (<span id="qualCountCalendar">0</span>)</button>
+          <button class="filter-chip qual-filter-chip" data-filter="MATCHES" onclick="renderQualificationDesk('MATCHES')">⚽ Live Scores (<span id="qualCountMatches">0</span>)</button>
         </div>
 
         <!-- Submissions Container -->
@@ -7575,6 +7963,30 @@ window.addEventListener('resize', () => {
   window.applyAutoDeviceLayout();
 });
 
+window.toggleFullScreenPresentation = function() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().then(() => {
+      window.setDeviceMode('projector');
+      if (typeof showToast === 'function') showToast('📽️ Fullscreen Projector Presentation Mode ON');
+    }).catch(() => {
+      window.setDeviceMode('projector');
+    });
+  } else {
+    if (document.exitFullscreen) document.exitFullscreen();
+  }
+};
+
+window.initDeviceMode = function() {
+  const saved = localStorage.getItem('dbyc_device_mode') || 'auto';
+  window.setDeviceMode(saved);
+};
+
+window.addEventListener('resize', () => {
+  if (window.currentDeviceMode === 'auto') {
+    window.setDeviceMode('auto');
+  }
+});
+
 document.addEventListener('DOMContentLoaded', () => {
   if (typeof window.initDeviceMode === 'function') window.initDeviceMode();
   initApp();
@@ -7673,9 +8085,7 @@ function loadLocalData() {
       appState.certificates = (parsed.certificates || []).filter(c => !deletedMems.has(c.memberId));
       appState.leaders = (parsed.leaders && parsed.leaders.length > 0)
         ? parsed.leaders
-        : (window.DBYC_OFFICIAL_LEADERS_SEED && window.DBYC_OFFICIAL_LEADERS_SEED.length > 0
-            ? JSON.parse(JSON.stringify(window.DBYC_OFFICIAL_LEADERS_SEED))
-            : []);
+        : (window.DBYC_OFFICIAL_LEADERS_SEED ? JSON.parse(JSON.stringify(window.DBYC_OFFICIAL_LEADERS_SEED)) : []);
 
       appState.teams = (parsed.teams && parsed.teams.length > 0) ? parsed.teams : [
         { id: 'TEAM-1', name: 'Red Dragons', nameTa: 'சிவப்பு டிராகன்கள்', color: '#dc2626', captain: 'Stephen Paul', slogan: 'Courage & Passion (துணிவும் உற்சாகமும்)', points: 450, icon: '🐉' },
@@ -7702,12 +8112,22 @@ function seedBasinBridgeData() {
     ? JSON.parse(JSON.stringify(window.DBYC_OFFICIAL_MEMBERS_SEED))
     : [];
 
-  // REQUIREMENT: Eradicate all demo datas!
+  // Zero dummy data across all operational desks
   appState.attendance = [];
   appState.minutes = [];
   appState.news = [];
   appState.matches = [];
   appState.media = [];
+  appState.events = [];
+  appState.teamPointsLog = [];
+
+  // Seed 4 House Teams with official structure
+  appState.teams = [
+    { id: 'TEAM-1', name: 'Red Dragons', nameTa: 'சிவப்பு டிராகன்கள்', color: '#dc2626', captain: 'Stephen Paul', slogan: 'Courage & Passion (துணிவும் உற்சாகமும்)', points: 0, icon: '🐉' },
+    { id: 'TEAM-2', name: 'Blue Sharks', nameTa: 'நீல சுறாக்கள்', color: '#0284c7', captain: 'Michael Raj', slogan: 'Wisdom & Power (ஞானமும் வலிமையும்)', points: 0, icon: '🦈' },
+    { id: 'TEAM-3', name: 'Green Warriors', nameTa: 'பச்சை வீரர்கள்', color: '#16a34a', captain: 'Antony Cruz', slogan: 'Unity & Growth (ஒற்றுமையும் வளர்ச்சியும்)', points: 0, icon: '⚔️' },
+    { id: 'TEAM-4', name: 'Yellow Tigers', nameTa: 'மஞ்சள் புலிகள்', color: '#d97706', captain: 'Joseph Kumar', slogan: 'Speed & Glory (வேகமும் புகழும்)', points: 0, icon: '🐯' }
+  ];
 
   appState.events = [
     { id: 'EVT-01', title: 'Don Bosco Feast & Basin Bridge Youth Sports Meet', category: 'Celebration', date: '2026-10-15', time: '09:00 AM', venue: 'DBYC Basin Bridge Ground', description: 'Grand annual tournaments for Sub Juniors, Juniors, Inters, Seniors, Super Seniors & Elders.' },
@@ -7854,17 +8274,18 @@ function seedBasinBridgeData() {
     if (obLogo && window.DBYC_OFFICIAL_LOGO) obLogo.src = window.DBYC_OFFICIAL_LOGO;
   }, 200);
 
-  if (!appState.events || appState.events.length === 0) {
-    appState.events = [
-      { id: 'EVT-001', title: 'Don Bosco Feast & Sports Festival', category: 'Celebration', date: '2026-01-31', time: '08:30', venue: 'DBYC Basin Bridge Stadium', approvalStatus: 'APPROVED', status: 'APPROVED', approvedBy: 'Rev. Fr. Director, SDB' },
-      { id: 'EVT-002', title: 'Inter-House Football 7s Championship', category: 'Sports Tournament', date: '2026-10-15', time: '16:00', venue: 'Football Turf Ground', approvalStatus: 'APPROVED', status: 'APPROVED', approvedBy: 'Rev. Fr. Director, SDB' },
-      { id: 'EVT-003', title: 'Youth Council General Body Meeting', category: 'Council Meeting', date: '2026-10-25', time: '18:30', venue: 'Oratory AV Hall', approvalStatus: 'APPROVED', status: 'APPROVED', approvedBy: 'Rev. Fr. Asst. Director, SDB' }
-    ];
+  // Purge any residual demo records from previous sessions
+  if (appState.events) {
+    appState.events = appState.events.filter(e => !e.id.startsWith('EVT-01') && !e.id.startsWith('EVT-001') && !e.id.startsWith('EVT-002') && !e.id.startsWith('EVT-003'));
   }
-  if (!appState.minutes || appState.minutes.length === 0) {
-    appState.minutes = [
-      { id: 'MIN-001', title: 'DBYC Council Planning Meeting & Annual Budget', date: '2026-09-20', presidedBy: 'Rev. Fr. Director, SDB', attendees: 24, agenda: 'House team points review, football tournament schedule, new member registrations', decisions: 'Approved tournament dates; awarded 100 points to Green Warriors for attendance excellence', approvalStatus: 'APPROVED', status: 'APPROVED', approvedBy: 'Rev. Fr. Director, SDB' }
-    ];
+  if (appState.minutes) {
+    appState.minutes = appState.minutes.filter(m => !m.id.startsWith('MIN-001'));
+  }
+  if (appState.media) {
+    appState.media = appState.media.filter(m => !m.id.startsWith('MEDIA-01') && !m.id.startsWith('MEDIA-02'));
+  }
+  if (appState.teamPointsLog) {
+    appState.teamPointsLog = appState.teamPointsLog.filter(l => !l.id.startsWith('LOG-'));
   }
 }
 
@@ -9297,6 +9718,8 @@ function switchView(viewName, isBackNavigation = false) {
     }
   }
 
+
+
   document.querySelectorAll('.app-section').forEach(sec => sec.style.display = 'none');
   const target = document.getElementById(`view_${cleanName}`);
   if (target) {
@@ -9320,7 +9743,7 @@ function switchView(viewName, isBackNavigation = false) {
     bottomNavBar.style.display = (cleanName === 'dashboard') ? 'flex' : 'none';
   }
 
-  if (cleanName === 'dashboard') updateDashboardStats();
+  if (cleanName === 'dashboard' || cleanName === 'statshub') updateDashboardStats();
   if (cleanName === 'profile') renderMyProfile();
   if (cleanName === 'members') renderMembersRegistry();
   if (cleanName === 'attendance') renderTodayAttendance();
@@ -9346,24 +9769,173 @@ function switchView(viewName, isBackNavigation = false) {
 // 6. DASHBOARD & STATS
 // ==========================================
 function updateDashboardStats() {
-  const total = (appState.members || []).length;
+  const members = appState.members || [];
+  const total = members.length;
   const today = new Date().toISOString().split('T')[0];
-  const todayAtt = (appState.attendance || []).filter(a => a.date === today).length;
+  const attList = appState.attendance || [];
+  const todayRecords = attList.filter(a => a.date === today);
+
+  // Dual QR Attendance: Inside vs Exited
+  const insideRecords = todayRecords.filter(a => a.action === 'ENTRY');
+  const exitedRecords = todayRecords.filter(a => a.action === 'EXIT');
+  const uniqueTodayMems = new Set(todayRecords.map(a => a.memberId)).size;
+
   const totalEvents = (appState.events || []).length;
+  const totalNews = (appState.news || []).length;
+  const totalMinutes = (appState.minutes || []).length;
+  const totalMedia = (appState.media || []).length;
+  const totalMatches = (appState.matches || []).length;
+  const leadersList = (appState.leaders && appState.leaders.length > 0)
+    ? appState.leaders
+    : (window.DBYC_OFFICIAL_LEADERS_SEED || []);
 
+  // Renewal Breakdown
+  let countRenewed = 0;
+  let countNotRenewed = 0;
+  members.forEach(m => {
+    const isApproved = m.approvalStatus === 'APPROVED' || m.status === 'APPROVED';
+    const isRen = (m.renewalStatus === 'Renewed' || (!m.renewalStatus && isApproved));
+    if (isRen) countRenewed++;
+    else countNotRenewed++;
+  });
+  const renewalRate = total > 0 ? Math.round((countRenewed / total) * 100) : 100;
+
+  // Age Groups Breakdown
+  const groupsDef = [
+    { key: 'Sub-Juniors', label: 'Sub Juniors (<10 yrs)', color: '#16a34a' },
+    { key: 'Juniors', label: 'Juniors (10-12 yrs)', color: '#0284c7' },
+    { key: 'Inters', label: 'Inters (13-15 yrs)', color: '#ea580c' },
+    { key: 'Seniors', label: 'Seniors (16-18 yrs)', color: '#dc2626' },
+    { key: 'Super Seniors', label: 'Super Seniors (19-25 yrs)', color: '#7c3aed' },
+    { key: 'Elders', label: 'Elders (25+ yrs)', color: '#334155' }
+  ];
+
+  const groupCounts = {};
+  groupsDef.forEach(g => { groupCounts[g.key] = 0; });
+  members.forEach(m => {
+    const grp = m.group || 'General';
+    for (const g of groupsDef) {
+      if (grp.toLowerCase().includes(g.key.toLowerCase())) {
+        groupCounts[g.key]++;
+        return;
+      }
+    }
+  });
+
+  // Top Quick Stats Cards
   const statMembersEl = document.getElementById('statTotalMembers');
-  if (statMembersEl) statMembersEl.textContent = total;
+  if (statMembersEl) statMembersEl.textContent = `${total} Members`;
+  const statObEl = document.getElementById('statOfficeBearers');
+  if (statObEl) statObEl.textContent = `${leadersList.length} Leaders`;
   const statAttEl = document.getElementById('statTodayAttendance');
-  if (statAttEl) statAttEl.textContent = todayAtt;
+  if (statAttEl) statAttEl.textContent = `${uniqueTodayMems} Present`;
+  const statAttSubEl = document.getElementById('statTodayAttendanceSub');
+  if (statAttSubEl) statAttSubEl.textContent = `${insideRecords.length} Inside • ${exitedRecords.length} Exited`;
+  const statRenEl = document.getElementById('statRenewalOverview');
+  if (statRenEl) statRenEl.textContent = `${countRenewed} Renewed (${renewalRate}%)`;
   const statEventsEl = document.getElementById('statTotalEvents');
-  if (statEventsEl) statEventsEl.textContent = totalEvents;
+  if (statEventsEl) statEventsEl.textContent = `${totalEvents} Meets / ${totalNews} News`;
 
-  // Pending Qualifications Count across all 4 streams
+  // Hub: Group Stats Progress Bars
+  const hubGroupStatsList = document.getElementById('hubGroupStatsList');
+  if (hubGroupStatsList) {
+    hubGroupStatsList.innerHTML = groupsDef.map(g => {
+      const cnt = groupCounts[g.key] || 0;
+      const pct = total > 0 ? Math.round((cnt / total) * 100) : 0;
+      return `
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:0.78rem; font-weight:700; color:#334155; margin-bottom:2px;">
+            <span>${g.label}</span>
+            <span>${cnt} (${pct}%)</span>
+          </div>
+          <div style="background:#e2e8f0; height:6px; border-radius:10px; overflow:hidden;">
+            <div style="background:${g.color}; width:${pct}%; height:100%; border-radius:10px; transition:width 0.3s ease;"></div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  const hubTotalBadge = document.getElementById('hubTotalMembersBadge');
+  if (hubTotalBadge) hubTotalBadge.textContent = `${total} Total`;
+
+  // Hub: Renewal Status
+  const hubCountRen = document.getElementById('hubCountRenewed');
+  if (hubCountRen) hubCountRen.textContent = countRenewed;
+  const hubCountNotRen = document.getElementById('hubCountNotRenewed');
+  if (hubCountNotRen) hubCountNotRen.textContent = countNotRenewed;
+  const hubRenBadge = document.getElementById('hubRenewalRateBadge');
+  if (hubRenBadge) hubRenBadge.textContent = `${renewalRate}% Active`;
+
+  // Hub: Attendance
+  const hubInside = document.getElementById('hubAttInside');
+  if (hubInside) hubInside.textContent = insideRecords.length;
+  const hubExited = document.getElementById('hubAttExited');
+  if (hubExited) hubExited.textContent = exitedRecords.length;
+  const hubAttTotal = document.getElementById('hubAttTotalToday');
+  if (hubAttTotal) hubAttTotal.textContent = `${uniqueTodayMems} Members (${total > 0 ? Math.round((uniqueTodayMems/total)*100) : 0}% Turnout)`;
+
+  // Hub: Office Bearers Portfolio Summary
+  const hubObList = document.getElementById('hubObCategoriesList');
+  if (hubObList) {
+    const obCats = [
+      { name: 'Oratory Leaders', count: 5 },
+      { name: 'Sub-Junior Leaders', count: 5 },
+      { name: 'Junior Leaders', count: 5 },
+      { name: 'Inter Leaders', count: 5 },
+      { name: 'Senior Leaders', count: 5 },
+      { name: 'Super Senior Leaders', count: 6 },
+      { name: 'Elders Council', count: 3 },
+      { name: 'Committee Members', count: 5 }
+    ];
+    hubObList.innerHTML = obCats.map(c => `
+      <div style="display:flex; justify-content:space-between; align-items:center; background:#ffffff; padding:4px 8px; border-radius:6px; border:1px solid #e2e8f0;">
+        <span style="color:#1e3a8a; font-weight:700;">${c.name}</span>
+        <span style="background:#dbeafe; color:#1d4ed8; font-weight:800; padding:1px 6px; border-radius:6px; font-size:0.72rem;">${c.count}</span>
+      </div>
+    `).join('');
+  }
+
+  // Hub: 4 House Teams Standings
+  const hubTeamsList = document.getElementById('hubTeamsList');
+  const teams = (appState.teams || []).slice().sort((a,b) => (b.points || 0) - (a.points || 0));
+  if (hubTeamsList) {
+    const maxPts = Math.max(...teams.map(t => t.points || 0), 100);
+    hubTeamsList.innerHTML = teams.map((t, idx) => {
+      const pct = Math.round(((t.points || 0) / maxPts) * 100);
+      return `
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.78rem; font-weight:800;">
+            <span>${idx + 1}. ${t.icon || '🏆'} ${t.name}</span>
+            <span style="color:${t.color || '#002b66'};">${t.points || 0} Pts</span>
+          </div>
+          <div style="background:#e2e8f0; height:6px; border-radius:10px; overflow:hidden; margin-top:2px;">
+            <div style="background:${t.color || '#0284c7'}; width:${pct}%; height:100%; border-radius:10px;"></div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Hub: Operations Counters
+  const hubEvt = document.getElementById('hubCountEvents');
+  if (hubEvt) hubEvt.textContent = totalEvents;
+  const hubNws = document.getElementById('hubCountNews');
+  if (hubNws) hubNws.textContent = totalNews;
+  const hubMin = document.getElementById('hubCountMinutes');
+  if (hubMin) hubMin.textContent = totalMinutes;
+  const hubMed = document.getElementById('hubCountMedia');
+  if (hubMed) hubMed.textContent = `${totalMedia} Items / ${totalMatches} Matches`;
+
+  // Pending Qualifications Count across all 6 streams
   const pendingMembers = (appState.members || []).filter(m => m.status === 'PENDING' || m.approvalStatus === 'PENDING').length;
   const pendingEvents = (appState.events || []).filter(e => e.status === 'PENDING' || e.approvalStatus === 'PENDING').length;
   const pendingNews = (appState.news || []).filter(n => n.status === 'PENDING' || n.approvalStatus === 'PENDING').length;
   const pendingMinutes = (appState.minutes || []).filter(m => m.status === 'PENDING' || m.approvalStatus === 'PENDING').length;
-  const totalPending = pendingMembers + pendingEvents + pendingNews + pendingMinutes;
+  const pendingMedia = (appState.media || []).filter(m => m.status === 'PENDING' || m.approvalStatus === 'PENDING').length;
+  const pendingMatches = (appState.matches || []).filter(m => m.status === 'PENDING' || m.approvalStatus === 'PENDING').length;
+
+  const totalPending = pendingMembers + pendingEvents + pendingNews + pendingMinutes + pendingMedia + pendingMatches;
 
   const qualBadge = document.getElementById('qualPendingHeaderBadge');
   if (qualBadge) qualBadge.textContent = `${totalPending} PENDING`;
@@ -9377,7 +9949,55 @@ function updateDashboardStats() {
   if (qualCountNews) qualCountNews.textContent = pendingNews;
   const qualCountMin = document.getElementById('qualCountMinutes');
   if (qualCountMin) qualCountMin.textContent = pendingMinutes;
+  const qualCountMed = document.getElementById('qualCountMedia');
+  if (qualCountMed) qualCountMed.textContent = pendingMedia;
+  const qualCountMat = document.getElementById('qualCountMatches');
+  if (qualCountMat) qualCountMat.textContent = pendingMatches;
+
+  const hubPendingTotal = document.getElementById('hubPendingTotalBadge');
+  if (hubPendingTotal) hubPendingTotal.textContent = `${totalPending} Pending`;
+  const hubPendingBtn = document.getElementById('hubPendingBtnCount');
+  if (hubPendingBtn) hubPendingBtn.textContent = totalPending;
+
+  // Mirror into dedicated view_statshub elements
+  const shGroupList = document.getElementById('statshubGroupStatsList');
+  if (shGroupList && hubGroupStatsList) shGroupList.innerHTML = hubGroupStatsList.innerHTML;
+  const shCountRen = document.getElementById('statshubCountRenewed');
+  if (shCountRen) shCountRen.textContent = countRenewed;
+  const shCountNotRen = document.getElementById('statshubCountNotRenewed');
+  if (shCountNotRen) shCountNotRen.textContent = countNotRenewed;
+  const shRenBadge = document.getElementById('statshubRenewalBadge');
+  if (shRenBadge) shRenBadge.textContent = `${renewalRate}% Active`;
+  const shInside = document.getElementById('statshubAttInside');
+  if (shInside) shInside.textContent = insideRecords.length;
+  const shExited = document.getElementById('statshubAttExited');
+  if (shExited) shExited.textContent = exitedRecords.length;
+  const shAttTotal = document.getElementById('statshubAttTotal');
+  if (shAttTotal) shAttTotal.textContent = `${uniqueTodayMems} Members (${total > 0 ? Math.round((uniqueTodayMems/total)*100) : 0}% Turnout)`;
+  const shObList = document.getElementById('statshubObList');
+  if (shObList && hubObList) shObList.innerHTML = hubObList.innerHTML;
+  const shTeamsList = document.getElementById('statshubTeamsList');
+  if (shTeamsList && hubTeamsList) shTeamsList.innerHTML = hubTeamsList.innerHTML;
+  const shEvt = document.getElementById('statshubCountEvents');
+  if (shEvt) shEvt.textContent = totalEvents;
+  const shNws = document.getElementById('statshubCountNews');
+  if (shNws) shNws.textContent = totalNews;
+  const shMin = document.getElementById('statshubCountMinutes');
+  if (shMin) shMin.textContent = totalMinutes;
+  const shMed = document.getElementById('statshubCountMedia');
+  if (shMed) shMed.textContent = `${totalMedia} Items / ${totalMatches} Matches`;
+  const shPendingBadge = document.getElementById('statshubPendingBadge');
+  if (shPendingBadge) shPendingBadge.textContent = `${totalPending} Pending`;
+  const shPendingBtn = document.getElementById('statshubPendingBtn');
+  if (shPendingBtn) shPendingBtn.textContent = totalPending;
+  const shTotalBadge = document.getElementById('statshubTotalBadge');
+  if (shTotalBadge) shTotalBadge.textContent = `${total} Registered Youths • ${leadersList.length} Office Bearers`;
 }
+
+window.filterMembersByRenewal = function(status) {
+  window.activeMemberRenewalFilter = status;
+  switchView('members');
+};
 
 function renderTodayAttendance() {
   const container = document.getElementById('todayAttendanceList');
@@ -9819,24 +10439,30 @@ window.toggleQrCamera = function() {
   // 1. Check if mediaDevices API is supported or restricted by browser
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     const isFileProto = (window.location.protocol === 'file:');
+    showToast('📸 Opening camera photo snap directly...');
+    const snapInput = document.getElementById('qrDirectSnapInput') || document.getElementById('qrPhotoFileInput');
+    if (snapInput) {
+      snapInput.click();
+      return;
+    }
+    const isFileProto = (window.location.protocol === 'file:');
     const msg = isFileProto
       ? 'Browsers require HTTPS to run live camera video streams directly. Tap below to snap a photo of the pass QR with your device camera.'
       : 'Camera stream is restricted on this browser context. Tap below to snap a photo of the pass QR with your device camera.';
-    showToast('📸 Please snap a photo of the QR pass with your device camera...');
     if (container) {
       container.innerHTML = `
         <div style="color:#fde047; padding:20px; text-align:center; max-width:340px; margin:0 auto;">
           <div style="font-size:2.2rem; margin-bottom:8px;">📷</div>
           <strong style="color:#ffffff; font-size:0.92rem; display:block; margin-bottom:6px;">Camera Access Restricted</strong>
           <p style="font-size:0.78rem; color:#cbd5e1; line-height:1.4; margin:0 0 12px;">${msg}</p>
-          <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:8px 16px; font-size:0.84rem; font-weight:800; border-radius:8px;" onclick="document.getElementById('qrDirectSnapInput').click();">
-            📸 Snap Photo with Device Camera
+          <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:8px 16px; font-size:0.84rem; font-weight:800; border-radius:8px;" onclick="document.getElementById('qrPhotoFileInput').click();">
+            📸 Snap / Select Pass Photo with Camera
           </button>
         </div>
       `;
     }
-    const snapInput = document.getElementById('qrDirectSnapInput') || document.getElementById('qrPhotoFileInput');
-    if (snapInput) snapInput.click();
+    const fileInp = document.getElementById('qrPhotoFileInput');
+    if (fileInp) fileInp.click();
     return;
   }
 
@@ -9850,8 +10476,8 @@ window.toggleQrCamera = function() {
   if (container) {
     container.setAttribute('data-active', 'true');
     container.innerHTML = `
-      <div style="position:relative; width:100%; height:100%; min-height:250px; display:flex; align-items:center; justify-content:center; background:#000; border-radius:8px; overflow:hidden;">
-        <video id="qrVideo" playsinline webkit-playsinline autoplay muted style="width:100%; height:100%; max-height:280px; object-fit:cover; border-radius:8px;"></video>
+      <div style="position:relative; width:100%; height:100%; min-height:250px; display:flex; align-items:center; justify-content:center; background:#000;">
+        <video id="qrVideo" playsinline autoplay muted style="width:100%; height:100%; max-height:280px; object-fit:cover; border-radius:8px;"></video>
         <div style="position:absolute; width:190px; height:190px; border:3px solid #10b981; border-radius:16px; box-shadow:0 0 0 4000px rgba(0,0,0,0.5); pointer-events:none; display:flex; align-items:center; justify-content:center;">
           <div style="width:100%; height:2px; background:#10b981; box-shadow:0 0 8px #10b981; animation:scanPulse 1.5s infinite ease-in-out;"></div>
         </div>
@@ -9868,10 +10494,7 @@ window.toggleQrCamera = function() {
         const video = document.getElementById('qrVideo');
         if (video) {
           video.srcObject = stream;
-          video.muted = true;
-          video.playsInline = true;
           video.setAttribute('playsinline', 'true');
-          video.setAttribute('webkit-playsinline', 'true');
           video.play().catch(e => console.warn('Video play note:', e));
         }
         showToast('📷 Camera scanner active. Point at Member Pass.');
@@ -9887,24 +10510,24 @@ window.toggleQrCamera = function() {
       console.warn('Camera access error:', err);
       isQrScanningActive = false;
       if (btn) {
-        btn.textContent = '📷 Live Camera Stream';
+        btn.textContent = '📷 Turn On Camera Scanner';
         btn.style.background = '#004b98';
       }
       if (flipBtn) flipBtn.style.display = 'none';
       if (container) {
         container.innerHTML = `
-          <div style="color:#ef4444; padding:18px; text-align:center; max-width:320px; margin:0 auto;">
+          <div style="color:#ef4444; padding:18px; text-align:center; max-width:320px;">
             <div style="font-size:2rem; margin-bottom:6px;">⚠️</div>
-            <strong style="display:block; margin-bottom:4px; font-size:0.88rem; color:#fff;">Camera Access Restricted</strong>
-            <p style="font-size:0.76rem; color:#cbd5e1; margin:0 0 10px; line-height:1.4;">
-              Ensure camera permissions are allowed, or tap below to snap a photo with your device camera:
+            <strong style="display:block; margin-bottom:4px; font-size:0.88rem;">Camera Permission or Access Issue</strong>
+            <p style="font-size:0.76rem; color:#94a3b8; margin:0 0 10px; line-height:1.4;">
+              Ensure camera permissions are allowed in site settings, or tap below to snap a photo with your device camera:
             </p>
-            <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:7px 14px; font-size:0.8rem; font-weight:800; border-radius:8px;" onclick="document.getElementById('qrDirectSnapInput').click();">
-              📸 Snap Photo with Device Camera
+            <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:7px 14px; font-size:0.8rem; font-weight:800; border-radius:8px;" onclick="document.getElementById('qrPhotoFileInput').click();">
+              📸 Take / Select Photo of Pass
             </button>
           </div>`;
       }
-      showToast('⚠️ Camera access restricted. Use camera photo snap or 1-tap entry.');
+      showToast('⚠️ Camera permission denied or in use. Use gallery photo or 1-tap check-in.');
     });
 };
 
@@ -11975,7 +12598,7 @@ function setupNewsHandlers() {
     }
 
     const isDirector = isDirectorOrAsstDirector();
-    const status = isDirector ? 'APPROVED' : 'PENDING';
+    const status = 'PENDING';
 
     if (editId) {
       // Update existing article
@@ -12056,7 +12679,7 @@ function setupNewsHandlers() {
   document.getElementById('newsForm')?.addEventListener('submit', (e) => {
     e.preventDefault();
     const isDirector = isDirectorOrAsstDirector();
-    const status = isDirector ? 'APPROVED' : 'PENDING';
+    const status = 'PENDING';
 
     const newNews = {
       id: 'NEWS-' + Date.now(),
@@ -12262,10 +12885,12 @@ function setupLiveScoreHandlers() {
       teamB,
       scoreA: 0,
       scoreB: 0,
-      status,
+      status: 'PENDING',
+      approvalStatus: 'PENDING',
       stage,
+      createdBy: appState.currentUser ? appState.currentUser.name : 'Sports Leader',
       commentary: [
-        { min: '00\'', text: `🏁 Match launched: ${teamA} vs ${teamB} at ${venue}!` }
+        { min: '00\'', text: `🏁 Match scheduled: ${teamA} vs ${teamB} at ${venue}!` }
       ]
     };
 
@@ -12581,7 +13206,7 @@ function setupMediaStudioHandlers() {
   document.getElementById('createVideoForm')?.addEventListener('submit', (e) => {
     e.preventDefault();
     const isDirector = isDirectorOrAsstDirector();
-    const status = isDirector ? 'APPROVED' : 'PENDING';
+    const status = 'PENDING';
 
     const title = document.getElementById('videoTitleInput').value.trim();
     const rawUrl = document.getElementById('videoYtUrlInput').value.trim();
@@ -12621,7 +13246,7 @@ function setupMediaStudioHandlers() {
   document.getElementById('createPhotoForm')?.addEventListener('submit', (e) => {
     e.preventDefault();
     const isDirector = isDirectorOrAsstDirector();
-    const status = isDirector ? 'APPROVED' : 'PENDING';
+    const status = 'PENDING';
 
     const title = document.getElementById('photoTitleInput').value.trim();
     const album = document.getElementById('photoAlbumInput').value.trim() || 'DBYC Event Gallery';
@@ -12687,7 +13312,8 @@ function setupMediaStudioHandlers() {
       date: new Date().toISOString().split('T')[0],
       url: embedUrl,
       youtubeId: ytId,
-      status: 'APPROVED',
+      status: 'PENDING',
+      approvalStatus: 'PENDING',
       qualifiedBy: appState.currentUser ? appState.currentUser.name : 'Rev. Fr. Director, SDB',
       desc: `Live broadcast on DBYC Official Channel: ${title}`
     };
@@ -13302,13 +13928,43 @@ window.saveAndDownloadQrPassPdf = function(event) {
 
 // 4. MEMBERS REGISTRY VIEW RENDERER
 window.activeMemberGroupFilter = 'ALL';
+window.activeMemberGroupFilter = 'ALL';
 window.activeMemberRenewalFilter = 'ALL';
+window.activeMemberTeamFilter = 'ALL';
 window.activeMemberActivityFilter = 'ALL';
+
+window.getCanonicalGroupName = function(grp) {
+  if (!grp) return 'Other Group';
+  const g = String(grp).trim().toLowerCase();
+  if (g.includes('sub')) return 'Sub Juniors Group (6-14)';
+  if (g.includes('super')) return 'Super Seniors Group (34-55)';
+  if (g.includes('junior')) return 'Junior Group (15-18)';
+  if (g.includes('inter')) return 'Inters Group (19-25)';
+  if (g.includes('senior')) return 'Senior Group (25-34)';
+  if (g.includes('elder')) return 'Elders Group (56+)';
+  return grp;
+};
+
+window.setMemberGroupFilter = function(grpVal) {
+  window.activeMemberGroupFilter = grpVal;
+  document.querySelectorAll('.group-chip').forEach(c => {
+    c.classList.toggle('active', c.getAttribute('data-group') === grpVal);
+  });
+  renderMembersRegistry();
+};
 
 window.setMemberRenewalFilter = function(filterVal) {
   window.activeMemberRenewalFilter = filterVal;
   document.querySelectorAll('.renewal-chip').forEach(c => {
     c.classList.toggle('active', c.getAttribute('data-renewal') === filterVal);
+  });
+  renderMembersRegistry();
+};
+
+window.setMemberTeamFilter = function(teamVal) {
+  window.activeMemberTeamFilter = teamVal;
+  document.querySelectorAll('.team-chip').forEach(c => {
+    c.classList.toggle('active', c.getAttribute('data-team') === teamVal);
   });
   renderMembersRegistry();
 };
@@ -13369,51 +14025,247 @@ function renderMembersRegistry() {
   if (!container) return;
 
   const members = appState.members || [];
+  const totalCount = members.length;
   const searchInput = document.getElementById('memberSearchInput');
   const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
 
+  // Canonical Age Group Definitions (Ordered)
+  const canonicalGroups = [
+    { key: 'Sub Juniors Group (6-14)', label: 'Sub Juniors (6-14)', idTag: 'chipCountGrpSubJunior', color: '#f59e0b', bg: '#fef3c7' },
+    { key: 'Junior Group (15-18)', label: 'Juniors (15-18)', idTag: 'chipCountGrpJunior', color: '#0284c7', bg: '#e0f2fe' },
+    { key: 'Inters Group (19-25)', label: 'Inters (19-25)', idTag: 'chipCountGrpInter', color: '#10b981', bg: '#dcfce7' },
+    { key: 'Senior Group (25-34)', label: 'Seniors (25-34)', idTag: 'chipCountGrpSenior', color: '#8b5cf6', bg: '#ede9fe' },
+    { key: 'Super Seniors Group (34-55)', label: 'Super Seniors (34-55)', idTag: 'chipCountGrpSuperSenior', color: '#ea580c', bg: '#ffedd5' },
+    { key: 'Elders Group (56+)', label: 'Elders (56+)', idTag: 'chipCountGrpElder', color: '#475569', bg: '#f1f5f9' }
+  ];
+
+  // Helper function to safely set element text
+  const setElTxt = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  };
+
+  // 1. Calculate overall counts for all groups & classifications from the entire database
+  const groupTotals = {};
+  canonicalGroups.forEach(g => { groupTotals[g.key] = 0; });
+  let countRenewed = 0;
+  let countNotRenewed = 0;
+  const teamTotals = { Red: 0, Blue: 0, Green: 0, Yellow: 0 };
+  const actTotals = {
+    Football: 0, Carrom: 0, Volleyball: 0, TableTennis: 0,
+    Cricket: 0, Gym: 0, Music: 0, Cultural: 0, Oratory: 0
+  };
+
+  members.forEach(m => {
+    const cg = window.getCanonicalGroupName(m.group);
+    if (groupTotals[cg] !== undefined) groupTotals[cg]++;
+
+    const isRen = (m.renewalStatus === 'Renewed' || (!m.renewalStatus && (m.status === 'APPROVED' || m.approvalStatus === 'APPROVED')));
+    if (isRen) countRenewed++; else countNotRenewed++;
+
+    const tm = String(m.team || '').toLowerCase();
+    if (tm.includes('red')) teamTotals.Red++;
+    else if (tm.includes('blue')) teamTotals.Blue++;
+    else if (tm.includes('green')) teamTotals.Green++;
+    else if (tm.includes('yellow')) teamTotals.Yellow++;
+
+    const mActs = Array.isArray(m.activities) ? m.activities.join(' ').toLowerCase() : String(m.activities || '').toLowerCase();
+    if (mActs.includes('football')) actTotals.Football++;
+    if (mActs.includes('carrom')) actTotals.Carrom++;
+    if (mActs.includes('volleyball')) actTotals.Volleyball++;
+    if (mActs.includes('table tennis')) actTotals.TableTennis++;
+    if (mActs.includes('cricket')) actTotals.Cricket++;
+    if (mActs.includes('gym')) actTotals.Gym++;
+    if (mActs.includes('music')) actTotals.Music++;
+    if (mActs.includes('cultural')) actTotals.Cultural++;
+    if (mActs.includes('oratory') || mActs.includes('youth centre')) actTotals.Oratory++;
+  });
+
+  // Update real-time counts on all filter chips
+  setElTxt('chipCountGrpAll', totalCount);
+  canonicalGroups.forEach(g => {
+    setElTxt(g.idTag, groupTotals[g.key] || 0);
+  });
+
+  setElTxt('chipCountRenAll', totalCount);
+  setElTxt('chipCountRenYes', countRenewed);
+  setElTxt('chipCountRenNo', countNotRenewed);
+
+  setElTxt('chipCountTeamAll', totalCount);
+  setElTxt('chipCountTeamRed', teamTotals.Red);
+  setElTxt('chipCountTeamBlue', teamTotals.Blue);
+  setElTxt('chipCountTeamGreen', teamTotals.Green);
+  setElTxt('chipCountTeamYellow', teamTotals.Yellow);
+
+  setElTxt('chipCountActAll', totalCount);
+  setElTxt('chipCountActFootball', actTotals.Football);
+  setElTxt('chipCountActCarrom', actTotals.Carrom);
+  setElTxt('chipCountActVolleyball', actTotals.Volleyball);
+  setElTxt('chipCountActTableTennis', actTotals.TableTennis);
+  setElTxt('chipCountActCricket', actTotals.Cricket);
+  setElTxt('chipCountActGym', actTotals.Gym);
+  setElTxt('chipCountActMusic', actTotals.Music);
+  setElTxt('chipCountActCultural', actTotals.Cultural);
+  setElTxt('chipCountActOratory', actTotals.Oratory);
+
+  // 2. Filter members based on active selections
+  const activeGrp = window.activeMemberGroupFilter || 'ALL';
+  const activeRen = window.activeMemberRenewalFilter || 'ALL';
+  const activeTm = window.activeMemberTeamFilter || 'ALL';
+  const activeAct = window.activeMemberActivityFilter || 'ALL';
+
   const filtered = members.filter(m => {
-    const matchesGroup = (window.activeMemberGroupFilter === 'ALL' || m.group === window.activeMemberGroupFilter);
+    // Group filter
+    let matchesGrp = true;
+    if (activeGrp !== 'ALL') {
+      const targetCanonical = window.getCanonicalGroupName(activeGrp);
+      matchesGrp = (window.getCanonicalGroupName(m.group) === targetCanonical);
+    }
+
+    // Renewal filter
+    let matchesRen = true;
+    const isRenewed = (m.renewalStatus === 'Renewed' || (!m.renewalStatus && (m.status === 'APPROVED' || m.approvalStatus === 'APPROVED')));
+    if (activeRen === 'RENEWED') matchesRen = isRenewed;
+    else if (activeRen === 'NOT_RENEWED') matchesRen = !isRenewed;
+
+    // Team filter
+    let matchesTm = true;
+    if (activeTm !== 'ALL') {
+      const tmStr = String(m.team || '').toLowerCase();
+      matchesTm = tmStr.includes(activeTm.toLowerCase());
+    }
+
+    // Activity filter
+    let matchesAct = true;
+    if (activeAct !== 'ALL') {
+      const targetAct = activeAct.toLowerCase();
+      const mActs = Array.isArray(m.activities) ? m.activities.join(' ').toLowerCase() : String(m.activities || '').toLowerCase();
+      matchesAct = mActs.includes(targetAct);
+    }
+
+    // Search query
     const matchesSearch = !query || 
       (m.name && m.name.toLowerCase().includes(query)) ||
       (m.id && m.id.toLowerCase().includes(query)) ||
       (m.mobile && m.mobile.includes(query)) ||
       (m.role && m.role.toLowerCase().includes(query));
 
-    // Renewal filter (Renewed vs Not Renewed)
-    let matchesRenewal = true;
-    const isRenewed = (m.renewalStatus === 'Renewed' || (!m.renewalStatus && (m.status === 'APPROVED' || m.approvalStatus === 'APPROVED')));
-    if (window.activeMemberRenewalFilter === 'RENEWED') {
-      matchesRenewal = isRenewed;
-    } else if (window.activeMemberRenewalFilter === 'NOT_RENEWED') {
-      matchesRenewal = !isRenewed;
-    }
-
-    // Activity filter (Football, Carrom, Volleyball, Table Tennis, etc.)
-    let matchesActivity = true;
-    if (window.activeMemberActivityFilter !== 'ALL') {
-      const targetAct = window.activeMemberActivityFilter.toLowerCase();
-      const mActs = Array.isArray(m.activities) ? m.activities.join(' ').toLowerCase() : String(m.activities || '').toLowerCase();
-      matchesActivity = mActs.includes(targetAct);
-    }
-
-    return matchesGroup && matchesSearch && matchesRenewal && matchesActivity;
+    return matchesGrp && matchesRen && matchesTm && matchesAct && matchesSearch;
   });
 
+  // 3. Compute group totals within the currently filtered results
+  const filteredGroupCounts = {};
+  canonicalGroups.forEach(g => { filteredGroupCounts[g.key] = 0; });
+  let filteredRenewed = 0;
+  let filteredNotRenewed = 0;
+
+  filtered.forEach(m => {
+    const cg = window.getCanonicalGroupName(m.group);
+    if (filteredGroupCounts[cg] !== undefined) filteredGroupCounts[cg]++;
+    const isRen = (m.renewalStatus === 'Renewed' || (!m.renewalStatus && (m.status === 'APPROVED' || m.approvalStatus === 'APPROVED')));
+    if (isRen) filteredRenewed++; else filteredNotRenewed++;
+  });
+
+  // 4. Update the Classification Hub UI
+  const totalBadge = document.getElementById('gridTotalMembersBadge');
+  if (totalBadge) {
+    totalBadge.textContent = (filtered.length === totalCount)
+      ? `Total: ${totalCount} Members`
+      : `Showing: ${filtered.length} of ${totalCount} Members`;
+  }
+
+  const summaryEl = document.getElementById('gridActiveFilterSummary');
+  if (summaryEl) {
+    let desc = [];
+    if (activeGrp !== 'ALL') desc.push(`Group: <strong>${activeGrp}</strong>`);
+    if (activeRen !== 'ALL') desc.push(`Renewal: <strong>${activeRen === 'RENEWED' ? 'Renewed' : 'Not Renewed'}</strong>`);
+    if (activeTm !== 'ALL') desc.push(`Team: <strong>${activeTm}</strong>`);
+    if (activeAct !== 'ALL') desc.push(`Activity: <strong>${activeAct}</strong>`);
+    if (query) desc.push(`Search: "<strong>${query}</strong>"`);
+    summaryEl.innerHTML = desc.length > 0
+      ? `Active Filters: ${desc.join(' • ')} (${filtered.length} members found)`
+      : `Showing all <strong>${totalCount}</strong> registered members across 6 official age categories`;
+  }
+
+  // Render the 6 Age Group Totals metric cards
+  const cardsContainer = document.getElementById('gridGroupTotalsCards');
+  if (cardsContainer) {
+    cardsContainer.innerHTML = canonicalGroups.map(g => {
+      const countInView = filteredGroupCounts[g.key] || 0;
+      const countOverall = groupTotals[g.key] || 0;
+      const pctOfTotal = totalCount > 0 ? Math.round((countOverall / totalCount) * 100) : 0;
+      const isActive = (activeGrp === g.key || activeGrp.startsWith(g.label.split(' ')[0]));
+
+      return `
+        <div onclick="window.setMemberGroupFilter('${g.key}')" style="cursor:pointer; background:${isActive ? g.bg : '#f8fafc'}; border:2px solid ${isActive ? g.color : '#e2e8f0'}; border-radius:10px; padding:10px; text-align:center; transition:all 0.2s ease; box-shadow:${isActive ? '0 3px 8px rgba(0,0,0,0.08)' : 'none'};">
+          <div style="font-size:0.75rem; font-weight:800; color:${isActive ? g.color : '#475569'}; margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+            ${g.label}
+          </div>
+          <div style="font-size:1.4rem; font-weight:900; color:#0f172a; line-height:1.1;">
+            ${countInView}
+          </div>
+          <div style="font-size:0.68rem; color:#64748b; margin-top:2px;">
+            ${(filtered.length !== totalCount) ? `${countInView} / ${countOverall} (${pctOfTotal}%)` : `${pctOfTotal}% of total`}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Render Sub-Classification Summary Line
+  const subBar = document.getElementById('gridClassificationSubBar');
+  if (subBar) {
+    const renPct = filtered.length > 0 ? Math.round((filteredRenewed / filtered.length) * 100) : 0;
+    subBar.innerHTML = `
+      <div style="display:flex; align-items:center; gap:6px;">
+        <strong>🔄 Renewal Status:</strong>
+        <span style="color:#15803d; font-weight:800;">${filteredRenewed} Renewed (${renPct}%)</span>
+        <span style="color:#cbd5e1;">•</span>
+        <span style="color:#b91c1c; font-weight:800;">${filteredNotRenewed} Due</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <strong>🏆 House Teams:</strong>
+        <span style="color:#dc2626; font-weight:800;">🔴 Red: ${teamTotals.Red}</span>
+        <span style="color:#0284c7; font-weight:800;">🔵 Blue: ${teamTotals.Blue}</span>
+        <span style="color:#16a34a; font-weight:800;">🟢 Green: ${teamTotals.Green}</span>
+        <span style="color:#d97706; font-weight:800;">🟡 Yellow: ${teamTotals.Yellow}</span>
+      </div>
+    `;
+  }
+
+  // 5. Handle empty state
   if (filtered.length === 0) {
     container.innerHTML = `
-      <div style="text-align:center; padding:40px 20px; background:#fff; border-radius:14px; border:1px dashed #cbd5e1; color:#64748b;">
+      <div style="text-align:center; padding:40px 20px; background:#fff; border-radius:14px; border:1px dashed #cbd5e1; color:#64748b; grid-column:1 / -1; width:100%;">
         <span style="font-size:2.5rem;">👥</span>
         <h4 style="font-size:1.1rem; color:#0f172a; margin-top:8px;">No Members Found</h4>
-        <p style="font-size:0.85rem; margin-top:4px;">No members match the selected group, renewal, or activity filter.</p>
+        <p style="font-size:0.85rem; margin-top:4px;">No members match the selected classification, group, renewal, or activity filter.</p>
+        <button type="button" class="btn-dbyc-primary" style="margin-top:12px; background:#004b98; padding:8px 16px; font-weight:800;" onclick="window.setMemberGroupFilter('ALL'); window.setMemberRenewalFilter('ALL'); window.setMemberTeamFilter('ALL'); window.setMemberActivityFilter('ALL'); if(document.getElementById('memberSearchInput')) document.getElementById('memberSearchInput').value='';">
+          🔄 Reset All Filters
+        </button>
       </div>
     `;
     return;
   }
 
+  // 6. Group the filtered members by Canonical Age Group to display Section Headers with Group Totals in the Grid
   const isDirector = isDirectorOrAsstDirector();
 
-  container.innerHTML = filtered.map(m => {
+  // Bucket members by canonical group
+  const groupBuckets = {};
+  canonicalGroups.forEach(g => { groupBuckets[g.key] = []; });
+  const otherBucket = [];
+
+  filtered.forEach(m => {
+    const cg = window.getCanonicalGroupName(m.group);
+    if (groupBuckets[cg]) groupBuckets[cg].push(m);
+    else otherBucket.push(m);
+  });
+
+  let gridHtml = '';
+
+  // Helper to render individual member card
+  const renderMemberCardHtml = (m) => {
     const photo = m.photo || window.DBYC_OFFICIAL_LOGO || 'assets/logo.png';
     const isApproved = m.approvalStatus === 'APPROVED' || m.status === 'APPROVED';
     const isRenewed = (m.renewalStatus === 'Renewed' || (!m.renewalStatus && isApproved));
@@ -13461,53 +14313,78 @@ function renderMembersRegistry() {
               <span>📞 <strong>${m.mobile || 'N/A'}</strong></span> • <span>🎂 DOB: <strong>${m.dob || 'N/A'}</strong> (Age: ${m.age || 'N/A'})</span> • ${renewalBadge}
             </div>
             <div style="margin-top:4px; display:flex; align-items:center; gap:4px; flex-wrap:wrap;">
-              <small style="color:#64748b; font-size:0.7rem; font-weight:700;">Acts:</small> ${actsPills}
+              <small style="color:#64748b; font-size:0.7rem; font-weight:700; margin-right:4px;">🎯 Acts:</small>
+              ${actsPills}
             </div>
           </div>
         </div>
 
         <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
           ${approvalBtn}
-          
-          <!-- Director & Asst Director: Both Renewal Options Side-by-Side -->
-          ${isDirector ? `
-            <button type="button" class="btn-dbyc-primary" style="background:#15803d; color:#ffffff; padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:8px; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 6px rgba(0,0,0,0.15); border:2px solid #86efac; cursor:pointer;" onclick="window.markMemberAsRenewed('${m.id}')" title="Director / Asst Director: Mark as Renewed (+1 Yr) / புதுப்பிக்கப்பட்டது">
-              ⚡ ✓ Renewed (+1 Yr)
-            </button>
-            <button type="button" class="btn-dbyc-secondary" style="background:#ffffff; color:#b91c1c; border:1.5px solid #dc2626; padding:6px 10px; font-size:0.75rem; font-weight:800; border-radius:8px; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 6px rgba(0,0,0,0.1); cursor:pointer;" onclick="window.markMemberAsNotRenewed('${m.id}')" title="Director / Asst Director: Mark as Not Renewed / Expired / புதுப்பிக்கப்படவில்லை">
-              🔴 Mark Not Renewed
-            </button>
-          ` : ''}
-
-          <!-- Member Details & Photo Editing for Leaders and Director -->
-          <button type="button" class="btn-dbyc-secondary" style="background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; padding:6px 10px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.quickEditMemberPhoto('${m.id}')" title="Change or update member photo">
-            📷 Photo
+          <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:6px 12px; font-weight:800; font-size:0.78rem;" onclick="window.openMemberPassModal('${m.id}')" title="Print/View 56x86mm ID Pass">
+            🪪 ID Pass
           </button>
-          <button type="button" class="btn-dbyc-primary" style="background:#0284c7; padding:6px 12px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.openAddMemberModal('${m.id}')" title="Edit member details and photo">
-            ✏️ Edit
+          <button type="button" class="btn-dbyc-secondary" style="font-size:0.78rem; font-weight:700; padding:6px 10px;" onclick="window.openEditMemberModal('${m.id}')" title="Edit Member Application Form">
+            ✏️ Edit Form
           </button>
-
-          <button type="button" class="btn-dbyc-primary" style="background:#d97706; padding:6px 10px; font-size:0.78rem; font-weight:800; border-radius:8px; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 6px rgba(217,119,6,0.25); border:none;" onclick="window.openAwardPointsForMember('${m.id}')" title="Award Points to ${m.name}">
+          <button type="button" class="btn-dbyc-secondary" style="background:#fef3c7; color:#b45309; border:1px solid #fde68a; font-size:0.78rem; font-weight:800; padding:6px 10px;" onclick="window.openAwardPointsForMember('${m.id}')" title="Award Points">
             🏆 +Pts
           </button>
-          <button type="button" class="btn-dbyc-primary" style="background:#0b57d0; padding:6px 12px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.viewMemberPass('${m.id}')" title="View digital QR pass">
-            🪪 QR Pass
-          </button>
-          <button type="button" class="btn-dbyc-primary" style="background:#475569; padding:6px 10px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.downloadApplicationFormPdf('${m.id}')" title="Download filled 18-Field PDF form">
-            📥 Form PDF
-          </button>
-          <button type="button" class="btn-dbyc-primary" style="background:linear-gradient(135deg, #7c3aed, #4338ca); padding:6px 10px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.printCombinedPassAndForm('${m.id}')" title="Print Form + QR Pass Together on 1 Full A4 Page">
-            🖪 Pass + Form Together
-          </button>
+          ${isRenewed ? `
+            <button type="button" class="btn-dbyc-secondary" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; font-size:0.75rem; font-weight:800; padding:5px 8px;" onclick="window.markMemberAsNotRenewed('${m.id}')" title="Mark as Not Renewed">
+              Mark Due
+            </button>
+          ` : `
+            <button type="button" class="btn-dbyc-primary" style="background:#16a34a; font-size:0.75rem; font-weight:800; padding:5px 10px;" onclick="window.markMemberAsRenewed('${m.id}')" title="Mark as Renewed">
+              Renew Now
+            </button>
+          `}
           ${isDirector ? `
-            <button type="button" class="btn-dbyc-primary" style="background:#fee2e2; color:#b91c1c; border:1px solid #fecaca; padding:6px 10px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="window.deleteMember('${m.id}')" title="Permanently delete member">
+            <button type="button" class="btn-icon-sm" style="background:#fee2e2; color:#b91c1c;" title="Permanently Delete Member Record" onclick="window.deleteMemberRecord('${m.id}')">
               🗑️ Delete
             </button>
           ` : ''}
         </div>
       </div>
     `;
-  }).join('');
+  };
+
+  // Render each canonical group that contains members with its bold TOTAL NUMBER banner
+  canonicalGroups.forEach(g => {
+    const list = groupBuckets[g.key] || [];
+    if (list.length > 0) {
+      const pctOfFiltered = Math.round((list.length / filtered.length) * 100);
+      gridHtml += `
+        <div class="member-grid-group-header" style="grid-column:1 / -1; width:100%; margin-top:16px; margin-bottom:10px; background:linear-gradient(135deg, #002b66, #004b98); color:#ffffff; padding:10px 16px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 8px rgba(0,43,102,0.18);">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:1.2rem;">📁</span>
+            <strong style="font-size:0.96rem; font-weight:800; letter-spacing:0.3px;">${g.label}</strong>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="background:rgba(255,255,255,0.22); border:1px solid rgba(255,255,255,0.35); padding:4px 12px; border-radius:14px; font-size:0.82rem; font-weight:900;">
+              TOTAL: ${list.length} MEMBERS
+            </span>
+            <span style="font-size:0.75rem; color:#bae6fd; font-weight:700;">
+              (${pctOfFiltered}% of view)
+            </span>
+          </div>
+        </div>
+      `;
+      gridHtml += list.map(m => renderMemberCardHtml(m)).join('');
+    }
+  });
+
+  if (otherBucket.length > 0) {
+    gridHtml += `
+      <div class="member-grid-group-header" style="grid-column:1 / -1; width:100%; margin-top:16px; margin-bottom:10px; background:#334155; color:#ffffff; padding:10px 16px; border-radius:12px; display:flex; justify-content:space-between; align-items:center;">
+        <strong>Other Categories</strong>
+        <span style="background:rgba(255,255,255,0.2); padding:4px 12px; border-radius:14px; font-size:0.82rem; font-weight:900;">TOTAL: ${otherBucket.length} MEMBERS</span>
+      </div>
+    `;
+    gridHtml += otherBucket.map(m => renderMemberCardHtml(m)).join('');
+  }
+
+  container.innerHTML = gridHtml;
 }
 
 // ==============================================================================
@@ -14333,9 +15210,7 @@ function renderLeadersDashboard() {
 
   // 1. Initialize leaders from seed if empty
   if (!window.appState.leaders || window.appState.leaders.length === 0) {
-    window.appState.leaders = (window.DBYC_OFFICIAL_LEADERS_SEED && window.DBYC_OFFICIAL_LEADERS_SEED.length > 0)
-      ? JSON.parse(JSON.stringify(window.DBYC_OFFICIAL_LEADERS_SEED))
-      : [];
+    window.appState.leaders = JSON.parse(JSON.stringify(window.DBYC_OFFICIAL_LEADERS_SEED || []));
   }
 
   // 2. Dynamic live sync with window.appState.members (2-way connection)
@@ -15078,17 +15953,18 @@ function setupEventsAndMinutesHandlers() {
       date,
       time,
       venue,
-      approvalStatus: isDirector ? 'APPROVED' : 'PENDING',
-      status: isDirector ? 'APPROVED' : 'PENDING',
-      approvedBy: isDirector ? (appState.currentUser ? appState.currentUser.name : 'Rev. Fr. Director, SDB') : '',
-      approvedAt: isDirector ? new Date().toISOString() : '',
+      approvalStatus: 'PENDING',
+      status: 'PENDING',
+      createdBy: appState.currentUser ? appState.currentUser.name : (isDirector ? 'Director / Asst Director' : 'Member'),
+      approvedBy: '',
+      approvedAt: '',
       createdAt: new Date().toISOString()
     };
 
     if (!appState.events) appState.events = [];
     appState.events.unshift(newEvent);
     saveLocalData();
-    showToast(isDirector ? '✅ Event added and approved!' : '⏳ Event submitted for Director qualification & approval.');
+    showToast('⏳ Calendar Event queued in Qualification Desk for review & qualification!');
 
     document.getElementById('eventForm')?.reset();
     const modal = document.getElementById('addEventModal');
@@ -15132,17 +16008,18 @@ function setupEventsAndMinutesHandlers() {
       attendees,
       agenda,
       decisions,
-      approvalStatus: isDirector ? 'APPROVED' : 'PENDING',
-      status: isDirector ? 'APPROVED' : 'PENDING',
-      approvedBy: isDirector ? (appState.currentUser ? appState.currentUser.name : 'Rev. Fr. Director, SDB') : '',
-      approvedAt: isDirector ? new Date().toISOString() : '',
+      approvalStatus: 'PENDING',
+      status: 'PENDING',
+      recordedBy: appState.currentUser ? appState.currentUser.name : (isDirector ? 'Director / Asst Director' : 'Secretary'),
+      approvedBy: '',
+      approvedAt: '',
       createdAt: new Date().toISOString()
     };
 
     if (!appState.minutes) appState.minutes = [];
     appState.minutes.unshift(newMinute);
     saveLocalData();
-    showToast(isDirector ? '✅ Minutes recorded and approved!' : '⏳ Minutes submitted for Director qualification & approval.');
+    showToast('⏳ Meeting Minutes queued in Qualification Desk for review & qualification!');
 
     document.getElementById('minutesForm')?.reset();
     const modal = document.getElementById('addMinutesModal');
@@ -15268,6 +16145,60 @@ window.rejectMinute = function(minuteId) {
   }
 };
 
+window.qualifyAndApproveMedia = function(mediaId) {
+  const m = (appState.media || []).find(x => x.id === mediaId);
+  if (!m) return;
+  m.approvalStatus = 'APPROVED';
+  m.status = 'APPROVED';
+  m.approvedBy = appState.currentUser ? appState.currentUser.name : 'Rev. Fr. Director, SDB';
+  m.approvedAt = new Date().toISOString();
+  saveLocalData();
+  showToast(`✅ Media "${m.title}" qualified and published!`);
+  renderQualificationDesk();
+  renderMediaStudio();
+  updateDashboardStats();
+};
+
+window.rejectMedia = function(mediaId) {
+  if (!confirm('Reject this media item?')) return;
+  const idx = (appState.media || []).findIndex(x => x.id === mediaId);
+  if (idx !== -1) {
+    appState.media.splice(idx, 1);
+    saveLocalData();
+    showToast('Media item removed.');
+    renderQualificationDesk();
+    renderMediaStudio();
+    updateDashboardStats();
+  }
+};
+
+window.qualifyAndApproveMatch = function(matchId) {
+  const m = (appState.matches || []).find(x => x.id === matchId);
+  if (!m) return;
+  m.approvalStatus = 'APPROVED';
+  m.status = m.status === 'PENDING' ? 'LIVE' : m.status;
+  m.approvedBy = appState.currentUser ? appState.currentUser.name : 'Rev. Fr. Director, SDB';
+  m.approvedAt = new Date().toISOString();
+  saveLocalData();
+  showToast(`✅ Live Match score qualified and launched!`);
+  renderQualificationDesk();
+  renderLiveScores();
+  updateDashboardStats();
+};
+
+window.rejectMatch = function(matchId) {
+  if (!confirm('Reject this match record?')) return;
+  const idx = (appState.matches || []).findIndex(x => x.id === matchId);
+  if (idx !== -1) {
+    appState.matches.splice(idx, 1);
+    saveLocalData();
+    showToast('Match record removed.');
+    renderQualificationDesk();
+    renderLiveScores();
+    updateDashboardStats();
+  }
+};
+
 function renderQualificationDesk(filter = 'ALL') {
   const container = document.getElementById('qualificationListContainer');
   if (!container) return;
@@ -15284,11 +16215,13 @@ function renderQualificationDesk(filter = 'ALL') {
     return;
   }
 
-  // Gather pending items across all 4 required streams
+  // Gather pending items across ALL 6 required streams
   const pendingMembers = (appState.members || []).filter(m => m.status === 'PENDING' || m.approvalStatus === 'PENDING').map(m => ({ ...m, itemType: 'MEMBERS' }));
   const pendingEvents = (appState.events || []).filter(e => e.status === 'PENDING' || e.approvalStatus === 'PENDING').map(e => ({ ...e, itemType: 'CALENDAR' }));
   const pendingNews = (appState.news || []).filter(n => n.status === 'PENDING' || n.approvalStatus === 'PENDING').map(n => ({ ...n, itemType: 'NEWS' }));
   const pendingMinutes = (appState.minutes || []).filter(m => m.status === 'PENDING' || m.approvalStatus === 'PENDING').map(m => ({ ...m, itemType: 'MINUTES' }));
+  const pendingMedia = (appState.media || []).filter(m => m.status === 'PENDING' || m.approvalStatus === 'PENDING').map(m => ({ ...m, itemType: 'MEDIA' }));
+  const pendingMatches = (appState.matches || []).filter(m => m.status === 'PENDING' || m.approvalStatus === 'PENDING').map(m => ({ ...m, itemType: 'MATCHES' }));
 
   // Update counters
   const setElText = (id, txt) => {
@@ -15299,7 +16232,9 @@ function renderQualificationDesk(filter = 'ALL') {
   setElText('qualCountCalendar', pendingEvents.length);
   setElText('qualCountNews', pendingNews.length);
   setElText('qualCountMinutes', pendingMinutes.length);
-  const totalPending = pendingMembers.length + pendingEvents.length + pendingNews.length + pendingMinutes.length;
+  setElText('qualCountMedia', pendingMedia.length);
+  setElText('qualCountMatches', pendingMatches.length);
+  const totalPending = pendingMembers.length + pendingEvents.length + pendingNews.length + pendingMinutes.length + pendingMedia.length + pendingMatches.length;
   setElText('qualCountAll', totalPending);
   setElText('qualPendingHeaderBadge', `${totalPending} PENDING`);
 
@@ -15313,11 +16248,13 @@ function renderQualificationDesk(filter = 'ALL') {
   });
 
   let displayItems = [];
-  if (filter === 'ALL') displayItems = [...pendingMembers, ...pendingEvents, ...pendingNews, ...pendingMinutes];
+  if (filter === 'ALL') displayItems = [...pendingMembers, ...pendingEvents, ...pendingNews, ...pendingMinutes, ...pendingMedia, ...pendingMatches];
   else if (filter === 'MEMBERS') displayItems = pendingMembers;
-  else if (filter === 'CALENDAR') displayItems = pendingEvents;
-  else if (filter === 'NEWS') displayItems = pendingNews;
   else if (filter === 'MINUTES') displayItems = pendingMinutes;
+  else if (filter === 'NEWS') displayItems = pendingNews;
+  else if (filter === 'MEDIA') displayItems = pendingMedia;
+  else if (filter === 'CALENDAR') displayItems = pendingEvents;
+  else if (filter === 'MATCHES') displayItems = pendingMatches;
 
   if (displayItems.length === 0) {
     container.innerHTML = `
@@ -15378,6 +16315,24 @@ function renderQualificationDesk(filter = 'ALL') {
       `;
       approveBtn = `<button type="button" class="btn-dbyc-primary" style="background:#16a34a; font-weight:800; padding:8px 14px; border-radius:8px; font-size:0.82rem;" onclick="window.qualifyAndApproveMinute('${item.id}')">✅ Qualify & Approve Minute</button>`;
       rejectBtn = `<button type="button" class="btn-dbyc-primary" style="background:#ef4444; font-weight:800; padding:8px 14px; border-radius:8px; font-size:0.82rem;" onclick="window.rejectMinute('${item.id}')">❌ Reject</button>`;
+    } else if (item.itemType === 'MEDIA') {
+      typeBadge = `<span class="role-badge" style="background:#0284c7; color:#fff; font-weight:800;">🎥 Live & Video Stream</span>`;
+      previewContent = `
+        <h4 style="font-size:1.1rem; font-weight:800; color:#002b66; margin-bottom:3px;">${item.title}</h4>
+        <div style="font-size:0.82rem; color:#475569;">Type: <strong>${item.type}</strong> • Category: <strong>${item.category || 'General'}</strong> • Creator: <strong>${item.author || 'DBYC'}</strong></div>
+        <p style="font-size:0.85rem; color:#334155; margin-top:4px;">${item.desc || ''}</p>
+        ${item.url ? `<div style="font-size:0.75rem; color:#0284c7; word-break:break-all; margin-top:2px;">🔗 ${item.url}</div>` : ''}
+      `;
+      approveBtn = `<button type="button" class="btn-dbyc-primary" style="background:#16a34a; font-weight:800; padding:8px 14px; border-radius:8px; font-size:0.82rem;" onclick="window.qualifyAndApproveMedia('${item.id}')">✅ Qualify & Approve Media</button>`;
+      rejectBtn = `<button type="button" class="btn-dbyc-primary" style="background:#ef4444; font-weight:800; padding:8px 14px; border-radius:8px; font-size:0.82rem;" onclick="window.rejectMedia('${item.id}')">❌ Reject</button>`;
+    } else if (item.itemType === 'MATCHES') {
+      typeBadge = `<span class="role-badge" style="background:#dc2626; color:#fff; font-weight:800;">⚽ Live Match Score</span>`;
+      previewContent = `
+        <h4 style="font-size:1.1rem; font-weight:800; color:#002b66; margin-bottom:3px;">${item.teamA} vs ${item.teamB} (${item.sport})</h4>
+        <div style="font-size:0.82rem; color:#475569;">Tournament: <strong>${item.tournament || 'DBYC Championship'}</strong> • Venue: <strong>${item.venue}</strong> • Stage: <strong>${item.stage || '1st Half'}</strong></div>
+      `;
+      approveBtn = `<button type="button" class="btn-dbyc-primary" style="background:#16a34a; font-weight:800; padding:8px 14px; border-radius:8px; font-size:0.82rem;" onclick="window.qualifyAndApproveMatch('${item.id}')">✅ Qualify & Approve Match</button>`;
+      rejectBtn = `<button type="button" class="btn-dbyc-primary" style="background:#ef4444; font-weight:800; padding:8px 14px; border-radius:8px; font-size:0.82rem;" onclick="window.rejectMatch('${item.id}')">❌ Reject</button>`;
     }
 
     return `
@@ -16172,14 +17127,7 @@ window.renderOfficeBearersDashboard = function() {
   const container = document.getElementById('officeBearersListContainer');
   if (!container) return;
 
-  // 1. Ensure leaders state is populated from official 39 leaders seed
-  if (!window.appState.leaders || window.appState.leaders.length === 0) {
-    window.appState.leaders = (window.DBYC_OFFICIAL_LEADERS_SEED && window.DBYC_OFFICIAL_LEADERS_SEED.length > 0)
-      ? JSON.parse(JSON.stringify(window.DBYC_OFFICIAL_LEADERS_SEED))
-      : [];
-  }
-
-  // 2. Live Dynamic Two-Way Sync with appState.members
+  // 1. Live Dynamic Two-Way Sync with appState.members
   if (typeof window.syncLeadersWithMembers === 'function') {
     window.syncLeadersWithMembers();
   }
@@ -16194,15 +17142,12 @@ window.renderOfficeBearersDashboard = function() {
     obDb.src = window.DON_BOSCO_PORTRAIT;
   }
 
-  const leaders = (window.appState.leaders && window.appState.leaders.length > 0)
-    ? window.appState.leaders
-    : (window.DBYC_OFFICIAL_LEADERS_SEED || []);
+  const leaders = window.appState.leaders || window.DBYC_OFFICIAL_LEADERS_SEED || [];
   const searchInput = document.getElementById('obSearchInput');
   const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
-  const currentFilter = window.activeObCategoryFilter || 'ALL';
 
   const filtered = leaders.filter(ldr => {
-    const matchesCat = (currentFilter === 'ALL' || ldr.category === currentFilter);
+    const matchesCat = (window.activeObCategoryFilter === 'ALL' || ldr.category === window.activeObCategoryFilter);
     const matchesSearch = !query ||
       (ldr.name && ldr.name.toLowerCase().includes(query)) ||
       (ldr.role && ldr.role.toLowerCase().includes(query)) ||
@@ -18275,5 +19220,17 @@ window.pasteAndCheckIn = async function() {
       </div>
     </div>
   </div>
+
+// Progressive Web App (PWA) Offline Service Worker Registration
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').then((reg) => {
+      console.log('✅ DBYC PWA Service Worker Registered with scope:', reg.scope);
+    }).catch((err) => {
+      console.log('DBYC Service Worker registration:', err);
+    });
+  });
+}
+
 </body>
 </html>

@@ -1,31 +1,38 @@
 {
-  "name": "DBYC Basin Bridge - Don Bosco Youth Centre",
-  "short_name": "DBYC Basin Bridge",
-  "description": "Official Management, Youth Membership & Dual QR Attendance Portal of Don Bosco Youth Centre, Basin Bridge, Chennai - 600 012.",
+  "name": "Don Bosco Youth Centre - DBYC Master Portal",
+  "short_name": "DBYC Portal",
+  "description": "Don Bosco Youth Centre Official Member Portal, Attendance Scanner & Digital ID Pass PWA",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
+  "orientation": "any",
   "background_color": "#002b66",
   "theme_color": "#002b66",
-  "orientation": "any",
+  "categories": ["community", "productivity", "utilities"],
   "icons": [
     {
-      "src": "assets/icon.jpg",
-      "sizes": "192x192 512x512",
-      "type": "image/jpeg",
-      "purpose": "any maskable"
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
       "src": "assets/logo.png",
-      "sizes": "192x192 512x512",
+      "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
-  ],
-  "categories": [
-    "community",
-    "productivity",
-    "sports",
-    "utilities"
   ]
 }

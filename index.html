@@ -2262,21 +2262,15 @@ body {
    NAVIGATION BACK BUTTON (◀ Back Symbol)
    ========================================== */
 .view-back-btn {
-  display: none !important; /* Unified into single topNavBackBtn */
-  background: #ffffff;
-  color: #004b98;
-  border: 1.5px solid #cbd5e1;
-  border-radius: 8px;
-  padding: 6px 14px;
-  font-size: 0.85rem;
-  font-weight: 800;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-  transition: all 0.2s ease;
-  margin-bottom: 12px;
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  height: 0 !important;
+  width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  overflow: hidden !important;
 }
 
 .view-back-btn:hover {
@@ -5795,24 +5789,27 @@ id="deviceSyncModal" class="modal-backdrop" style="display:none; z-index:99999;"
           <div class="form-group-dbyc">
             <label id="lblFormRole">பதவி / பொறுப்பு (Designation / Role in DBYC) *</label>
             <select id="formRole" class="form-control-dbyc" style="width:100%; padding:10px 12px; border:1.5px solid #cbd5e1; border-radius:10px; font-size:0.95rem; font-weight:700; background:#f8fafc; color:#0f172a;">
-                      <option value="Member" selected>Member (Regular Member)</option>
-                      <optgroup label="Central Leadership (Single Posting across DBYC)">
-                        <option value="Director">Director</option>
-                        <option value="Assistant Director">Assistant Director</option>
-                        <option value="GS (General Secretary)">GS (General Secretary)</option>
-                        <option value="AGS (Assistant General Secretary)">AGS (Assistant General Secretary)</option>
-                      </optgroup>
-                      <optgroup label="Group Leadership (1 per Group)">
-                        <option value="President">President</option>
-                        <option value="Secretary">Secretary</option>
-                        <option value="Sports Secretary">Sports Secretary</option>
-                        <option value="Cultural Secretary">Cultural Secretary</option>
-                        <option value="Social & Spiritual Secretary">Social & Spiritual Secretary</option>
-                      </optgroup>
-                      <optgroup label="Group Incharge">
-                        <option value="Group Incharge">Group Incharge</option>
-                      </optgroup>
-                    </select>
+              <option value="Member" selected>Member (Regular Member)</option>
+              <optgroup label="Central Leadership (Single Posting across DBYC - 1 Incharge Only)">
+                <option value="Director">Director</option>
+                <option value="Assistant Director">Assistant Director</option>
+                <option value="GS (General Secretary)">GS (General Secretary)</option>
+                <option value="AGS (Assistant General Secretary)">AGS (Assistant General Secretary)</option>
+              </optgroup>
+              <optgroup label="Central Office Bearers">
+                <option value="Sports Secretary">Sports Secretary</option>
+                <option value="Cultural Secretary">Cultural Secretary</option>
+                <option value="Social & Spiritual Secretary">Social and Spiritual Secretary</option>
+                <option value="Group Incharge">Group Incharge</option>
+              </optgroup>
+              <optgroup label="Group Level Postings (1 each per Group)">
+                <option value="President">President</option>
+                <option value="Secretary">Secretary</option>
+                <option value="Sports Secretary (Group)">Sports Secretary (Group)</option>
+                <option value="Cultural Secretary (Group)">Cultural Secretary (Group)</option>
+                <option value="Social Secretary (Group)">Social Secretary (Group)</option>
+              </optgroup>
+            </select>
           </div>
         </div>
 
@@ -7219,9 +7216,11 @@ var setVal = window.setVal;
 window.viewHistoryStack = [];
 window.navigateBackStep = function() {
   if (window.viewHistoryStack && window.viewHistoryStack.length > 1) {
-    window.viewHistoryStack.pop();
-    const prev = window.viewHistoryStack.pop();
+    window._isNavigatingBack = true;
+    window.viewHistoryStack.pop(); // remove current view
+    const prev = window.viewHistoryStack.pop(); // remove previous to let switchView push cleanly or restore
     if (typeof window.switchView === 'function') window.switchView(prev || 'dashboard');
+    window._isNavigatingBack = false;
   } else {
     if (typeof window.switchView === 'function') window.switchView('dashboard');
   }
@@ -7288,17 +7287,16 @@ function syncLeadersWithMembers() {
         if (!m.name || m.name.toLowerCase().includes('lourdu') || m.name.toLowerCase().includes('merrady') || m.name.toLowerCase().includes('frangleen')) {
           m.name = 'Rev. Fr. Director, SDB';
         }
-        return; // Executive immunity: Never let assistant director or leader checks touch Director DBYC-DIR-001
+        return;
       }
       if (m.id === 'DBYC-DIR-002') {
         m.name = 'Rev. Fr. Don Frangleen, SDB';
         m.role = 'Assistant Director';
         m.roles = ['Assistant Director'];
-        return; // Executive immunity: Never let director or leader checks touch Asst Director DBYC-DIR-002
+        return;
       }
       const r = (m.role || '').toLowerCase();
       const n = (m.name || '').toLowerCase();
-      // Remove Lourdu Merrady from Director post
       if (r.includes('director') && !r.includes('asst')) {
         if (n.includes('lourdu') || n.includes('merrady') || n.includes('merredy')) {
           m.name = 'Rev. Fr. Director, SDB';
@@ -7325,26 +7323,21 @@ function syncLeadersWithMembers() {
     return 'Oratory Group';
   };
 
-  // 1. AUTO-SYNCHRONIZE ALL OFFICIAL LEADERS INTO MEMBERS REGISTRY
-  // "all the office bearers detials should also must be in the members portal with the datas it has to be automatically apear in the registerd member"
+  // 1. AUTO-SYNCHRONIZE OFFICIAL LEADERS INTO MEMBERS REGISTRY BY STRICT ID ONLY
+  // PREVENT PHOTO AND DATA INTERCHANGE: NEVER match by name substring or phone string!
   leaders.forEach(ldr => {
-    const ldrPhoneClean = (ldr.phone || '').replace(/\D/g, '');
-    const ldrNameNorm = (ldr.name || '').trim().toLowerCase();
     const ldrIdNorm = (ldr.id || '').trim().toUpperCase();
 
     let matchedMem = members.find(m => {
-      if (!m || m.id === 'DBYC-DIR-001' || m.id === 'DBYC-DIR-002') return false; // Executive Immunity: Never conflate Director or Asst Director with Youth Office Bearers
+      if (!m || m.id === 'DBYC-DIR-001' || m.id === 'DBYC-DIR-002') return false;
       if (ldr.memberId && m.id === ldr.memberId) return true;
       if (m.id && m.id.toUpperCase() === ldrIdNorm) return true;
-      const mPhoneClean = (m.mobile || '').replace(/\D/g, '');
-      if (ldrPhoneClean && mPhoneClean && ldrPhoneClean.length >= 8 && mPhoneClean.length >= 8 && ldrPhoneClean === mPhoneClean) return true;
-      if (ldrNameNorm && (m.name || '').trim().toLowerCase() === ldrNameNorm) return true;
       return false;
     });
 
     if (!matchedMem) {
       matchedMem = {
-        id: ldr.memberId || ldr.id || ('DBYC-LDR-' + ldr.name.replace(/[^A-Za-z0-9]/g, '').toUpperCase()),
+        id: ldr.memberId || ldr.id || ('DBYC-LDR-' + (ldr.name || 'LEADER').replace(/[^A-Za-z0-9]/g, '').toUpperCase()),
         name: ldr.name,
         role: ldr.role || 'Youth Leader',
         roles: [ldr.role || 'Youth Leader'],
@@ -7373,75 +7366,46 @@ function syncLeadersWithMembers() {
       members.push(matchedMem);
       ldr.memberId = matchedMem.id;
     } else {
-      // 2-Way Sync
+      // Strict 1:1 ID match only
       ldr.memberId = matchedMem.id;
-      if (matchedMem.photo) ldr.photo = matchedMem.photo;
-      else if (ldr.photo) matchedMem.photo = ldr.photo;
+      if (matchedMem.photo && !ldr.photo) ldr.photo = matchedMem.photo;
+      else if (ldr.photo && !matchedMem.photo) matchedMem.photo = ldr.photo;
 
-      if (matchedMem.mobile) ldr.phone = matchedMem.mobile;
-      else if (ldr.phone) matchedMem.mobile = ldr.phone;
-
-      // Multi-post holding: "one person also can hold two three posts"
       if (!matchedMem.roles) matchedMem.roles = [matchedMem.role || 'Youth Leader'];
       if (!matchedMem.roles.includes(ldr.role)) matchedMem.roles.push(ldr.role);
-      const cleanRoles1 = [...new Set(matchedMem.roles.flatMap(r => (r || '').split(' & ').map(x => x.trim())).filter(Boolean))];
-      matchedMem.roles = cleanRoles1;
-      matchedMem.role = cleanRoles1.join(' & ');
-
-      if (matchedMem.homeAddress) ldr.address = matchedMem.homeAddress;
-      if (matchedMem.activities && !ldr.abilities) ldr.abilities = Array.isArray(matchedMem.activities) ? matchedMem.activities.join(', ') : matchedMem.activities;
     }
   });
 
-  // 2. Automatically pull any registered member with leadership role into leaders if not already there
-  const leadershipRoles = [
-    'president', 'secretary', 'general secretary', 'gs', 'ags', 'treasurer', 'joint secretary',
-    'vice president', 'animator', 'leader', 'incharge', 'group incharge',
-    'captain', 'councillor', 'council', 'committee', 'choir', 'sports', 'media'
-  ];
-
+  // 2. PULL REGISTERED MEMBERS WITH LEADERSHIP ROLE INTO LEADERS BY STRICT ID ONLY
   members.forEach(m => {
+    if (!m) return;
     const roleLower = (m.role || '').toLowerCase();
-    const groupLower = (m.group || '').toLowerCase();
-    const catLower = (m.category || '').toLowerCase();
-    const mNameNorm = (m.name || '').trim().toLowerCase();
+    if (roleLower.includes('director') || roleLower === 'member') return;
 
-    // NEVER import Director or Assistant Director into Youth Office Bearers!
-    if (roleLower.includes('director') || mNameNorm.includes('director') || mNameNorm.includes('frangleen')) {
-      return;
-    }
-
-    const isLeaderRole = leadershipRoles.some(r => roleLower.includes(r));
-    const isLeaderCat = catLower.includes('leader') || groupLower.includes('leader') || catLower.includes('committee') || catLower.includes('elder');
-
-    if (isLeaderRole || isLeaderCat) {
-      const existing = leaders.find(l => {
-        if (l.memberId && l.memberId === m.id) return true;
-        const lPhone = (l.phone || '').replace(/\D/g, '');
-        const mPhone = (m.mobile || '').replace(/\D/g, '');
-        if (lPhone && mPhone && lPhone === mPhone) return true;
-        if ((l.name || '').trim().toLowerCase() === mNameNorm) return true;
-        return false;
-      });
-
+    if (window.isOfficeBearer(m)) {
+      const existing = leaders.find(l => (l.memberId && l.memberId === m.id) || (l.id === 'LDR-DYN-' + m.id) || (l.id === m.id));
       if (!existing) {
         leaders.push({
           id: 'LDR-DYN-' + m.id,
           memberId: m.id,
           name: m.name,
-          role: m.role || 'Youth Leader',
+          role: m.role || 'Office Bearer',
           category: m.category || mapCatToGroup(m.group),
-          phone: m.mobile || '',
+          phone: m.mobile || m.phone || '',
           tenure: m.yearsInDbyc ? (m.yearsInDbyc + ' Years') : '1+ Year',
           photo: m.photo || '',
-          achievements: m.futureAmbition || 'Active Member of DBYC',
+          achievements: m.futureAmbition || 'Active Leader of DBYC',
           abilities: Array.isArray(m.activities) ? m.activities.join(', ') : (m.activities || m.joiningPurpose || 'Youth animation and service')
         });
+      } else {
+        existing.memberId = m.id;
+        if (m.photo && !existing.photo) existing.photo = m.photo;
+        if (m.role) existing.role = m.role;
       }
     }
   });
 }
-window.syncLeadersWithMembers = syncLeadersWithMembers;
+window.syncLeadersWithMemberswindow.syncLeadersWithMembers = syncLeadersWithMembers;
 
 
 
@@ -14237,6 +14201,17 @@ function setupMediaStudioHandlers() {
       qualifiedBy: isDirector ? (appState.currentUser ? appState.currentUser.name : 'Rev. Fr. Director, SDB') : ''
     };
 
+    // Upload to Google Drive folder DBYC_Media_Uploads
+    if (activeMediaPhotoBase64 && activeMediaPhotoBase64.startsWith('data:') && typeof window.uploadMediaToDrive === 'function') {
+      window.uploadMediaToDrive(activeMediaPhotoBase64, 'event_photo_' + Date.now() + '.jpg', 'image/jpeg').then(driveUrl => {
+        if (driveUrl) {
+          newMedia.url = driveUrl;
+          saveLocalData();
+          if (typeof renderMediaStudio === 'function') renderMediaStudio();
+        }
+      }).catch(e => console.warn('Drive event photo upload note:', e));
+    }
+
     appState.media.unshift(newMedia);
     saveLocalData();
     updateDashboardStats();
@@ -14728,27 +14703,47 @@ window.checkRoleAvailability = function(role, group, editId) {
   if (!role || role === 'Member') return { ok: true };
 
   const members = window.appState.members || [];
-  const singlePostings = ['Director', 'Assistant Director', 'GS (General Secretary)', 'AGS (Assistant General Secretary)'];
+  const normalizedRole = (role || '').trim().toLowerCase();
 
-  if (singlePostings.includes(role)) {
-    const existing = members.find(m => m.id !== editId && (m.role || '').trim().toLowerCase() === role.toLowerCase());
+  // 1. Single Postings across DBYC (Director, Assistant Director, GS, AGS - only 1 person can be incharge)
+  const singlePostings = [
+    'director', 'assistant director', 'asst director',
+    'gs', 'gs (general secretary)', 'general secretary',
+    'ags', 'ags (assistant general secretary)', 'assistant general secretary'
+  ];
+
+  const isSingle = singlePostings.some(sp => sp === normalizedRole);
+  if (isSingle) {
+    const existing = members.find(m => {
+      if (!m || m.id === editId) return false;
+      const mRole = (m.role || '').trim().toLowerCase();
+      return singlePostings.some(sp => sp === mRole && (sp.includes('director') === normalizedRole.includes('director')) && (sp.includes('gs') === normalizedRole.includes('gs')));
+    });
     if (existing) {
       existing.role = 'Member';
-      console.log(`[Role Reassignment] Reassigned previous ${role} (${existing.name}) to Member.`);
+      console.log(`[Role Reassignment] Reassigned previous single posting ${role} (${existing.name} - ${existing.id}) to Member.`);
     }
     return { ok: true };
   }
 
-  const groupPostings = ['President', 'Secretary', 'Sports Secretary', 'Cultural Secretary', 'Social & Spiritual Secretary'];
-  if (groupPostings.includes(role)) {
-    const existingGroupLeader = members.find(m => 
-      m.id !== editId && 
-      (m.group || '').trim().toLowerCase() === (group || '').trim().toLowerCase() && 
-      (m.role || '').trim().toLowerCase() === role.toLowerCase()
-    );
+  // 2. Group Level Postings (President, Secretary, Sports Secretary, Cultural Secretary, Social Secretary - 1 each per group)
+  const groupPostings = [
+    'president', 'secretary',
+    'sports secretary (group)', 'cultural secretary (group)', 'social secretary (group)',
+    'sports secretary', 'cultural secretary', 'social secretary'
+  ];
+  const isGroupPost = groupPostings.some(gp => gp === normalizedRole) && !normalizedRole.includes('spiritual');
+  if (isGroupPost) {
+    const normGroup = (group || '').trim().toLowerCase();
+    const existingGroupLeader = members.find(m => {
+      if (!m || m.id === editId) return false;
+      const mGroup = (m.group || '').trim().toLowerCase();
+      const mRole = (m.role || '').trim().toLowerCase();
+      return mGroup === normGroup && (mRole === normalizedRole || (groupPostings.includes(mRole) && mRole.split(' ')[0] === normalizedRole.split(' ')[0]));
+    });
     if (existingGroupLeader) {
       existingGroupLeader.role = 'Member';
-      console.log(`[Role Reassignment] Reassigned previous ${group} ${role} (${existingGroupLeader.name}) to Member.`);
+      console.log(`[Role Reassignment] Reassigned previous ${group} ${role} (${existingGroupLeader.name} - ${existingGroupLeader.id}) to Member.`);
     }
     return { ok: true };
   }
@@ -14844,8 +14839,20 @@ window.saveMemberRegistrationFormDirect = function(event) {
     if (!memberData.membershipStatus) memberData.membershipStatus = 'ACTIVE';
   }
 
-  if (window._currentFormPhotoBase64 !== null) {
-    memberData.photo = window._currentFormPhotoBase64;
+  const chosenPhoto = (window._currentFormPhotoBase64 !== null) ? window._currentFormPhotoBase64 : (window.capturedMemberPhotoBase64 || '');
+  if (chosenPhoto) {
+    memberData.photo = chosenPhoto;
+    // Asynchronously upload photo to Google Drive DBYC_Media_Uploads
+    if (chosenPhoto.startsWith('data:') && typeof window.uploadMediaToDrive === 'function') {
+      window.uploadMediaToDrive(chosenPhoto, 'member_' + memberData.id + '.jpg', 'image/jpeg').then(driveUrl => {
+        if (driveUrl) {
+          memberData.photo = driveUrl;
+          if (typeof saveState === 'function') saveState();
+          if (typeof renderMembersRegistry === 'function') renderMembersRegistry();
+          if (typeof renderOfficeBearersDashboard === 'function') renderOfficeBearersDashboard();
+        }
+      }).catch(err => console.warn('Cloud photo upload note:', err));
+    }
   }
 
   // Save to Google Sheets & Drive asynchronously (Zero Captcha)
@@ -14877,6 +14884,7 @@ window.openAddMemberModal = function(editId = null) {
 
   window._editingMemberId = editId;
   window._currentFormPhotoBase64 = null;
+  window.capturedMemberPhotoBase64 = '';
 
   const titleEl = document.getElementById('memberFormModalTitle');
   const deleteBtn = document.getElementById('btnDeleteMemberFromModal');
@@ -14933,6 +14941,7 @@ window.openAddMemberModal = function(editId = null) {
       if (m.photo && m.photo.trim() !== '') {
         if (previewImg) previewImg.src = m.photo;
         window._currentFormPhotoBase64 = m.photo;
+        window.capturedMemberPhotoBase64 = m.photo;
         if (photoBadge) photoBadge.textContent = '✅ Member Photo Present';
         if (removePhotoBtn) removePhotoBtn.style.display = 'inline-block';
       } else {
@@ -14957,6 +14966,7 @@ window.closeAddMemberModal = function() {
   if (modal) modal.style.display = 'none';
   window._editingMemberId = null;
   window._currentFormPhotoBase64 = null;
+  window.capturedMemberPhotoBase64 = '';
   const fileInput = document.getElementById('formPhotoFileInput');
   if (fileInput) fileInput.value = '';
 };
@@ -17653,6 +17663,70 @@ window.addEventListener('appinstalled', () => {
   }
 });
 
+// ==============================================================================
+// DBYC GOOGLE SHEETS & DRIVE ENGINE (Zero Captcha - Direct Cloud Engine)
+// ==============================================================================
+window.DbycGoogleSheetsDriveEngine = {
+  getBackendUrl: function() {
+    return (window.DbycGoogleDriveServerStorage && window.DbycGoogleDriveServerStorage.backendUrl) ||
+           localStorage.getItem('dbyc_backend_url') ||
+           localStorage.getItem('dbyc_gas_url') ||
+           window.DBYC_MASTER_BACKEND_URL || '';
+  },
+
+  // Upload Media (Photos and Videos) to Google Drive (DBYC_Media_Uploads)
+  uploadMedia: async function(base64Data, fileName, mimeType) {
+    const url = this.getBackendUrl();
+    if (!url || !base64Data) return null;
+    try {
+      const payload = {
+        action: 'UPLOAD_MEDIA',
+        fileName: fileName || ('media_' + Date.now() + '.jpg'),
+        mimeType: mimeType || 'image/jpeg',
+        base64Data: base64Data
+      };
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+      const res = await response.json();
+      if (res && res.status === 'success') {
+        return res.viewUrl || res.url || res.downloadUrl;
+      }
+    } catch (e) {
+      console.warn('[DbycGoogleSheetsDriveEngine] Media upload error:', e);
+    }
+    return null;
+  },
+
+  // Direct Registration into Google Sheets (Frictionless, Zero Captcha)
+  registerMemberDirect: async function(memberData) {
+    const url = this.getBackendUrl();
+    if (!url) return null;
+    try {
+      const payload = {
+        action: 'REGISTER_MEMBER',
+        member: memberData
+      };
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+      const res = await response.json();
+      return res;
+    } catch (e) {
+      console.warn('[DbycGoogleSheetsDriveEngine] Direct member registration error:', e);
+    }
+    return null;
+  }
+};
+
+window.uploadMediaToDrive = async function(base64Data, fileName, mimeType) {
+  return await window.DbycGoogleSheetsDriveEngine.uploadMedia(base64Data, fileName, mimeType);
+};
+
 window.DbycGoogleDriveServerStorage = {
   isInitialized: false,
   isConnected: false,
@@ -18419,36 +18493,54 @@ window.renderOfficeBearersDashboard = function() {
   const members = window.appState.members || [];
   const officeBearers = members.filter(m => window.isOfficeBearer(m));
 
-  const totalObBadge = document.getElementById('totalOfficeBearersBadge');
-  if (totalObBadge) totalObBadge.textContent = `${officeBearers.length} Office Bearers`;
+  const totalObBadge = document.getElementById('totalOfficeBearersBadge') || document.getElementById('obHeaderCountBadge');
+  if (totalObBadge) totalObBadge.textContent = `${officeBearers.length} Office Bearers • Basin Bridge, Chennai - 12`;
 
   const container = document.getElementById('officeBearersListContainer') || document.getElementById('leadersListContainer');
   if (!container) return;
 
-  const activeCat = window.activeObCategoryFilter || 'all';
+  const activeCat = (window.activeObCategoryFilter || 'ALL').toUpperCase();
+  const searchInput = document.getElementById('obSearchInput');
+  const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
 
   const filtered = officeBearers.filter(m => {
-    if (activeCat === 'all') return true;
-    const cat = (m.leaderCategory || m.group || '').toLowerCase();
-    if (activeCat === 'council') return cat.includes('council') || cat.includes('director') || cat.includes('oratory');
-    if (activeCat === 'subjunior') return cat.includes('sub');
-    if (activeCat === 'junior') return cat.includes('junior') && !cat.includes('sub');
-    if (activeCat === 'senior') return cat.includes('senior') && !cat.includes('super');
-    if (activeCat === 'supersenior') return cat.includes('super');
-    if (activeCat === 'elders') return cat.includes('elder');
-    if (activeCat === 'committee') return cat.includes('committee');
-    return true;
+    const cat = (m.category || m.leaderCategory || m.group || '').toUpperCase();
+    const role = (m.role || '').toUpperCase();
+    const name = (m.name || '').toLowerCase();
+    const phone = (m.mobile || m.phone || '').toLowerCase();
+
+    // Category filter matching
+    let matchesCat = true;
+    if (activeCat !== 'ALL') {
+      if (activeCat.includes('SUB')) matchesCat = cat.includes('SUB') || (m.group && m.group.toUpperCase().includes('SUB'));
+      else if (activeCat.includes('JUNIOR')) matchesCat = (cat.includes('JUNIOR') && !cat.includes('SUB')) || (m.group && m.group.toUpperCase().includes('JUNIOR') && !m.group.toUpperCase().includes('SUB'));
+      else if (activeCat.includes('INTER')) matchesCat = cat.includes('INTER') || (m.group && m.group.toUpperCase().includes('INTER'));
+      else if (activeCat.includes('SUPER')) matchesCat = cat.includes('SUPER') || (m.group && m.group.toUpperCase().includes('SUPER'));
+      else if (activeCat.includes('SENIOR')) matchesCat = (cat.includes('SENIOR') && !cat.includes('SUPER')) || (m.group && m.group.toUpperCase().includes('SENIOR') && !m.group.toUpperCase().includes('SUPER'));
+      else if (activeCat.includes('ELDER')) matchesCat = cat.includes('ELDER') || (m.group && m.group.toUpperCase().includes('ELDER'));
+      else if (activeCat.includes('COMMITTEE')) matchesCat = cat.includes('COMMITTEE') || role.includes('DIRECTOR') || role.includes('GS') || role.includes('INCHARGE');
+      else if (activeCat.includes('ORATORY')) matchesCat = cat.includes('ORATORY') || (m.group && m.group.toUpperCase().includes('ORATORY'));
+      else matchesCat = cat.includes(activeCat);
+    }
+
+    // Search query matching
+    let matchesSearch = true;
+    if (query) {
+      matchesSearch = name.includes(query) || role.toLowerCase().includes(query) || phone.includes(query) || (m.id && m.id.toLowerCase().includes(query));
+    }
+
+    return matchesCat && matchesSearch;
   });
 
   if (filtered.length === 0) {
-    container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px; color:#64748b;">No office bearers found in this category.</div>';
+    container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px; color:#64748b; font-size:0.95rem;">No office bearers match the selected filter.</div>';
     return;
   }
 
   container.innerHTML = filtered.map(m => {
     const photoUrl = m.photo && m.photo.trim() !== '' ? m.photo : (window.DBYC_DEFAULT_AVATAR || 'assets/don_bosco.webp');
     const designation = m.role || 'Office Bearer';
-    const groupName = m.group || 'DBYC Council';
+    const groupName = m.group || m.category || 'DBYC';
     const phone = m.mobile || m.phone || '—';
 
     return `
@@ -20138,24 +20230,34 @@ window.saveQuickPhoto = function() {
       m.photo = newPhoto;
       m.updatedAt = new Date().toISOString();
       updated = true;
-    }
-  }
 
-  if (leaderId) {
+      // Sync strictly by ID (No name/phone fuzzy matching to prevent photo swapping!)
+      const matchLeader = (window.appState.leaders || []).find(l => l.memberId === m.id || l.id === m.id);
+      if (matchLeader) matchLeader.photo = newPhoto;
+
+      // Upload to Google Drive folder asynchronously
+      if (newPhoto && newPhoto.startsWith('data:') && typeof window.uploadMediaToDrive === 'function') {
+        window.uploadMediaToDrive(newPhoto, 'photo_' + m.id + '.jpg', 'image/jpeg').then(driveUrl => {
+          if (driveUrl) {
+            m.photo = driveUrl;
+            if (matchLeader) matchLeader.photo = driveUrl;
+            saveLocalData();
+          }
+        }).catch(e => console.warn('Drive photo upload note:', e));
+      }
+    }
+  } else if (leaderId) {
     const l = (window.appState.leaders || []).find(x => x.id === leaderId);
     if (l) {
       l.photo = newPhoto;
       l.updatedAt = new Date().toISOString();
       updated = true;
-    }
-  }
 
-  // Cross-synchronize between member and leader
-  if (memberId) {
-    const m = (window.appState.members || []).find(x => x.id === memberId);
-    if (m) {
-      const matchLeader = (window.appState.leaders || []).find(l => l.memberId === m.id || l.name === m.name || (l.phone && m.mobile && l.phone.replace(/\D/g,'') === m.mobile.replace(/\D/g,'')));
-      if (matchLeader) matchLeader.photo = newPhoto;
+      // Sync strictly by ID to members list
+      if (l.memberId) {
+        const matchMem = (window.appState.members || []).find(m => m.id === l.memberId);
+        if (matchMem) matchMem.photo = newPhoto;
+      }
     }
   }
 
@@ -20170,7 +20272,7 @@ window.saveQuickPhoto = function() {
       window.renderOfficeBearersDashboard();
     }
     window.closeQuickPhotoEditModal();
-    if (typeof showToast === 'function') showToast('✅ Member photo saved & synchronized across all portals!');
+    if (typeof showToast === 'function') showToast('✅ Member photo saved & synchronized strictly!');
   } else {
     if (typeof showToast === 'function') showToast('⚠️ No target selected to save photo.');
   }
